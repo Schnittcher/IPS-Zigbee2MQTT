@@ -1,4 +1,4 @@
-# IPS-Zigbee2MQTT
+# IPS-Z2MDevice
    Anbindung von www.zigbee2mqtt.io an IP-Symcon.
      
    ## Inhaltverzeichnis

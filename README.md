@@ -22,7 +22,7 @@
 
 ## 2. Enthaltene Module
 
-* [IPS-Zigbee2MQTT](IPS-Zigebee2MQTT/README.md)
+* [IPS-Z2MDevice](IPS-Z2MDevice/README.md)
 
 ## 3. Installation
 IPS-Zigbee2MQTT (Branch 5.1):
