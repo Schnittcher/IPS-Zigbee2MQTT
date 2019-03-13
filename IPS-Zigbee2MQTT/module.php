@@ -80,10 +80,9 @@ class IPS_Zigbee2MQTT extends IPSModule
                             SetValue($this->GetIDForIdent('Z2M_State'), false);
                             break;
                         default:
-                            $this->SendDebug('State', 'Undefined State: '.$Payload->state,0);
+                            $this->SendDebug('State', 'Undefined State: ' . $Payload->state, 0);
                             break;
                     }
-
                 }
             }
         }
