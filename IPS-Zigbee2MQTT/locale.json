@@ -1,0 +1,15 @@
+{
+  "translations": {
+    "de": {
+      "State": "Status",
+      "Temperature": "Temperatur",
+      "Linkquality": "Verbindungsqualität",
+      "Humidity": "Feuchtigkeit",
+      "Pressure": "Druck",
+      "Battery": "Batterie",
+      "Voltage": "Stromspannung",
+      "Action": "Aktion",
+      "Brightness": "Helligkeit"
+    }
+  }
+}
