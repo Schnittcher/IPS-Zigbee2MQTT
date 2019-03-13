@@ -3,7 +3,7 @@
 declare(strict_types=1);
 require_once __DIR__ . '/../libs/Zigbee2MQTTHelper.php';
 
-class IPS_Zigbee2MQTT extends IPSModule
+class IPS_Z2MDevice extends IPSModule
 {
     use Zigbee2MQTTHelper;
 
