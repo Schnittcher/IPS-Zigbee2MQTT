@@ -9,7 +9,8 @@
       "Battery": "Batterie",
       "Voltage": "Stromspannung",
       "Action": "Aktion",
-      "Brightness": "Helligkeit"
+      "Brightness": "Helligkeit",
+      "Occupancy": "Bewegung"
     }
   }
 }
