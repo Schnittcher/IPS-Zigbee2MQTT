@@ -74,7 +74,6 @@ class IPS_Z2MDevice extends IPSModule
                     SetValue($this->GetIDForIdent('Z2M_Occupancy'), $Payload->occupancy);
                 }
 
-
                 if (property_exists($Payload, 'state')) {
                     $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
                     $this->EnableAction('Z2M_State');
