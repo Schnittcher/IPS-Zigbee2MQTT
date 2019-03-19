@@ -16,16 +16,17 @@
    
 ## 1. Voraussetzungen
 
-* mindestens IPS Version 5.1 Ninja
+* mindestens IPS Version 5.1
 * MQTT Server (IPS Modul) 
 
 
 ## 2. Enthaltene Module
 
+* [IPS-Z2MBridge](IPS-Z2MBridge/README.md)
 * [IPS-Z2MDevice](IPS-Z2MDevice/README.md)
 
 ## 3. Installation
-IPS-Zigbee2MQTT (Branch 5.1):
+IPS-Zigbee2MQTT:
 ```
 https://github.com/Schnittcher/IPS-Zigbee2MQTT.git
 ```
