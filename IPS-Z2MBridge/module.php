@@ -36,9 +36,9 @@ class IPS_Z2MBridge extends IPSModule
             $this->SendDebug('MQTT Payload', $Buffer->Payload, 0);
             if (property_exists($Buffer, 'Topic')) {
                 $Payload = json_decode($Buffer->Payload);
-                if (fnmatch('*state*',$Buffer->Topic)) {
-                        $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '');
-                        switch ($Buffer->Payload) {
+                if (fnmatch('*state*', $Buffer->Topic)) {
+                    $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '');
+                    switch ($Buffer->Payload) {
                             case 'online':
                                 SetValue($this->GetIDForIdent('Z2M_State'), true);
                                 break;
@@ -46,10 +46,10 @@ class IPS_Z2MBridge extends IPSModule
                                 SetValue($this->GetIDForIdent('Z2M_State'), false);
                                 break;
                             default:
-                                $this->SendDebug('Bridge State', 'Invalid Payload'. $Buffer->Payload,0);
+                                $this->SendDebug('Bridge State', 'Invalid Payload' . $Buffer->Payload, 0);
                         }
                 }
-                if (fnmatch('*config*',$Buffer->Topic)) {
+                if (fnmatch('*config*', $Buffer->Topic)) {
                     if (property_exists($Payload, 'log_level')) {
                         $this->RegisterVariableString('Z2M_Log_Level', $this->Translate('Log Level'), '');
                         SetValue($this->GetIDForIdent('Z2M_Log_Level'), $Payload->log_level);
@@ -59,7 +59,7 @@ class IPS_Z2MBridge extends IPSModule
                         SetValue($this->GetIDForIdent('Z2M_Permit_Join'), $Payload->permit_join);
                     }
                 }
-                if (fnmatch('*log*',$Buffer->Topic)) {
+                if (fnmatch('*log*', $Buffer->Topic)) {
                     switch ($Payload->type) {
                         case 'pairing':
                             $this->RegisterVariableString('Z2M_Pairing', $this->Translate('Pairing'), '');
@@ -79,7 +79,7 @@ class IPS_Z2MBridge extends IPSModule
                             break;
                         case 'device_renamed':
                             $this->RegisterVariableString('Z2M_Device_Renamed', $this->Translate('Device Renamed'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Device_Renamed'), $Payload->message->from.' >> '.$Payload->message->to);
+                            SetValue($this->GetIDForIdent('Z2M_Device_Renamed'), $Payload->message->from . ' >> ' . $Payload->message->to);
                             break;
                         case 'device_bind':
                             $this->RegisterVariableString('Z2M_Device_bind', $this->Translate('Device Bind'), '');
@@ -105,7 +105,7 @@ class IPS_Z2MBridge extends IPSModule
                             $this->RegisterVariableString('Z2M_Devices', $this->Translate('Devices'), '');
                             SetValue($this->GetIDForIdent('Z2M_Devices'), $Buffer->Payload);
                             break;
-                        case 'device_publish_error' :
+                        case 'device_publish_error':
                             $this->RegisterVariableString('Z2M_Device_Publish_Error', $this->Translate('Device Publish Error'), '');
                             SetValue($this->GetIDForIdent('Z2M_Device_Publish_Error'), $Payload->device_publish_error);
                             break;
