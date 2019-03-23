@@ -10,7 +10,8 @@
       "Voltage": "Stromspannung",
       "Action": "Aktion",
       "Brightness": "Helligkeit",
-      "Water Leak": "Wasserleck"
+      "Water Leak": "Wasserleck",
+      "Contact": "Kontakt"
     }
   }
 }

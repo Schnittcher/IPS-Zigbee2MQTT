@@ -77,6 +77,10 @@ class IPS_Z2MDevice extends IPSModule
                     $this->RegisterVariableBoolean('Z2M_WaterLeak', $this->Translate('Water Leak'), '');
                     SetValue($this->GetIDForIdent('Z2M_WaterLeak'), $Payload->water_leak);
                 }
+                if (property_exists($Payload, 'contact')) {
+                    $this->RegisterVariableBoolean('Z2M_Contact', $this->Translate('Contact'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Contact'), $Payload->contract);
+                }
 
                 if (property_exists($Payload, 'state')) {
                     $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
