@@ -79,7 +79,7 @@ class IPS_Z2MDevice extends IPSModule
                 }
                 if (property_exists($Payload, 'contact')) {
                     $this->RegisterVariableBoolean('Z2M_Contact', $this->Translate('Contact'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Contact'), $Payload->contract);
+                    SetValue($this->GetIDForIdent('Z2M_Contact'), $Payload->contact);
                 }
 
                 if (property_exists($Payload, 'state')) {
