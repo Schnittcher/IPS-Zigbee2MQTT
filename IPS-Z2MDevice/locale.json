@@ -11,7 +11,8 @@
       "Action": "Aktion",
       "Brightness": "Helligkeit",
       "Water Leak": "Wasserleck",
-      "Contact": "Kontakt"
+      "Contact": "Kontakt",
+      "Illuminance": "Beleuchtungsstärke"
     }
   }
 }
