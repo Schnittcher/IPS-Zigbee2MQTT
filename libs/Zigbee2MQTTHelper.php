@@ -42,6 +42,22 @@ trait Zigbee2MQTTHelper
         $this->publish($PayloadJSON);
     }
 
+    public function setColor(int $color, string $mode) {
+        switch ($mode) {
+            case 'cie':
+                $RGB = $this->HexToRGB($color);
+                $cie = $this->RGBToCIE($RGB[0],$RGB[1],$RGB[2]);
+
+                $Payload['color'] = $cie;
+                $PayloadJSON = json_encode($Payload,JSON_UNESCAPED_SLASHES);
+                $this->publish($PayloadJSON);
+                break;
+            default:
+                $this->SendDebug('setColor', 'Invalid Mode '.$mode,0);
+                break;
+        }
+    }
+
     private function publish($payload)
     {
         $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
@@ -54,6 +70,30 @@ trait Zigbee2MQTTHelper
         $this->SendDebug(__FUNCTION__ . 'Publish Topic', $Data['Topic'], 0);
         $this->SendDebug(__FUNCTION__, $DataJSON, 0);
         $this->SendDataToParent($DataJSON);
+    }
+
+    protected function HexToRGB($value)
+    {
+        $RGB = [];
+        $RGB[0] = (($value >> 16) & 0xFF);
+        $RGB[1] = (($value >> 8) & 0xFF);
+        $RGB[2] = ($value & 0xFF);
+        return $RGB;
+    }
+
+    protected function RGBToCIE($red,$green,$blue) {
+        $red = ($red > 0.04045) ? pow(($red + 0.055) / (1.0 + 0.055), 2.4) : ($red / 12.92);
+        $green = ($green > 0.04045) ? pow(($green + 0.055) / (1.0 + 0.055), 2.4) : ($green / 12.92);
+        $blue = ($blue > 0.04045) ? pow(($blue + 0.055) / (1.0 + 0.055), 2.4) : ($blue / 12.92);
+
+        $X = $red * 0.664511 + $green * 0.154324 + $blue * 0.162028;
+        $Y = $red * 0.283881 + $green * 0.668433 + $blue * 0.047685;
+        $Z = $red * 0.000088 + $green * 0.072310 + $blue * 0.986039;
+
+        $cie['x'] = round(($X / ($X + $Y + $Z)),4);
+        $cie['y'] = round(($Y / ($X + $Y + $Z)),4);
+
+        return $cie;
     }
 }
 
