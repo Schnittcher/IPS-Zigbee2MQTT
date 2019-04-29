@@ -43,7 +43,7 @@ trait Zigbee2MQTTHelper
     }
 
     public function setColorMode(int $mode) {
-        $Payload['color_mode'] = stravl($mode);
+        $Payload['color_mode'] = strval($mode);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->publish($PayloadJSON);
     }
