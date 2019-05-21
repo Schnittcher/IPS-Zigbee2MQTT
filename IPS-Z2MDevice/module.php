@@ -89,6 +89,38 @@ class IPS_Z2MDevice extends IPSModule
                     $this->RegisterVariableBoolean('Z2M_Contact', $this->Translate('Contact'), '');
                     SetValue($this->GetIDForIdent('Z2M_Contact'), $Payload->contact);
                 }
+                if (property_exists($Payload, 'smoke')) {
+                    $this->RegisterVariableBoolean('Z2M_Smoke', $this->Translate('Smoke'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Smoke'), $Payload->smoke);
+                }
+                if (property_exists($Payload, 'battery_low')) {
+                    $this->RegisterVariableBoolean('Z2M_Battery_Low', $this->Translate('Battery Low'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Battery_Low'), $Payload->battery_low);
+                }
+                if (property_exists($Payload, 'angle')) {
+                    $this->RegisterVariableInteger('Z2M_Angle', $this->Translate('Angle'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Angle'), $Payload->angle);
+                }
+                if (property_exists($Payload, 'angle_x')) {
+                    $this->RegisterVariableInteger('Z2M_Angle_X', $this->Translate('Angle X'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Angle_X'), $Payload->angle_x);
+                }
+                if (property_exists($Payload, 'angle_y')) {
+                    $this->RegisterVariableInteger('Z2M_Angle_Y', $this->Translate('Angle Y'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Angle_Y'), $Payload->angle_y);
+                }
+                if (property_exists($Payload, 'angle_x_absolute')) {
+                    $this->RegisterVariableInteger('Z2M_Angle_X_Absolute', $this->Translate('Angle_X_Absolute'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Angle_X_Absolute'), $Payload->angle_x_absolute);
+                }
+                if (property_exists($Payload, 'angle_Y_absolute')) {
+                    $this->RegisterVariableInteger('Z2M_Angle_Y_Absolute', $this->Translate('Angle_Y_Absolute'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Angle_Y_Absolute'), $Payload->angle_y_absolute);
+                }
+                if (property_exists($Payload, 'angle_z')) {
+                    $this->RegisterVariableInteger('Z2M_Angle_Z', $this->Translate('Angle Z'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Angle_Z'), $Payload->angle_z);
+                }
 
                 if (property_exists($Payload, 'state')) {
                     $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');

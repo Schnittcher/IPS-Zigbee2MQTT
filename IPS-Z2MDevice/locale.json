@@ -13,7 +13,9 @@
       "Brightness": "Helligkeit",
       "Water Leak": "Wasserleck",
       "Contact": "Kontakt",
-      "Illuminance": "Beleuchtungsstärke"
+      "Illuminance": "Beleuchtungsstärke",
+      "Smoke": "Rauch",,
+      "Battery Low": "Batterie schwach"
     }
   }
 }
