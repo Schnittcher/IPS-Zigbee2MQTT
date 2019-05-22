@@ -14,6 +14,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_State':
                 $this->SwitchMode($Value);
                 break;
+            case 'Z2M_Sensitivity':
+                $this->setSensitivity($Value);
+                break;
             default:
                 $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
                 break;
@@ -66,6 +69,12 @@ trait Zigbee2MQTTHelper
         }
     }
 
+    public function setSensitivity(int $value) {
+        $Payload['sensitivity'] = strval($value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->publish($PayloadJSON);
+    }
+
     private function publish($payload)
     {
         $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
@@ -105,6 +114,36 @@ trait Zigbee2MQTTHelper
         $cie['y'] = round(($Y / ($X + $Y + $Z)), 4);
 
         return $cie;
+    }
+
+    protected function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+    {
+        if (!IPS_VariableProfileExists($Name)) {
+            IPS_CreateVariableProfile($Name, 1);
+        } else {
+            $profile = IPS_GetVariableProfile($Name);
+            if ($profile['ProfileType'] != 1) {
+                throw new Exception('Variable profile type does not match for profile ' . $Name);
+            }
+        }
+        IPS_SetVariableProfileIcon($Name, $Icon);
+        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+    }
+
+    protected function RegisterProfileIntegerEx($Name, $Icon, $Prefix, $Suffix, $Associations)
+    {
+        if (count($Associations) === 0) {
+            $MinValue = 0;
+            $MaxValue = 0;
+        } else {
+            $MinValue = $Associations[0][0];
+            $MaxValue = $Associations[count($Associations) - 1][0];
+        }
+        $this->RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, 0);
+        foreach ($Associations as $Association) {
+            IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
+        }
     }
 }
 

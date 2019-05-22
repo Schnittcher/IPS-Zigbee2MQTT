@@ -25,3 +25,9 @@
    ```php
    Z2M_setDimmer(25537,50) //auf 50% dimmen;
    ```
+   
+   **2M_setSensitivity($InstanceID, $Value)**\
+   Mit dieser Funktion ist es möglich die Empfindlichkeit einzustellen.
+   ```php
+   2M_setSensitivity(25537,1) //1 = Medium, 2 = Low, 3 = High
+   ```

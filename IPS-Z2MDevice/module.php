@@ -14,6 +14,16 @@ class IPS_Z2MDevice extends IPSModule
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
 
         $this->RegisterPropertyString('MQTTTopic', '');
+
+
+        if (!IPS_VariableProfileExists('Z2M.Sensitivity')) {
+            $Associations = array();
+            $Associations[] = array(1, $this->Translate('Medium'), '', -1);
+            $Associations[] = array(2, $this->Translate('Low'), '', -1);
+            $Associations[] = array(3, $this->Translate('High'), '', -1);
+            $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
+        }
+
     }
 
     public function ApplyChanges()
@@ -132,6 +142,25 @@ class IPS_Z2MDevice extends IPSModule
                 if (property_exists($Payload, 'angle')) {
                     $this->RegisterVariableFloat('Z2M_Angle', $this->Translate('Angle'), '');
                     SetValue($this->GetIDForIdent('Z2M_Angle'), $Payload->angle);
+                }
+                if (property_exists($Payload, 'sensitivity')) {
+                    $this->RegisterVariableInteger('Z2M_Sensitivity', $this->Translate('Sensitivity'), 'Z2M.Sensitivity');
+                    SetValue($this->GetIDForIdent('Z2M_Sensitivity'), $Payload->sensitivity);
+                    $this->EnableAction('Z2M_Sensitivity');
+                    switch ($Payload->sensitivity) {
+                        case 'medium':
+                            SetValue($this->GetIDForIdent('Z2M_Sensitivity'), 1);
+                            break;
+                        case 'low':
+                            SetValue($this->GetIDForIdent('Z2M_Sensitivity'), 2);
+                            break;
+                        case 'high':
+                            SetValue($this->GetIDForIdent('Z2M_Sensitivity'), 3);
+                            break;
+                        default:
+                            $this->SendDebug('SetValue Sensitivity', 'Invalid Value: '.$Payload->sensitivity,0);
+                            break;
+                    }
                 }
                 if (property_exists($Payload, 'state')) {
                     $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
