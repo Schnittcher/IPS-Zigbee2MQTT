@@ -15,11 +15,7 @@
       "Contact": "Kontakt",
       "Illuminance": "Beleuchtungsstärke",
       "Smoke": "Rauch",
-      "Battery Low": "Batterie schwach",
-      "Sensitivity": "Empfindlichkeit",
-      "Medium": "Mittel",
-      "Low": "Niedrig",
-      "High": "Hoch"
+      "Battery Low": "Batterie schwach"
     }
   }
 }

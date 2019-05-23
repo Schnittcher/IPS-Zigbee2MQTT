@@ -1,0 +1,161 @@
+{
+  "temperature": {
+    "name": "Temperature",
+    "type": 2,
+    "profile": "~Temperature",
+    "action": 0
+  },
+  "linkquality": {
+    "name": "Linkquality",
+    "type": 1,
+    "profile": "",
+    "action": 0
+  },
+  "humidity": {
+    "name": "Humidity",
+    "type": 2,
+    "profile": "",
+    "action": 0
+  },
+  "pressure": {
+    "name": "Pressure",
+    "type": 2,
+    "profile": "",
+    "action": 0
+  },
+  "battery": {
+    "name": "Battery",
+    "type": 2,
+    "profile": "",
+    "action": 0
+  },
+  "voltage": {
+    "name": "Voltage",
+    "type": 2,
+    "profile": "",
+    "action": 0
+  },
+  "action": {
+    "name": "Action",
+    "type": 3,
+    "profile": "",
+    "action": 0
+  },
+  "click": {
+    "name": "Click",
+    "type": 3,
+    "profile": "",
+    "action": 0
+  },
+  "brightness": {
+    "name": "Brightness",
+    "type": 2,
+    "profile": "~Intensity.255",
+    "action": 1
+  },
+  "occupancy": {
+    "name": "Occupancy",
+    "type": 0,
+    "profile": "",
+    "action": 0
+  },
+  "illuminance": {
+    "name": "Illuminance",
+    "type": 1,
+    "profile": "",
+    "action": 0
+  },
+  "water_leak": {
+    "name": "Water Leak",
+    "type": 0,
+    "profile": "",
+    "action": 0
+  },
+  "contact": {
+    "name": "Contact",
+    "type": 0,
+    "profile": "",
+    "action": 0
+  },
+  "smoke": {
+    "name": "Smoke",
+    "type": 0,
+    "profile": "",
+    "action": 0
+  },
+  "battery_low": {
+    "name": "Battery Low",
+    "type": 0,
+    "profile": "",
+    "action": 0
+  },
+  "angle": {
+    "name": "Angle",
+    "type": 1,
+    "profile": "",
+    "action": 0
+  },
+  "angle_x": {
+    "name": "Angle X",
+    "type": 1,
+    "profile": "",
+    "action": 0
+  },
+  "angle_y": {
+    "name": "Angle Y",
+    "type": 1,
+    "profile": "",
+    "action": 0
+  },
+  "angle_x_absolute": {
+    "name": "Angle X Absolute",
+    "type": 1,
+    "profile": "",
+    "action": 0
+  },
+  "angle_y_absolute": {
+    "name": "Angle Y Absolute",
+    "type": 1,
+    "profile": "",
+    "action": 0
+  },
+  "angle_z": {
+    "name": "Angle Z",
+    "type": 1,
+    "profile": "",
+    "action": 0
+  },
+  "from_side": {
+    "name": "From Side",
+    "type": 1,
+    "profile": "",
+    "action": 0
+  },
+  "to_side": {
+    "name": "To Side",
+    "type": 1,
+    "profile": "",
+    "action": 0
+  },
+  "state": {
+    "name": "State",
+    "type": 0,
+    "profile": "~Switch",
+    "action": 1,
+    "boolean": {
+      "true": "ON",
+      "false": "OFF"
+    }
+  },
+  "sensitivity": {
+    "name": "Sensitivity",
+    "type": 1,
+    "profile": "Z2M.Sensitivity",
+    "action": 1,
+    "integer": {
+      "Medium": "1",
+      "Low": "2",
+      "High": "3"
+    }
+  }
+}

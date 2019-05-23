@@ -7,42 +7,45 @@ trait Zigbee2MQTTHelper
 {
     public function RequestAction($Ident, $Value)
     {
-        switch ($Ident) {
-            case 'Z2M_Brightness':
-                $this->setDimmer($Value);
+        $Devices = json_decode(file_get_contents(__DIR__ . '/../libs/devices.json'));
+
+        $Ident = lcfirst(str_replace("Z2M_","",$Ident));
+
+        switch ($Devices->{$Ident}->type) {
+            case 0:
+                if (is_object($Devices->{$Ident}->boolean)) {
+                    switch ($Value) {
+                        case true:
+                            $Payload[$Ident] = $Devices->{$Ident}->boolean->true;
+                            break;
+                        case false:
+                            $Payload[$Ident] = $Devices->{$Ident}->boolean->false;
+                            break;
+                        default:
+                            $this->SendDebug('State', 'Undefined Value: ' . $Value, 0);
+                            break;
+                    }
+                    $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+                    $this->publish($PayloadJSON);
+                }
                 break;
-            case 'Z2M_State':
-                $this->SwitchMode($Value);
-                break;
-            case 'Z2M_Sensitivity':
-                $this->setSensitivity($Value);
+            case 1:
+                if (property_exists($Devices->{$Ident},"integer")) {
+                    foreach ($Devices->{$Ident}->integer as $IntKey => $IntValue) {
+                        if ($IntValue == $Value) {
+                            $Payload[$Ident] = lcfirst($IntKey);
+                        }
+                    }
+                }
+                $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+                $this->publish($PayloadJSON);
                 break;
             default:
-                $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
+                $Payload[$Ident] = strval($Value);
+                $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+                $this->publish($PayloadJSON);
                 break;
         }
-    }
-
-    public function setDimmer(int $value)
-    {
-        $Payload['brightness'] = strval($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->publish($PayloadJSON);
-    }
-
-    public function SwitchMode(bool $value)
-    {
-        switch ($value) {
-            case true:
-                $state = 'ON';
-                break;
-            case false:
-                $state = 'OFF';
-                break;
-        }
-        $Payload['state'] = $state;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->publish($PayloadJSON);
     }
 
     public function setColorMode(int $mode)
@@ -67,12 +70,6 @@ trait Zigbee2MQTTHelper
                 $this->SendDebug('setColor', 'Invalid Mode ' . $mode, 0);
                 break;
         }
-    }
-
-    public function setSensitivity(int $value) {
-        $Payload['sensitivity'] = strval($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->publish($PayloadJSON);
     }
 
     private function publish($payload)
@@ -130,7 +127,6 @@ trait Zigbee2MQTTHelper
         IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
         IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
     }
-
     protected function RegisterProfileIntegerEx($Name, $Icon, $Prefix, $Suffix, $Associations)
     {
         if (count($Associations) === 0) {
@@ -145,6 +141,7 @@ trait Zigbee2MQTTHelper
             IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
         }
     }
+
 }
 
 trait Zigbee2MQTTBridgeHelper
