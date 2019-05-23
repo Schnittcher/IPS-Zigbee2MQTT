@@ -9,7 +9,7 @@ trait Zigbee2MQTTHelper
     {
         $Devices = json_decode(file_get_contents(__DIR__ . '/../libs/devices.json'));
 
-        $Ident = lcfirst(str_replace("Z2M_","",$Ident));
+        $Ident = lcfirst(str_replace('Z2M_', '', $Ident));
 
         switch ($Devices->{$Ident}->type) {
             case 0:
@@ -30,7 +30,7 @@ trait Zigbee2MQTTHelper
                 }
                 break;
             case 1:
-                if (property_exists($Devices->{$Ident},"integer")) {
+                if (property_exists($Devices->{$Ident}, 'integer')) {
                     foreach ($Devices->{$Ident}->integer as $IntKey => $IntValue) {
                         if ($IntValue == $Value) {
                             $Payload[$Ident] = lcfirst($IntKey);
@@ -127,6 +127,7 @@ trait Zigbee2MQTTHelper
         IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
         IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
     }
+
     protected function RegisterProfileIntegerEx($Name, $Icon, $Prefix, $Suffix, $Associations)
     {
         if (count($Associations) === 0) {
@@ -141,7 +142,6 @@ trait Zigbee2MQTTHelper
             IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
         }
     }
-
 }
 
 trait Zigbee2MQTTBridgeHelper
