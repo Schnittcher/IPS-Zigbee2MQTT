@@ -69,7 +69,8 @@ trait Zigbee2MQTTHelper
         }
     }
 
-    public function setSensitivity(int $value) {
+    public function setSensitivity(int $value)
+    {
         $Payload['sensitivity'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->publish($PayloadJSON);
