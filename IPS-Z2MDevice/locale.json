@@ -19,7 +19,9 @@
       "Sensitivity": "Empfindlichkeit",
       "Medium": "Mittel",
       "Low": "Niedrig",
-      "High": "Hoch"
+      "High": "Hoch",
+      "Duration": "Dauer",
+      "Counter": "Zähler"
     }
   }
 }

@@ -143,6 +143,14 @@ class IPS_Z2MDevice extends IPSModule
                     $this->RegisterVariableFloat('Z2M_Angle', $this->Translate('Angle'), '');
                     SetValue($this->GetIDForIdent('Z2M_Angle'), $Payload->angle);
                 }
+                if (property_exists($Payload, 'duration')) {
+                    $this->RegisterVariableFloat('Z2M_Duration', $this->Translate('Duration'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Duration'), $Payload->duration);
+                }
+                if (property_exists($Payload, 'counter')) {
+                    $this->RegisterVariableFloat('Z2M_Counter', $this->Translate('Counter'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Counter'), $Payload->counter);
+                }
                 if (property_exists($Payload, 'sensitivity')) {
                     $this->RegisterVariableInteger('Z2M_Sensitivity', $this->Translate('Sensitivity'), 'Z2M.Sensitivity');
                     SetValue($this->GetIDForIdent('Z2M_Sensitivity'), $Payload->sensitivity);
