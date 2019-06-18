@@ -149,6 +149,18 @@ class IPS_Z2MDevice extends IPSModule
                     $this->RegisterVariableFloat('Z2M_Counter', $this->Translate('Counter'), '');
                     SetValue($this->GetIDForIdent('Z2M_Counter'), $Payload->counter);
                 }
+                if (property_exists($Payload, 'color')) {
+                    $this->SendDebug(__FUNCTION__. ' Color', $Payload->color->x,0);
+                    if (property_exists($Payload, 'brightness')) {
+                        $RGBColor = $this->CIEToRGB($Payload->color->x, $Payload->color->y, $Payload->brightness);
+                    } else {
+                        $RGBColor = $this->CIEToRGB($Payload->color->x,$Payload->color->y);
+                    }
+                    $this->SendDebug(__FUNCTION__. ' Color RGB HEX', $RGBColor,0);
+                    $this->RegisterVariableInteger('Z2M_Color', $this->Translate('Color'), 'HexColor');
+                    $this->EnableAction('Z2M_Color');
+                    SetValue($this->GetIDForIdent('Z2M_Color'), hexdec(($RGBColor)));
+                }
                 if (property_exists($Payload, 'sensitivity')) {
                     $this->RegisterVariableInteger('Z2M_Sensitivity', $this->Translate('Sensitivity'), 'Z2M.Sensitivity');
                     SetValue($this->GetIDForIdent('Z2M_Sensitivity'), $Payload->sensitivity);

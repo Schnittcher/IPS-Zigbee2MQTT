@@ -21,7 +21,8 @@
       "Low": "Niedrig",
       "High": "Hoch",
       "Duration": "Dauer",
-      "Counter": "Zähler"
+      "Counter": "Zähler",
+      "Color": "Farbe"
     }
   }
 }
