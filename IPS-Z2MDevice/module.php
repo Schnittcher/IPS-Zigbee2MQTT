@@ -15,7 +15,6 @@ class IPS_Z2MDevice extends IPSModule
 
         $this->RegisterPropertyString('MQTTTopic', '');
 
-
         if (!IPS_VariableProfileExists('Z2M.Sensitivity')) {
             $Associations = array();
             $Associations[] = array(1, $this->Translate('Medium'), '', -1);
@@ -23,7 +22,6 @@ class IPS_Z2MDevice extends IPSModule
             $Associations[] = array(3, $this->Translate('High'), '', -1);
             $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
         }
-
     }
 
     public function ApplyChanges()
@@ -166,7 +164,7 @@ class IPS_Z2MDevice extends IPSModule
                             SetValue($this->GetIDForIdent('Z2M_Sensitivity'), 3);
                             break;
                         default:
-                            $this->SendDebug('SetValue Sensitivity', 'Invalid Value: '.$Payload->sensitivity,0);
+                            $this->SendDebug('SetValue Sensitivity', 'Invalid Value: ' . $Payload->sensitivity, 0);
                             break;
                     }
                 }
