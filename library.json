@@ -3,7 +3,7 @@
 	"author": "Kai Schnittcher",
 	"name": "IPS-Zigbee2MQTT",
 	"url": "https://github.com/Schnittcher/IPS-Zigbee2MQTT",
-	"version": "2.1",
+	"version": "2.1.1",
 	"build": 0,
 	"date": 0
 }
