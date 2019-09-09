@@ -23,7 +23,8 @@
       "Duration": "Dauer",
       "Counter": "Zähler",
       "Color": "Farbe",
-      "Power": "Leistung"
+      "Power": "Leistung",
+      "Philips HUE Illuminance": "Philips HUE Beleuchtungsstärke"
     }
   }
 }

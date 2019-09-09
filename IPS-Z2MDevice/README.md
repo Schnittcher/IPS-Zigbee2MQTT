@@ -10,6 +10,7 @@
    Feld | Beschreibung
    ------------ | -------------
    MQTT Topic | Hier wird das Topic vom Device eingetragen.
+   Philips HUE Beleuchtungsstärke | Muss ausgewählt werden, wenn es sich um einen HUE Bewegungsmelder handelt.
    
    ## 2. Funktionen
    

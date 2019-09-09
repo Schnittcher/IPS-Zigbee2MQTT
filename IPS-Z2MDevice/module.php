@@ -14,6 +14,7 @@ class IPS_Z2MDevice extends IPSModule
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
 
         $this->RegisterPropertyString('MQTTTopic', '');
+        $this->RegisterPropertyBoolean('HUEIlluminance', false);
 
         if (!IPS_VariableProfileExists('Z2M.Sensitivity')) {
             $Associations = array();
@@ -87,7 +88,11 @@ class IPS_Z2MDevice extends IPSModule
                 }
                 if (property_exists($Payload, 'illuminance')) {
                     $this->RegisterVariableInteger('Z2M_Illuminance', $this->Translate('Illuminance'), '~Illumination');
-                    SetValue($this->GetIDForIdent('Z2M_Illuminance'), $Payload->illuminance);
+                    if ($this->ReadPropertyBoolean('HUEIlluminance')) {
+                        SetValue($this->GetIDForIdent('Z2M_Illuminance'), intval(pow(10, $Payload->illuminance / 10000)));
+                    } else {
+                        SetValue($this->GetIDForIdent('Z2M_Illuminance'), $Payload->illuminance);
+                    }
                 }
                 if (property_exists($Payload, 'water_leak')) {
                     $this->RegisterVariableBoolean('Z2M_WaterLeak', $this->Translate('Water Leak'), '');
