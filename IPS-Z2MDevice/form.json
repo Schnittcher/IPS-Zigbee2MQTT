@@ -1,6 +1,7 @@
 {
     "elements":
     [
-      { "type": "ValidationTextBox", "name": "MQTTTopic", "caption": "MQTT Topic" }
+      { "type": "ValidationTextBox", "name": "MQTTTopic", "caption": "MQTT Topic" },
+      { "type": "CheckBox", "name": "HUEIlluminance", "caption": "Philips HUE Illuminance" }
     ]
 }
