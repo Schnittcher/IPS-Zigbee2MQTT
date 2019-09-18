@@ -111,27 +111,27 @@ class IPS_Z2MDevice extends IPSModule
                     SetValue($this->GetIDForIdent('Z2M_Battery_Low'), $Payload->battery_low);
                 }
                 if (property_exists($Payload, 'angle')) {
-                    $this->RegisterVariableInteger('Z2M_Angle', $this->Translate('Angle'), '');
+                    $this->RegisterVariableFloat('Z2M_Angle', $this->Translate('Angle'), '');
                     SetValue($this->GetIDForIdent('Z2M_Angle'), $Payload->angle);
                 }
                 if (property_exists($Payload, 'angle_x')) {
-                    $this->RegisterVariableInteger('Z2M_Angle_X', $this->Translate('Angle X'), '');
+                    $this->RegisterVariableFloat('Z2M_Angle_X', $this->Translate('Angle X'), '');
                     SetValue($this->GetIDForIdent('Z2M_Angle_X'), $Payload->angle_x);
                 }
                 if (property_exists($Payload, 'angle_y')) {
-                    $this->RegisterVariableInteger('Z2M_Angle_Y', $this->Translate('Angle Y'), '');
+                    $this->RegisterVariableFloat('Z2M_Angle_Y', $this->Translate('Angle Y'), '');
                     SetValue($this->GetIDForIdent('Z2M_Angle_Y'), $Payload->angle_y);
                 }
                 if (property_exists($Payload, 'angle_x_absolute')) {
-                    $this->RegisterVariableInteger('Z2M_Angle_X_Absolute', $this->Translate('Angle_X_Absolute'), '');
+                    $this->RegisterVariableFloat('Z2M_Angle_X_Absolute', $this->Translate('Angle_X_Absolute'), '');
                     SetValue($this->GetIDForIdent('Z2M_Angle_X_Absolute'), $Payload->angle_x_absolute);
                 }
                 if (property_exists($Payload, 'angle_y_absolute')) {
-                    $this->RegisterVariableInteger('Z2M_Angle_Y_Absolute', $this->Translate('Angle_Y_Absolute'), '');
+                    $this->RegisterVariableFloat('Z2M_Angle_Y_Absolute', $this->Translate('Angle_Y_Absolute'), '');
                     SetValue($this->GetIDForIdent('Z2M_Angle_Y_Absolute'), $Payload->angle_y_absolute);
                 }
                 if (property_exists($Payload, 'angle_z')) {
-                    $this->RegisterVariableInteger('Z2M_Angle_Z', $this->Translate('Angle Z'), '');
+                    $this->RegisterVariableFloat('Z2M_Angle_Z', $this->Translate('Angle Z'), '');
                     SetValue($this->GetIDForIdent('Z2M_Angle_Z'), $Payload->angle_z);
                 }
                 if (property_exists($Payload, 'from_side')) {
@@ -141,10 +141,6 @@ class IPS_Z2MDevice extends IPSModule
                 if (property_exists($Payload, 'to_side')) {
                     $this->RegisterVariableInteger('Z2M_To_Side', $this->Translate('To Side'), '');
                     SetValue($this->GetIDForIdent('Z2M_To_Side'), $Payload->to_side);
-                }
-                if (property_exists($Payload, 'angle')) {
-                    $this->RegisterVariableFloat('Z2M_Angle', $this->Translate('Angle'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Angle'), $Payload->angle);
                 }
                 if (property_exists($Payload, 'power')) {
                     $this->RegisterVariableFloat('Z2M_Power', $this->Translate('Power'), '');
