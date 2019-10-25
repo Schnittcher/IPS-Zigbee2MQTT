@@ -17,10 +17,10 @@ class IPS_Z2MDevice extends IPSModule
         $this->RegisterPropertyBoolean('HUEIlluminance', false);
 
         if (!IPS_VariableProfileExists('Z2M.Sensitivity')) {
-            $Associations = array();
-            $Associations[] = array(1, $this->Translate('Medium'), '', -1);
-            $Associations[] = array(2, $this->Translate('Low'), '', -1);
-            $Associations[] = array(3, $this->Translate('High'), '', -1);
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Medium'), '', -1];
+            $Associations[] = [2, $this->Translate('Low'), '', -1];
+            $Associations[] = [3, $this->Translate('High'), '', -1];
             $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
         }
     }
