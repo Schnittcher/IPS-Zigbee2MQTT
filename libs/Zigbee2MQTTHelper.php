@@ -80,23 +80,9 @@ trait Zigbee2MQTTHelper
         $this->publish($PayloadJSON);
     }
 
-    private function publish($payload)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
-        $Data['Payload'] = $payload;
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . 'Publish Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
-        $this->SendDataToParent($DataJSON);
-    }
-
     protected function HexToRGB($value)
     {
-        $RGB = array();
+        $RGB = [];
         $RGB[0] = (($value >> 16) & 0xFF);
         $RGB[1] = (($value >> 8) & 0xFF);
         $RGB[2] = ($value & 0xFF);
@@ -185,7 +171,7 @@ trait Zigbee2MQTTHelper
      * if (strlen($b) < 2)     $b = "0" + $b;
      *
      * return "#".$r.$g.$b;
-     * **/
+     * */
     protected function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
     {
         if (!IPS_VariableProfileExists($Name)) {
@@ -214,6 +200,20 @@ trait Zigbee2MQTTHelper
         foreach ($Associations as $Association) {
             IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
         }
+    }
+
+    private function publish($payload)
+    {
+        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
+        $Data['PacketType'] = 3;
+        $Data['QualityOfService'] = 0;
+        $Data['Retain'] = false;
+        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
+        $Data['Payload'] = $payload;
+        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
+        $this->SendDebug(__FUNCTION__ . 'Publish Topic', $Data['Topic'], 0);
+        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
+        $this->SendDataToParent($DataJSON);
     }
 }
 
