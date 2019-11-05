@@ -23,6 +23,12 @@ class IPS_Z2MDevice extends IPSModule
             $Associations[] = [3, $this->Translate('High'), '', -1];
             $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
         }
+        if (!IPS_VariableProfileExists('Z2M.DeviceStatus')) {
+            $this->RegisterProfileBooleanEx('Z2M.DeviceStatus', 'Network', '', '', [
+                [false, 'Offline',  '', 0xFF0000],
+                [true, 'Online',  '', 0x00FF00]
+            ]);
+        }
     }
 
     public function ApplyChanges()
@@ -44,7 +50,17 @@ class IPS_Z2MDevice extends IPSModule
             $this->SendDebug('MQTT Topic', $Buffer->Topic, 0);
             $this->SendDebug('MQTT Payload', $Buffer->Payload, 0);
             if (property_exists($Buffer, 'Topic')) {
-                $Payload = json_decode($Buffer->Payload);
+                if (fnmatch('*/availability', $Buffer->Topic)) {
+                    $this->RegisterVariableBoolean('Z2M_Status', $this->Translate('Status'), 'Z2M.DeviceStatus');
+                    if ($Buffer->Payload == 'online') {
+                        SetValue($this->GetIDForIdent('Z2M_Status'), true);
+                    } else {
+                        SetValue($this->GetIDForIdent('Z2M_Status'), false);
+                    }
+                }
+            }
+            $Payload = json_decode($Buffer->Payload);
+            if (is_object($Payload)) {
                 if (property_exists($Payload, 'temperature')) {
                     $this->RegisterVariableFloat('Z2M_Temperature', $this->Translate('Temperature'), '~Temperature');
                     SetValue($this->GetIDForIdent('Z2M_Temperature'), $Payload->temperature);
@@ -183,7 +199,7 @@ class IPS_Z2MDevice extends IPSModule
                         default:
                             $this->SendDebug('SetValue Sensitivity', 'Invalid Value: ' . $Payload->sensitivity, 0);
                             break;
-                    }
+                        }
                 }
                 if (property_exists($Payload, 'state')) {
                     $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
@@ -198,7 +214,8 @@ class IPS_Z2MDevice extends IPSModule
                         default:
                             $this->SendDebug('State', 'Undefined State: ' . $Payload->state, 0);
                             break;
-                    }
+
+                        }
                 }
             }
         }
