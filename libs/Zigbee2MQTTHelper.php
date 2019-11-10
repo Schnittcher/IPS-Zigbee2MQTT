@@ -28,6 +28,9 @@ trait Zigbee2MQTTHelper
                 $this->SendDebug(__FUNCTION__ . ' Color', $Value, 0);
                 $this->setColor($Value, 'cie');
                 break;
+            case 'Z2M_Position':
+                $this->setPosition($Value);
+                break;
             default:
                 $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
                 break;
@@ -37,6 +40,13 @@ trait Zigbee2MQTTHelper
     public function setDimmer(int $value)
     {
         $Payload['brightness'] = strval($value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->publish($PayloadJSON);
+    }
+
+    public function setPosition(int $value)
+    {
+        $Payload['position'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->publish($PayloadJSON);
     }
