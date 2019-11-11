@@ -275,7 +275,7 @@ trait Zigbee2MQTTBridgeHelper
         $Data['PacketType'] = 3;
         $Data['QualityOfService'] = 0;
         $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/' . $group_name . '/add';
+        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/group/' . $group_name . '/add';
         $Data['Payload'] = $friendly_name;
         $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
         $this->SendDebug(__FUNCTION__ . 'Add Group Topic', $Data['Topic'], 0);
@@ -289,7 +289,7 @@ trait Zigbee2MQTTBridgeHelper
         $Data['PacketType'] = 3;
         $Data['QualityOfService'] = 0;
         $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/' . $group_name . '/remove';
+        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/group/' . $group_name . '/remove';
         $Data['Payload'] = $friendly_name;
         $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
         $this->SendDebug(__FUNCTION__ . 'Remove Group Topic', $Data['Topic'], 0);
@@ -303,7 +303,7 @@ trait Zigbee2MQTTBridgeHelper
         $Data['PacketType'] = 3;
         $Data['QualityOfService'] = 0;
         $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/' . $group_name . '/remove_all';
+        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/group/' . $group_name . '/remove_all';
         $Data['Payload'] = $friendly_name;
         $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
         $this->SendDebug(__FUNCTION__ . 'Publish Topic', $Data['Topic'], 0);
