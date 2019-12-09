@@ -21,6 +21,12 @@ trait Zigbee2MQTTHelper
             case 'Z2M_State':
                 $this->SwitchMode($Value);
                 break;
+            case 'Z2M_l1':
+                $this->Command('l1/set', $Value);
+                break;
+            case 'Z2M_l2':
+                $this->Command('l2/set', $Value);
+                break;
             case 'Z2M_Sensitivity':
                 $this->setSensitivity($Value);
                 break;
@@ -35,6 +41,19 @@ trait Zigbee2MQTTHelper
                 $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
                 break;
         }
+    }
+
+    public function Command(string $topic, string $value)
+    {
+        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
+        $Data['PacketType'] = 3;
+        $Data['QualityOfService'] = 0;
+        $Data['Retain'] = false;
+        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' .$this->ReadPropertyString('MQTTTopic') .'/'. $topic;
+        $Data['Payload'] = $value;
+        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
+        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
+        $this->SendDataToParent($DataJSON);
     }
 
     public function setDimmer(int $value)

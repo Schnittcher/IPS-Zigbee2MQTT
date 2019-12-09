@@ -2,6 +2,8 @@
   "translations": {
     "de": {
       "State": "Status",
+      "State 1": "Status 1",
+      "State 2": "Status 2",
       "Temperature": "Temperatur",
       "Linkquality": "Verbindungsqualität",
       "Humidity": "Feuchtigkeit",
