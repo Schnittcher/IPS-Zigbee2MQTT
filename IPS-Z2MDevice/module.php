@@ -228,7 +228,7 @@ class IPS_Z2MDevice extends IPSModule
                 if (property_exists($Payload, 'state_l1')) {
                     $this->RegisterVariableBoolean('Z2M_Statel1', $this->Translate('State 1'), '~Switch');
                     $this->EnableAction('Z2M_Statel1');
-                    switch ($Payload->l1) {
+                    switch ($Payload->state_l1) {
                         case 'ON':
                             SetValue($this->GetIDForIdent('Z2M_Statel1'), true);
                             break;
@@ -243,7 +243,7 @@ class IPS_Z2MDevice extends IPSModule
                 if (property_exists($Payload, 'state_l2')) {
                     $this->RegisterVariableBoolean('Z2M_Statel2', $this->Translate('State 2'), '~Switch');
                     $this->EnableAction('Z2M_Statel2');
-                    switch ($Payload->l1) {
+                    switch ($Payload->state_l2) {
                         case 'ON':
                             SetValue($this->GetIDForIdent('Z2M_Statel2'), true);
                             break;
