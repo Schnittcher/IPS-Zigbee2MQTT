@@ -223,33 +223,32 @@ class IPS_Z2MDevice extends IPSModule
                         default:
                             $this->SendDebug('State', 'Undefined State: ' . $Payload->state, 0);
                             break;
-
                         }
                 }
-                if (property_exists($Payload, 'l1')) {
-                    $this->RegisterVariableBoolean('Z2M_l1', $this->Translate('State 1'), '~Switch');
-                    $this->EnableAction('Z2M_l1');
+                if (property_exists($Payload, 'state_l1')) {
+                    $this->RegisterVariableBoolean('Z2M_Statel1', $this->Translate('State 1'), '~Switch');
+                    $this->EnableAction('Z2M_Statel1');
                     switch ($Payload->l1) {
                         case 'ON':
-                            SetValue($this->GetIDForIdent('Z2M_l1'), true);
+                            SetValue($this->GetIDForIdent('Z2M_Statel1'), true);
                             break;
                         case 'OFF':
-                            SetValue($this->GetIDForIdent('Z2M_l1'), false);
+                            SetValue($this->GetIDForIdent('Z2M_Statel1'), false);
                             break;
                         default:
-                            $this->SendDebug('State 1', 'Undefined State 1: ' . $Payload->l1, 0);
+                            $this->SendDebug('State 1', 'Undefined State 1: ' . $Payload->state_l1, 0);
                             break;
                     }
                 }
-                if (property_exists($Payload, 'l2')) {
-                    $this->RegisterVariableBoolean('Z2M_l2', $this->Translate('State 2'), '~Switch');
-                    $this->EnableAction('Z2M_l2');
+                if (property_exists($Payload, 'state_l2')) {
+                    $this->RegisterVariableBoolean('Z2M_Statel2', $this->Translate('State 2'), '~Switch');
+                    $this->EnableAction('Z2M_Statel2');
                     switch ($Payload->l1) {
                         case 'ON':
-                            SetValue($this->GetIDForIdent('Z2M_l2'), true);
+                            SetValue($this->GetIDForIdent('Z2M_Statel2'), true);
                             break;
                         case 'OFF':
-                            SetValue($this->GetIDForIdent('Z2M_l2'), false);
+                            SetValue($this->GetIDForIdent('Z2M_Statel2'), false);
                             break;
                         default:
                             $this->SendDebug('State 2', 'Undefined State 2: ' . $Payload->l2, 0);
