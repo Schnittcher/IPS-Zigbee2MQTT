@@ -21,7 +21,7 @@ trait Zigbee2MQTTHelper
             case 'Z2M_State':
                 $this->SwitchMode($Value);
                 break;
-            case 'Z2M_Statel2':
+            case 'Z2M_Statel1':
                 $this->Command('l1/set', $Value);
                 break;
             case 'Z2M_Statel2':
