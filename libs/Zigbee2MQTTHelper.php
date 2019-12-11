@@ -72,7 +72,7 @@ trait Zigbee2MQTTHelper
 
     public function SwitchMode(bool $value)
     {
-        $this->OnOff($Value);
+        $this->OnOff($value);
         $Payload['state'] = $state;
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->publish($PayloadJSON);
