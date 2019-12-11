@@ -238,7 +238,7 @@ trait Zigbee2MQTTHelper
 
     private function OnOff(bool $Value)
     {
-        switch ($value) {
+        switch ($Value) {
             case true:
                 $state = 'ON';
                 break;
