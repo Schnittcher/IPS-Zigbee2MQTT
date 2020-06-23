@@ -115,6 +115,10 @@ class IPS_Z2MDevice extends IPSModule
                         SetValue($this->GetIDForIdent('Z2M_Illuminance'), $Payload->illuminance);
                     }
                 }
+                if (property_exists($Payload, 'illuminance_lux')) {
+                    $this->RegisterVariableInteger('Z2M_Illuminance', $this->Translate('Illuminance'), '~Illumination');
+                    SetValue($this->GetIDForIdent('Z2M_Illuminance'), $Payload->illuminance_lux);
+                }
                 if (property_exists($Payload, 'water_leak')) {
                     $this->RegisterVariableBoolean('Z2M_WaterLeak', $this->Translate('Water Leak'), '');
                     SetValue($this->GetIDForIdent('Z2M_WaterLeak'), $Payload->water_leak);
