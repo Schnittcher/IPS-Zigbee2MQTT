@@ -26,7 +26,8 @@
       "Counter": "Zähler",
       "Color": "Farbe",
       "Power": "Leistung",
-      "Philips HUE Illuminance": "Philips HUE Beleuchtungsstärke"
+      "Philips HUE Illuminance": "Philips HUE Beleuchtungsstärke",
+      "Occupancy": "Bewegung"
     }
   }
 }
