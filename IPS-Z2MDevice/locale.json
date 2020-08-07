@@ -28,7 +28,8 @@
       "Color": "Farbe",
       "Power": "Leistung",
       "Philips HUE Illuminance": "Philips HUE Beleuchtungsstärke",
-      "Occupancy": "Bewegung"
+      "Occupancy": "Bewegung",
+      "Strength": "Stärke"
     }
   }
 }
