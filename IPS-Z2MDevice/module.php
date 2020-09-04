@@ -201,7 +201,6 @@ class IPS_Z2MDevice extends IPSModule
                 }
                 if (property_exists($Payload, 'sensitivity')) {
                     $this->RegisterVariableInteger('Z2M_Sensitivity', $this->Translate('Sensitivity'), 'Z2M.Sensitivity');
-                    SetValue($this->GetIDForIdent('Z2M_Sensitivity'), $Payload->sensitivity);
                     $this->EnableAction('Z2M_Sensitivity');
                     switch ($Payload->sensitivity) {
                         case 'medium':
