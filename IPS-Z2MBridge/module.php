@@ -60,55 +60,57 @@ class IPS_Z2MBridge extends IPSModule
                     }
                 }
                 if (fnmatch('*log*', $Buffer->Topic)) {
-                    switch ($Payload->type) {
-                        case 'pairing':
-                            $this->RegisterVariableString('Z2M_Pairing', $this->Translate('Pairing'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Pairing'), $Buffer->Payload);
-                            break;
-                        case 'device_connected':
-                            $this->RegisterVariableString('Z2M_Device_Connected', $this->Translate('Device Connected'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Device_Connected'), $Buffer->Payload);
-                            break;
-                        case 'device removed':
-                            $this->RegisterVariableString('Z2M_Device_Removed', $this->Translate('Device Removed'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Device_Removed'), $Buffer->Payload);
-                            break;
-                        case 'device_banned':
-                            $this->RegisterVariableString('Z2M_Device_Banned', $this->Translate('Device Banned'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Device_Banned'), $Buffer->Payload);
-                            break;
-                        case 'device_renamed':
-                            $this->RegisterVariableString('Z2M_Device_Renamed', $this->Translate('Device Renamed'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Device_Renamed'), $Payload->message->from . ' >> ' . $Payload->message->to);
-                            break;
-                        case 'device_bind':
-                            $this->RegisterVariableString('Z2M_Device_bind', $this->Translate('Device Bind'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Device_bind'), $Buffer->Payload);
-                            break;
-                        case 'device_unbind':
-                            $this->RegisterVariableString('Z2M_Device_Unbind', $this->Translate('Device Unbind'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Device_Unbind'), $Buffer->Payload);
-                            break;
-                        case 'device_group_add':
-                            $this->RegisterVariableString('Z2M_Device_Group_Add', $this->Translate('Device Group Add'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Device_Group_Add'), $Buffer->Payload);
-                            break;
-                        case 'device_group_remove':
-                            $this->RegisterVariableString('Z2M_Device_Group_Remove', $this->Translate('Device Group Remove'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Device_Group_Remove'), $Buffer->Payload);
-                            break;
-                        case 'device_group_remove_all':
-                            $this->RegisterVariableString('Z2M_Device_Group_Remove_All', $this->Translate('Device Group Remove All'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Device_Group_Remove_All'), $Buffer->Payload);
-                            break;
-                        case 'devices':
-                            $this->RegisterVariableString('Z2M_Devices', $this->Translate('Devices'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Devices'), $Buffer->Payload);
-                            break;
-                        case 'device_publish_error':
-                            $this->RegisterVariableString('Z2M_Device_Publish_Error', $this->Translate('Device Publish Error'), '');
-                            SetValue($this->GetIDForIdent('Z2M_Device_Publish_Error'), $Payload->device_publish_error);
-                            break;
+                    if (property_exists($Payload, 'type')) {
+                        switch ($Payload->type) {
+                            case 'pairing':
+                                $this->RegisterVariableString('Z2M_Pairing', $this->Translate('Pairing'), '');
+                                SetValue($this->GetIDForIdent('Z2M_Pairing'), $Buffer->Payload);
+                                break;
+                            case 'device_connected':
+                                $this->RegisterVariableString('Z2M_Device_Connected', $this->Translate('Device Connected'), '');
+                                SetValue($this->GetIDForIdent('Z2M_Device_Connected'), $Buffer->Payload);
+                                break;
+                            case 'device removed':
+                                $this->RegisterVariableString('Z2M_Device_Removed', $this->Translate('Device Removed'), '');
+                                SetValue($this->GetIDForIdent('Z2M_Device_Removed'), $Buffer->Payload);
+                                break;
+                            case 'device_banned':
+                                $this->RegisterVariableString('Z2M_Device_Banned', $this->Translate('Device Banned'), '');
+                                SetValue($this->GetIDForIdent('Z2M_Device_Banned'), $Buffer->Payload);
+                                break;
+                            case 'device_renamed':
+                                $this->RegisterVariableString('Z2M_Device_Renamed', $this->Translate('Device Renamed'), '');
+                                SetValue($this->GetIDForIdent('Z2M_Device_Renamed'), $Payload->message->from . ' >> ' . $Payload->message->to);
+                                break;
+                            case 'device_bind':
+                                $this->RegisterVariableString('Z2M_Device_bind', $this->Translate('Device Bind'), '');
+                                SetValue($this->GetIDForIdent('Z2M_Device_bind'), $Buffer->Payload);
+                                break;
+                            case 'device_unbind':
+                                $this->RegisterVariableString('Z2M_Device_Unbind', $this->Translate('Device Unbind'), '');
+                                SetValue($this->GetIDForIdent('Z2M_Device_Unbind'), $Buffer->Payload);
+                                break;
+                            case 'device_group_add':
+                                $this->RegisterVariableString('Z2M_Device_Group_Add', $this->Translate('Device Group Add'), '');
+                                SetValue($this->GetIDForIdent('Z2M_Device_Group_Add'), $Buffer->Payload);
+                                break;
+                            case 'device_group_remove':
+                                $this->RegisterVariableString('Z2M_Device_Group_Remove', $this->Translate('Device Group Remove'), '');
+                                SetValue($this->GetIDForIdent('Z2M_Device_Group_Remove'), $Buffer->Payload);
+                                break;
+                            case 'device_group_remove_all':
+                                $this->RegisterVariableString('Z2M_Device_Group_Remove_All', $this->Translate('Device Group Remove All'), '');
+                                SetValue($this->GetIDForIdent('Z2M_Device_Group_Remove_All'), $Buffer->Payload);
+                                break;
+                            case 'devices':
+                                $this->RegisterVariableString('Z2M_Devices', $this->Translate('Devices'), '');
+                                SetValue($this->GetIDForIdent('Z2M_Devices'), $Buffer->Payload);
+                                break;
+                            case 'device_publish_error':
+                                $this->RegisterVariableString('Z2M_Device_Publish_Error', $this->Translate('Device Publish Error'), '');
+                                SetValue($this->GetIDForIdent('Z2M_Device_Publish_Error'), $Payload->device_publish_error);
+                                break;
+                        }
                     }
                 }
             }
