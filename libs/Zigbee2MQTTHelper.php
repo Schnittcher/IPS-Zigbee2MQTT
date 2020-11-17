@@ -18,6 +18,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Brightness':
                 $this->setDimmer($Value);
                 break;
+            case 'Z2M_ColorTemp':
+                $this->setColorTemperature($Value);
+                break;
             case 'Z2M_State':
                 $this->SwitchMode($Value);
                 break;
@@ -59,6 +62,13 @@ trait Zigbee2MQTTHelper
     public function setDimmer(int $value)
     {
         $Payload['brightness'] = strval($value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->publish($PayloadJSON);
+    }
+
+    public function setColorTemperature(int $value)
+    {
+        $Payload['color_temp'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->publish($PayloadJSON);
     }

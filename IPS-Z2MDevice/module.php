@@ -23,6 +23,15 @@ class IPS_Z2MDevice extends IPSModule
             $Associations[] = [3, $this->Translate('High'), '', -1];
             $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
         }
+
+        if (!IPS_VariableProfileExists('Z2M.ColorTemperature')) {
+            IPS_CreateVariableProfile('Z2M.ColorTemperature', 1);
+        }
+        IPS_SetVariableProfileDigits('Z2M.ColorTemperature', 0);
+        IPS_SetVariableProfileIcon('Z2M.ColorTemperature', 'Bulb');
+        IPS_SetVariableProfileText('Z2M.ColorTemperature', '', ' Mired');
+        IPS_SetVariableProfileValues('Z2M.ColorTemperature', 50, 400, 1);
+
         if (!IPS_VariableProfileExists('Z2M.DeviceStatus')) {
             $this->RegisterProfileBooleanEx('Z2M.DeviceStatus', 'Network', '', '', [
                 [false, 'Offline',  '', 0xFF0000],
@@ -216,6 +225,11 @@ class IPS_Z2MDevice extends IPSModule
                             $this->SendDebug('SetValue Sensitivity', 'Invalid Value: ' . $Payload->sensitivity, 0);
                             break;
                         }
+                }
+                if (property_exists($Payload, 'color_temp')) {
+                    $this->RegisterVariableInteger('Z2M_ColorTemp', $this->Translate('Color Temperature'), 'Z2M.ColorTemperature');
+                    $this->EnableAction('Z2M_ColorTemp');
+                    SetValue($this->GetIDForIdent('Z2M_ColorTemp'), $Payload->color_temp);
                 }
                 if (property_exists($Payload, 'state')) {
                     $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
