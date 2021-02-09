@@ -1,0 +1,36 @@
+{
+  "translations": {
+    "de": {
+      "State": "Status",
+      "State 1": "Status 1",
+      "State 2": "Status 2",
+      "Temperature": "Temperatur",
+      "Linkquality": "Verbindungsqualität",
+      "Humidity": "Feuchtigkeit",
+      "Pressure": "Druck",
+      "Battery": "Batterie",
+      "Voltage": "Spannung",
+      "Action": "Aktion",
+      "Click": "Click",
+      "Brightness": "Helligkeit",
+      "Water Leak": "Wasserleck",
+      "Contact": "Kontakt",
+      "Illuminance": "Beleuchtungsstärke",
+      "Illuminance Lux": "Beleuchtungsstärke Lux",
+      "Smoke": "Rauch",
+      "Battery Low": "Batterie schwach",
+      "Sensitivity": "Empfindlichkeit",
+      "Medium": "Mittel",
+      "Low": "Niedrig",
+      "High": "Hoch",
+      "Duration": "Dauer",
+      "Counter": "Zähler",
+      "Color": "Farbe",
+      "Power": "Leistung",
+      "Philips HUE Illuminance": "Philips HUE Beleuchtungsstärke",
+      "Occupancy": "Bewegung",
+      "Strength": "Stärke",
+      "Color Temperature": "Farbtemperatur"
+    }
+  }
+}

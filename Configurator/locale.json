@@ -1,0 +1,26 @@
+{
+  "translations": {
+    "de": {
+      "Settings": "Einstellungen",
+      "Paring Mode:": "Paring Modus:",
+      "Activate Pairing Mode": "Aktiviere Paring Modus",
+      "Deactivate Pairing Mode": "Deaktiviere Paring Modus",
+      "Unknown": "Unbekannt",
+      "Paring active": "Paring aktiv",
+      "Paring inactive": "Paring inaktiv",
+      "Devices": "Geräte",
+      "Groups": "Gruppen",
+      "IEEE Address": "IEEE Addresse",
+      "Type": "Typ",
+      "Vendor": "Hersteller",
+      "Model": "Model",
+      "Description": "Beschreibung",
+      "Power Source": "Energiequelle",
+      "Supported": "Unterstützt",
+      "Battery": "Batterie",
+      "Mains (single phase)": "Netz (einphasig)",
+      "Please use this function with attention!": "Bitte benutzen Sie diese Funktion mit Aufmerksamkeit!",
+      "Read Variables": "Rufe Variablen ab"
+    }
+  }
+}

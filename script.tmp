@@ -1,0 +1,12 @@
+open scp://root:pi@10.10.0.128/ -hostkey="ecdsa-sha2-nistp256 256 xRP2ybW2amXpCmgVlKrxP72VyU2LNW/a/7xZ3s6hJqw=" 
+cd /var/lib/symcon/modules/ 
+put c:\Users\Kai1\Documents\Git\IPS-Zigbee2MQTT "-filemask= * | .git\; .vscode\; .idea\\ " *
+exit 
+open scp://root:pi@10.10.0.128/ -hostkey="ecdsa-sha2-nistp256 256 xRP2ybW2amXpCmgVlKrxP72VyU2LNW/a/7xZ3s6hJqw=" 
+cd /var/lib/symcon/modules/ 
+put c:\Users\Kai1\Documents\Git\IPS-Zigbee2MQTT "-filemask= * | .git\; .vscode\; .idea\\ " *
+exit 
+open scp://root:pi@10.10.0.128/ -hostkey="ecdsa-sha2-nistp256 256 xRP2ybW2amXpCmgVlKrxP72VyU2LNW/a/7xZ3s6hJqw=" 
+cd /var/lib/symcon/modules/ 
+put c:\Users\Kai1\Documents\Git\IPS-Zigbee2MQTT "-filemask= * | .git\; .vscode\; .idea\\ " *
+exit 

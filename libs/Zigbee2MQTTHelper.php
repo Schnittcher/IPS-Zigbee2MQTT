@@ -1,14 +1,6 @@
 <?php
 
 declare(strict_types=1);
-define('MQTT_GROUP_TOPIC', 'zigbee2mqtt');
-
-if (!function_exists('fnmatch')) {
-    function fnmatch($pattern, $string)
-    {
-        return preg_match('#^' . strtr(preg_quote($pattern, '#'), ['\*' => '.*', '\?' => '.']) . '$#i', $string);
-    }
-}
 
 trait Zigbee2MQTTHelper
 {
@@ -46,38 +38,250 @@ trait Zigbee2MQTTHelper
         }
     }
 
-    public function Command(string $topic, string $value)
+    public function ReceiveData($JSONString)
     {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/' . $topic;
-        $Data['Payload'] = $value;
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
-        $this->SendDataToParent($DataJSON);
+        $this->SendDebug('JSON', $JSONString, 0);
+        if (!empty($this->ReadPropertyString('MQTTTopic'))) {
+            $Buffer = json_decode($JSONString);
+            // Buffer decodieren und in eine Variable schreiben
+            $this->SendDebug('MQTT Topic', $Buffer->Topic, 0);
+            $this->SendDebug('MQTT Payload', $Buffer->Payload, 0);
+            if (property_exists($Buffer, 'Topic')) {
+                if (fnmatch('*/availability', $Buffer->Topic)) {
+                    $this->RegisterVariableBoolean('Z2M_Status', $this->Translate('Status'), 'Z2M.DeviceStatus');
+                    if ($Buffer->Payload == 'online') {
+                        SetValue($this->GetIDForIdent('Z2M_Status'), true);
+                    } else {
+                        SetValue($this->GetIDForIdent('Z2M_Status'), false);
+                    }
+                }
+            }
+            $Payload = json_decode($Buffer->Payload);
+            if (is_object($Payload)) {
+                if (property_exists($Payload, 'temperature')) {
+                    $this->RegisterVariableFloat('Z2M_Temperature', $this->Translate('Temperature'), '~Temperature');
+                    SetValue($this->GetIDForIdent('Z2M_Temperature'), $Payload->temperature);
+                }
+                if (property_exists($Payload, 'linkquality')) {
+                    $this->RegisterVariableInteger('Z2M_Linkquality', $this->Translate('Linkquality'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Linkquality'), $Payload->linkquality);
+                }
+                if (property_exists($Payload, 'humidity')) {
+                    $this->RegisterVariableFloat('Z2M_Humidity', $this->Translate('Humidity'), '~Humidity.F');
+                    SetValue($this->GetIDForIdent('Z2M_Humidity'), $Payload->humidity);
+                }
+                if (property_exists($Payload, 'pressure')) {
+                    $this->RegisterVariableFloat('Z2M_Pressure', $this->Translate('Pressure'), '~AirPressure.F');
+                    SetValue($this->GetIDForIdent('Z2M_Pressure'), $Payload->pressure);
+                }
+                if (property_exists($Payload, 'battery')) {
+                    $this->RegisterVariableFloat('Z2M_Battery', $this->Translate('Battery'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Battery'), $Payload->battery);
+                }
+                if (property_exists($Payload, 'voltage')) {
+                    $this->RegisterVariableFloat('Z2M_Voltage', $this->Translate('Voltage'), '~Volt');
+                    SetValue($this->GetIDForIdent('Z2M_Voltage'), $Payload->voltage);
+                }
+                if (property_exists($Payload, 'action')) {
+                    $this->RegisterVariableString('Z2M_Action', $this->Translate('Action'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Action'), $Payload->action);
+                }
+                if (property_exists($Payload, 'click')) {
+                    $this->RegisterVariableString('Z2M_Click', $this->Translate('Click'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Click'), $Payload->click);
+                }
+                if (property_exists($Payload, 'brightness')) {
+                    $this->RegisterVariableInteger('Z2M_Brightness', $this->Translate('Brightness'), '~Intensity.255');
+                    $this->EnableAction('Z2M_Brightness');
+                    SetValue($this->GetIDForIdent('Z2M_Brightness'), $Payload->brightness);
+                }
+                if (property_exists($Payload, 'position')) {
+                    $this->RegisterVariableInteger('Z2M_Position', $this->Translate('Position'), '~Intensity.100');
+                    $this->EnableAction('Z2M_Position');
+                    SetValue($this->GetIDForIdent('Z2M_Position'), $Payload->position);
+                }
+                if (property_exists($Payload, 'occupancy')) {
+                    $this->RegisterVariableBoolean('Z2M_Occupancy', $this->Translate('Occupancy'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Occupancy'), $Payload->occupancy);
+                }
+                if (property_exists($Payload, 'illuminance')) {
+                    $this->RegisterVariableInteger('Z2M_Illuminance', $this->Translate('Illuminance'), '');
+                }
+                if (property_exists($Payload, 'illuminance_lux')) {
+                    $this->RegisterVariableInteger('Z2M_Illuminance_Lux', $this->Translate('Illuminance Lux'), '~Illumination');
+                    SetValue($this->GetIDForIdent('Z2M_Illuminance_Lux'), $Payload->illuminance_lux);
+                }
+                if (property_exists($Payload, 'strength')) {
+                    $this->RegisterVariableInteger('Z2M_Strength', $this->Translate('Strength'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Strength'), $Payload->strength);
+                }
+                if (property_exists($Payload, 'water_leak')) {
+                    $this->RegisterVariableBoolean('Z2M_WaterLeak', $this->Translate('Water Leak'), '');
+                    SetValue($this->GetIDForIdent('Z2M_WaterLeak'), $Payload->water_leak);
+                }
+                if (property_exists($Payload, 'contact')) {
+                    $this->RegisterVariableBoolean('Z2M_Contact', $this->Translate('Contact'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Contact'), $Payload->contact);
+                }
+                if (property_exists($Payload, 'smoke')) {
+                    $this->RegisterVariableBoolean('Z2M_Smoke', $this->Translate('Smoke'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Smoke'), $Payload->smoke);
+                }
+                if (property_exists($Payload, 'battery_low')) {
+                    $this->RegisterVariableBoolean('Z2M_Battery_Low', $this->Translate('Battery Low'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Battery_Low'), $Payload->battery_low);
+                }
+                if (property_exists($Payload, 'angle')) {
+                    $this->RegisterVariableFloat('Z2M_Angle', $this->Translate('Angle'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Angle'), $Payload->angle);
+                }
+                if (property_exists($Payload, 'angle_x')) {
+                    $this->RegisterVariableFloat('Z2M_Angle_X', $this->Translate('Angle X'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Angle_X'), $Payload->angle_x);
+                }
+                if (property_exists($Payload, 'angle_y')) {
+                    $this->RegisterVariableFloat('Z2M_Angle_Y', $this->Translate('Angle Y'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Angle_Y'), $Payload->angle_y);
+                }
+                if (property_exists($Payload, 'angle_x_absolute')) {
+                    $this->RegisterVariableFloat('Z2M_Angle_X_Absolute', $this->Translate('Angle_X_Absolute'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Angle_X_Absolute'), $Payload->angle_x_absolute);
+                }
+                if (property_exists($Payload, 'angle_y_absolute')) {
+                    $this->RegisterVariableFloat('Z2M_Angle_Y_Absolute', $this->Translate('Angle_Y_Absolute'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Angle_Y_Absolute'), $Payload->angle_y_absolute);
+                }
+                if (property_exists($Payload, 'angle_z')) {
+                    $this->RegisterVariableFloat('Z2M_Angle_Z', $this->Translate('Angle Z'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Angle_Z'), $Payload->angle_z);
+                }
+                if (property_exists($Payload, 'from_side')) {
+                    $this->RegisterVariableInteger('Z2M_From_Side', $this->Translate('From Side'), '');
+                    SetValue($this->GetIDForIdent('Z2M_From_Side'), $Payload->from_side);
+                }
+                if (property_exists($Payload, 'to_side')) {
+                    $this->RegisterVariableInteger('Z2M_To_Side', $this->Translate('To Side'), '');
+                    SetValue($this->GetIDForIdent('Z2M_To_Side'), $Payload->to_side);
+                }
+                if (property_exists($Payload, 'power')) {
+                    $this->RegisterVariableFloat('Z2M_Power', $this->Translate('Power'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Power'), $Payload->power);
+                }
+                if (property_exists($Payload, 'consumption')) {
+                    $this->RegisterVariableFloat('Z2M_Consumption', $this->Translate('Consumption'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Consumption'), $Payload->consumption);
+                }
+                if (property_exists($Payload, 'duration')) {
+                    $this->RegisterVariableFloat('Z2M_Duration', $this->Translate('Duration'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Duration'), $Payload->duration);
+                }
+                if (property_exists($Payload, 'counter')) {
+                    $this->RegisterVariableFloat('Z2M_Counter', $this->Translate('Counter'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Counter'), $Payload->counter);
+                }
+                if (property_exists($Payload, 'color')) {
+                    $this->SendDebug(__FUNCTION__ . ' Color', $Payload->color->x, 0);
+                    if (property_exists($Payload, 'brightness')) {
+                        $RGBColor = ltrim($this->CIEToRGB($Payload->color->x, $Payload->color->y, $Payload->brightness), '#');
+                    } else {
+                        $RGBColor = ltrim($this->CIEToRGB($Payload->color->x, $Payload->color->y), '#');
+                    }
+                    $this->SendDebug(__FUNCTION__ . ' Color RGB HEX', $RGBColor, 0);
+                    $this->RegisterVariableInteger('Z2M_Color', $this->Translate('Color'), 'HexColor');
+                    $this->EnableAction('Z2M_Color');
+                    SetValue($this->GetIDForIdent('Z2M_Color'), hexdec(($RGBColor)));
+                }
+                if (property_exists($Payload, 'sensitivity')) {
+                    $this->RegisterVariableInteger('Z2M_Sensitivity', $this->Translate('Sensitivity'), 'Z2M.Sensitivity');
+                    $this->EnableAction('Z2M_Sensitivity');
+                    switch ($Payload->sensitivity) {
+                        case 'medium':
+                            SetValue($this->GetIDForIdent('Z2M_Sensitivity'), 1);
+                            break;
+                        case 'low':
+                            SetValue($this->GetIDForIdent('Z2M_Sensitivity'), 2);
+                            break;
+                        case 'high':
+                            SetValue($this->GetIDForIdent('Z2M_Sensitivity'), 3);
+                            break;
+                        default:
+                            $this->SendDebug('SetValue Sensitivity', 'Invalid Value: ' . $Payload->sensitivity, 0);
+                            break;
+                        }
+                }
+                if (property_exists($Payload, 'color_temp')) {
+                    $this->RegisterVariableInteger('Z2M_ColorTemp', $this->Translate('Color Temperature'), 'Z2M.ColorTemperature');
+                    $this->EnableAction('Z2M_ColorTemp');
+                    SetValue($this->GetIDForIdent('Z2M_ColorTemp'), $Payload->color_temp);
+                }
+                if (property_exists($Payload, 'state')) {
+                    $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
+                    $this->EnableAction('Z2M_State');
+                    switch ($Payload->state) {
+                        case 'ON':
+                            SetValue($this->GetIDForIdent('Z2M_State'), true);
+                            break;
+                        case 'OFF':
+                            SetValue($this->GetIDForIdent('Z2M_State'), false);
+                            break;
+                        default:
+                            $this->SendDebug('State', 'Undefined State: ' . $Payload->state, 0);
+                            break;
+                        }
+                }
+                if (property_exists($Payload, 'state_l1')) {
+                    $this->RegisterVariableBoolean('Z2M_Statel1', $this->Translate('State 1'), '~Switch');
+                    $this->EnableAction('Z2M_Statel1');
+                    switch ($Payload->state_l1) {
+                        case 'ON':
+                            SetValue($this->GetIDForIdent('Z2M_Statel1'), true);
+                            break;
+                        case 'OFF':
+                            SetValue($this->GetIDForIdent('Z2M_Statel1'), false);
+                            break;
+                        default:
+                            $this->SendDebug('State 1', 'Undefined State 1: ' . $Payload->state_l1, 0);
+                            break;
+                    }
+                }
+                if (property_exists($Payload, 'state_l2')) {
+                    $this->RegisterVariableBoolean('Z2M_Statel2', $this->Translate('State 2'), '~Switch');
+                    $this->EnableAction('Z2M_Statel2');
+                    switch ($Payload->state_l2) {
+                        case 'ON':
+                            SetValue($this->GetIDForIdent('Z2M_Statel2'), true);
+                            break;
+                        case 'OFF':
+                            SetValue($this->GetIDForIdent('Z2M_Statel2'), false);
+                            break;
+                        default:
+                            $this->SendDebug('State 2', 'Undefined State 2: ' . $Payload->l2, 0);
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     public function setDimmer(int $value)
     {
         $Payload['brightness'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->publish($PayloadJSON);
+        $this->Z2MSet($PayloadJSON);
     }
 
     public function setColorTemperature(int $value)
     {
         $Payload['color_temp'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->publish($PayloadJSON);
+        $this->Z2MSet($PayloadJSON);
     }
 
     public function setPosition(int $value)
     {
         $Payload['position'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->publish($PayloadJSON);
+        $this->Z2MSet($PayloadJSON);
     }
 
     public function SwitchMode(bool $value)
@@ -85,14 +289,14 @@ trait Zigbee2MQTTHelper
         $state = $this->OnOff($value);
         $Payload['state'] = $state;
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->publish($PayloadJSON);
+        $this->Z2MSet($PayloadJSON);
     }
 
     public function setColorMode(int $mode)
     {
         $Payload['color_mode'] = strval($mode);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->publish($PayloadJSON);
+        $this->Z2MSet($PayloadJSON);
     }
 
     public function setColor(int $color, string $mode)
@@ -104,7 +308,7 @@ trait Zigbee2MQTTHelper
 
                 $Payload['color'] = $cie;
                 $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-                $this->publish($PayloadJSON);
+                $this->Z2MSet($PayloadJSON);
                 break;
             default:
                 $this->SendDebug('setColor', 'Invalid Mode ' . $mode, 0);
@@ -116,134 +320,7 @@ trait Zigbee2MQTTHelper
     {
         $Payload['sensitivity'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->publish($PayloadJSON);
-    }
-
-    protected function HexToRGB($value)
-    {
-        $RGB = [];
-        $RGB[0] = (($value >> 16) & 0xFF);
-        $RGB[1] = (($value >> 8) & 0xFF);
-        $RGB[2] = ($value & 0xFF);
-        $this->SendDebug('HexToRGB', 'R: ' . $RGB[0] . ' G: ' . $RGB[1] . ' B: ' . $RGB[2], 0);
-        return $RGB;
-    }
-
-    protected function RGBToCIE($red, $green, $blue)
-    {
-        $red = ($red > 0.04045) ? pow(($red + 0.055) / (1.0 + 0.055), 2.4) : ($red / 12.92);
-        $green = ($green > 0.04045) ? pow(($green + 0.055) / (1.0 + 0.055), 2.4) : ($green / 12.92);
-        $blue = ($blue > 0.04045) ? pow(($blue + 0.055) / (1.0 + 0.055), 2.4) : ($blue / 12.92);
-
-        $X = $red * 0.664511 + $green * 0.154324 + $blue * 0.162028;
-        $Y = $red * 0.283881 + $green * 0.668433 + $blue * 0.047685;
-        $Z = $red * 0.000088 + $green * 0.072310 + $blue * 0.986039;
-        $this->SendDebug('RGBToCIE', 'X: ' . $X . ' Y: ' . $Y . ' Z: ' . $Z, 0);
-
-        $cie['x'] = round(($X / ($X + $Y + $Z)), 4);
-        $cie['y'] = round(($Y / ($X + $Y + $Z)), 4);
-
-        return $cie;
-    }
-
-    protected function CIEToRGB($x, $y, $brightness = 255)
-    {
-        $z = 1.0 - $x - $y;
-        $Y = $brightness / 255;
-        $X = ($Y / $y) * $x;
-        $Z = ($Y / $y) * $z;
-
-        $red = $X * 1.656492 - $Y * 0.354851 - $Z * 0.255038;
-        $green = -$X * 0.707196 + $Y * 1.655397 + $Z * 0.036152;
-        $blue = $X * 0.051713 - $Y * 0.121364 + $Z * 1.011530;
-
-        if ($red > $blue && $red > $green && $red > 1.0) {
-            $green = $green / $red;
-            $blue = $blue / $red;
-            $red = 1.0;
-        } elseif ($green > $blue && $green > $red && $green > 1.0) {
-            $red = $red / $green;
-            $blue = $blue / $green;
-            $green = 1.0;
-        } elseif ($blue > $red && $blue > $green && $blue > 1.0) {
-            $red = $red / $blue;
-            $green = $green / $blue;
-            $blue = 1.0;
-        }
-        $red = $red <= 0.0031308 ? 12.92 * $red : (1.0 + 0.055) * $red ** (1.0 / 2.4) - 0.055;
-        $green = $green <= 0.0031308 ? 12.92 * $green : (1.0 + 0.055) * $green ** (1.0 / 2.4) - 0.055;
-        $blue = $blue <= 0.0031308 ? 12.92 * $blue : (1.0 + 0.055) * $blue ** (1.0 / 2.4) - 0.055;
-
-        $red = ceil($red * 255);
-        $green = ceil($green * 255);
-        $blue = ceil($blue * 255);
-
-        $color = sprintf('#%02x%02x%02x', $red, $green, $blue);
-
-        return $color;
-    }
-
-    protected function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
-    {
-        if (!IPS_VariableProfileExists($Name)) {
-            IPS_CreateVariableProfile($Name, 1);
-        } else {
-            $profile = IPS_GetVariableProfile($Name);
-            if ($profile['ProfileType'] != 1) {
-                throw new Exception('Variable profile type does not match for profile ' . $Name);
-            }
-        }
-        IPS_SetVariableProfileIcon($Name, $Icon);
-        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-    }
-
-    protected function RegisterProfileIntegerEx($Name, $Icon, $Prefix, $Suffix, $Associations)
-    {
-        if (count($Associations) === 0) {
-            $MinValue = 0;
-            $MaxValue = 0;
-        } else {
-            $MinValue = $Associations[0][0];
-            $MaxValue = $Associations[count($Associations) - 1][0];
-        }
-        $this->RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, 0);
-        foreach ($Associations as $Association) {
-            IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
-        }
-    }
-
-    protected function RegisterProfileBoolean($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
-    {
-        if (!IPS_VariableProfileExists($Name)) {
-            IPS_CreateVariableProfile($Name, 0);
-        } else {
-            $profile = IPS_GetVariableProfile($Name);
-            if ($profile['ProfileType'] != 0) {
-                throw new Exception('Variable profile type does not match for profile ' . $Name);
-            }
-        }
-
-        IPS_SetVariableProfileIcon($Name, $Icon);
-        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-    }
-
-    protected function RegisterProfileBooleanEx($Name, $Icon, $Prefix, $Suffix, $Associations)
-    {
-        if (count($Associations) === 0) {
-            $MinValue = 0;
-            $MaxValue = 0;
-        } else {
-            $MinValue = $Associations[0][0];
-            $MaxValue = $Associations[count($Associations) - 1][0];
-        }
-
-        $this->RegisterProfileBoolean($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, 0);
-
-        foreach ($Associations as $Association) {
-            IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
-        }
+        $this->Z2MSet($PayloadJSON);
     }
 
     private function OnOff(bool $Value)
@@ -259,7 +336,7 @@ trait Zigbee2MQTTHelper
         return $state;
     }
 
-    private function publish($payload)
+    private function Z2MSet($payload)
     {
         $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
         $Data['PacketType'] = 3;
@@ -268,155 +345,8 @@ trait Zigbee2MQTTHelper
         $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
         $Data['Payload'] = $payload;
         $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . 'Publish Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
-        $this->SendDataToParent($DataJSON);
-    }
-}
-
-trait Zigbee2MQTTBridgeHelper
-{
-    public function AddGroup(string $group_name, string $friendly_name)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/group/' . $group_name . '/add';
-        $Data['Payload'] = $friendly_name;
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . 'Add Group Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
-        $this->SendDataToParent($DataJSON);
-    }
-
-    public function RemoveGroup(string $group_name, string $friendly_name)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/group/' . $group_name . '/remove';
-        $Data['Payload'] = $friendly_name;
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . 'Remove Group Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
-        $this->SendDataToParent($DataJSON);
-    }
-
-    public function RemoveAllGroup(string $group_name, string $friendly_name)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/group/' . $group_name . '/remove_all';
-        $Data['Payload'] = $friendly_name;
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . 'Publish Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
-        $this->SendDataToParent($DataJSON);
-    }
-
-    public function Bind(string $source_device, string $target_device)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/bind/' . $source_device;
-        $Data['Payload'] = $target_device;
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . 'Bind Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
-        $this->SendDataToParent($DataJSON);
-    }
-
-    public function Unbind(string $source_device, string $target_device)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/unbind/' . $source_device;
-        $Data['Payload'] = $target_device;
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . 'Unbind Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
-        $this->SendDataToParent($DataJSON);
-    }
-
-    public function getGroupMembership(string $friendly_name)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/device/' . $friendly_name . '/get_group_membership';
-        $Data['Payload'] = '';
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . 'getGroupMembership Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
-        $this->SendDataToParent($DataJSON);
-    }
-
-    public function Networkmap()
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/networkmap';
-        $Data['Payload'] = 'graphviz';
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . 'Bind Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
-        $this->SendDataToParent($DataJSON);
-    }
-
-    public function RenameDevice(string $old_friendly_name, string $new_friendly_name)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/config/rename';
-
-        $Payload['old'] = $old_friendly_name;
-        $Payload['new'] = $new_friendly_name;
-        $Data['Payload'] = json_encode($Payload);
-
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . 'RenameDevice Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
-        $this->SendDataToParent($DataJSON);
-    }
-
-    public function BanDevice(string $friendly_name)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/config/ban';
-        $Data['Payload'] = $friendly_name;
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . 'Bind Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
-        $this->SendDataToParent($DataJSON);
-    }
-
-    public function RemoveDevice(string $friendly_name)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/config/remove';
-        $Data['Payload'] = $friendly_name;
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . 'Bind Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__, $DataJSON, 0);
+        $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
+        $this->SendDebug(__FUNCTION__ . ' Payload', $Data['Payload'], 0);
         $this->SendDataToParent($DataJSON);
     }
 }

@@ -1,18 +1,20 @@
 <?php
 
 declare(strict_types=1);
+require_once __DIR__ . '/../libs/MQTTHelper.php';
+require_once __DIR__ . '/../libs/Zigbee2MQTTBridgeHelper.php';
 require_once __DIR__ . '/../libs/Zigbee2MQTTHelper.php';
 
-class IPS_Z2MBridge extends IPSModule
+class Zigbee2MQTTBridge extends IPSModule
 {
     use Zigbee2MQTTBridgeHelper;
+    use MQTTHelper;
 
     public function Create()
     {
         //Never delete this line!
         parent::Create();
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
-
         $this->RegisterPropertyString('MQTTTopic', 'bridge');
     }
 

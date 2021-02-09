@@ -9,7 +9,7 @@
       "Humidity": "Feuchtigkeit",
       "Pressure": "Druck",
       "Battery": "Batterie",
-      "Voltage": "Stromspannung",
+      "Voltage": "Spannung",
       "Action": "Aktion",
       "Click": "Click",
       "Brightness": "Helligkeit",
@@ -30,7 +30,7 @@
       "Philips HUE Illuminance": "Philips HUE Beleuchtungsstärke",
       "Occupancy": "Bewegung",
       "Strength": "Stärke",
-      "Color Temperature": "Color Temperature"
+      "Color Temperature": "Farbtemperatur"
     }
   }
 }
