@@ -6,12 +6,12 @@
       "State 2": "Status 2",
       "Temperature": "Temperatur",
       "Linkquality": "Verbindungsqualität",
-      "Humidity": "Feuchtigkeit",
-      "Pressure": "Druck",
+      "Humidity": "Luftfeuchte",
+      "Pressure": "Luftdruck",
       "Battery": "Batterie",
       "Voltage": "Spannung",
       "Action": "Aktion",
-      "Click": "Click",
+      "Click": "Klick",
       "Brightness": "Helligkeit",
       "Water Leak": "Wasserleck",
       "Contact": "Kontakt",
@@ -30,7 +30,13 @@
       "Philips HUE Illuminance": "Philips HUE Beleuchtungsstärke",
       "Occupancy": "Bewegung",
       "Strength": "Stärke",
-      "Color Temperature": "Farbtemperatur"
+      "Color Temperature": "Farbtemperatur",
+      "Single": "Einmal",
+      "Double": "Zweimal",
+      "Triple": "Dreimal",
+      "Quad": "Viermal",
+      "Hold": "Halten",
+      "Release": "Loslassen"
     }
   }
 }
