@@ -80,7 +80,7 @@ trait Zigbee2MQTTHelper
                 }
                 if (property_exists($Payload, 'voltage')) {
                     $this->RegisterVariableFloat('Z2M_Voltage', $this->Translate('Voltage'), '~Volt');
-                    SetValue($this->GetIDForIdent('Z2M_Voltage'), $Payload->voltage);
+                    SetValue($this->GetIDForIdent('Z2M_Voltage'), $Payload->voltage / 1000);
                 }
                 if (property_exists($Payload, 'action')) {
                     $this->RegisterVariableString('Z2M_Action', $this->Translate('Action'), '');
