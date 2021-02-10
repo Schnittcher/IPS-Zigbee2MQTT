@@ -51,7 +51,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
                 $Value['vendor'] = $device['vendor'];
                 $Value['modelID'] = $device['modelID'];
                 $Value['description'] = $device['description'];
-                $Value['power_source'] = $this->Translate($device['powerSource']);
+                $Value['power_source'] = (array_key_exists('powerSource', $device) == true ? $this->Translate($device['powerSource']) : $this->Translate('Unknown'));
             }
             $Value['instanceID'] = $instanceID;
 
