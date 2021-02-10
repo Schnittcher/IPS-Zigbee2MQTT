@@ -15,6 +15,9 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $this->RegisterPropertyString('MQTTTopic', '');
         $this->SetBuffer('Devices', '{}');
         $this->SetBuffer('Groups', '{}');
+
+        //$this->RegisterAttributeBoolean('ReceiveDataFilterActive', true);
+        $this->RegisterTimer('Z2M_ActivateReceiveDataFilter', 0, 'Z2M_ActivateReceiveDataFilter($_IPS[\'TARGET\']);"');
     }
 
     public function ApplyChanges()
@@ -120,9 +123,19 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $this->Command('request/device/rename', json_encode($Payload));
     }
 
+    public function ActivateReceiveDataFilter()
+    {
+        $topic = $this->ReadPropertyString('MQTTTopic');
+        $this->SetReceiveDataFilter('.*' . $topic . '.*');
+        $this->SetTimerInterval('Z2M_ActivateReceiveDataFilter', 0);
+
+    }
+
     private function getDevices()
     {
+        $this->SetReceiveDataFilter('');
         $this->Command('config/devices/get', '');
+        $this->SetTimerInterval('Z2M_ActivateReceiveDataFilter', 30000);
     }
 
     private function getGroups()
