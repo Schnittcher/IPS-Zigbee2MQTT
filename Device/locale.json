@@ -4,6 +4,8 @@
       "State": "Status",
       "State 1": "Status 1",
       "State 2": "Status 2",
+      "State 3": "Status 3",
+      "State 4": "Status 4",
       "Temperature": "Temperatur",
       "Linkquality": "Verbindungsqualität",
       "Humidity": "Luftfeuchte",
@@ -18,6 +20,11 @@
       "Illuminance": "Beleuchtungsstärke",
       "Illuminance Lux": "Beleuchtungsstärke Lux",
       "Smoke": "Rauch",
+      "Tamper": "Manipuliert",
+      "Enrolled": "Enrolled",
+      "Restore Reports": "Restore Reports",
+      "Supervision Reports": "Supervision Reports",
+      "Trouble": "Trouble",
       "Battery Low": "Batterie schwach",
       "Sensitivity": "Empfindlichkeit",
       "Medium": "Mittel",
@@ -29,6 +36,8 @@
       "Power": "Leistung",
       "Philips HUE Illuminance": "Philips HUE Beleuchtungsstärke",
       "Occupancy": "Bewegung",
+      "Occupancy Timeout": "Bewegung Timeout",
+      "Motion Sensitivity": "Bewegungsempfindlichkeit",
       "Strength": "Stärke",
       "Color Temperature": "Farbtemperatur",
       "Single": "Einmal",
@@ -36,7 +45,8 @@
       "Triple": "Dreimal",
       "Quad": "Viermal",
       "Hold": "Halten",
-      "Release": "Loslassen"
+      "Release": "Loslassen",
+      "Update": "Update"
     }
   }
 }
