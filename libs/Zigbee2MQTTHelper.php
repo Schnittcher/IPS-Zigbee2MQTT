@@ -84,9 +84,19 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_Battery', $this->Translate('Battery'), '~Battery.100');
                     SetValue($this->GetIDForIdent('Z2M_Battery'), $Payload->battery);
                 }
+                //Da Millivolt und Volt mit dem selben Topic verschickt wird
                 if (property_exists($Payload, 'voltage')) {
                     $this->RegisterVariableFloat('Z2M_Voltage', $this->Translate('Voltage'), '~Volt');
-                    SetValue($this->GetIDForIdent('Z2M_Voltage'), $Payload->voltage / 1000);
+                    if ($Payload->voltage > 400) { //Es gibt wahrscheinlich keine Zigbee Geräte mit über 400 Voltm
+                        SetValue($this->GetIDForIdent('Z2M_Voltage'), $Payload->voltage / 1000);
+                    } else {
+                        SetValue($this->GetIDForIdent('Z2M_Voltage'), $Payload->voltage);
+                    }
+                }
+
+                if (property_exists($Payload, 'current')) {
+                    $this->RegisterVariableFloat('Z2M_Current', $this->Translate('Current'), '~Ampere');
+                    SetValue($this->GetIDForIdent('Z2M_Current'), $Payload->current);
                 }
                 if (property_exists($Payload, 'action')) {
                     $this->RegisterVariableString('Z2M_Action', $this->Translate('Action'), '');
