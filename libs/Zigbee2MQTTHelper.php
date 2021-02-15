@@ -378,6 +378,41 @@ trait Zigbee2MQTTHelper
         }
     }
 
+    protected function createVariableProfiles()
+    {
+        if (!IPS_VariableProfileExists('Z2M.Sensitivity')) {
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Medium'), '', -1];
+            $Associations[] = [2, $this->Translate('Low'), '', -1];
+            $Associations[] = [3, $this->Translate('High'), '', -1];
+            $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
+        }
+
+        if (!IPS_VariableProfileExists('Z2M.SystemMode')) {
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Off'), '', -1];
+            $Associations[] = [2, $this->Translate('Auto'), '', -1];
+            $Associations[] = [3, $this->Translate('Heat'), '', -1];
+            $Associations[] = [4, $this->Translate('Cool'), '', -1];
+            $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
+        }
+
+        if (!IPS_VariableProfileExists('Z2M.ColorTemperature')) {
+            IPS_CreateVariableProfile('Z2M.ColorTemperature', 1);
+        }
+        IPS_SetVariableProfileDigits('Z2M.ColorTemperature', 0);
+        IPS_SetVariableProfileIcon('Z2M.ColorTemperature', 'Bulb');
+        IPS_SetVariableProfileText('Z2M.ColorTemperature', '', ' Mired');
+        IPS_SetVariableProfileValues('Z2M.ColorTemperature', 50, 500, 1);
+
+        if (!IPS_VariableProfileExists('Z2M.DeviceStatus')) {
+            $this->RegisterProfileBooleanEx('Z2M.DeviceStatus', 'Network', '', '', [
+                [false, 'Offline',  '', 0xFF0000],
+                [true, 'Online',  '', 0x00FF00]
+            ]);
+        }
+    }
+
     private function setDimmer(int $value)
     {
         $Payload['brightness'] = strval($value);
@@ -436,41 +471,6 @@ trait Zigbee2MQTTHelper
         $Payload['sensitivity'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
-    }
-
-    protected function createVariableProfiles()
-    {
-        if (!IPS_VariableProfileExists('Z2M.Sensitivity')) {
-            $Associations = [];
-            $Associations[] = [1, $this->Translate('Medium'), '', -1];
-            $Associations[] = [2, $this->Translate('Low'), '', -1];
-            $Associations[] = [3, $this->Translate('High'), '', -1];
-            $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
-        }
-
-        if (!IPS_VariableProfileExists('Z2M.SystemMode')) {
-            $Associations = [];
-            $Associations[] = [1, $this->Translate('Off'), '', -1];
-            $Associations[] = [2, $this->Translate('Auto'), '', -1];
-            $Associations[] = [3, $this->Translate('Heat'), '', -1];
-            $Associations[] = [4, $this->Translate('Cool'), '', -1];
-            $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
-        }
-
-        if (!IPS_VariableProfileExists('Z2M.ColorTemperature')) {
-            IPS_CreateVariableProfile('Z2M.ColorTemperature', 1);
-        }
-        IPS_SetVariableProfileDigits('Z2M.ColorTemperature', 0);
-        IPS_SetVariableProfileIcon('Z2M.ColorTemperature', 'Bulb');
-        IPS_SetVariableProfileText('Z2M.ColorTemperature', '', ' Mired');
-        IPS_SetVariableProfileValues('Z2M.ColorTemperature', 50, 500, 1);
-
-        if (!IPS_VariableProfileExists('Z2M.DeviceStatus')) {
-            $this->RegisterProfileBooleanEx('Z2M.DeviceStatus', 'Network', '', '', [
-                [false, 'Offline',  '', 0xFF0000],
-                [true, 'Online',  '', 0x00FF00]
-            ]);
-        }
     }
 
     private function setSystemMode(int $value)
