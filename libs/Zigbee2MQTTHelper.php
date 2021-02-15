@@ -31,6 +31,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Sensitivity':
                 $this->setSensitivity($Value);
                 break;
+            case 'Z2M_SystemMode':
+                $this->setSystemMode($Value);
+                break;
             case 'Z2M_Color':
                 $this->SendDebug(__FUNCTION__ . ' Color', $Value, 0);
                 $this->setColor($Value, 'cie');
@@ -68,6 +71,40 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableFloat('Z2M_Temperature', $this->Translate('Temperature'), '~Temperature');
                     SetValue($this->GetIDForIdent('Z2M_Temperature'), $Payload->temperature);
                 }
+                if (property_exists($Payload, 'local_temperature')) {
+                    $this->RegisterVariableFloat('Z2M_LocalTemperature', $this->Translate('Local Temperature'), '~Temperature');
+                    SetValue($this->GetIDForIdent('Z2M_LocalTemperature'), $Payload->local_temperature);
+                }
+                if (property_exists($Payload, 'current_heating_setpoint')) {
+                    $this->RegisterVariableFloat('Z2M_CurrentHeatingSetpoint', $this->Translate('Current Heating Setpoint'), '~Temperature');
+                    SetValue($this->GetIDForIdent('Z2M_CurrentHeatingSetpoint'), $Payload->current_heating_setpoint);
+                }
+                if (property_exists($Payload, 'system_mode')) {
+                    $this->RegisterVariableInteger('Z2M_SystemMode', $this->Translate('Mode'), 'Z2M.SystemMode');
+                    $this->EnableAction('system_mode');
+                    switch ($Payload->sensitivity) {
+                        case 'off':
+                            SetValue($this->GetIDForIdent('Z2M_SystemMode'), 1);
+                            break;
+                        case 'auto':
+                            SetValue($this->GetIDForIdent('Z2M_SystemMode'), 2);
+                            break;
+                        case 'heat':
+                            SetValue($this->GetIDForIdent('Z2M_SystemMode'), 3);
+                            break;
+                        case 'cool':
+                            SetValue($this->GetIDForIdent('Z2M_SystemMode'), 3);
+                            break;
+                        default:
+                            $this->SendDebug('SetValue SystemMode', 'Invalid Value: ' . $Payload->system_mode, 0);
+                            break;
+                        }
+                }
+                if (property_exists($Payload, 'running_state')) {
+                    $this->RegisterVariableString('Z2M_RunningState', $this->Translate('Running State'), '');
+                    SetValue($this->GetIDForIdent('Z2M_RunningState'), $Payload->action);
+                }
+
                 if (property_exists($Payload, 'linkquality')) {
                     $this->RegisterVariableInteger('Z2M_Linkquality', $this->Translate('Linkquality'), '');
                     SetValue($this->GetIDForIdent('Z2M_Linkquality'), $Payload->linkquality);
@@ -93,7 +130,6 @@ trait Zigbee2MQTTHelper
                         SetValue($this->GetIDForIdent('Z2M_Voltage'), $Payload->voltage);
                     }
                 }
-
                 if (property_exists($Payload, 'current')) {
                     $this->RegisterVariableFloat('Z2M_Current', $this->Translate('Current'), '~Ampere');
                     SetValue($this->GetIDForIdent('Z2M_Current'), $Payload->current);
@@ -342,28 +378,28 @@ trait Zigbee2MQTTHelper
         }
     }
 
-    public function setDimmer(int $value)
+    private function setDimmer(int $value)
     {
         $Payload['brightness'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
 
-    public function setColorTemperature(int $value)
+    private function setColorTemperature(int $value)
     {
         $Payload['color_temp'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
 
-    public function setPosition(int $value)
+    private function setPosition(int $value)
     {
         $Payload['position'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
 
-    public function SwitchMode(bool $value)
+    private function SwitchMode(bool $value)
     {
         $state = $this->OnOff($value);
         $Payload['state'] = $state;
@@ -371,14 +407,14 @@ trait Zigbee2MQTTHelper
         $this->Z2MSet($PayloadJSON);
     }
 
-    public function setColorMode(int $mode)
+    private function setColorMode(int $mode)
     {
         $Payload['color_mode'] = strval($mode);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
 
-    public function setColor(int $color, string $mode)
+    private function setColor(int $color, string $mode)
     {
         switch ($mode) {
             case 'cie':
@@ -395,7 +431,7 @@ trait Zigbee2MQTTHelper
         }
     }
 
-    public function setSensitivity(int $value)
+    private function setSensitivity(int $value)
     {
         $Payload['sensitivity'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
@@ -409,6 +445,15 @@ trait Zigbee2MQTTHelper
             $Associations[] = [1, $this->Translate('Medium'), '', -1];
             $Associations[] = [2, $this->Translate('Low'), '', -1];
             $Associations[] = [3, $this->Translate('High'), '', -1];
+            $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
+        }
+
+        if (!IPS_VariableProfileExists('Z2M.SystemMode')) {
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Off'), '', -1];
+            $Associations[] = [2, $this->Translate('Auto'), '', -1];
+            $Associations[] = [3, $this->Translate('Heat'), '', -1];
+            $Associations[] = [4, $this->Translate('Cool'), '', -1];
             $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
         }
 
@@ -426,6 +471,30 @@ trait Zigbee2MQTTHelper
                 [true, 'Online',  '', 0x00FF00]
             ]);
         }
+    }
+
+    private function setSystemMode(int $value)
+    {
+        switch ($value) {
+            case 1: //off
+                $Payload['system_mode'] = 'off';
+                break;
+            case 2: //auto
+                $Payload['system_mode'] = 'auto';
+                break;
+            case 3: //heat
+                $Payload['system_mode'] = 'heat';
+                break;
+            case 4: //cool
+                $Payload['system_mode'] = 'cool';
+                break;
+            default:
+                $this->SendDebug('Invalid System Mode', $value, 0);
+                return;
+        }
+
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
     }
 
     private function OnOff(bool $Value)
