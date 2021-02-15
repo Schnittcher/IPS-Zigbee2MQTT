@@ -77,11 +77,12 @@ trait Zigbee2MQTTHelper
                 }
                 if (property_exists($Payload, 'current_heating_setpoint')) {
                     $this->RegisterVariableFloat('Z2M_CurrentHeatingSetpoint', $this->Translate('Current Heating Setpoint'), '~Temperature');
+                    $this->EnableAction('Z2M_CurrentHeatingSetpoint');
                     SetValue($this->GetIDForIdent('Z2M_CurrentHeatingSetpoint'), $Payload->current_heating_setpoint);
                 }
                 if (property_exists($Payload, 'system_mode')) {
                     $this->RegisterVariableInteger('Z2M_SystemMode', $this->Translate('Mode'), 'Z2M.SystemMode');
-                    $this->EnableAction('system_mode');
+                    $this->EnableAction('Z2M_SystemMode');
                     switch ($Payload->sensitivity) {
                         case 'off':
                             SetValue($this->GetIDForIdent('Z2M_SystemMode'), 1);
@@ -394,7 +395,7 @@ trait Zigbee2MQTTHelper
             $Associations[] = [2, $this->Translate('Auto'), '', -1];
             $Associations[] = [3, $this->Translate('Heat'), '', -1];
             $Associations[] = [4, $this->Translate('Cool'), '', -1];
-            $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
+            $this->RegisterProfileIntegerEx('Z2M.SystemMode', '', '', '', $Associations);
         }
 
         if (!IPS_VariableProfileExists('Z2M.ColorTemperature')) {
