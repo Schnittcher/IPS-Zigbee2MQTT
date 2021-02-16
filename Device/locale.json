@@ -9,6 +9,7 @@
       "Temperature": "Temperatur",
       "Local Temperature": "Lokale Temperatur",
       "Current Heating Setpoint": "Aktueller Heizsollwert",
+      "Occupied Heating Setpoint": "Besetzter Heizungssollwert",
       "Mode": "Modus",
       "Running State": "Betriebszustand",
       "Linkquality": "Verbindungsqualität",

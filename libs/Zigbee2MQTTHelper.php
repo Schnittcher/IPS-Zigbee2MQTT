@@ -34,6 +34,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_CurrentHeatingSetpoint':
                 $this->setCurrentHeatingSetpoint($Value);
                 break;
+            case 'Z2M_OccupiedHeatingSetpoint':
+                $this->setOccupiedHeatingSetpoint($Value);
+                break;
             case 'Z2M_SystemMode':
                 $this->setSystemMode($Value);
                 break;
@@ -80,8 +83,13 @@ trait Zigbee2MQTTHelper
                 }
                 if (property_exists($Payload, 'current_heating_setpoint')) {
                     $this->RegisterVariableFloat('Z2M_CurrentHeatingSetpoint', $this->Translate('Current Heating Setpoint'), '~Temperature');
-                    $this->EnableAction('Z2M_CurrentHeatingSetpoint');
+                    //$this->EnableAction('Z2M_CurrentHeatingSetpoint');
                     SetValue($this->GetIDForIdent('Z2M_CurrentHeatingSetpoint'), $Payload->current_heating_setpoint);
+                }
+                if (property_exists($Payload, 'occupied_heating_setpoint')) {
+                    $this->RegisterVariableFloat('Z2M_OccupiedHeatingSetpoint', $this->Translate('Occupied Heating Setpoint'), '~Temperature');
+                    $this->EnableAction('Z2M_OccupiedHeatingSetpoint');
+                    SetValue($this->GetIDForIdent('Z2M_OccupiedHeatingSetpoint'), $Payload->occupied_heating_setpoint);
                 }
                 if (property_exists($Payload, 'system_mode')) {
                     $this->RegisterVariableInteger('Z2M_SystemMode', $this->Translate('Mode'), 'Z2M.SystemMode');
@@ -456,6 +464,13 @@ trait Zigbee2MQTTHelper
     private function setCurrentHeatingSetpoint(float $value)
     {
         $Payload['current_heating_setpoint'] = $value;
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function setOccupiedHeatingSetpoint(float $value)
+    {
+        $Payload['occupied_heating_setpoint'] = $value;
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
