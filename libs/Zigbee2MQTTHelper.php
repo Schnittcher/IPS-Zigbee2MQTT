@@ -31,6 +31,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Sensitivity':
                 $this->setSensitivity($Value);
                 break;
+            case 'Z2M_CurrentHeatingSetpoint':
+                $this->setCurrentHeatingSetpoint($Value);
+                break;
             case 'Z2M_SystemMode':
                 $this->setSystemMode($Value);
                 break;
@@ -446,6 +449,13 @@ trait Zigbee2MQTTHelper
     private function setColorMode(int $mode)
     {
         $Payload['color_mode'] = strval($mode);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function setCurrentHeatingSetpoint(float $value)
+    {
+        $Payload['current_hating_setpoint'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
