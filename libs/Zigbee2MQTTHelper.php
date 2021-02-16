@@ -455,7 +455,7 @@ trait Zigbee2MQTTHelper
 
     private function setCurrentHeatingSetpoint(float $value)
     {
-        $Payload['current_hating_setpoint'] = strval($value);
+        $Payload['current_heating_setpoint'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
