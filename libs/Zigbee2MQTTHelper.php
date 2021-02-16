@@ -83,7 +83,7 @@ trait Zigbee2MQTTHelper
                 if (property_exists($Payload, 'system_mode')) {
                     $this->RegisterVariableInteger('Z2M_SystemMode', $this->Translate('Mode'), 'Z2M.SystemMode');
                     $this->EnableAction('Z2M_SystemMode');
-                    switch ($Payload->sensitivity) {
+                    switch ($Payload->system_mode) {
                         case 'off':
                             SetValue($this->GetIDForIdent('Z2M_SystemMode'), 1);
                             break;
