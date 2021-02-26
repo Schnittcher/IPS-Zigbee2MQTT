@@ -257,12 +257,16 @@ trait Zigbee2MQTTHelper
                     SetValue($this->GetIDForIdent('Z2M_To_Side'), $Payload->to_side);
                 }
                 if (property_exists($Payload, 'power')) {
-                    $this->RegisterVariableFloat('Z2M_Power', $this->Translate('Power'), '');
+                    $this->RegisterVariableFloat('Z2M_Power', $this->Translate('Power'), '~Watt.3680');
                     SetValue($this->GetIDForIdent('Z2M_Power'), $Payload->power);
                 }
                 if (property_exists($Payload, 'consumption')) {
-                    $this->RegisterVariableFloat('Z2M_Consumption', $this->Translate('Consumption'), '');
+                    $this->RegisterVariableFloat('Z2M_Consumption', $this->Translate('Consumption'), '~Electricity');
                     SetValue($this->GetIDForIdent('Z2M_Consumption'), $Payload->consumption);
+                }
+                if (property_exists($Payload, 'energy')) {
+                    $this->RegisterVariableFloat('Z2M_Energy', $this->Translate('Energy'), '~Electricity');
+                    SetValue($this->GetIDForIdent('Z2M_Energy'), $Payload->energy);
                 }
                 if (property_exists($Payload, 'duration')) {
                     $this->RegisterVariableFloat('Z2M_Duration', $this->Translate('Duration'), '');
