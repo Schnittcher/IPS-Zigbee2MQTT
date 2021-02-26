@@ -263,7 +263,7 @@ trait Zigbee2MQTTHelper
                 if (property_exists($Payload, 'consumer_connected')) {
                     $this->RegisterVariableBoolean('Z2M_Consumer_Connected', $this->Translate('Consumer connected'), 'Z2M.ConsumerConnected');
                     SetValue($this->GetIDForIdent('Z2M_Consumer_Connected'), $Payload->consumer_connected);
-                }              
+                }
                 if (property_exists($Payload, 'consumption')) {
                     $this->RegisterVariableFloat('Z2M_Consumption', $this->Translate('Consumption'), '~Electricity');
                     SetValue($this->GetIDForIdent('Z2M_Consumption'), $Payload->consumption);
