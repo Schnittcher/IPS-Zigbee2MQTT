@@ -260,6 +260,10 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableFloat('Z2M_Power', $this->Translate('Power'), '~Watt.3680');
                     SetValue($this->GetIDForIdent('Z2M_Power'), $Payload->power);
                 }
+                if (property_exists($Payload, 'consumer_connected')) {
+                    $this->RegisterVariableBoolean('Z2M_Consumer_Connected', $this->Translate('Consumer connected'), 'Z2M.ConsumerConnected');
+                    SetValue($this->GetIDForIdent('Z2M_Consumer_Connected'), $Payload->consumer_connected);
+                }              
                 if (property_exists($Payload, 'consumption')) {
                     $this->RegisterVariableFloat('Z2M_Consumption', $this->Translate('Consumption'), '~Electricity');
                     SetValue($this->GetIDForIdent('Z2M_Consumption'), $Payload->consumption);
@@ -420,6 +424,13 @@ trait Zigbee2MQTTHelper
         IPS_SetVariableProfileIcon('Z2M.ColorTemperature', 'Bulb');
         IPS_SetVariableProfileText('Z2M.ColorTemperature', '', ' Mired');
         IPS_SetVariableProfileValues('Z2M.ColorTemperature', 50, 500, 1);
+
+        if (!IPS_VariableProfileExists('Z2M.ConsumerConnected')) {
+            $this->RegisterProfileBooleanEx('Z2M.ConsumerConnected', 'Plug', '', '', [
+                [false, $this->Translate('not connected'),  '', 0xFF0000],
+                [true, $this->Trnalsate('connected'),  '', 0x00FF00]
+            ]);
+        }
 
         if (!IPS_VariableProfileExists('Z2M.DeviceStatus')) {
             $this->RegisterProfileBooleanEx('Z2M.DeviceStatus', 'Network', '', '', [
