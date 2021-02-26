@@ -39,6 +39,8 @@
       "Counter": "Zähler",
       "Color": "Farbe",
       "Power": "Leistung",
+      "Consumption": "Verbrauch",
+      "Energy": "Energie",
       "Current": "Strom",
       "Philips HUE Illuminance": "Philips HUE Beleuchtungsstärke",
       "Occupancy": "Bewegung",
