@@ -428,7 +428,7 @@ trait Zigbee2MQTTHelper
         if (!IPS_VariableProfileExists('Z2M.ConsumerConnected')) {
             $this->RegisterProfileBooleanEx('Z2M.ConsumerConnected', 'Plug', '', '', [
                 [false, $this->Translate('not connected'),  '', 0xFF0000],
-                [true, $this->Trnalsate('connected'),  '', 0x00FF00]
+                [true, $this->Translate('connected'),  '', 0x00FF00]
             ]);
         }
 
