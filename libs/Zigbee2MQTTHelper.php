@@ -83,7 +83,7 @@ trait Zigbee2MQTTHelper
                 }
                 if (property_exists($Payload, 'current_heating_setpoint')) {
                     $this->RegisterVariableFloat('Z2M_CurrentHeatingSetpoint', $this->Translate('Current Heating Setpoint'), '~Temperature');
-                    //$this->EnableAction('Z2M_CurrentHeatingSetpoint');
+                    $this->EnableAction('Z2M_CurrentHeatingSetpoint');
                     SetValue($this->GetIDForIdent('Z2M_CurrentHeatingSetpoint'), $Payload->current_heating_setpoint);
                 }
                 if (property_exists($Payload, 'occupied_heating_setpoint')) {
