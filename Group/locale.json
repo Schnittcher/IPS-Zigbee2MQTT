@@ -26,6 +26,7 @@
       "Duration": "Dauer",
       "Counter": "Zähler",
       "Color": "Farbe",
+      "Consumer connected": "Verbraucher verbunden",
       "Power": "Leistung",
       "Consumption": "Verbrauch",
       "Energy": "Energie",
@@ -38,7 +39,9 @@
       "Triple": "Dreimal",
       "Quad": "Viermal",
       "Hold": "Halten",
-      "Release": "Loslassen"
+      "Release": "Loslassen",
+      "not connected": "Nicht verbunden",
+      "connected": "Verbunden"
     }
   }
 }

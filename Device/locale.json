@@ -38,6 +38,7 @@
       "Duration": "Dauer",
       "Counter": "Zähler",
       "Color": "Farbe",
+      "Consumer connected": "Verbraucher verbunden",
       "Power": "Leistung",
       "Consumption": "Verbrauch",
       "Energy": "Energie",
@@ -54,7 +55,9 @@
       "Quad": "Viermal",
       "Hold": "Halten",
       "Release": "Loslassen",
-      "Update": "Update"
+      "Update": "Update",
+      "not connected": "Nicht verbunden",
+      "connected": "Verbunden"
     }
   }
 }
