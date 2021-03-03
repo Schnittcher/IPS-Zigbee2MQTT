@@ -621,6 +621,18 @@ trait Zigbee2MQTTHelper
         }
         return $state;
     }
+    private function OpenClose(bool $Value)
+    {
+        switch ($Value) {
+            case true:
+                $state = 'OPEN';
+                break;
+            case false:
+                $state = 'CLOSE';
+                break;
+        }
+        return $state;
+    }
 
     private function Z2MSet($payload)
     {
