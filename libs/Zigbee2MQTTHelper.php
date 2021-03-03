@@ -50,7 +50,7 @@ trait Zigbee2MQTTHelper
                 $this->setThermostatAwayMode($Value);
                 break;
             case 'Z2M_BoostTime':
-                $this->Command('boost_time/set', strval($Value));
+                $this->setThermostatBoostTime($Value);
                 break;
             case 'Z2M_SystemMode':
                 $this->setSystemMode($Value);
@@ -672,7 +672,7 @@ trait Zigbee2MQTTHelper
 
     private function setThermostatBoostTime(int $Value)
     {
-        $Payload['boost_time'] = strval($Value);
+        $Payload['boost_time'] = $Values;
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
