@@ -656,6 +656,27 @@ trait Zigbee2MQTTHelper
         $this->Z2MSet($PayloadJSON);
     }
 
+    private function setThermostatAwayMode(bool $Value)
+    {
+        $Payload['away_mode'] = $this->OnOff($Value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function setThermostatAwayPresetDays(int $Value)
+    {
+        $Payload['away_preset_days'] = strval($mode);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function setThermostatBoostTime(int $Value)
+    {
+        $Payload['boost_time'] = strval($Value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
     private function setColor(int $color, string $mode)
     {
         switch ($mode) {
