@@ -665,14 +665,14 @@ trait Zigbee2MQTTHelper
 
     private function setThermostatAwayPresetDays(int $Value)
     {
-        $Payload['away_preset_days'] = strval($mode);
+        $Payload['away_preset_days'] = strval($Value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
 
     private function setThermostatBoostTime(int $Value)
     {
-        $Payload['boost_time'] = $Values;
+        $Payload['boost_time'] = strval($Value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
