@@ -337,13 +337,25 @@ trait Zigbee2MQTTHelper
                     SetValue($this->GetIDForIdent('Z2M_ColorTemp'), $Payload->color_temp);
                 }
                 if (property_exists($Payload, 'state')) {
-                    $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
-                    $this->EnableAction('Z2M_State');
                     switch ($Payload->state) {
                         case 'ON':
+                            $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
+                            $this->EnableAction('Z2M_State');
                             SetValue($this->GetIDForIdent('Z2M_State'), true);
                             break;
                         case 'OFF':
+                            $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
+                            $this->EnableAction('Z2M_State');
+                            SetValue($this->GetIDForIdent('Z2M_State'), false);
+                            break;
+                        case 'OPEN':
+                            $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Window');
+                            $this->EnableAction('Z2M_State');
+                            SetValue($this->GetIDForIdent('Z2M_State'), true);
+                            break;
+                        case 'CLOSE':
+                            $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Window');
+                            $this->EnableAction('Z2M_State');
                             SetValue($this->GetIDForIdent('Z2M_State'), false);
                             break;
                         default:
@@ -484,7 +496,19 @@ trait Zigbee2MQTTHelper
 
     private function SwitchMode(bool $value)
     {
-        $state = $this->OnOff($value);
+        switch ($value) {
+            case 'ON':
+            case 'OFF':
+                $state = $this->OnOff($value);
+                break;
+            case 'OPEN':
+            case 'CLOSE':
+                $state = $this->OpenClose($value);
+                break;
+            default:
+                $this->SendDebug('Invalid Value for SwitchMode', $value, 0);
+                return;
+        }
         $Payload['state'] = $state;
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
