@@ -43,6 +43,15 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Preset':
                 $this->setThermostatPreset($Value);
                 break;
+            case 'Z2M_AwayPresetDays':
+                $this->setThermostatAwayPresetDays($Value);
+                break;
+            case 'Z2M_AwayMode':
+                $this->setThermostatAwayMode($Value);
+                break;
+            case 'Z2M_BoostTime':
+                $this->setThermostatBoostTime($Value);
+                break;
             case 'Z2M_SystemMode':
                 $this->setSystemMode($Value);
                 break;
