@@ -650,6 +650,9 @@ trait Zigbee2MQTTHelper
             case 5:
                 $preset = 'eco';
                 break;
+            case 6:
+                $preset = 'heat';
+                break;
             default:
             $this->SendDebug('Invalid Set Thermostat Preset', $value, 0);
                 return;
