@@ -545,7 +545,7 @@ trait Zigbee2MQTTHelper
             $Associations[] = [2, $this->Translate('Boost'), '', -1];
             $Associations[] = [3, $this->Translate('Complexes Program'), '', -1];
             $Associations[] = [4, $this->Translate('Comfort'), '', -1];
-            $Associations[] = [4, $this->Translate('Eco'), '', -1];
+            $Associations[] = [5, $this->Translate('Eco'), '', -1];
             $this->RegisterProfileIntegerEx('Z2M.ThermostatPreset', '', '', '', $Associations);
         }
 
