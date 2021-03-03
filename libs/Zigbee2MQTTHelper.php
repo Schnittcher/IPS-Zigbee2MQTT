@@ -50,7 +50,7 @@ trait Zigbee2MQTTHelper
                 $this->setThermostatAwayMode($Value);
                 break;
             case 'Z2M_BoostTime':
-                $this->setThermostatBoostTime($Value);
+                $this->Command('boost_time/set', strval($Value));
                 break;
             case 'Z2M_SystemMode':
                 $this->setSystemMode($Value);
