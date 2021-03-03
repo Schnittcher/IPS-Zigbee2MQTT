@@ -535,6 +535,32 @@ trait Zigbee2MQTTHelper
         $this->Z2MSet($PayloadJSON);
     }
 
+    private function setOccupancyTimeout(int $value)
+    {
+        $Payload['occupancy_timeout'] = $value;
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function setMotionSensitivity(int $value)
+    {
+        switch ($value) {
+            case 1:
+                $Payload['motion_sensitivity'] = 'medium';
+                break;
+            case 2:
+                $Payload['motion_sensitivity'] = 'low';
+                break;
+            case 3:
+                $Payload['motion_sensitivity'] = 'high';
+                break;
+            default:
+                return;
+            }
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
     private function setSystemMode(int $value)
     {
         switch ($value) {
