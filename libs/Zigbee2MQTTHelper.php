@@ -47,6 +47,12 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Position':
                 $this->setPosition($Value);
                 break;
+            case 'Z2M_MotionSensitivity':
+                $this->setMotionSensitivity($Value);
+                break;
+            case 'Z2M_OccupancyTimeout':
+                $this->setOccupancyTimeout($Value);
+                break;
             default:
                 $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
                 break;
@@ -170,11 +176,26 @@ trait Zigbee2MQTTHelper
                 }
                 if (property_exists($Payload, 'occupancy_timeout')) {
                     $this->RegisterVariableInteger('Z2M_OccupancyTimeout', $this->Translate('Occupancy Timeout'), '');
+                    $this->EnableAction('Z2M_OccupancyTimeout');
                     SetValue($this->GetIDForIdent('Z2M_OccupancyTimeout'), $Payload->occupancy_timeout);
                 }
                 if (property_exists($Payload, 'motion_sensitivity')) {
-                    $this->RegisterVariableString('Z2M_MotionSensitivity', $this->Translate('Motion Sensitivity'), '');
-                    SetValue($this->GetIDForIdent('Z2M_MotionSensitivity'), $Payload->motion_sensitivity);
+                    $this->RegisterVariableInteger('Z2M_MotionSensitivity', $this->Translate('Motion Sensitivity'), 'Z2M.Sensitivity');
+                    $this->EnableAction('Z2M_MotionSensitivity');
+                    switch ($Payload->motion_sensitivity) {
+                        case 'medium':
+                            SetValue($this->GetIDForIdent('Z2M_MotionSensitivity'), 1);
+                            break;
+                        case 'low':
+                            SetValue($this->GetIDForIdent('Z2M_MotionSensitivity'), 2);
+                            break;
+                        case 'high':
+                            SetValue($this->GetIDForIdent('Z2M_MotionSensitivity'), 3);
+                            break;
+                        default:
+                            $this->SendDebug('SetValue MotionSensitivity', 'Invalid Value: ' . $Payload->motion_sensitivity, 0);
+                            break;
+                        }
                 }
                 if (property_exists($Payload, 'illuminance')) {
                     $this->RegisterVariableInteger('Z2M_Illuminance', $this->Translate('Illuminance'), '');
