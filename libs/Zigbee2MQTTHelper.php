@@ -37,6 +37,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_OccupiedHeatingSetpoint':
                 $this->setOccupiedHeatingSetpoint($Value);
                 break;
+            case 'Z2M_Preset':
+                $this->setThermostatPreset($Value);
+                break;
             case 'Z2M_SystemMode':
                 $this->setSystemMode($Value);
                 break;
@@ -87,6 +90,80 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableFloat('Z2M_LocalTemperature', $this->Translate('Local Temperature'), '~Temperature');
                     SetValue($this->GetIDForIdent('Z2M_LocalTemperature'), $Payload->local_temperature);
                 }
+                if (property_exists($Payload, 'max_temperature')) {
+                    $this->RegisterVariableFloat('Z2M_MaxTemperature', $this->Translate('Max Temperature'), '~Temperature');
+                    $this->EnableAction('Z2M_MaxTemperature');
+                    SetValue($this->GetIDForIdent('Z2M_MaxTemperature'), $Payload->max_temperature);
+                }
+
+                if (property_exists($Payload, 'min_temperature')) {
+                    $this->RegisterVariableFloat('Z2M_MinTemperature', $this->Translate('Min Temperature'), '~Temperature');
+                    $this->EnableAction('Z2M_MinTemperature');
+                    SetValue($this->GetIDForIdent('Z2M_MinTemperature'), $Payload->min_temperature);
+                }
+
+                if (property_exists($Payload, 'preset')) {
+                    $this->RegisterVariableInteger('Z2M_Preset', $this->Translate('Preset'), 'Z2M.ThermostatPreset');
+                    $this->EnableAction('Z2M_Preset');
+                    switch ($Payload->preset) {
+                        case 'manual':
+                            SetValue($this->GetIDForIdent('Z2M_Preset'), 1);
+                            break;
+                        case 'boost':
+                            SetValue($this->GetIDForIdent('Z2M_Preset'), 2);
+                            break;
+                        case 'complex':
+                            SetValue($this->GetIDForIdent('Z2M_Preset'), 3);
+                            break;
+                        case 'comfort':
+                            SetValue($this->GetIDForIdent('Z2M_Preset'), 4);
+                            break;
+                        case 'eco':
+                            SetValue($this->GetIDForIdent('Z2M_Preset'), 5);
+                            break;
+                        default:
+                            $this->SendDebug('SetValue SystemMode', 'Invalid Value: ' . $Payload->system_mode, 0);
+                            break;
+                        }
+                    SetValue($this->GetIDForIdent('Z2M_Preset'), $Payload->preset);
+                }
+
+                if (property_exists($Payload, 'away_mode')) {
+                    $this->RegisterVariableBoolean('Z2M_AwayMode', $this->Translate('Away Mode'), '~Switch');
+                    $this->EnableAction('Z2M_AwayMode');
+                    SetValue($this->GetIDForIdent('Z2M_AwayMode'), $Payload->away_mode);
+                }
+
+                if (property_exists($Payload, 'away_preset_days')) {
+                    $this->RegisterVariableInteger('Z2M_AwayPresetDays', $this->Translate('Away Preset Days'), '');
+                    $this->EnableAction('Z2M_AwayPresetDays');
+                    SetValue($this->GetIDForIdent('Z2M_AwayPresetDays'), $Payload->away_preset_days);
+                }
+
+                if (property_exists($Payload, 'away_preset_temperature')) {
+                    $this->RegisterVariableFloat('Z2M_AwayPresetTemperature', $this->Translate('Away Preset Temperature'), '~Temperature');
+                    $this->EnableAction('Z2M_AwayPresetDays');
+                    SetValue($this->GetIDForIdent('Z2M_AwayPresetDays'), $Payload->away_preset_temperature);
+                }
+
+                if (property_exists($Payload, 'boost_time')) {
+                    $this->RegisterVariableInteger('Z2M_BoostTime', $this->Translate('Boost Time'), '');
+                    $this->EnableAction('Z2M_BoostTime');
+                    SetValue($this->GetIDForIdent('Z2M_BoostTime'), $Payload->boost_time);
+                }
+
+                if (property_exists($Payload, 'comfort_temperature')) {
+                    $this->RegisterVariableFloat('Z2M_ComfortTemperature', $this->Translate('Comfort Temperature'), '~Temperature');
+                    $this->EnableAction('Z2M_ComfortTemperature');
+                    SetValue($this->GetIDForIdent('Z2M_ComfortTemperature'), $Payload->comfort_temperature);
+                }
+
+                if (property_exists($Payload, 'eco_temperature')) {
+                    $this->RegisterVariableFloat('Z2M_EcoTemperature', $this->Translate('Eco Temperature'), '~Temperature');
+                    $this->EnableAction('Z2M_EcoTemperature');
+                    SetValue($this->GetIDForIdent('Z2M_EcoTemperature'), $Payload->eco_temperature);
+                }
+
                 if (property_exists($Payload, 'current_heating_setpoint')) {
                     $this->RegisterVariableFloat('Z2M_CurrentHeatingSetpoint', $this->Translate('Current Heating Setpoint'), '~Temperature');
                     $this->EnableAction('Z2M_CurrentHeatingSetpoint');
@@ -450,6 +527,16 @@ trait Zigbee2MQTTHelper
             $this->RegisterProfileIntegerEx('Z2M.SystemMode', '', '', '', $Associations);
         }
 
+        if (!IPS_VariableProfileExists('Z2M.ThermostatPreset')) {
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Manual'), '', -1];
+            $Associations[] = [2, $this->Translate('Boost'), '', -1];
+            $Associations[] = [3, $this->Translate('Complexes Program'), '', -1];
+            $Associations[] = [4, $this->Translate('Comfort'), '', -1];
+            $Associations[] = [4, $this->Translate('Eco'), '', -1];
+            $this->RegisterProfileIntegerEx('Z2M.ThermostatPreset', '', '', '', $Associations);
+        }
+
         if (!IPS_VariableProfileExists('Z2M.ColorTemperature')) {
             IPS_CreateVariableProfile('Z2M.ColorTemperature', 1);
         }
@@ -531,6 +618,34 @@ trait Zigbee2MQTTHelper
     private function setOccupiedHeatingSetpoint(float $value)
     {
         $Payload['occupied_heating_setpoint'] = $value;
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function setThermostatPreset(int $value)
+    {
+        switch ($value) {
+            case 1:
+                $preset = 'manual';
+                break;
+            case 2:
+                $preset = 'boost';
+                break;
+            case 3:
+                $preset = 'complex';
+                break;
+            case 4:
+                $preset = 'comfort';
+                break;
+            case 5:
+                $preset = 'eco';
+                break;
+            default:
+            $this->SendDebug('Invalid Set Thermostat Preset', $value, 0);
+                return;
+        }
+
+        $Payload['preset'] = $preset;
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
