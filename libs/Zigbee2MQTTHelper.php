@@ -322,6 +322,10 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableBoolean('Z2M_Smoke', $this->Translate('Smoke'), '~Alert');
                     SetValue($this->GetIDForIdent('Z2M_Smoke'), $Payload->smoke);
                 }
+                if (property_exists($Payload, 'smoke_density')) {
+                    $this->RegisterVariableInteger('Z2M_SmokeDensity', $this->Translate('Smoke Density'), '');
+                    SetValue($this->GetIDForIdent('Z2M_SmokeDensity'), $Payload->smoke_density);
+                }
                 if (property_exists($Payload, 'tamper')) {
                     $this->RegisterVariableBoolean('Z2M_Tamper', $this->Translate('Tamper'), '~Alert');
                     SetValue($this->GetIDForIdent('Z2M_Tamper'), $Payload->tamper);
