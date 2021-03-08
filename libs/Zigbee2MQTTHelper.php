@@ -133,6 +133,18 @@ trait Zigbee2MQTTHelper
                         case 'eco':
                             SetValue($this->GetIDForIdent('Z2M_Preset'), 5);
                             break;
+                        case 'heat':
+                            SetValue($this->GetIDForIdent('Z2M_Preset'), 6);
+                            break;
+                        case 'heat':
+                            SetValue($this->GetIDForIdent('Z2M_Preset'), 6);
+                            break;
+                        case 'schedule':
+                            SetValue($this->GetIDForIdent('Z2M_Preset'), 7);
+                            break;
+                        case 'away':
+                            SetValue($this->GetIDForIdent('Z2M_Preset'), 8);
+                            break;
                         default:
                             $this->SendDebug('SetValue SystemMode', 'Invalid Value: ' . $Payload->system_mode, 0);
                             break;
@@ -547,6 +559,8 @@ trait Zigbee2MQTTHelper
             $Associations[] = [4, $this->Translate('Comfort'), '', -1];
             $Associations[] = [5, $this->Translate('Eco'), '', -1];
             $Associations[] = [6, $this->Translate('Heat'), '', -1];
+            $Associations[] = [7, $this->Translate('Schedule'), '', -1];
+            $Associations[] = [8, $this->Translate('Away'), '', -1];
             $this->RegisterProfileIntegerEx('Z2M.ThermostatPreset', '', '', '', $Associations);
         }
 
@@ -646,9 +660,6 @@ trait Zigbee2MQTTHelper
                 break;
             case 5:
                 $preset = 'eco';
-                break;
-            case 6:
-                $preset = 'heat';
                 break;
             default:
             $this->SendDebug('Invalid Set Thermostat Preset', $value, 0);
