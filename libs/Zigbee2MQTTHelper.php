@@ -28,6 +28,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Statel4':
                 $this->Command('l4/set', $this->OnOff($Value));
                 break;
+            case'Z2M_PowerOutageMemory':
+                $this->Command('power_outage_memory/set', $this->OnOff($Value));
+                break;
             case 'Z2M_StateWindow':
                 $this->StateWindow($Value);
                 break;
@@ -467,6 +470,21 @@ trait Zigbee2MQTTHelper
                             $this->SendDebug('State', 'Undefined State: ' . $Payload->state, 0);
                             break;
                         }
+                }
+                if (property_exists($Payload, 'power_outage_memory')) {
+                    $this->RegisterVariableBoolean('Z2M_PowerOutageMemory', $this->Translate('Power Outage Memory'), '~Switch');
+                    $this->EnableAction('Z2M_PowerOutageMemory');
+                    switch ($Payload->power_outage_memory) {
+                        case 'ON':
+                            SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), true);
+                            break;
+                        case 'OFF':
+                            SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), false);
+                            break;
+                        default:
+                            $this->SendDebug('Power Outage Memory', 'Undefined Power Outage Memory: ' . $Payload->power_outage_memory, 0);
+                            break;
+                    }
                 }
                 if (property_exists($Payload, 'state_l1')) {
                     $this->RegisterVariableBoolean('Z2M_Statel1', $this->Translate('State 1'), '~Switch');
