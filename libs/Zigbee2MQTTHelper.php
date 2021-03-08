@@ -29,7 +29,7 @@ trait Zigbee2MQTTHelper
                 $this->Command('l4/set', $this->OnOff($Value));
                 break;
             case'Z2M_PowerOutageMemory':
-                $this->Command('power_outage_memory/set', $this->OnOff($Value));
+                $this->setPowerOutageMemory($Value);
                 break;
             case 'Z2M_StateWindow':
                 $this->StateWindow($Value);
@@ -472,14 +472,17 @@ trait Zigbee2MQTTHelper
                         }
                 }
                 if (property_exists($Payload, 'power_outage_memory')) {
-                    $this->RegisterVariableBoolean('Z2M_PowerOutageMemory', $this->Translate('Power Outage Memory'), '~Switch');
+                    $this->RegisterVariableInteger('Z2M_PowerOutageMemory', $this->Translate('Power Outage Memory'), '~Z2M.PowerOutageMemory');
                     $this->EnableAction('Z2M_PowerOutageMemory');
                     switch ($Payload->power_outage_memory) {
                         case 'ON':
-                            SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), true);
+                            SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), 1);
                             break;
                         case 'OFF':
-                            SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), false);
+                            SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), 2);
+                            break;
+                        case 'restore':
+                            SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), 2);
                             break;
                         default:
                             $this->SendDebug('Power Outage Memory', 'Undefined Power Outage Memory: ' . $Payload->power_outage_memory, 0);
@@ -573,6 +576,14 @@ trait Zigbee2MQTTHelper
             $this->RegisterProfileIntegerEx('Z2M.SystemMode', '', '', '', $Associations);
         }
 
+        if (!IPS_VariableProfileExists('Z2M.PowerOutageMemory')) {
+            $Associations = [];
+            $Associations[] = [1, $this->Translate('Off'), '', -1];
+            $Associations[] = [2, $this->Translate('On'), '', -1];
+            $Associations[] = [3, $this->Translate('Restore'), '', -1];
+            $this->RegisterProfileIntegerEx('Z2M.PowerOutageMemory', '', '', '', $Associations);
+        }
+
         if (!IPS_VariableProfileExists('Z2M.ThermostatPreset')) {
             $Associations = [];
             $Associations[] = [1, $this->Translate('Manual'), '', -1];
@@ -633,6 +644,28 @@ trait Zigbee2MQTTHelper
     private function SwitchMode(bool $value)
     {
         $Payload['state'] = $this->OnOff($value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function setPowerOutageMemory(int $value)
+    {
+        switch ($value) {
+            case 1:
+                $PowerOutageMemory = 'on';
+                break;
+            case 2:
+                $PowerOutageMemory = 'off';
+                break;
+            case 3:
+                $PowerOutageMemory = 'restore';
+                break;
+            default:
+            $this->SendDebug('Invalid Power Outage Memory', $value, 0);
+                return;
+        }
+
+        $Payload['power_outage_memory'] = $PowerOutageMemory;
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
