@@ -133,9 +133,6 @@ trait Zigbee2MQTTHelper
                         case 'eco':
                             SetValue($this->GetIDForIdent('Z2M_Preset'), 5);
                             break;
-                        case 'heat':
-                            SetValue($this->GetIDForIdent('Z2M_Preset'), 6);
-                            break;
                         default:
                             $this->SendDebug('SetValue SystemMode', 'Invalid Value: ' . $Payload->system_mode, 0);
                             break;
@@ -203,7 +200,7 @@ trait Zigbee2MQTTHelper
                             SetValue($this->GetIDForIdent('Z2M_SystemMode'), 3);
                             break;
                         case 'cool':
-                            SetValue($this->GetIDForIdent('Z2M_SystemMode'), 3);
+                            SetValue($this->GetIDForIdent('Z2M_SystemMode'), 4);
                             break;
                         default:
                             $this->SendDebug('SetValue SystemMode', 'Invalid Value: ' . $Payload->system_mode, 0);
