@@ -321,6 +321,10 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableBoolean('Z2M_Contact', $this->Translate('Contact'), '');
                     SetValue($this->GetIDForIdent('Z2M_Contact'), $Payload->contact);
                 }
+                if (property_exists($Payload, 'carbon_monoxide')) {
+                    $this->RegisterVariableBoolean('Z2M_CarbonMonoxide', $this->Translate('Carbon Monoxide'), '~Alert');
+                    SetValue($this->GetIDForIdent('Z2M_CarbonMonoxide'), $Payload->smoke);
+                }
                 if (property_exists($Payload, 'smoke')) {
                     $this->RegisterVariableBoolean('Z2M_Smoke', $this->Translate('Smoke'), '~Alert');
                     SetValue($this->GetIDForIdent('Z2M_Smoke'), $Payload->smoke);
