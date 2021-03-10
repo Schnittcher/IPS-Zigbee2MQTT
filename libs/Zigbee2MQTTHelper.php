@@ -472,7 +472,7 @@ trait Zigbee2MQTTHelper
                         }
                 }
                 if (property_exists($Payload, 'power_outage_memory')) {
-                    $this->RegisterVariableInteger('Z2M_PowerOutageMemory', $this->Translate('Power Outage Memory'), '~Z2M.PowerOutageMemory');
+                    $this->RegisterVariableInteger('Z2M_PowerOutageMemory', $this->Translate('Power Outage Memory'), 'Z2M.PowerOutageMemory');
                     $this->EnableAction('Z2M_PowerOutageMemory');
                     switch ($Payload->power_outage_memory) {
                         case 'ON':
