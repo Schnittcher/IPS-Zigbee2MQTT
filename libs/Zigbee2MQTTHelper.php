@@ -149,7 +149,7 @@ trait Zigbee2MQTTHelper
                             SetValue($this->GetIDForIdent('Z2M_Preset'), 8);
                             break;
                         default:
-                            $this->SendDebug('SetValue Preset', 'Invalid Value: ' . $Payload->preset, 0);
+                        $this->SendDebug('SetValue Preset', 'Invalid Value: ' . $Payload->preset, 0);
                             break;
                         }
                 }
@@ -157,7 +157,17 @@ trait Zigbee2MQTTHelper
                 if (property_exists($Payload, 'away_mode')) {
                     $this->RegisterVariableBoolean('Z2M_AwayMode', $this->Translate('Away Mode'), '~Switch');
                     $this->EnableAction('Z2M_AwayMode');
-                    SetValue($this->GetIDForIdent('Z2M_AwayMode'), $Payload->away_mode);
+                    switch ($Payload->state_l1) {
+                    case 'ON':
+                        SetValue($this->GetIDForIdent('Z2M_AwayMode'), true);
+                        break;
+                    case 'OFF':
+                        SetValue($this->GetIDForIdent('Z2M_AwayMode'), false);
+                        break;
+                    default:
+                        $this->SendDebug('SetValue AwayMode', 'Invalid Value: ' . $Payload->away_mode, 0);
+                        break;
+                    }
                 }
 
                 if (property_exists($Payload, 'away_preset_days')) {
