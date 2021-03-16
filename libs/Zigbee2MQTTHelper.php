@@ -149,10 +149,9 @@ trait Zigbee2MQTTHelper
                             SetValue($this->GetIDForIdent('Z2M_Preset'), 8);
                             break;
                         default:
-                            $this->SendDebug('SetValue SystemMode', 'Invalid Value: ' . $Payload->system_mode, 0);
+                            $this->SendDebug('SetValue Preset', 'Invalid Value: ' . $Payload->preset, 0);
                             break;
                         }
-                    SetValue($this->GetIDForIdent('Z2M_Preset'), $Payload->preset);
                 }
 
                 if (property_exists($Payload, 'away_mode')) {
