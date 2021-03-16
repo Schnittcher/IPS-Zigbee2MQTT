@@ -157,7 +157,7 @@ trait Zigbee2MQTTHelper
                 if (property_exists($Payload, 'away_mode')) {
                     $this->RegisterVariableBoolean('Z2M_AwayMode', $this->Translate('Away Mode'), '~Switch');
                     $this->EnableAction('Z2M_AwayMode');
-                    switch ($Payload->state_l1) {
+                    switch ($Payload->away_mode) {
                     case 'ON':
                         SetValue($this->GetIDForIdent('Z2M_AwayMode'), true);
                         break;
