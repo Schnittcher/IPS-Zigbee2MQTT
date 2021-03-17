@@ -13,8 +13,8 @@ MQTT Topic | Hier wird das Topic der Zigbee2MQTT Bridge eingetragen.
 ## 2. Funktionen
 
 ### Z2M_getDeviceVariables($FriendlyName)
-Mit diewser Funktion werden alle Variablen von dem Gerät abgerufen, welches als Parameter übergeben wird.
-Diese Funktion ist mit äußerster vorsicht zu benutzen, da diese Funktion das Gerät umbenennt und danach wieder in den Ursprung benennt, denn dann werden alle Werte von Zigbee2MQTT per MQTT versendet und dadruch die Variablen in Symocn angelegt!
+Mit dieser Funktion werden alle Variablen von dem Gerät abgerufen, welches als Parameter übergeben wird.
+Diese Funktion ist mit äußerster vorsicht zu benutzen, da diese Funktion das Gerät umbenennt und danach wieder in den Ursprung benennt, denn dann werden alle Werte von Zigbee2MQTT per MQTT versendet und dadurch die Variablen in Symcon angelegt!
 
 ```php
 Z2M_getDeviceVariables('Lampe1');
@@ -30,7 +30,7 @@ $Payload['to'] = 'Lampe1Neu';
 $Payload['homeassistant_rename'] = false;
 $this->Command('request/device/rename', json_encode($Payload));
 ```
-Dieses Beispiel bennennt die Lampe von Lampe1 in Lampe1Neu um.
+Dieses Beispiel benennt die Lampe von Lampe1 in Lampe1Neu um.
 Hier wird an das Topic "zigbee2mqtt/bridge/request/device/rename" gesendet.
 
 ### Z2M_CommandExt(string $topic, string $value)

@@ -110,7 +110,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
         }
     }
 
-    public function getDeviceVariables($FriendlyName)
+    public function getDeviceVariables(string $FriendlyName)
     {
         $Payload['from'] = $FriendlyName;
         $Payload['to'] = $FriendlyName . 'Z2MSymcon';

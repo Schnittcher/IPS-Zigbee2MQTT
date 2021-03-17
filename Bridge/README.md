@@ -57,7 +57,7 @@
   ```
   
   **Z2M_RenameDevice(int $InstanceID,$old_friendly_name, string $new_friendly_name)**\
-  Mit dieser Funktion ist es möglich, die Geräte umzubennen.
+  Mit dieser Funktion ist es möglich, die Geräte umzubenennen.
   ```php
   Z2M_RenameDevice(25537, "IkeaLEDKueche1", "IkeaLedKueche2");
   ```
