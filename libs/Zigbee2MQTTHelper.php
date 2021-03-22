@@ -178,8 +178,8 @@ trait Zigbee2MQTTHelper
 
                 if (property_exists($Payload, 'away_preset_temperature')) {
                     $this->RegisterVariableFloat('Z2M_AwayPresetTemperature', $this->Translate('Away Preset Temperature'), '~Temperature');
-                    $this->EnableAction('Z2M_AwayPresetDays');
-                    SetValue($this->GetIDForIdent('Z2M_AwayPresetDays'), $Payload->away_preset_temperature);
+                    $this->EnableAction('Z2M_AwayPresetTemperature');
+                    SetValue($this->GetIDForIdent('Z2M_AwayPresetTemperature'), $Payload->away_preset_temperature);
                 }
 
                 if (property_exists($Payload, 'boost_time')) {
