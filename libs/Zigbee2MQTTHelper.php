@@ -233,7 +233,7 @@ trait Zigbee2MQTTHelper
                 }
                 if (property_exists($Payload, 'running_state')) {
                     $this->RegisterVariableString('Z2M_RunningState', $this->Translate('Running State'), '');
-                    SetValue($this->GetIDForIdent('Z2M_RunningState'), $Payload->action);
+                    SetValue($this->GetIDForIdent('Z2M_RunningState'), $Payload->running_state);
                 }
 
                 if (property_exists($Payload, 'linkquality')) {
