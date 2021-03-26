@@ -177,7 +177,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (property_exists($Payload, 'away_preset_temperature')) {
-                    $this->RegisterVariableFloat('Z2M_AwayPresetTemperature', $this->Translate('Away Preset Temperature'), '~Temperature');
+                    $this->RegisterVariableFloat('Z2M_AwayPresetTemperature', $this->Translate('Away Preset Temperature'), '~Temperature.Room');
                     $this->EnableAction('Z2M_AwayPresetTemperature');
                     SetValue($this->GetIDForIdent('Z2M_AwayPresetTemperature'), $Payload->away_preset_temperature);
                 }
@@ -189,24 +189,24 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (property_exists($Payload, 'comfort_temperature')) {
-                    $this->RegisterVariableFloat('Z2M_ComfortTemperature', $this->Translate('Comfort Temperature'), '~Temperature');
+                    $this->RegisterVariableFloat('Z2M_ComfortTemperature', $this->Translate('Comfort Temperature'), '~Temperature.Room');
                     $this->EnableAction('Z2M_ComfortTemperature');
                     SetValue($this->GetIDForIdent('Z2M_ComfortTemperature'), $Payload->comfort_temperature);
                 }
 
                 if (property_exists($Payload, 'eco_temperature')) {
-                    $this->RegisterVariableFloat('Z2M_EcoTemperature', $this->Translate('Eco Temperature'), '~Temperature');
+                    $this->RegisterVariableFloat('Z2M_EcoTemperature', $this->Translate('Eco Temperature'), '~Temperature.Room');
                     $this->EnableAction('Z2M_EcoTemperature');
                     SetValue($this->GetIDForIdent('Z2M_EcoTemperature'), $Payload->eco_temperature);
                 }
 
                 if (property_exists($Payload, 'current_heating_setpoint')) {
-                    $this->RegisterVariableFloat('Z2M_CurrentHeatingSetpoint', $this->Translate('Current Heating Setpoint'), '~Temperature');
+                    $this->RegisterVariableFloat('Z2M_CurrentHeatingSetpoint', $this->Translate('Current Heating Setpoint'), '~Temperature.Room');
                     $this->EnableAction('Z2M_CurrentHeatingSetpoint');
                     SetValue($this->GetIDForIdent('Z2M_CurrentHeatingSetpoint'), $Payload->current_heating_setpoint);
                 }
                 if (property_exists($Payload, 'occupied_heating_setpoint')) {
-                    $this->RegisterVariableFloat('Z2M_OccupiedHeatingSetpoint', $this->Translate('Occupied Heating Setpoint'), '~Temperature');
+                    $this->RegisterVariableFloat('Z2M_OccupiedHeatingSetpoint', $this->Translate('Occupied Heating Setpoint'), '~Temperature.Room');
                     $this->EnableAction('Z2M_OccupiedHeatingSetpoint');
                     SetValue($this->GetIDForIdent('Z2M_OccupiedHeatingSetpoint'), $Payload->occupied_heating_setpoint);
                 }
