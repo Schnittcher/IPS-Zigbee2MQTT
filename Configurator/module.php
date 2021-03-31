@@ -40,6 +40,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
 
         //Devices
         $Devices = json_decode($this->GetBuffer('Devices'), true);
+        $this->SendDebug('Buffer Devices', json_encode($Devices), 0);
         $ValuesDevices = [];
 
         foreach ($Devices as $device) {
