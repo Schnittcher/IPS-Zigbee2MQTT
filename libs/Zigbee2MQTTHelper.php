@@ -65,6 +65,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Position':
                 $this->setPosition($Value);
                 break;
+            case 'Z2M_MotorSpeed':
+                $this->setMotorSpeed($Value);
+                break;
             case 'Z2M_MotionSensitivity':
                 $this->setMotionSensitivity($Value);
                 break;
@@ -282,6 +285,11 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_Position', $this->Translate('Position'), '~Intensity.100');
                     $this->EnableAction('Z2M_Position');
                     SetValue($this->GetIDForIdent('Z2M_Position'), $Payload->position);
+                }
+                if (property_exists($Payload, 'motor_speed')) {
+                    $this->RegisterVariableInteger('Z2M_MotorSpeed', $this->Translate('Motor Speed'), '~Intensity.255');
+                    $this->EnableAction('Z2M_MotoSpeed');
+                    SetValue($this->GetIDForIdent('Z2M_MotoSpeed'), $Payload->motor_speed);
                 }
                 if (property_exists($Payload, 'occupancy')) {
                     $this->RegisterVariableBoolean('Z2M_Occupancy', $this->Translate('Occupancy'), '~Motion');
@@ -650,6 +658,13 @@ trait Zigbee2MQTTHelper
     private function setPosition(int $value)
     {
         $Payload['position'] = strval($value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function setMotorSpeed(int $value)
+    {
+        $Payload['motor_speed'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }

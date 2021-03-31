@@ -74,7 +74,9 @@
       "Release": "Loslassen",
       "Update": "Update",
       "not connected": "Nicht verbunden",
-      "connected": "Verbunden"
+      "connected": "Verbunden",
+      "Position": "Position",
+      "Motor Speed": "Motorgeschwindigkeit"
     }
   }
 }
