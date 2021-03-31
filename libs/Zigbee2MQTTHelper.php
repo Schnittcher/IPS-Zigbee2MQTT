@@ -288,8 +288,8 @@ trait Zigbee2MQTTHelper
                 }
                 if (property_exists($Payload, 'motor_speed')) {
                     $this->RegisterVariableInteger('Z2M_MotorSpeed', $this->Translate('Motor Speed'), '~Intensity.255');
-                    $this->EnableAction('Z2M_MotoSpeed');
-                    SetValue($this->GetIDForIdent('Z2M_MotoSpeed'), $Payload->motor_speed);
+                    $this->EnableAction('Z2M_MotorSpeed');
+                    SetValue($this->GetIDForIdent('Z2M_MotorSpeed'), $Payload->motor_speed);
                 }
                 if (property_exists($Payload, 'occupancy')) {
                     $this->RegisterVariableBoolean('Z2M_Occupancy', $this->Translate('Occupancy'), '~Motion');
