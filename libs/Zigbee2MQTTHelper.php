@@ -503,7 +503,7 @@ trait Zigbee2MQTTHelper
                             SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), 2);
                             break;
                         case 'restore':
-                            SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), 2);
+                            SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), 3);
                             break;
                         default:
                             $this->SendDebug('Power Outage Memory', 'Undefined Power Outage Memory: ' . $Payload->power_outage_memory, 0);
