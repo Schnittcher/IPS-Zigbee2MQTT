@@ -496,10 +496,10 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_PowerOutageMemory', $this->Translate('Power Outage Memory'), 'Z2M.PowerOutageMemory');
                     $this->EnableAction('Z2M_PowerOutageMemory');
                     switch ($Payload->power_outage_memory) {
-                        case 'OFF':
+                        case 'off':
                             SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), 1);
                             break;
-                        case 'ON':
+                        case 'on':
                             SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), 2);
                             break;
                         case 'restore':
