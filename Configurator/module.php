@@ -77,14 +77,13 @@ class Zigbee2MQTTConfigurator extends IPSModule
             $Value['name'] = $group['friendly_name'];
             $Value['instanceID'] = $instanceID;
 
-            $Value['create'] = [
+            $Value['create'] =
                 [
                     'moduleID'      => '{11BF3773-E940-469B-9DD7-FB9ACD7199A2}',
                     'configuration' => [
                         'MQTTTopic'    => $group['friendly_name']
                     ]
-                ],
-            ];
+                ];
             array_push($ValuesGroups, $Value);
         }
         $Form['actions'][1]['items'][0]['values'] = $ValuesGroups;
