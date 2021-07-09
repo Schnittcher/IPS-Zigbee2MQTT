@@ -238,7 +238,14 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableString('Z2M_RunningState', $this->Translate('Running State'), '');
                     SetValue($this->GetIDForIdent('Z2M_RunningState'), $Payload->running_state);
                 }
-
+                if (property_exists($Payload, 'state_left')) {
+                    $this->RegisterVariableString('Z2M_StateLeft', $this->Translate('State Left'), '');
+                    SetValue($this->GetIDForIdent('Z2M_StateLeft'), $Payload->state_left);
+                }
+                if (property_exists($Payload, 'state_right')) {
+                    $this->RegisterVariableString('Z2M_StateRight', $this->Translate('State Right'), '');
+                    SetValue($this->GetIDForIdent('Z2M_StateRight'), $Payload->state_right);
+                }
                 if (property_exists($Payload, 'linkquality')) {
                     $this->RegisterVariableInteger('Z2M_Linkquality', $this->Translate('Linkquality'), '');
                     SetValue($this->GetIDForIdent('Z2M_Linkquality'), $Payload->linkquality);
