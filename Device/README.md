@@ -17,18 +17,18 @@
    **Z2M_SwitchMode($InstanceID, $Value)**\
    Mit dieser Funktion ist es möglich das Gerät ein- bzw. auszuschalten.
    ```php
-   Z2M_SwitchMode(25537, true) //Einschalten;
-   Z2M_SwitchMode(25537,false) //Ausschalten;
+   Z2M_SwitchMode(25537, true); //Einschalten
+   Z2M_SwitchMode(25537,false); //Ausschalten
    ```
    
    **Z2M_setDimmer($InstanceID, $Value)**\
    Mit dieser Funktion ist es möglich das Gerät zu dimmen.
    ```php
-   Z2M_setDimmer(25537,50) //auf 50% dimmen;
+   Z2M_setDimmer(25537,50); //auf 50% dimmen
    ```
    
-   **2M_setSensitivity($InstanceID, $Value)**\
+   **Z2M_setSensitivity($InstanceID, $Value)**\
    Mit dieser Funktion ist es möglich die Empfindlichkeit einzustellen.
    ```php
-   2M_setSensitivity(25537,1) //1 = Medium, 2 = Low, 3 = High
+   Z2M_setSensitivity(25537,1); //1 = Medium, 2 = Low, 3 = High
    ```

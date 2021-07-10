@@ -22,8 +22,10 @@
 
 ## 2. Enthaltene Module
 
-* [IPS-Z2MBridge](IPS-Z2MBridge/README.md)
-* [IPS-Z2MDevice](IPS-Z2MDevice/README.md)
+* [Zigbee2MQTTConfigurator](Configurator/README.md)
+* [Zigbee2MQTTBridge](Bridge/README.md)
+* [Zigbee2MQTTDevice](Device/README.md)
+* [Zigbee2MQTTGroup](Group/README.md)
 
 ## 3. Installation
 IPS-Zigbee2MQTT:
@@ -36,7 +38,7 @@ Bitte den einzelnen Modulen entnehmen.
 
 ## 5. Spenden
 
-Dieses Modul ist für die nicht kommzerielle Nutzung kostenlos, Schenkungen als Unterstützung für den Autor werden hier akzeptiert:    
+Dieses Modul ist für die nicht kommerzielle Nutzung kostenlos, Schenkungen als Unterstützung für den Autor werden hier akzeptiert:    
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EK4JRP87XLSHW" target="_blank"><img src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donate_LG.gif" border="0" /></a>
 
