@@ -543,7 +543,7 @@ trait Zigbee2MQTTHelper
                             SetValue($this->GetIDForIdent('Z2M_Statel2'), false);
                             break;
                         default:
-                            $this->SendDebug('State 2', 'Undefined State 2: ' . $Payload->l2, 0);
+                            $this->SendDebug('State 2', 'Undefined State 2: ' . $Payload->state_l2, 0);
                             break;
                     }
                 }
@@ -558,7 +558,7 @@ trait Zigbee2MQTTHelper
                             SetValue($this->GetIDForIdent('Z2M_Statel3'), false);
                             break;
                         default:
-                            $this->SendDebug('State 3', 'Undefined State 3: ' . $Payload->l3, 0);
+                            $this->SendDebug('State 3', 'Undefined State 3: ' . $Payload->state_l3, 0);
                             break;
                     }
                 }
@@ -573,7 +573,22 @@ trait Zigbee2MQTTHelper
                             SetValue($this->GetIDForIdent('Z2M_Statel4'), false);
                             break;
                         default:
-                            $this->SendDebug('State 4', 'Undefined State 4: ' . $Payload->l4, 0);
+                            $this->SendDebug('State 4', 'Undefined State 4: ' . $Payload->state_l4, 0);
+                            break;
+                    }
+                }
+                if (property_exists($Payload, 'state_l5')) {
+                    $this->RegisterVariableBoolean('Z2M_Statel5', $this->Translate('State 5'), '~Switch');
+                    $this->EnableAction('Z2M_Statel5');
+                    switch ($Payload->state_l5) {
+                        case 'ON':
+                            SetValue($this->GetIDForIdent('Z2M_Statel5'), true);
+                            break;
+                        case 'OFF':
+                            SetValue($this->GetIDForIdent('Z2M_Statel5'), false);
+                            break;
+                        default:
+                            $this->SendDebug('State 5', 'Undefined State 5: ' . $Payload->state_l5, 0);
                             break;
                     }
                 }
