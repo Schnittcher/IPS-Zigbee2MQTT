@@ -597,6 +597,18 @@ trait Zigbee2MQTTHelper
                     SetValue($this->GetIDForIdent('Z2M_Update'), $Payload->update_available);
                 }
             }
+            if (property_exists($Payload, 'voc')) {
+                $this->RegisterVariableFloat('Z2M_VOC', $this->Translate('VOC'), '');
+                SetValue($this->GetIDForIdent('Z2M_VOC'), $Payload->voc);
+            }
+            if (property_exists($Payload, 'co2')) {
+                $this->RegisterVariableFloat('Z2M_CO2', $this->Translate('CO2'), '');
+                SetValue($this->GetIDForIdent('Z2M_CO2'), $Payload->co2);
+            }
+            if (property_exists($Payload, 'formaldehyd')) {
+                $this->RegisterVariableFloat('Z2M_Formaldehyd', $this->Translate('Formaldehyd'), '');
+                SetValue($this->GetIDForIdent('Z2M_Formaldehyd'), $Payload->formaldehyd);
+            }
         }
     }
 

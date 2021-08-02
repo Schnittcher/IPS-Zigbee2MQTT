@@ -79,7 +79,10 @@
       "not connected": "Nicht verbunden",
       "connected": "Verbunden",
       "Position": "Position",
-      "Motor Speed": "Motorgeschwindigkeit"
+      "Motor Speed": "Motorgeschwindigkeit",
+      "VOC": "VOC",
+      "CO2": "CO2",
+      "Formaldehyd": "Formaldehyd"
     }
   }
 }
