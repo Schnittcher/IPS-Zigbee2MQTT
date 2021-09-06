@@ -284,7 +284,7 @@ trait Zigbee2MQTTHelper
                     SetValue($this->GetIDForIdent('Z2M_Click'), $Payload->click);
                 }
                 if (property_exists($Payload, 'brightness')) {
-                    $this->RegisterVariableInteger('Z2M_Brightness', $this->Translate('Brightness'), '~Intensity.255');
+                    $this->RegisterVariableInteger('Z2M_Brightness', $this->Translate('Brightness'), 'Z2M.Intensity.254');
                     $this->EnableAction('Z2M_Brightness');
                     SetValue($this->GetIDForIdent('Z2M_Brightness'), $Payload->brightness);
                 }
@@ -596,18 +596,18 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableBoolean('Z2M_Update', $this->Translate('Update'), '');
                     SetValue($this->GetIDForIdent('Z2M_Update'), $Payload->update_available);
                 }
-            }
-            if (property_exists($Payload, 'voc')) {
-                $this->RegisterVariableFloat('Z2M_VOC', $this->Translate('VOC'), '');
-                SetValue($this->GetIDForIdent('Z2M_VOC'), $Payload->voc);
-            }
-            if (property_exists($Payload, 'co2')) {
-                $this->RegisterVariableFloat('Z2M_CO2', $this->Translate('CO2'), '');
-                SetValue($this->GetIDForIdent('Z2M_CO2'), $Payload->co2);
-            }
-            if (property_exists($Payload, 'formaldehyd')) {
-                $this->RegisterVariableFloat('Z2M_Formaldehyd', $this->Translate('Formaldehyd'), '');
-                SetValue($this->GetIDForIdent('Z2M_Formaldehyd'), $Payload->formaldehyd);
+                if (property_exists($Payload, 'voc')) {
+                    $this->RegisterVariableFloat('Z2M_VOC', $this->Translate('VOC'), '');
+                    SetValue($this->GetIDForIdent('Z2M_VOC'), $Payload->voc);
+                }
+                if (property_exists($Payload, 'co2')) {
+                    $this->RegisterVariableFloat('Z2M_CO2', $this->Translate('CO2'), '');
+                    SetValue($this->GetIDForIdent('Z2M_CO2'), $Payload->co2);
+                }
+                if (property_exists($Payload, 'formaldehyd')) {
+                    $this->RegisterVariableFloat('Z2M_Formaldehyd', $this->Translate('Formaldehyd'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Formaldehyd'), $Payload->formaldehyd);
+                }
             }
         }
     }
@@ -620,6 +620,11 @@ trait Zigbee2MQTTHelper
             $Associations[] = [2, $this->Translate('Low'), '', -1];
             $Associations[] = [3, $this->Translate('High'), '', -1];
             $this->RegisterProfileIntegerEx('Z2M.Sensitivity', '', '', '', $Associations);
+        }
+
+        if (!IPS_VariableProfileExists('Z2M.Intensity.254')) {
+            $Associations = [];
+            $this->RegisterProfileInteger('Z2M.Intensity.254', 'Intensity', '', '%', 0, 254, 1);
         }
 
         if (!IPS_VariableProfileExists('Z2M.SystemMode')) {
