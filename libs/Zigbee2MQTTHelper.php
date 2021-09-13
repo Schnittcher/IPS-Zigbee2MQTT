@@ -26,10 +26,10 @@ trait Zigbee2MQTTHelper
                 $this->SwitchMode($Value);
                 // FIXME: No break. Please add proper comment if intentional
             case 'Z2M_StateRGB':
-                $this->SwitchMode($Value);
+                $this->SwitchModeRGB($Value);
                 // FIXME: No break. Please add proper comment if intentional
             case 'Z2M_StateWhite':
-                $this->SwitchMode($Value);
+                $this->SwitchModeWhite($Value);
                 break;
             case 'Z2M_Statel1':
                 $this->Command('l1/set', $this->OnOff($Value));
