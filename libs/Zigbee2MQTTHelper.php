@@ -10,10 +10,25 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Brightness':
                 $this->setDimmer($Value);
                 break;
+            case 'Z2M_BrightnessRGB':
+                $this->setBrightnessRGB($Value);
+                break;
+            case 'Z2M_BrightnessWhite':
+                $this->setBrightnessWhite($Value);
+                break;
             case 'Z2M_ColorTemp':
                 $this->setColorTemperature($Value);
                 break;
+            case 'Z2M_ColorTempRGB':
+                $this->setColorTemperature($Value, 'color_temp_rgb');
+                break;
             case 'Z2M_State':
+                $this->SwitchMode($Value);
+                // FIXME: No break. Please add proper comment if intentional
+            case 'Z2M_StateRGB':
+                $this->SwitchMode($Value);
+                // FIXME: No break. Please add proper comment if intentional
+            case 'Z2M_StateWhite':
                 $this->SwitchMode($Value);
                 break;
             case 'Z2M_Statel1':
@@ -61,6 +76,10 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Color':
                 $this->SendDebug(__FUNCTION__ . ' Color', $Value, 0);
                 $this->setColor($Value, 'cie');
+                break;
+            case 'Z2M_ColorRGB':
+                $this->SendDebug(__FUNCTION__ . ' :: Color RGB', $Value, 0);
+                $this->setColor($Value, 'cie', 'color_rgb');
                 break;
             case 'Z2M_Position':
                 $this->setPosition($Value);
@@ -288,6 +307,16 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_Brightness');
                     SetValue($this->GetIDForIdent('Z2M_Brightness'), $Payload->brightness);
                 }
+                if (property_exists($Payload, 'brightness_rgb')) {
+                    $this->RegisterVariableInteger('Z2M_BrightnessRGB', $this->Translate('Brightness RGB'), 'Z2M.Intensity.254');
+                    $this->EnableAction('Z2M_BrightnessRGB');
+                    SetValue($this->GetIDForIdent('Z2M_BrightnessRGB'), $Payload->brightness_rgb);
+                }
+                if (property_exists($Payload, 'brightness_white')) {
+                    $this->RegisterVariableInteger('Z2M_BrightnessWhite', $this->Translate('Brightness White'), 'Z2M.Intensity.254');
+                    $this->EnableAction('Z2M_BrightnessWhite');
+                    SetValue($this->GetIDForIdent('Z2M_BrightnessWhite'), $Payload->brightness_white);
+                }
                 if (property_exists($Payload, 'position')) {
                     $this->RegisterVariableInteger('Z2M_Position', $this->Translate('Position'), '~Intensity.100');
                     $this->EnableAction('Z2M_Position');
@@ -449,6 +478,21 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_Color');
                     SetValue($this->GetIDForIdent('Z2M_Color'), hexdec(($RGBColor)));
                 }
+
+                if (property_exists($Payload, 'color_rgb')) {
+                    $this->SendDebug(__FUNCTION__ . ':: Color X', $Payload->color_rgb->x, 0);
+                    $this->SendDebug(__FUNCTION__ . ':: Color Y', $Payload->color_rgb->y, 0);
+                    if (property_exists($Payload, 'brightness_rgb')) {
+                        $RGBColor = ltrim($this->CIEToRGB($Payload->color_rgb->x, $Payload->color_rgb->y, $Payload->brightness_rgb), '#');
+                    } else {
+                        $RGBColor = ltrim($this->CIEToRGB($Payload->color_rgb->x, $Payload->color_rgb->y), '#');
+                    }
+                    $this->SendDebug(__FUNCTION__ . ' Color :: RGB HEX', $RGBColor, 0);
+                    $this->RegisterVariableInteger('Z2M_ColorRGB', $this->Translate('Color'), 'HexColor');
+                    $this->EnableAction('Z2M_ColorRGB');
+                    SetValue($this->GetIDForIdent('Z2M_ColorRGB'), hexdec(($RGBColor)));
+                }
+
                 if (property_exists($Payload, 'sensitivity')) {
                     $this->RegisterVariableInteger('Z2M_Sensitivity', $this->Translate('Sensitivity'), 'Z2M.Sensitivity');
                     $this->EnableAction('Z2M_Sensitivity');
@@ -472,6 +516,13 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_ColorTemp');
                     SetValue($this->GetIDForIdent('Z2M_ColorTemp'), $Payload->color_temp);
                 }
+
+                if (property_exists($Payload, 'color_temp_rgb')) {
+                    $this->RegisterVariableInteger('Z2M_ColorTempRGB', $this->Translate('Color Temperature RGB'), 'Z2M.ColorTemperature');
+                    $this->EnableAction('Z2M_ColorTempRGB');
+                    SetValue($this->GetIDForIdent('Z2M_ColorTempRGB'), $Payload->color_temp_rgb);
+                }
+
                 if (property_exists($Payload, 'state')) {
                     switch ($Payload->state) {
                         case 'ON':
@@ -495,10 +546,47 @@ trait Zigbee2MQTTHelper
                             SetValue($this->GetIDForIdent('Z2M_StateWindow'), false);
                             break;
                         default:
-                            $this->SendDebug('State', 'Undefined State: ' . $Payload->state, 0);
-                            break;
+                        $this->SendDebug('State', 'Undefined State: ' . $Payload->state, 0);
+                        break;
                         }
                 }
+
+                if (property_exists($Payload, 'state_rgb')) {
+                    switch ($Payload->state_rgb) {
+                        case 'ON':
+                            $this->RegisterVariableBoolean('Z2M_StateRGB', $this->Translate('State RGB'), '~Switch');
+                            $this->EnableAction('Z2M_StateRGB');
+                            SetValue($this->GetIDForIdent('Z2M_StateRGB'), true);
+                            break;
+                        case 'OFF':
+                            $this->RegisterVariableBoolean('Z2M_StateRGB', $this->Translate('State RGB'), '~Switch');
+                            $this->EnableAction('Z2M_StateRGB');
+                            SetValue($this->GetIDForIdent('Z2M_StateRGB'), false);
+                            break;
+                        default:
+                        $this->SendDebug('State RGB', 'Undefined State: ' . $Payload->state_rgb, 0);
+                        break;
+                        }
+                }
+
+                if (property_exists($Payload, 'state_white')) {
+                    switch ($Payload->state_white) {
+                        case 'ON':
+                            $this->RegisterVariableBoolean('Z2M_StateWhite', $this->Translate('State White'), '~Switch');
+                            $this->EnableAction('Z2M_StateWhite');
+                            SetValue($this->GetIDForIdent('Z2M_StateWhite'), true);
+                            break;
+                        case 'OFF':
+                            $this->RegisterVariableBoolean('Z2M_StateWhite', $this->Translate('State White'), '~Switch');
+                            $this->EnableAction('Z2M_StateWhite');
+                            SetValue($this->GetIDForIdent('Z2M_StateWhite'), false);
+                            break;
+                        default:
+                        $this->SendDebug('State White', 'Undefined State: ' . $Payload->state_white, 0);
+                        break;
+                        }
+                }
+
                 if (property_exists($Payload, 'power_outage_memory')) {
                     $this->RegisterVariableInteger('Z2M_PowerOutageMemory', $this->Translate('Power Outage Memory'), 'Z2M.PowerOutageMemory');
                     $this->EnableAction('Z2M_PowerOutageMemory');
@@ -687,9 +775,30 @@ trait Zigbee2MQTTHelper
         $this->Z2MSet($PayloadJSON);
     }
 
-    private function setColorTemperature(int $value)
+    private function setBrightnessWhite(int $value)
     {
-        $Payload['color_temp'] = strval($value);
+        $Payload['brightness_white'] = strval($value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function setBrightnessRGB(int $value)
+    {
+        $Payload['brightness_rgb'] = strval($value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function setColorTemperature(int $value, $z2mmode = 'color_temp')
+    {
+        if ($Z2MMode = 'color_temp') {
+            $Payload['color_temp'] = strval($value);
+        } elseif ($Z2MMode == 'color_temp_rgb') {
+            $Payload['color_temp_rgb'] = strval($value);
+        } else {
+            return;
+        }
+
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
@@ -711,6 +820,20 @@ trait Zigbee2MQTTHelper
     private function SwitchMode(bool $value)
     {
         $Payload['state'] = $this->OnOff($value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function SwitchModeRGB(bool $value)
+    {
+        $Payload['state_rgb'] = $this->OnOff($value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function SwitchModeWhite(bool $value)
+    {
+        $Payload['state_white'] = $this->OnOff($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }
@@ -814,14 +937,20 @@ trait Zigbee2MQTTHelper
         $this->Z2MSet($PayloadJSON);
     }
 
-    private function setColor(int $color, string $mode)
+    private function setColor(int $color, string $mode, string $Z2MMode = 'color')
     {
         switch ($mode) {
             case 'cie':
                 $RGB = $this->HexToRGB($color);
                 $cie = $this->RGBToCIE($RGB[0], $RGB[1], $RGB[2]);
+                if ($Z2MMode = 'color') {
+                    $Payload['color'] = $cie;
+                } elseif ($Z2MMode == 'color_rgb') {
+                    $Payload['color_rgb'] = $cie;
+                } else {
+                    return;
+                }
 
-                $Payload['color'] = $cie;
                 $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
                 $this->Z2MSet($PayloadJSON);
                 break;

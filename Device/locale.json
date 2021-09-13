@@ -2,6 +2,8 @@
   "translations": {
     "de": {
       "State": "Status",
+      "State RGB": "Status RGB",
+      "State White": "Status Weiß",
       "State 1": "Status 1",
       "State 2": "Status 2",
       "State 3": "Status 3",
@@ -38,6 +40,8 @@
       "Action": "Aktion",
       "Click": "Klick",
       "Brightness": "Helligkeit",
+      "Brightness RGB": "Helligkeit RGB",
+      "Brightness White": "Helligkeit Weiß",
       "Water Leak": "Wasserleck",
       "Contact": "Kontakt",
       "Illuminance": "Beleuchtungsstärke",
@@ -69,6 +73,7 @@
       "Motion Sensitivity": "Bewegungsempfindlichkeit",
       "Strength": "Stärke",
       "Color Temperature": "Farbtemperatur",
+      "Color Temperature RGB": "Farbtemperatur RGB",
       "Single": "Einmal",
       "Double": "Zweimal",
       "Triple": "Dreimal",
