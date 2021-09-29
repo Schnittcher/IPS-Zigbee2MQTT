@@ -161,9 +161,6 @@ trait Zigbee2MQTTHelper
                         case 'heat':
                             SetValue($this->GetIDForIdent('Z2M_Preset'), 6);
                             break;
-                        case 'heat':
-                            SetValue($this->GetIDForIdent('Z2M_Preset'), 6);
-                            break;
                         case 'schedule':
                             SetValue($this->GetIDForIdent('Z2M_Preset'), 7);
                             break;
