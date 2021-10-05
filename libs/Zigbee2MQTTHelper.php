@@ -351,6 +351,22 @@ trait Zigbee2MQTTHelper
                             break;
                         }
                 }
+                if (property_exists($Payload, 'presence_state')) {
+                    $this->RegisterVariableBoolean('Z2M_Presence_State', $this->Translate('Presence State'), '~Motion');
+                    SetValue($this->GetIDForIdent('Z2M_Presence_State'), $Payload->presence_state);
+                }
+                if (property_exists($Payload, 'motion_state')) {
+                    $this->RegisterVariableBoolean('Z2M_Motion_State', $this->Translate('Motion State'), '~Motion');
+                    SetValue($this->GetIDForIdent('Z2M_Motion_State'), $Payload->motion_state);
+                }
+                if (property_exists($Payload, 'motion_direction')) {
+                    $this->RegisterVariableString('Z2M_Motion_Direction', $this->Translate('Motion Direction'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Motion_Direction'), $Payload->motion_direction);
+                }
+                if (property_exists($Payload, 'motion')) {
+                    $this->RegisterVariableInteger('Z2M_Motion', $this->Translate('Motionspeed'), '');
+                    SetValue($this->GetIDForIdent('Z2M_Motion'), $Payload->motion);
+                }
                 if (property_exists($Payload, 'illuminance')) {
                     $this->RegisterVariableInteger('Z2M_Illuminance', $this->Translate('Illuminance'), '');
                     SetValue($this->GetIDForIdent('Z2M_Illuminance'), $Payload->illuminance);
