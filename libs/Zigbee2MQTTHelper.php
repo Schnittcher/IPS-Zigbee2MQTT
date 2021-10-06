@@ -229,6 +229,10 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_OccupiedHeatingSetpoint');
                     $this->SetValue('Z2M_OccupiedHeatingSetpoint', $Payload->occupied_heating_setpoint);
                 }
+                if (property_exists($Payload, 'pi_heating_demand')) {
+                    $this->RegisterVariableFloat('Z2M_Pi_Heating_Demand', $this->Translate('Valve Position'), '~Intensity.100');
+                    $this->SetValue('Z2M_Pi_Heating_Demand', $Payload->pi_heating_demand);
+                }
                 if (property_exists($Payload, 'system_mode')) {
                     $this->RegisterVariableInteger('Z2M_SystemMode', $this->Translate('Mode'), 'Z2M.SystemMode');
                     $this->EnableAction('Z2M_SystemMode');
