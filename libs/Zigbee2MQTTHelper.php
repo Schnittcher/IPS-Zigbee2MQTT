@@ -111,9 +111,9 @@ trait Zigbee2MQTTHelper
                 if (fnmatch('*/availability', $Buffer->Topic)) {
                     $this->RegisterVariableBoolean('Z2M_Status', $this->Translate('Status'), 'Z2M.DeviceStatus');
                     if ($Buffer->Payload == 'online') {
-                        SetValue($this->GetIDForIdent('Z2M_Status'), true);
+                        $this->SetValue('Z2M_Status', true);
                     } else {
-                        SetValue($this->GetIDForIdent('Z2M_Status'), false);
+                        $this->SetValue('Z2M_Status', false);
                     }
                 }
             }
@@ -121,22 +121,22 @@ trait Zigbee2MQTTHelper
             if (is_object($Payload)) {
                 if (property_exists($Payload, 'temperature')) {
                     $this->RegisterVariableFloat('Z2M_Temperature', $this->Translate('Temperature'), '~Temperature');
-                    SetValue($this->GetIDForIdent('Z2M_Temperature'), $Payload->temperature);
+                    $this->SetValue('Z2M_Temperature', $Payload->temperature);
                 }
                 if (property_exists($Payload, 'local_temperature')) {
                     $this->RegisterVariableFloat('Z2M_LocalTemperature', $this->Translate('Local Temperature'), '~Temperature');
-                    SetValue($this->GetIDForIdent('Z2M_LocalTemperature'), $Payload->local_temperature);
+                    $this->SetValue('Z2M_LocalTemperature', $Payload->local_temperature);
                 }
                 if (property_exists($Payload, 'max_temperature')) {
                     $this->RegisterVariableFloat('Z2M_MaxTemperature', $this->Translate('Max Temperature'), '~Temperature');
                     $this->EnableAction('Z2M_MaxTemperature');
-                    SetValue($this->GetIDForIdent('Z2M_MaxTemperature'), $Payload->max_temperature);
+                    $this->SetValue('Z2M_MaxTemperature', $Payload->max_temperature);
                 }
 
                 if (property_exists($Payload, 'min_temperature')) {
                     $this->RegisterVariableFloat('Z2M_MinTemperature', $this->Translate('Min Temperature'), '~Temperature');
                     $this->EnableAction('Z2M_MinTemperature');
-                    SetValue($this->GetIDForIdent('Z2M_MinTemperature'), $Payload->min_temperature);
+                    $this->SetValue('Z2M_MinTemperature', $Payload->min_temperature);
                 }
 
                 if (property_exists($Payload, 'preset')) {
@@ -144,28 +144,28 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_Preset');
                     switch ($Payload->preset) {
                         case 'manual':
-                            SetValue($this->GetIDForIdent('Z2M_Preset'), 1);
+                            $this->SetValue('Z2M_Preset', 1);
                             break;
                         case 'boost':
-                            SetValue($this->GetIDForIdent('Z2M_Preset'), 2);
+                            $this->SetValue('Z2M_Preset', 2);
                             break;
                         case 'complex':
-                            SetValue($this->GetIDForIdent('Z2M_Preset'), 3);
+                            $this->SetValue('Z2M_Preset', 3);
                             break;
                         case 'comfort':
-                            SetValue($this->GetIDForIdent('Z2M_Preset'), 4);
+                            $this->SetValue('Z2M_Preset', 4);
                             break;
                         case 'eco':
-                            SetValue($this->GetIDForIdent('Z2M_Preset'), 5);
+                            $this->SetValue('Z2M_Preset', 5);
                             break;
                         case 'heat':
-                            SetValue($this->GetIDForIdent('Z2M_Preset'), 6);
+                            $this->SetValue('Z2M_Preset', 6);
                             break;
                         case 'schedule':
-                            SetValue($this->GetIDForIdent('Z2M_Preset'), 7);
+                            $this->SetValue('Z2M_Preset', 7);
                             break;
                         case 'away':
-                            SetValue($this->GetIDForIdent('Z2M_Preset'), 8);
+                            $this->SetValue('Z2M_Preset', 8);
                             break;
                         default:
                         $this->SendDebug('SetValue Preset', 'Invalid Value: ' . $Payload->preset, 0);
@@ -178,10 +178,10 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_AwayMode');
                     switch ($Payload->away_mode) {
                     case 'ON':
-                        SetValue($this->GetIDForIdent('Z2M_AwayMode'), true);
+                        $this->SetValue('Z2M_AwayMode', true);
                         break;
                     case 'OFF':
-                        SetValue($this->GetIDForIdent('Z2M_AwayMode'), false);
+                        $this->SetValue('Z2M_AwayMode', false);
                         break;
                     default:
                         $this->SendDebug('SetValue AwayMode', 'Invalid Value: ' . $Payload->away_mode, 0);
@@ -192,58 +192,58 @@ trait Zigbee2MQTTHelper
                 if (property_exists($Payload, 'away_preset_days')) {
                     $this->RegisterVariableInteger('Z2M_AwayPresetDays', $this->Translate('Away Preset Days'), '');
                     $this->EnableAction('Z2M_AwayPresetDays');
-                    SetValue($this->GetIDForIdent('Z2M_AwayPresetDays'), $Payload->away_preset_days);
+                    $this->SetValue('Z2M_AwayPresetDays', $Payload->away_preset_days);
                 }
 
                 if (property_exists($Payload, 'away_preset_temperature')) {
                     $this->RegisterVariableFloat('Z2M_AwayPresetTemperature', $this->Translate('Away Preset Temperature'), '~Temperature.Room');
                     $this->EnableAction('Z2M_AwayPresetTemperature');
-                    SetValue($this->GetIDForIdent('Z2M_AwayPresetTemperature'), $Payload->away_preset_temperature);
+                    $this->SetValue('Z2M_AwayPresetTemperature', $Payload->away_preset_temperature);
                 }
 
                 if (property_exists($Payload, 'boost_time')) {
                     $this->RegisterVariableInteger('Z2M_BoostTime', $this->Translate('Boost Time'), '');
                     $this->EnableAction('Z2M_BoostTime');
-                    SetValue($this->GetIDForIdent('Z2M_BoostTime'), $Payload->boost_time);
+                    $this->SetValue('Z2M_BoostTime', $Payload->boost_time);
                 }
 
                 if (property_exists($Payload, 'comfort_temperature')) {
                     $this->RegisterVariableFloat('Z2M_ComfortTemperature', $this->Translate('Comfort Temperature'), '~Temperature.Room');
                     $this->EnableAction('Z2M_ComfortTemperature');
-                    SetValue($this->GetIDForIdent('Z2M_ComfortTemperature'), $Payload->comfort_temperature);
+                    $this->SetValue('Z2M_ComfortTemperature', $Payload->comfort_temperature);
                 }
 
                 if (property_exists($Payload, 'eco_temperature')) {
                     $this->RegisterVariableFloat('Z2M_EcoTemperature', $this->Translate('Eco Temperature'), '~Temperature.Room');
                     $this->EnableAction('Z2M_EcoTemperature');
-                    SetValue($this->GetIDForIdent('Z2M_EcoTemperature'), $Payload->eco_temperature);
+                    $this->SetValue('Z2M_EcoTemperature', $Payload->eco_temperature);
                 }
 
                 if (property_exists($Payload, 'current_heating_setpoint')) {
                     $this->RegisterVariableFloat('Z2M_CurrentHeatingSetpoint', $this->Translate('Current Heating Setpoint'), '~Temperature.Room');
                     $this->EnableAction('Z2M_CurrentHeatingSetpoint');
-                    SetValue($this->GetIDForIdent('Z2M_CurrentHeatingSetpoint'), $Payload->current_heating_setpoint);
+                    $this->SetValue('Z2M_CurrentHeatingSetpoint', $Payload->current_heating_setpoint);
                 }
                 if (property_exists($Payload, 'occupied_heating_setpoint')) {
                     $this->RegisterVariableFloat('Z2M_OccupiedHeatingSetpoint', $this->Translate('Occupied Heating Setpoint'), '~Temperature.Room');
                     $this->EnableAction('Z2M_OccupiedHeatingSetpoint');
-                    SetValue($this->GetIDForIdent('Z2M_OccupiedHeatingSetpoint'), $Payload->occupied_heating_setpoint);
+                    $this->SetValue('Z2M_OccupiedHeatingSetpoint', $Payload->occupied_heating_setpoint);
                 }
                 if (property_exists($Payload, 'system_mode')) {
                     $this->RegisterVariableInteger('Z2M_SystemMode', $this->Translate('Mode'), 'Z2M.SystemMode');
                     $this->EnableAction('Z2M_SystemMode');
                     switch ($Payload->system_mode) {
                         case 'off':
-                            SetValue($this->GetIDForIdent('Z2M_SystemMode'), 1);
+                            $this->SetValue('Z2M_SystemMode', 1);
                             break;
                         case 'auto':
-                            SetValue($this->GetIDForIdent('Z2M_SystemMode'), 2);
+                            $this->SetValue('Z2M_SystemMode', 2);
                             break;
                         case 'heat':
-                            SetValue($this->GetIDForIdent('Z2M_SystemMode'), 3);
+                            $this->SetValue('Z2M_SystemMode', 3);
                             break;
                         case 'cool':
-                            SetValue($this->GetIDForIdent('Z2M_SystemMode'), 4);
+                            $this->SetValue('Z2M_SystemMode', 4);
                             break;
                         default:
                             $this->SendDebug('SetValue SystemMode', 'Invalid Value: ' . $Payload->system_mode, 0);
@@ -252,99 +252,99 @@ trait Zigbee2MQTTHelper
                 }
                 if (property_exists($Payload, 'running_state')) {
                     $this->RegisterVariableString('Z2M_RunningState', $this->Translate('Running State'), '');
-                    SetValue($this->GetIDForIdent('Z2M_RunningState'), $Payload->running_state);
+                    $this->SetValue('Z2M_RunningState', $Payload->running_state);
                 }
                 if (property_exists($Payload, 'state_left')) {
                     $this->RegisterVariableString('Z2M_StateLeft', $this->Translate('State Left'), '');
-                    SetValue($this->GetIDForIdent('Z2M_StateLeft'), $Payload->state_left);
+                    $this->SetValue('Z2M_StateLeft', $Payload->state_left);
                 }
                 if (property_exists($Payload, 'state_right')) {
                     $this->RegisterVariableString('Z2M_StateRight', $this->Translate('State Right'), '');
-                    SetValue($this->GetIDForIdent('Z2M_StateRight'), $Payload->state_right);
+                    $this->SetValue('Z2M_StateRight', $Payload->state_right);
                 }
                 if (property_exists($Payload, 'linkquality')) {
                     $this->RegisterVariableInteger('Z2M_Linkquality', $this->Translate('Linkquality'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Linkquality'), $Payload->linkquality);
+                    $this->SetValue('Z2M_Linkquality', $Payload->linkquality);
                 }
                 if (property_exists($Payload, 'humidity')) {
                     $this->RegisterVariableFloat('Z2M_Humidity', $this->Translate('Humidity'), '~Humidity.F');
-                    SetValue($this->GetIDForIdent('Z2M_Humidity'), $Payload->humidity);
+                    $this->SetValue('Z2M_Humidity', $Payload->humidity);
                 }
                 if (property_exists($Payload, 'pressure')) {
                     $this->RegisterVariableFloat('Z2M_Pressure', $this->Translate('Pressure'), '~AirPressure.F');
-                    SetValue($this->GetIDForIdent('Z2M_Pressure'), $Payload->pressure);
+                    $this->SetValue('Z2M_Pressure', $Payload->pressure);
                 }
                 if (property_exists($Payload, 'battery')) {
                     $this->RegisterVariableInteger('Z2M_Battery', $this->Translate('Battery'), '~Battery.100');
-                    SetValue($this->GetIDForIdent('Z2M_Battery'), $Payload->battery);
+                    $this->SetValue('Z2M_Battery', $Payload->battery);
                 }
                 //Da Millivolt und Volt mit dem selben Topic verschickt wird
                 if (property_exists($Payload, 'voltage')) {
                     $this->RegisterVariableFloat('Z2M_Voltage', $this->Translate('Voltage'), '~Volt');
                     if ($Payload->voltage > 400) { //Es gibt wahrscheinlich keine Zigbee Geräte mit über 400 Voltm
-                        SetValue($this->GetIDForIdent('Z2M_Voltage'), $Payload->voltage / 1000);
+                        $this->SetValue('Z2M_Voltage', $Payload->voltage / 1000);
                     } else {
-                        SetValue($this->GetIDForIdent('Z2M_Voltage'), $Payload->voltage);
+                        $this->SetValue('Z2M_Voltage', $Payload->voltage);
                     }
                 }
                 if (property_exists($Payload, 'current')) {
                     $this->RegisterVariableFloat('Z2M_Current', $this->Translate('Current'), '~Ampere');
-                    SetValue($this->GetIDForIdent('Z2M_Current'), $Payload->current);
+                    $this->SetValue('Z2M_Current', $Payload->current);
                 }
                 if (property_exists($Payload, 'action')) {
                     $this->RegisterVariableString('Z2M_Action', $this->Translate('Action'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Action'), $Payload->action);
+                    $this->SetValue('Z2M_Action', $Payload->action);
                 }
                 if (property_exists($Payload, 'click')) {
                     $this->RegisterVariableString('Z2M_Click', $this->Translate('Click'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Click'), $Payload->click);
+                    $this->SetValue('Z2M_Click', $Payload->click);
                 }
                 if (property_exists($Payload, 'brightness')) {
                     $this->RegisterVariableInteger('Z2M_Brightness', $this->Translate('Brightness'), 'Z2M.Intensity.254');
                     $this->EnableAction('Z2M_Brightness');
-                    SetValue($this->GetIDForIdent('Z2M_Brightness'), $Payload->brightness);
+                    $this->SetValue('Z2M_Brightness', $Payload->brightness);
                 }
                 if (property_exists($Payload, 'brightness_rgb')) {
                     $this->RegisterVariableInteger('Z2M_BrightnessRGB', $this->Translate('Brightness RGB'), 'Z2M.Intensity.254');
                     $this->EnableAction('Z2M_BrightnessRGB');
-                    SetValue($this->GetIDForIdent('Z2M_BrightnessRGB'), $Payload->brightness_rgb);
+                    $this->SetValue('Z2M_BrightnessRGB', $Payload->brightness_rgb);
                 }
                 if (property_exists($Payload, 'brightness_white')) {
                     $this->RegisterVariableInteger('Z2M_BrightnessWhite', $this->Translate('Brightness White'), 'Z2M.Intensity.254');
                     $this->EnableAction('Z2M_BrightnessWhite');
-                    SetValue($this->GetIDForIdent('Z2M_BrightnessWhite'), $Payload->brightness_white);
+                    $this->SetValue('Z2M_BrightnessWhite', $Payload->brightness_white);
                 }
                 if (property_exists($Payload, 'position')) {
                     $this->RegisterVariableInteger('Z2M_Position', $this->Translate('Position'), '~Intensity.100');
                     $this->EnableAction('Z2M_Position');
-                    SetValue($this->GetIDForIdent('Z2M_Position'), $Payload->position);
+                    $this->SetValue('Z2M_Position', $Payload->position);
                 }
                 if (property_exists($Payload, 'motor_speed')) {
                     $this->RegisterVariableInteger('Z2M_MotorSpeed', $this->Translate('Motor Speed'), '~Intensity.255');
                     $this->EnableAction('Z2M_MotorSpeed');
-                    SetValue($this->GetIDForIdent('Z2M_MotorSpeed'), $Payload->motor_speed);
+                    $this->SetValue('Z2M_MotorSpeed', $Payload->motor_speed);
                 }
                 if (property_exists($Payload, 'occupancy')) {
                     $this->RegisterVariableBoolean('Z2M_Occupancy', $this->Translate('Occupancy'), '~Motion');
-                    SetValue($this->GetIDForIdent('Z2M_Occupancy'), $Payload->occupancy);
+                    $this->SetValue('Z2M_Occupancy', $Payload->occupancy);
                 }
                 if (property_exists($Payload, 'occupancy_timeout')) {
                     $this->RegisterVariableInteger('Z2M_OccupancyTimeout', $this->Translate('Occupancy Timeout'), '');
                     $this->EnableAction('Z2M_OccupancyTimeout');
-                    SetValue($this->GetIDForIdent('Z2M_OccupancyTimeout'), $Payload->occupancy_timeout);
+                    $this->SetValue('Z2M_OccupancyTimeout', $Payload->occupancy_timeout);
                 }
                 if (property_exists($Payload, 'motion_sensitivity')) {
                     $this->RegisterVariableInteger('Z2M_MotionSensitivity', $this->Translate('Motion Sensitivity'), 'Z2M.Sensitivity');
                     $this->EnableAction('Z2M_MotionSensitivity');
                     switch ($Payload->motion_sensitivity) {
                         case 'medium':
-                            SetValue($this->GetIDForIdent('Z2M_MotionSensitivity'), 1);
+                            $this->SetValue('Z2M_MotionSensitivity', 1);
                             break;
                         case 'low':
-                            SetValue($this->GetIDForIdent('Z2M_MotionSensitivity'), 2);
+                            $this->SetValue('Z2M_MotionSensitivity', 2);
                             break;
                         case 'high':
-                            SetValue($this->GetIDForIdent('Z2M_MotionSensitivity'), 3);
+                            $this->SetValue('Z2M_MotionSensitivity', 3);
                             break;
                         default:
                             $this->SendDebug('SetValue MotionSensitivity', 'Invalid Value: ' . $Payload->motion_sensitivity, 0);
@@ -353,131 +353,131 @@ trait Zigbee2MQTTHelper
                 }
                 if (property_exists($Payload, 'presence_state')) {
                     $this->RegisterVariableBoolean('Z2M_Presence_State', $this->Translate('Presence State'), '~Motion');
-                    SetValue($this->GetIDForIdent('Z2M_Presence_State'), $Payload->presence_state);
+                    $this->SetValue('Z2M_Presence_State', $Payload->presence_state);
                 }
                 if (property_exists($Payload, 'motion_state')) {
                     $this->RegisterVariableBoolean('Z2M_Motion_State', $this->Translate('Motion State'), '~Motion');
-                    SetValue($this->GetIDForIdent('Z2M_Motion_State'), $Payload->motion_state);
+                    $this->SetValue('Z2M_Motion_State', $Payload->motion_state);
                 }
                 if (property_exists($Payload, 'motion_direction')) {
                     $this->RegisterVariableString('Z2M_Motion_Direction', $this->Translate('Motion Direction'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Motion_Direction'), $Payload->motion_direction);
+                    $this->SetValue('Z2M_Motion_Direction', $Payload->motion_direction);
                 }
                 if (property_exists($Payload, 'motion')) {
                     $this->RegisterVariableInteger('Z2M_Motion', $this->Translate('Motionspeed'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Motion'), $Payload->motion);
+                    $this->SetValue('Z2M_Motion', $Payload->motion);
                 }
                 if (property_exists($Payload, 'illuminance')) {
                     $this->RegisterVariableInteger('Z2M_Illuminance', $this->Translate('Illuminance'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Illuminance'), $Payload->illuminance);
+                    $this->SetValue('Z2M_Illuminance', $Payload->illuminance);
                 }
                 if (property_exists($Payload, 'illuminance_lux')) {
                     $this->RegisterVariableInteger('Z2M_Illuminance_Lux', $this->Translate('Illuminance Lux'), '~Illumination');
-                    SetValue($this->GetIDForIdent('Z2M_Illuminance_Lux'), $Payload->illuminance_lux);
+                    $this->SetValue('Z2M_Illuminance_Lux', $Payload->illuminance_lux);
                 }
                 if (property_exists($Payload, 'strength')) {
                     $this->RegisterVariableInteger('Z2M_Strength', $this->Translate('Strength'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Strength'), $Payload->strength);
+                    $this->SetValue('Z2M_Strength', $Payload->strength);
                 }
                 if (property_exists($Payload, 'water_leak')) {
                     $this->RegisterVariableBoolean('Z2M_WaterLeak', $this->Translate('Water Leak'), '');
-                    SetValue($this->GetIDForIdent('Z2M_WaterLeak'), $Payload->water_leak);
+                    $this->SetValue('Z2M_WaterLeak', $Payload->water_leak);
                 }
                 if (property_exists($Payload, 'contact')) {
                     $this->RegisterVariableBoolean('Z2M_Contact', $this->Translate('Contact'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Contact'), $Payload->contact);
+                    $this->SetValue('Z2M_Contact', $Payload->contact);
                 }
                 if (property_exists($Payload, 'carbon_monoxide')) {
                     $this->RegisterVariableBoolean('Z2M_CarbonMonoxide', $this->Translate('Carbon Monoxide'), '~Alert');
-                    SetValue($this->GetIDForIdent('Z2M_CarbonMonoxide'), $Payload->carbon_monoxide);
+                    $this->SetValue('Z2M_CarbonMonoxide', $Payload->carbon_monoxide);
                 }
                 if (property_exists($Payload, 'smoke')) {
                     $this->RegisterVariableBoolean('Z2M_Smoke', $this->Translate('Smoke'), '~Alert');
-                    SetValue($this->GetIDForIdent('Z2M_Smoke'), $Payload->smoke);
+                    $this->SetValue('Z2M_Smoke', $Payload->smoke);
                 }
                 if (property_exists($Payload, 'smoke_density')) {
                     $this->RegisterVariableInteger('Z2M_SmokeDensity', $this->Translate('Smoke Density'), '');
-                    SetValue($this->GetIDForIdent('Z2M_SmokeDensity'), $Payload->smoke_density);
+                    $this->SetValue('Z2M_SmokeDensity', $Payload->smoke_density);
                 }
                 if (property_exists($Payload, 'tamper')) {
                     $this->RegisterVariableBoolean('Z2M_Tamper', $this->Translate('Tamper'), '~Alert');
-                    SetValue($this->GetIDForIdent('Z2M_Tamper'), $Payload->tamper);
+                    $this->SetValue('Z2M_Tamper', $Payload->tamper);
                 }
                 if (property_exists($Payload, 'enrolled')) {
                     $this->RegisterVariableBoolean('Z2M_Enrolled', $this->Translate('Enrolled'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Enrolled'), $Payload->enrolled);
+                    $this->SetValue('Z2M_Enrolled', $Payload->enrolled);
                 }
                 if (property_exists($Payload, 'restore_reports')) {
                     $this->RegisterVariableBoolean('Z2M_RestoreReports', $this->Translate('Restore Reports'), '');
-                    SetValue($this->GetIDForIdent('Z2M_RestoreReports'), $Payload->restore_reports);
+                    $this->SetValue('Z2M_RestoreReports', $Payload->restore_reports);
                 }
                 if (property_exists($Payload, 'supervision_reports')) {
                     $this->RegisterVariableBoolean('Z2M_SupervisionReports', $this->Translate('Supervision Reports'), '');
-                    SetValue($this->GetIDForIdent('Z2M_SupervisionReports'), $Payload->supervision_reports);
+                    $this->SetValue('Z2M_SupervisionReports', $Payload->supervision_reports);
                 }
                 if (property_exists($Payload, 'trouble')) {
                     $this->RegisterVariableBoolean('Z2M_Trouble', $this->Translate('Trouble'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Trouble'), $Payload->trouble);
+                    $this->SetValue('Z2M_Trouble', $Payload->trouble);
                 }
                 if (property_exists($Payload, 'battery_low')) {
                     $this->RegisterVariableBoolean('Z2M_Battery_Low', $this->Translate('Battery Low'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Battery_Low'), $Payload->battery_low);
+                    $this->SetValue('Z2M_Battery_Low', $Payload->battery_low);
                 }
                 if (property_exists($Payload, 'angle')) {
                     $this->RegisterVariableFloat('Z2M_Angle', $this->Translate('Angle'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Angle'), $Payload->angle);
+                    $this->SetValue('Z2M_Angle', $Payload->angle);
                 }
                 if (property_exists($Payload, 'angle_x')) {
                     $this->RegisterVariableFloat('Z2M_Angle_X', $this->Translate('Angle X'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Angle_X'), $Payload->angle_x);
+                    $this->SetValue('Z2M_Angle_X', $Payload->angle_x);
                 }
                 if (property_exists($Payload, 'angle_y')) {
                     $this->RegisterVariableFloat('Z2M_Angle_Y', $this->Translate('Angle Y'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Angle_Y'), $Payload->angle_y);
+                    $this->SetValue('Z2M_Angle_Y', $Payload->angle_y);
                 }
                 if (property_exists($Payload, 'angle_x_absolute')) {
                     $this->RegisterVariableFloat('Z2M_Angle_X_Absolute', $this->Translate('Angle_X_Absolute'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Angle_X_Absolute'), $Payload->angle_x_absolute);
+                    $this->SetValue('Z2M_Angle_X_Absolute', $Payload->angle_x_absolute);
                 }
                 if (property_exists($Payload, 'angle_y_absolute')) {
                     $this->RegisterVariableFloat('Z2M_Angle_Y_Absolute', $this->Translate('Angle_Y_Absolute'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Angle_Y_Absolute'), $Payload->angle_y_absolute);
+                    $this->SetValue('Z2M_Angle_Y_Absolute', $Payload->angle_y_absolute);
                 }
                 if (property_exists($Payload, 'angle_z')) {
                     $this->RegisterVariableFloat('Z2M_Angle_Z', $this->Translate('Angle Z'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Angle_Z'), $Payload->angle_z);
+                    $this->SetValue('Z2M_Angle_Z', $Payload->angle_z);
                 }
                 if (property_exists($Payload, 'from_side')) {
                     $this->RegisterVariableInteger('Z2M_From_Side', $this->Translate('From Side'), '');
-                    SetValue($this->GetIDForIdent('Z2M_From_Side'), $Payload->from_side);
+                    $this->SetValue('Z2M_From_Side', $Payload->from_side);
                 }
                 if (property_exists($Payload, 'to_side')) {
                     $this->RegisterVariableInteger('Z2M_To_Side', $this->Translate('To Side'), '');
-                    SetValue($this->GetIDForIdent('Z2M_To_Side'), $Payload->to_side);
+                    $this->SetValue('Z2M_To_Side', $Payload->to_side);
                 }
                 if (property_exists($Payload, 'power')) {
                     $this->RegisterVariableFloat('Z2M_Power', $this->Translate('Power'), '~Watt.3680');
-                    SetValue($this->GetIDForIdent('Z2M_Power'), $Payload->power);
+                    $this->SetValue('Z2M_Power', $Payload->power);
                 }
                 if (property_exists($Payload, 'consumer_connected')) {
                     $this->RegisterVariableBoolean('Z2M_Consumer_Connected', $this->Translate('Consumer connected'), 'Z2M.ConsumerConnected');
-                    SetValue($this->GetIDForIdent('Z2M_Consumer_Connected'), $Payload->consumer_connected);
+                    $this->SetValue('Z2M_Consumer_Connected', $Payload->consumer_connected);
                 }
                 if (property_exists($Payload, 'consumption')) {
                     $this->RegisterVariableFloat('Z2M_Consumption', $this->Translate('Consumption'), '~Electricity');
-                    SetValue($this->GetIDForIdent('Z2M_Consumption'), $Payload->consumption);
+                    $this->SetValue('Z2M_Consumption', $Payload->consumption);
                 }
                 if (property_exists($Payload, 'energy')) {
                     $this->RegisterVariableFloat('Z2M_Energy', $this->Translate('Energy'), '~Electricity');
-                    SetValue($this->GetIDForIdent('Z2M_Energy'), $Payload->energy);
+                    $this->SetValue('Z2M_Energy', $Payload->energy);
                 }
                 if (property_exists($Payload, 'duration')) {
                     $this->RegisterVariableFloat('Z2M_Duration', $this->Translate('Duration'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Duration'), $Payload->duration);
+                    $this->SetValue('Z2M_Duration', $Payload->duration);
                 }
                 if (property_exists($Payload, 'counter')) {
                     $this->RegisterVariableFloat('Z2M_Counter', $this->Translate('Counter'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Counter'), $Payload->counter);
+                    $this->SetValue('Z2M_Counter', $Payload->counter);
                 }
                 if (property_exists($Payload, 'color')) {
                     $this->SendDebug(__FUNCTION__ . ' Color', $Payload->color->x, 0);
@@ -489,7 +489,7 @@ trait Zigbee2MQTTHelper
                     $this->SendDebug(__FUNCTION__ . ' Color RGB HEX', $RGBColor, 0);
                     $this->RegisterVariableInteger('Z2M_Color', $this->Translate('Color'), 'HexColor');
                     $this->EnableAction('Z2M_Color');
-                    SetValue($this->GetIDForIdent('Z2M_Color'), hexdec(($RGBColor)));
+                    $this->SetValue('Z2M_Color', hexdec(($RGBColor)));
                 }
 
                 if (property_exists($Payload, 'color_rgb')) {
@@ -503,7 +503,7 @@ trait Zigbee2MQTTHelper
                     $this->SendDebug(__FUNCTION__ . ' Color :: RGB HEX', $RGBColor, 0);
                     $this->RegisterVariableInteger('Z2M_ColorRGB', $this->Translate('Color'), 'HexColor');
                     $this->EnableAction('Z2M_ColorRGB');
-                    SetValue($this->GetIDForIdent('Z2M_ColorRGB'), hexdec(($RGBColor)));
+                    $this->SetValue('Z2M_ColorRGB', hexdec(($RGBColor)));
                 }
 
                 if (property_exists($Payload, 'sensitivity')) {
@@ -511,13 +511,13 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_Sensitivity');
                     switch ($Payload->sensitivity) {
                         case 'medium':
-                            SetValue($this->GetIDForIdent('Z2M_Sensitivity'), 1);
+                            $this->SetValue('Z2M_Sensitivity', 1);
                             break;
                         case 'low':
-                            SetValue($this->GetIDForIdent('Z2M_Sensitivity'), 2);
+                            $this->SetValue('Z2M_Sensitivity', 2);
                             break;
                         case 'high':
-                            SetValue($this->GetIDForIdent('Z2M_Sensitivity'), 3);
+                            $this->SetValue('Z2M_Sensitivity', 3);
                             break;
                         default:
                             $this->SendDebug('SetValue Sensitivity', 'Invalid Value: ' . $Payload->sensitivity, 0);
@@ -527,13 +527,13 @@ trait Zigbee2MQTTHelper
                 if (property_exists($Payload, 'color_temp')) {
                     $this->RegisterVariableInteger('Z2M_ColorTemp', $this->Translate('Color Temperature'), 'Z2M.ColorTemperature');
                     $this->EnableAction('Z2M_ColorTemp');
-                    SetValue($this->GetIDForIdent('Z2M_ColorTemp'), $Payload->color_temp);
+                    $this->SetValue('Z2M_ColorTemp', $Payload->color_temp);
                 }
 
                 if (property_exists($Payload, 'color_temp_rgb')) {
                     $this->RegisterVariableInteger('Z2M_ColorTempRGB', $this->Translate('Color Temperature RGB'), 'Z2M.ColorTemperature');
                     $this->EnableAction('Z2M_ColorTempRGB');
-                    SetValue($this->GetIDForIdent('Z2M_ColorTempRGB'), $Payload->color_temp_rgb);
+                    $this->SetValue('Z2M_ColorTempRGB', $Payload->color_temp_rgb);
                 }
 
                 if (property_exists($Payload, 'state')) {
@@ -541,22 +541,22 @@ trait Zigbee2MQTTHelper
                         case 'ON':
                             $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
                             $this->EnableAction('Z2M_State');
-                            SetValue($this->GetIDForIdent('Z2M_State'), true);
+                            $this->SetValue('Z2M_State', true);
                             break;
                         case 'OFF':
                             $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
                             $this->EnableAction('Z2M_State');
-                            SetValue($this->GetIDForIdent('Z2M_State'), false);
+                            $this->SetValue('Z2M_State', false);
                             break;
                         case 'OPEN':
                             $this->RegisterVariableBoolean('Z2M_StateWindow', $this->Translate('State'), '~Window');
                             $this->EnableAction('Z2M_StateWindow');
-                            SetValue($this->GetIDForIdent('Z2M_StateWindow'), true);
+                            $this->SetValue('Z2M_StateWindow', true);
                             break;
                         case 'CLOSE':
                             $this->RegisterVariableBoolean('Z2M_StateWindow', $this->Translate('State'), '~Window');
                             $this->EnableAction('Z2M_StateWindow');
-                            SetValue($this->GetIDForIdent('Z2M_StateWindow'), false);
+                            $this->SetValue('Z2M_StateWindow', false);
                             break;
                         default:
                         $this->SendDebug('State', 'Undefined State: ' . $Payload->state, 0);
@@ -569,12 +569,12 @@ trait Zigbee2MQTTHelper
                         case 'ON':
                             $this->RegisterVariableBoolean('Z2M_StateRGB', $this->Translate('State RGB'), '~Switch');
                             $this->EnableAction('Z2M_StateRGB');
-                            SetValue($this->GetIDForIdent('Z2M_StateRGB'), true);
+                            $this->SetValue('Z2M_StateRGB', true);
                             break;
                         case 'OFF':
                             $this->RegisterVariableBoolean('Z2M_StateRGB', $this->Translate('State RGB'), '~Switch');
                             $this->EnableAction('Z2M_StateRGB');
-                            SetValue($this->GetIDForIdent('Z2M_StateRGB'), false);
+                            $this->SetValue('Z2M_StateRGB', false);
                             break;
                         default:
                         $this->SendDebug('State RGB', 'Undefined State: ' . $Payload->state_rgb, 0);
@@ -587,12 +587,12 @@ trait Zigbee2MQTTHelper
                         case 'ON':
                             $this->RegisterVariableBoolean('Z2M_StateWhite', $this->Translate('State White'), '~Switch');
                             $this->EnableAction('Z2M_StateWhite');
-                            SetValue($this->GetIDForIdent('Z2M_StateWhite'), true);
+                            $this->SetValue('Z2M_StateWhite', true);
                             break;
                         case 'OFF':
                             $this->RegisterVariableBoolean('Z2M_StateWhite', $this->Translate('State White'), '~Switch');
                             $this->EnableAction('Z2M_StateWhite');
-                            SetValue($this->GetIDForIdent('Z2M_StateWhite'), false);
+                            $this->SetValue('Z2M_StateWhite', false);
                             break;
                         default:
                         $this->SendDebug('State White', 'Undefined State: ' . $Payload->state_white, 0);
@@ -605,13 +605,13 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_PowerOutageMemory');
                     switch ($Payload->power_outage_memory) {
                         case 'off':
-                            SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), 1);
+                            $this->SetValue('Z2M_PowerOutageMemory', 1);
                             break;
                         case 'on':
-                            SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), 2);
+                            $this->SetValue('Z2M_PowerOutageMemory', 2);
                             break;
                         case 'restore':
-                            SetValue($this->GetIDForIdent('Z2M_PowerOutageMemory'), 3);
+                            $this->SetValue('Z2M_PowerOutageMemory', 3);
                             break;
                         default:
                             $this->SendDebug('Power Outage Memory', 'Undefined Power Outage Memory: ' . $Payload->power_outage_memory, 0);
@@ -623,10 +623,10 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_Statel1');
                     switch ($Payload->state_l1) {
                         case 'ON':
-                            SetValue($this->GetIDForIdent('Z2M_Statel1'), true);
+                            $this->SetValue('Z2M_Statel1', true);
                             break;
                         case 'OFF':
-                            SetValue($this->GetIDForIdent('Z2M_Statel1'), false);
+                            $this->SetValue('Z2M_Statel1', false);
                             break;
                         default:
                             $this->SendDebug('State 1', 'Undefined State 1: ' . $Payload->state_l1, 0);
@@ -638,10 +638,10 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_Statel2');
                     switch ($Payload->state_l2) {
                         case 'ON':
-                            SetValue($this->GetIDForIdent('Z2M_Statel2'), true);
+                            $this->SetValue('Z2M_Statel2', true);
                             break;
                         case 'OFF':
-                            SetValue($this->GetIDForIdent('Z2M_Statel2'), false);
+                            $this->SetValue('Z2M_Statel2', false);
                             break;
                         default:
                             $this->SendDebug('State 2', 'Undefined State 2: ' . $Payload->state_l2, 0);
@@ -653,10 +653,10 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_Statel3');
                     switch ($Payload->state_l3) {
                         case 'ON':
-                            SetValue($this->GetIDForIdent('Z2M_Statel3'), true);
+                            $this->SetValue('Z2M_Statel3', true);
                             break;
                         case 'OFF':
-                            SetValue($this->GetIDForIdent('Z2M_Statel3'), false);
+                            $this->SetValue('Z2M_Statel3', false);
                             break;
                         default:
                             $this->SendDebug('State 3', 'Undefined State 3: ' . $Payload->state_l3, 0);
@@ -668,10 +668,10 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_Statel4');
                     switch ($Payload->state_l4) {
                         case 'ON':
-                            SetValue($this->GetIDForIdent('Z2M_Statel4'), true);
+                            $this->SetValue('Z2M_Statel4', true);
                             break;
                         case 'OFF':
-                            SetValue($this->GetIDForIdent('Z2M_Statel4'), false);
+                            $this->SetValue('Z2M_Statel4', false);
                             break;
                         default:
                             $this->SendDebug('State 4', 'Undefined State 4: ' . $Payload->state_l4, 0);
@@ -683,10 +683,10 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_Statel5');
                     switch ($Payload->state_l5) {
                         case 'ON':
-                            SetValue($this->GetIDForIdent('Z2M_Statel5'), true);
+                            $this->SetValue('Z2M_Statel5', true);
                             break;
                         case 'OFF':
-                            SetValue($this->GetIDForIdent('Z2M_Statel5'), false);
+                            $this->SetValue('Z2M_Statel5', false);
                             break;
                         default:
                             $this->SendDebug('State 5', 'Undefined State 5: ' . $Payload->state_l5, 0);
@@ -695,19 +695,19 @@ trait Zigbee2MQTTHelper
                 }
                 if (property_exists($Payload, 'update_available')) {
                     $this->RegisterVariableBoolean('Z2M_Update', $this->Translate('Update'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Update'), $Payload->update_available);
+                    $this->SetValue('Z2M_Update', $Payload->update_available);
                 }
                 if (property_exists($Payload, 'voc')) {
                     $this->RegisterVariableFloat('Z2M_VOC', $this->Translate('VOC'), '');
-                    SetValue($this->GetIDForIdent('Z2M_VOC'), $Payload->voc);
+                    $this->SetValue('Z2M_VOC', $Payload->voc);
                 }
                 if (property_exists($Payload, 'co2')) {
                     $this->RegisterVariableFloat('Z2M_CO2', $this->Translate('CO2'), '');
-                    SetValue($this->GetIDForIdent('Z2M_CO2'), $Payload->co2);
+                    $this->SetValue('Z2M_CO2', $Payload->co2);
                 }
                 if (property_exists($Payload, 'formaldehyd')) {
                     $this->RegisterVariableFloat('Z2M_Formaldehyd', $this->Translate('Formaldehyd'), '');
-                    SetValue($this->GetIDForIdent('Z2M_Formaldehyd'), $Payload->formaldehyd);
+                    $this->SetValue('Z2M_Formaldehyd', $Payload->formaldehyd);
                 }
             }
         }
