@@ -70,6 +70,7 @@
       "Current": "Strom",
       "Philips HUE Illuminance": "Philips HUE Beleuchtungsstärke",
       "Occupancy": "Bewegung",
+      "Motion": "Bewegung",
       "Occupancy Timeout": "Bewegung Timeout",
       "Presence State": "Präsenz Status",
       "Motion Sensitivity": "Bewegungsempfindlichkeit",

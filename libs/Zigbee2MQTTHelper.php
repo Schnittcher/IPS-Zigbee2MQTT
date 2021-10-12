@@ -359,6 +359,10 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableBoolean('Z2M_Presence_State', $this->Translate('Presence State'), '~Presence');
                     $this->SetValue('Z2M_Presence_State', $Payload->presence_state);
                 }
+                if (property_exists($Payload, 'motion')) {
+                    $this->RegisterVariableBoolean('Z2M_Motion', $this->Translate('Motion'), '~Motion');
+                    $this->SetValue('Z2M_Motion', $Payload->motion);
+                }
                 if (property_exists($Payload, 'motion_state')) {
                     $this->RegisterVariableBoolean('Z2M_Motion_State', $this->Translate('Motion State'), '~Motion');
                     $this->SetValue('Z2M_Motion_State', $Payload->motion_state);
@@ -371,9 +375,9 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableString('Z2M_Scene', $this->Translate('Scene'), '');
                     $this->SetValue('Z2M_Scene', $Payload->scene);
                 }
-                if (property_exists($Payload, 'motion')) {
-                    $this->RegisterVariableInteger('Z2M_Motion', $this->Translate('Motionspeed'), '');
-                    $this->SetValue('Z2M_Motion', $Payload->motion);
+                if (property_exists($Payload, 'motion_speed')) {
+                    $this->RegisterVariableInteger('Z2M_Motion_Speed', $this->Translate('Motionspeed'), '');
+                    $this->SetValue('Z2M_Motion_Speed', $Payload->motion_speed);
                 }
                 if (property_exists($Payload, 'illuminance')) {
                     $this->RegisterVariableInteger('Z2M_Illuminance', $this->Translate('Illuminance'), '');
