@@ -361,9 +361,9 @@ trait Zigbee2MQTTHelper
                             break;
                         }
                 }
-                if (property_exists($Payload, 'presence_state')) {
-                    $this->RegisterVariableBoolean('Z2M_Presence_State', $this->Translate('Presence State'), '~Presence');
-                    $this->SetValue('Z2M_Presence_State', $Payload->presence_state);
+                if (property_exists($Payload, 'presence')) {
+                    $this->RegisterVariableBoolean('Z2M_Presence', $this->Translate('Presence'), '~Presence');
+                    $this->SetValue('Z2M_Presence', $Payload->presence);
                 }
                 if (property_exists($Payload, 'motion')) {
                     $this->RegisterVariableBoolean('Z2M_Motion', $this->Translate('Motion'), '~Motion');
@@ -391,7 +391,7 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_Radar_Sensitivity', $Payload->radar_sensitivity);
                 }
                 if (property_exists($Payload, 'radar_scene')) {
-                    $this->RegisterVariableInteger('Z2M_Radar_Scene', $this->Translate('Radar Scene'), 'Z2M.RadarScene');
+                    $this->RegisterVariableString('Z2M_Radar_Scene', $this->Translate('Radar Scene'), 'Z2M.RadarScene');
                     $this->EnableAction('Z2M_Radar_Scene');
                     $this->SetValue('Z2M_Radar_Scene', $Payload->radar_scene);
                 }
