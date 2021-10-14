@@ -52,6 +52,12 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Sensitivity':
                 $this->setSensitivity($Value);
                 break;
+            case 'Z2M_RadarSensitivity':
+                $this->setRadarSensitivity($Value);
+                break;
+            case 'Z2M_RadarScene':
+                $this->setRadarScene($Value);
+                break;
             case 'Z2M_CurrentHeatingSetpoint':
                 $this->setCurrentHeatingSetpoint($Value);
                 break;
@@ -378,6 +384,16 @@ trait Zigbee2MQTTHelper
                 if (property_exists($Payload, 'motion_speed')) {
                     $this->RegisterVariableInteger('Z2M_Motion_Speed', $this->Translate('Motionspeed'), '');
                     $this->SetValue('Z2M_Motion_Speed', $Payload->motion_speed);
+                }
+                if (property_exists($Payload, 'radar_sensitivity')) {
+                    $this->RegisterVariableInteger('Z2M_Radar_Sensitivity', $this->Translate('Radar Sensitivity'), 'Z2M.RadarSensitivity');
+                    $this->EnableAction('Z2M_Radar_Sensitivity');
+                    $this->SetValue('Z2M_Radar_Sensitivity', $Payload->radar_sensitivity);
+                }
+                if (property_exists($Payload, 'radar_scene')) {
+                    $this->RegisterVariableInteger('Z2M_Radar_Scene', $this->Translate('Radar Scene'), 'Z2M.RadarScene');
+                    $this->EnableAction('Z2M_Radar_Scene');
+                    $this->SetValue('Z2M_Radar_Scene', $Payload->radar_scene);
                 }
                 if (property_exists($Payload, 'illuminance')) {
                     $this->RegisterVariableInteger('Z2M_Illuminance', $this->Translate('Illuminance'), '');
@@ -740,6 +756,22 @@ trait Zigbee2MQTTHelper
             $this->RegisterProfileInteger('Z2M.Intensity.254', 'Intensity', '', '%', 0, 254, 1);
         }
 
+        if (!IPS_VariableProfileExists('Z2M.RadarSensitivity')) {
+            $Associations = [];
+            $this->RegisterProfileInteger('Z2M.RadarSensitivity', 'Intensity', '', '', 0, 9, 1);
+        }
+        if (!IPS_VariableProfileExists('Z2M.RadarScene')) {
+            $this->RegisterProfileStringEx('Z2M.RadarScene', 'Menu', '', '', [
+                ['default', $this->Translate('Default'), '', 0xFFFFFF],
+                ['area', $this->Translate('Area'), '', 0x0000FF],
+                ['toilet', $this->Translate('Toilet'), '', 0x0000FF],
+                ['bedroom', $this->Translate('Bedroom'), '', 0x0000FF],
+                ['parlour', $this->Translate('Parlour'), '', 0x0000FF],
+                ['office', $this->Translate('Office'), '', 0x0000FF],
+                ['hotel', $this->Translate('Hotel'), '', 0x0000FF]
+            ]);
+        }
+
         if (!IPS_VariableProfileExists('Z2M.SystemMode')) {
             $Associations = [];
             $Associations[] = [1, $this->Translate('Off'), '', -1];
@@ -994,6 +1026,20 @@ trait Zigbee2MQTTHelper
     private function setSensitivity(int $value)
     {
         $Payload['sensitivity'] = strval($value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function setRadarSensitivity(int $value)
+    {
+        $Payload['radar_sensitivity'] = strval($value);
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
+    private function setRadarScene(string $value)
+    {
+        $Payload['radar_scene'] = strval($value);
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($PayloadJSON);
     }

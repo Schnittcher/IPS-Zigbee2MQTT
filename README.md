@@ -16,7 +16,7 @@
    
 ## 1. Voraussetzungen
 
-* mindestens IPS Version 5.1
+* mindestens IPS Version 6.0
 * MQTT Server (IPS Modul) 
 
 

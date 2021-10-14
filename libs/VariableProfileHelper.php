@@ -217,3 +217,5 @@ trait VariableProfileHelper
         IPS_DeleteVariableProfile($Name);
     }
 }
+
+/* @} */

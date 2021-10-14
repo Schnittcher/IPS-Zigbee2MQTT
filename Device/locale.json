@@ -94,7 +94,16 @@
       "Motor Speed": "Motorgeschwindigkeit",
       "VOC": "VOC",
       "CO2": "CO2",
-      "Formaldehyd": "Formaldehyd"
+      "Formaldehyd": "Formaldehyd",
+      "Radar Scene": "Radar Szene",
+      "Radar Sensitivity": "Radar Empfindlichkeit",
+      "Default": "Default",
+      "Area": "Area",
+      "Toilet": "Badezimmer",
+      "Bedroom": "Schlafzimmer",
+      "Parlour": "Salon",
+      "Office": "Büro",
+      "Hotel": "Hotel"
     }
   }
 }
