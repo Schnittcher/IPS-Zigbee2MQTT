@@ -758,7 +758,7 @@ trait Zigbee2MQTTHelper
 
         if (!IPS_VariableProfileExists('Z2M.RadarSensitivity')) {
             $Associations = [];
-            $this->RegisterProfileInteger('Z2M.RadarSensitivity', 'Intensity', '', '', 0, 9, 1);
+            $this->RegisterProfileInteger('Z2M.RadarSensitivity', 'Intensity', '', '', 0, 10, 1);
         }
         if (!IPS_VariableProfileExists('Z2M.RadarScene')) {
             $this->RegisterProfileStringEx('Z2M.RadarScene', 'Menu', '', '', [
