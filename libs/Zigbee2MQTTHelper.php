@@ -19,6 +19,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_ColorTemp':
                 $this->setColorTemperature($Value);
                 break;
+            case 'Z2M_ColorTempKelvin':
+                $this->setColorTemperature(round(1000000 / $Value));
+                break;
             case 'Z2M_ColorTempRGB':
                 $this->setColorTemperature($Value, 'color_temp_rgb');
                 break;
