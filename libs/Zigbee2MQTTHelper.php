@@ -559,6 +559,10 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_ColorTemp', $this->Translate('Color Temperature'), 'Z2M.ColorTemperature');
                     $this->EnableAction('Z2M_ColorTemp');
                     $this->SetValue('Z2M_ColorTemp', $Payload->color_temp);
+
+                    $this->RegisterVariableInteger('Z2M_ColorTempKelvin', $this->Translate('Color Temperature Kelvin'), 'Z2M.ColorTemperatureKelvin');
+                    $this->EnableAction('Z2M_ColorTempKelvin');
+                    $this->SetValue('Z2M_ColorTempKelvin', 1000000 / $Payload->color_temp); //Convert to Kelvin
                 }
 
                 if (property_exists($Payload, 'color_temp_rgb')) {
