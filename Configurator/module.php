@@ -12,7 +12,8 @@ class Zigbee2MQTTConfigurator extends IPSModule
         //Never delete this line!
         parent::Create();
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
-        $this->RegisterPropertyString('MQTTTopic', 'bridge');
+        $this->RegisterPropertyString('MQTTBaseTopic', 'zigbe2mqtt');
+
         $this->SetBuffer('Devices', '{}');
         $this->SetBuffer('Groups', '{}');
 
@@ -26,7 +27,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
         parent::ApplyChanges();
 
         //Setze Filter fÃ¼r ReceiveData
-        $topic = $this->ReadPropertyString('MQTTTopic');
+        $topic = 'symcon/' . $this->ReadPropertyString('MQTTBaseTopic');
         $this->SetReceiveDataFilter('.*' . $topic . '.*');
         $this->getDevices();
         $this->getGroups();
@@ -42,18 +43,20 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $Devices = json_decode($this->GetBuffer('Devices'), true);
         $this->SendDebug('Buffer Devices', json_encode($Devices), 0);
         $ValuesDevices = [];
+        $this->LogMessage(print_r($Devices, true), KL_NOTIFY);
 
         foreach ($Devices as $device) {
+
             $instanceID = $this->getDeviceInstanceID($device['friendly_name']);
             $Value['name'] = $device['friendly_name'];
             $Value['ieee_address'] = $device['ieeeAddr'];
+            $Value['networkAddress'] = $device['networkAddress'];
             $Value['type'] = $device['type'];
-            if ($device['type'] != 'Coordinator') {
-                $Value['vendor'] = $device['vendor'];
-                $Value['modelID'] = (array_key_exists('modelID', $device) == true ? $device['modelID'] : $this->Translate('Unknown'));
-                $Value['description'] = $device['description'];
-                $Value['power_source'] = (array_key_exists('powerSource', $device) == true ? $this->Translate($device['powerSource']) : $this->Translate('Unknown'));
-            }
+            $Value['vendor'] = $device['vendor'];
+            $Value['modelID'] = (array_key_exists('modelID', $device) == true ? $device['modelID'] : $this->Translate('Unknown'));
+            $Value['description'] = $device['description'];
+            $Value['power_source'] = (array_key_exists('powerSource', $device) == true ? $this->Translate($device['powerSource']) : $this->Translate('Unknown'));
+
             $Value['instanceID'] = $instanceID;
 
             $Value['create'] =
@@ -96,7 +99,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $Buffer = json_decode($JSONString, true);
 
         if (array_key_exists('Topic', $Buffer)) {
-            if (fnmatch('*/config/devices', $Buffer['Topic'])) {
+            if (fnmatch('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/devices', $Buffer['Topic'])) {
                 $Payload = json_decode($Buffer['Payload'], true);
                 $this->SetBuffer('Devices', json_encode($Payload));
             }
@@ -132,9 +135,11 @@ class Zigbee2MQTTConfigurator extends IPSModule
 
     private function getDevices()
     {
-        $this->SetReceiveDataFilter('');
-        $this->Command('config/devices/get', '');
-        $this->SetTimerInterval('Z2M_ActivateReceiveDataFilter', 30000);
+        //$this->SetReceiveDataFilter('');
+
+        $this->Command('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/getDevices', '');
+
+        //$this->SetTimerInterval('Z2M_ActivateReceiveDataFilter', 30000);
     }
 
     private function getGroups()

@@ -42,7 +42,9 @@
       "Release": "Loslassen",
       "not connected": "Nicht verbunden",
       "connected": "Verbunden",
-      "Presencez": "Präsenz"
+      "Presencez": "Präsenz",
+      "Seconds": "Sekunden",
+      "Effect": "Effekt"
     }
   }
 }

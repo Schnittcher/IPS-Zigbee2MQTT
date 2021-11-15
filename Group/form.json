@@ -1,6 +1,14 @@
 {
-    "elements":
-    [
-      { "type": "ValidationTextBox", "name": "MQTTTopic", "caption": "MQTT Topic" }
-    ]
+  "elements": [
+    {
+      "type": "ValidationTextBox",
+      "name": "MQTTTBaseTopic",
+      "caption": "MQTT Base Topic"
+    },
+    {
+      "type": "ValidationTextBox",
+      "name": "MQTTTopic",
+      "caption": "MQTT Topic"
+    }
+  ]
 }

@@ -104,7 +104,9 @@
       "Bedroom": "Schlafzimmer",
       "Parlour": "Salon",
       "Office": "Büro",
-      "Hotel": "Hotel"
+      "Hotel": "Hotel",
+      "Seconds": "Sekunden",
+      "Effect": "Effekt"
     }
   }
 }
