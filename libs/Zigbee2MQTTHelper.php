@@ -1159,7 +1159,7 @@ trait Zigbee2MQTTHelper
         $missedVariables['light'] = [];
         $missedVariables['switch'] = [];
 
-        $this->SendDebug(__FUNCTION__ . ':: All Exposes', json_encode($array), 0);
+        $this->SendDebug(__FUNCTION__ . ':: All Exposes', json_encode($exposes), 0);
 
         foreach ($exposes as $key => $expose) {
             switch ($expose['type']) {
