@@ -1164,6 +1164,9 @@ trait Zigbee2MQTTHelper
                                 case 'binary':
                                     switch ($feature['property']) {
                                         case 'state':
+                                            if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
+                                                $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
+                                            }
                                             break;
                                         default:
                                         // Default Switch binary
