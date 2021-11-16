@@ -1538,7 +1538,7 @@ trait Zigbee2MQTTHelper
                             if (!IPS_VariableProfileExists('Z2M.OverloadProtection')) {
                                 $this->RegisterProfileInteger('Z2M.OverloadProtection', 'Electricity', '', ' ' . $this->Translate('Watt'), 100, 2200, 0);
                             }
-                            $this->RegisterVariableFloat('Z2M_OverloadProtection', $this->Translate('Overload Protection'), 'Z2M.OverloadProtection');
+                            $this->RegisterVariableInteger('Z2M_OverloadProtection', $this->Translate('Overload Protection'), 'Z2M.OverloadProtection');
                             $this->EnableAction('Z2M_OverloadProtection');
                             break;
                         case 'calibration_time':
