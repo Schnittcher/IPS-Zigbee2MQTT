@@ -1157,6 +1157,9 @@ trait Zigbee2MQTTHelper
     {
         $missedVariables = [];
         $missedVariables['light'] = [];
+        $missedVariables['switch'] = [];
+
+        $this->SendDebug(__FUNCTION__ . ':: All Exposes', json_encode($array), 0);
 
         foreach ($exposes as $key => $expose) {
             switch ($expose['type']) {
@@ -1173,7 +1176,7 @@ trait Zigbee2MQTTHelper
                                             break;
                                         default:
                                         // Default Switch binary
-                                        $missedVariables['light'][] = $feature;
+                                        $missedVariables['switch'][] = $feature;
                                         break;
                                     }
                                 break; //Switch binaray break;
@@ -1181,7 +1184,7 @@ trait Zigbee2MQTTHelper
                                     switch ($feature['property']) {
                                         default:
                                         // Default Switch binary
-                                        $missedVariables['light'][] = $feature;
+                                        $missedVariables['switch'][] = $feature;
                                         break;
                                     }
                                     break; //Switch numeric break;
@@ -1189,7 +1192,7 @@ trait Zigbee2MQTTHelper
                                     switch ($feature['property']) {
                                         default:
                                         // Default Switch enum
-                                        $missedVariables['light'][] = $feature;
+                                        $missedVariables['switch'][] = $feature;
                                         break;
                                     }
                                     break; //Switch enum break;
@@ -1557,6 +1560,6 @@ trait Zigbee2MQTTHelper
                     break;
             }
         }
-        $this->SendDebug('Missed Variables', json_encode($missedVariables), 0);
+        $this->SendDebug(__FUNCTION__ . ':: Missed Exposes', json_encode($missedVariables), 0);
     }
 }
