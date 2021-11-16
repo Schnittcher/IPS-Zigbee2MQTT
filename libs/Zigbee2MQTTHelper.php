@@ -1158,7 +1158,6 @@ trait Zigbee2MQTTHelper
         $missedVariables = [];
         $missedVariables['light'] = [];
 
-        IPS_LogMessage('Exposes', print_r($exposes, true));
         foreach ($exposes as $key => $expose) {
             switch ($expose['type']) {
                 case 'switch':
