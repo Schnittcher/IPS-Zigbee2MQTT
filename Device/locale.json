@@ -28,8 +28,11 @@
       "Boost Time": "Boost Zeit",
       "Comfort Temperature": "Komfort Temperatur",
       "Eco Temperature": "Eco Temperatur",
+      "Heating": "Heizt",
       "Current Heating Setpoint": "Aktueller Heizsollwert",
       "Occupied Heating Setpoint": "Besetzter Heizungssollwert",
+      "Boost Heating Countdown": "Boost-Heizungs-Countdown",
+      "Boost Heating": "Boost-Heizung",
       "Valve Position": "Ventilstellung",
       "Mode": "Modus",
       "Running State": "Betriebszustand",
@@ -106,7 +109,15 @@
       "Office": "Büro",
       "Hotel": "Hotel",
       "Seconds": "Sekunden",
-      "Effect": "Effekt"
+      "Minutes": "Minutes",
+      "Effect": "Effekt",
+      "Auto Off": "Automatische Abschaltung",
+      "Overload Protection": "Überspannungschutz",
+      "Force": "Erzwingen",
+      "Moving": "Bewegung",
+      "Calibration": "Kalibrierung",
+      "Calibration Time": "Kalibrierzeit",
+      "Motor Reversal": "Motorumkehr"
     }
   }
 }
