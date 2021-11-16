@@ -406,7 +406,9 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_Illuminance', $Payload->illuminance);
                 }
                 if (property_exists($Payload, 'illuminance_lux')) {
-                    $this->SetValue('Z2M_Illuminance_Lux', $Payload->illuminance_lux);
+                    if (@$this->GetIDForIdent('Z2M_Illuminance_Lux') > 0) {
+                        $this->SetValue('Z2M_Illuminance_Lux', $Payload->illuminance_lux);
+                    }
                 }
                 if (property_exists($Payload, 'strength')) {
                     $this->SetValue('Z2M_Strength', $Payload->strength);
