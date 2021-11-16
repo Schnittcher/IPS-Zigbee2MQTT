@@ -117,7 +117,8 @@
       "Moving": "Bewegung",
       "Calibration": "Kalibrierung",
       "Calibration Time": "Kalibrierzeit",
-      "Motor Reversal": "Motorumkehr"
+      "Motor Reversal": "Motorumkehr",
+      "Get Device Infos": "Geräteinformationen abrufen"
     }
   }
 }

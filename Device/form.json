@@ -10,5 +10,9 @@
       "name": "MQTTTopic",
       "caption": "MQTT Topic"
     }
+  ],
+  "actions":
+  [
+      { "type": "Button", "label": "Get Device Infos", "onClick": "Z2M_getDeviceInfo($id);" }
   ]
 }
