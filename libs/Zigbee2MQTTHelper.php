@@ -1157,6 +1157,41 @@ trait Zigbee2MQTTHelper
         IPS_LogMessage('Exposes', print_r($exposes, true));
         foreach ($exposes as $key => $expose) {
             switch ($expose['type']) {
+                case 'switch':
+                    if (array_key_exists('features', $expose)) {
+                        foreach ($expose['features'] as $key => $feature) {
+                            switch ($feature['type']) {
+                                case 'binary':
+                                    switch ($feature['property']) {
+                                        case 'state':
+                                            break;
+                                        default:
+                                        // Default Switch binary
+                                        $missedVariables['light'][] = $feature;
+                                        break;
+                                    }
+                                break; //Switch binaray break;
+                                case 'numeric':
+                                    switch ($feature['property']) {
+                                        default:
+                                        // Default Switch binary
+                                        $missedVariables['light'][] = $feature;
+                                        break;
+                                    }
+                                    break; //Switch numeric break;
+                                case 'enum':
+                                    switch ($feature['property']) {
+                                        default:
+                                        // Default Switch enum
+                                        $missedVariables['light'][] = $feature;
+                                        break;
+                                    }
+                                    break; //Switch enum break;
+                            }
+                        }
+                    }
+                break; //Switch break
+
                 case 'light':
                     if (array_key_exists('features', $expose)) {
                         foreach ($expose['features'] as $key => $feature) {
