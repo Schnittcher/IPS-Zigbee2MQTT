@@ -1227,6 +1227,12 @@ trait Zigbee2MQTTHelper
                     break;
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'state':
+                            //Variable with Profile ~Switch
+                            if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
+                                $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
+                            }
+                            break;
                         case 'occupancy':
                             $this->RegisterVariableBoolean('Z2M_Occupancy', $this->Translate('Occupancy'), '~Motion');
                         break;
