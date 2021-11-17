@@ -52,6 +52,9 @@ trait Zigbee2MQTTHelper
             case'Z2M_PowerOutageMemory':
                 $this->setPowerOutageMemory(strval($Value));
                 break;
+            case'Z2M_PowerOnBehavior':
+                $this->setPowerOnBehavior(strval($Value));
+                break;
             case'Z2M_AutoOff':
                 $this->setAutoOff($this->OnOff($Value));
                 break;
@@ -615,6 +618,9 @@ trait Zigbee2MQTTHelper
                 if (property_exists($Payload, 'power_outage_memory')) {
                     $this->SetValue('Z2M_PowerOutageMemory', $Payload->power_outage_memory);
                 }
+                if (property_exists($Payload, 'power_on_behavior')) {
+                    $this->SetValue('Z2M_PowerOnBehavior', $Payload->power_on_behavior);
+                }
                 if (property_exists($Payload, 'state_l1')) {
                     $this->RegisterVariableBoolean('Z2M_Statel1', $this->Translate('State 1'), '~Switch');
                     $this->EnableAction('Z2M_Statel1');
@@ -900,6 +906,13 @@ trait Zigbee2MQTTHelper
         $this->Z2MSet($PayloadJSON);
     }
 
+    private function setPowerOnBehavior(string $value)
+    {
+        $Payload['power_on_behavior'] = $value;
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
+    }
+
     private function setAutoOff(string $Value)
     {
         $Payload['auto_off'] = $value;
@@ -1172,6 +1185,7 @@ trait Zigbee2MQTTHelper
                                         case 'state':
                                             if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
                                                 $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
+                                                $this->EnableAction('Z2M_State');
                                             }
                                             break;
                                         default:
@@ -1383,6 +1397,17 @@ trait Zigbee2MQTTHelper
                         }
                         $this->RegisterVariableString('Z2M_PowerOutageMemory', $this->Translate('Power Outage Memory'), 'Z2M.PowerOutageMemory');
                         $this->EnableAction('Z2M_PowerOutageMemory');
+                        break;
+                    case 'power_on_behavior':
+                        if (!IPS_VariableProfileExists('Z2M.PowerOnBehavior')) {
+                            $this->RegisterProfileStringEx('Z2M.PowerOnBehavior', 'Information', '', '', [
+                                ['on', $this->Translate('On'), '', 0x0000FF],
+                                ['off', $this->Translate('Off'), '', 0x0000FF],
+                                ['previous', $this->Translate('Previous'), '', 0x0000FF]
+                            ]);
+                        }
+                        $this->RegisterVariableString('Z2M_PowerOnBehavior', $this->Translate('Power on behavior'), 'Z2M.PowerOnBehavior');
+                        $this->EnableAction('Z2M_PowerOnBehavior');
                         break;
                     case 'motion_sensitivity':
                         if (!IPS_VariableProfileExists('Z2M.Sensitivity')) {
