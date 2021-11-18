@@ -622,8 +622,6 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_PowerOnBehavior', $Payload->power_on_behavior);
                 }
                 if (property_exists($Payload, 'state_l1')) {
-                    $this->RegisterVariableBoolean('Z2M_Statel1', $this->Translate('State 1'), '~Switch');
-                    $this->EnableAction('Z2M_Statel1');
                     switch ($Payload->state_l1) {
                         case 'ON':
                             $this->SetValue('Z2M_Statel1', true);
@@ -637,8 +635,6 @@ trait Zigbee2MQTTHelper
                     }
                 }
                 if (property_exists($Payload, 'state_l2')) {
-                    $this->RegisterVariableBoolean('Z2M_Statel2', $this->Translate('State 2'), '~Switch');
-                    $this->EnableAction('Z2M_Statel2');
                     switch ($Payload->state_l2) {
                         case 'ON':
                             $this->SetValue('Z2M_Statel2', true);
@@ -652,8 +648,6 @@ trait Zigbee2MQTTHelper
                     }
                 }
                 if (property_exists($Payload, 'state_l3')) {
-                    $this->RegisterVariableBoolean('Z2M_Statel3', $this->Translate('State 3'), '~Switch');
-                    $this->EnableAction('Z2M_Statel3');
                     switch ($Payload->state_l3) {
                         case 'ON':
                             $this->SetValue('Z2M_Statel3', true);
@@ -667,8 +661,6 @@ trait Zigbee2MQTTHelper
                     }
                 }
                 if (property_exists($Payload, 'state_l4')) {
-                    $this->RegisterVariableBoolean('Z2M_Statel4', $this->Translate('State 4'), '~Switch');
-                    $this->EnableAction('Z2M_Statel4');
                     switch ($Payload->state_l4) {
                         case 'ON':
                             $this->SetValue('Z2M_Statel4', true);
@@ -682,8 +674,6 @@ trait Zigbee2MQTTHelper
                     }
                 }
                 if (property_exists($Payload, 'state_l5')) {
-                    $this->RegisterVariableBoolean('Z2M_Statel5', $this->Translate('State 5'), '~Switch');
-                    $this->EnableAction('Z2M_Statel5');
                     switch ($Payload->state_l5) {
                         case 'ON':
                             $this->SetValue('Z2M_Statel5', true);
@@ -1183,10 +1173,28 @@ trait Zigbee2MQTTHelper
                                 case 'binary':
                                     switch ($feature['property']) {
                                         case 'state':
-                                            if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
                                                 $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
                                                 $this->EnableAction('Z2M_State');
-                                            }
+                                            break;
+                                        case 'state_l1':
+                                            $this->RegisterVariableBoolean('Z2M_Statel1', $this->Translate('State 1'), '~Switch');
+                                            $this->EnableAction('Z2M_Statel1');
+                                            break;
+                                        case 'state_l2':
+                                            $this->RegisterVariableBoolean('Z2M_Statel2', $this->Translate('State 2'), '~Switch');
+                                            $this->EnableAction('Z2M_Statel2');
+                                            break;
+                                        case 'state_l3':
+                                            $this->RegisterVariableBoolean('Z2M_Statel3', $this->Translate('State 3'), '~Switch');
+                                            $this->EnableAction('Z2M_Statel3');
+                                            break;
+                                        case 'state_l4':
+                                            $this->RegisterVariableBoolean('Z2M_Statel4', $this->Translate('State 4'), '~Switch');
+                                            $this->EnableAction('Z2M_Statel4');
+                                            break;
+                                        case 'state_l5':
+                                            $this->RegisterVariableBoolean('Z2M_Statel5', $this->Translate('State 5'), '~Switch');
+                                            $this->EnableAction('Z2M_Statel5');
                                             break;
                                         default:
                                         // Default Switch binary
