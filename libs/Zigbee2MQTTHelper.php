@@ -458,9 +458,8 @@ trait Zigbee2MQTTHelper
                 if (property_exists($Payload, 'battery_low')) {
                     $this->SetValue('Z2M_Battery_Low', $Payload->battery_low);
                 }
-                if (property_exists($Payload, 'angle')) {
-                    $this->RegisterVariableFloat('Z2M_Angle', $this->Translate('Angle'), '');
-                    $this->SetValue('Z2M_Angle', $Payload->angle);
+                if (property_exists($Payload, 'action_angle')) {
+                    $this->SetValue('Z2M_ActionAngle', $Payload->action_angle);
                 }
                 if (property_exists($Payload, 'angle_x')) {
                     $this->SetValue('Z2M_Angle_X', $Payload->angle_x);
@@ -479,13 +478,14 @@ trait Zigbee2MQTTHelper
                 if (property_exists($Payload, 'angle_z')) {
                     $this->SetValue('Z2M_Angle_Z', $Payload->angle_z);
                 }
-                if (property_exists($Payload, 'from_side')) {
-                    $this->RegisterVariableInteger('Z2M_From_Side', $this->Translate('From Side'), '');
-                    $this->SetValue('Z2M_From_Side', $Payload->from_side);
+                if (property_exists($Payload, 'action_from_side')) {
+                    $this->SetValue('Z2M_ActionFromSide', $Payload->action_from_side);
                 }
-                if (property_exists($Payload, 'to_side')) {
-                    $this->RegisterVariableInteger('Z2M_To_Side', $this->Translate('To Side'), '');
-                    $this->SetValue('Z2M_To_Side', $Payload->to_side);
+                if (property_exists($Payload, 'action_side')) {
+                    $this->SetValue('Z2M_ActionSide', $Payload->action_side);
+                }
+                if (property_exists($Payload, 'action_to_side')) {
+                    $this->SetValue('Z2M_ActionToSide', $Payload->action_to_side);
                 }
                 if (property_exists($Payload, 'power')) {
                     $this->SetValue('Z2M_Power', $Payload->power);
@@ -1583,7 +1583,19 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterProfileInteger('Z2M.CalibrationTime', 'Clock', '', ' ' . $this->Translate('Seconds'), 0, 0, 0);
                             }
                             $this->RegisterVariableInteger('Z2M_CalibrationTime', $this->Translate('Calibration Time'), 'Z2M.CalibrationTime');
-                            // FIXME: No break. Please add proper comment if intentional
+                            break;
+                        case 'action_angle':
+                            $this->RegisterVariableInteger('Z2M_ActionAngle', $this->Translate('Action angle'), '');
+                            break;
+                        case 'action_from_side':
+                            $this->RegisterVariableInteger('Z2M_ActionFromSide', $this->Translate('Action from side'), '');
+                            break;
+                        case 'action_side':
+                            $this->RegisterVariableInteger('Z2M_ActionSide', $this->Translate('Action side'), '');
+                            break;
+                        case 'action_to_side':
+                        $this->RegisterVariableInteger('Z2M_ActionToSide', $this->Translate('Action to side'), '');
+                            break;
                     default:
                         $missedVariables[] = $expose;
                         break;

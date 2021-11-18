@@ -120,7 +120,11 @@
       "Motor Reversal": "Motorumkehr",
       "Get Device Infos": "Geräteinformationen abrufen",
       "Power on behavior": "Einschaltverhalten",
-      "Previous" : "Vorherig"
+      "Previous" : "Vorherig",
+      "Action angle": "Aktionswinkel",
+      "Action from side": "Aktion von der Seite",
+      "Action side": "Aktion Seite",
+      "Action to side": "Aktion zur Seite"
     }
   }
 }
