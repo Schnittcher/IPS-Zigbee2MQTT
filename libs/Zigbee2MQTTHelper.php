@@ -166,7 +166,6 @@ trait Zigbee2MQTTHelper
 
     public function ReceiveData($JSONString)
     {
-        $this->SendDebug('JSON', $JSONString, 0);
         if (!empty($this->ReadPropertyString('MQTTTopic'))) {
             $Buffer = json_decode($JSONString, true);
 
@@ -970,8 +969,8 @@ trait Zigbee2MQTTHelper
             case 'binary':
                 switch ($expose['property']) {
                     case 'consumer_connected':
-                        if (!IPS_VariableProfileExists('Z2M.ConsumerConnected')) {
-                            $this->RegisterProfileBooleanEx('Z2M.ConsumerConnected', 'Plug', '', '', [
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileBooleanEx($ProfileName, 'Plug', '', '', [
                                 [false, $this->Translate('not connected'),  '', 0xFF0000],
                                 [true, $this->Translate('connected'),  '', 0x00FF00]
                             ]);
