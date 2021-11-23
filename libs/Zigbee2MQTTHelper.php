@@ -1222,7 +1222,7 @@ trait Zigbee2MQTTHelper
                                     ['boost', $this->Translate('Boost'), '', 0xFF0000]
                                 ]);
                             }
-                            // FIXME: No break. Please add proper comment if intentional
+                            break;
                         case 'Z2M.running_state.8d38f7dc':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -1335,7 +1335,7 @@ trait Zigbee2MQTTHelper
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' %', $expose['value_min'], $expose['value_max'], 1);
                         }
-                        // FIXME: No break. Please add proper comment if intentional
+                        break;
                     case 'current_heating_setpoint_auto':
                     case 'current_heating_setpoint':
                     case 'occupied_heating_setpoint':
