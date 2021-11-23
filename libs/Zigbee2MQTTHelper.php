@@ -8,121 +8,121 @@ trait Zigbee2MQTTHelper
     {
         switch ($Ident) {
             case 'Z2M_Brightness':
-                $this->setDimmer($Value);
+                $Payload['brightness'] = strval($Value);
                 break;
             case 'Z2M_BrightnessRGB':
-                $this->setBrightnessRGB($Value);
+                $Payload['brightness_rgb'] = strval($Value);
                 break;
             case 'Z2M_BrightnessWhite':
-                $this->setBrightnessWhite($Value);
+                $Payload['brightness_white'] = strval($Value);
                 break;
             case 'Z2M_ColorTemp':
-                $this->setColorTemperature($Value);
+                $Payload['color_temp'] = strval($Value);
                 break;
             case 'Z2M_ColorTempKelvin':
-                $this->setColorTemperature(intval(round(1000000 / $Value, 0)));
+                $Payload['color_temp'] = strval(intval(round(1000000 / $Value, 0)));
                 break;
             case 'Z2M_ColorTempRGB':
-                $this->setColorTemperature($Value, 'color_temp_rgb');
+                $Payload['color_temp_rgb'] = strval($Value);
                 break;
             case 'Z2M_State':
-                $this->SwitchMode($Value);
+                $Payload['state'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_RunningState':
-                $this->setRunningState($Value);
+                $Payload['running_state'] = strval($Value);
                 break;
             case 'Z2M_StateRGB':
-                $this->SwitchModeRGB($Value);
+                $Payload['state_rgb'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_StateWhite':
-                $this->SwitchModeWhite($Value);
+                $Payload['state_white'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_LEDDisabledNight':
-                $this->SwitchModeLEDDisabledNight($Value);
+                $Payload['led_disabled_night'] = strval($Value);
                 break;
             case 'Z2M_Statel1':
-                $this->Command('l1/set', $this->OnOff($Value));
+                $Payload['l1'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_Statel2':
-                $this->Command('l2/set', $this->OnOff($Value));
+                $Payload['l2'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_Statel3':
-                $this->Command('l3/set', $this->OnOff($Value));
+                $Payload['l3'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_Statel4':
-                $this->Command('l4/set', $this->OnOff($Value));
+                $Payload['l4'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_WindowDetection':
-                $this->setWindowDetection($Value);
+                $Payload['window_detection'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_ChildLock':
-                $this->setChildLock($Value);
+                $Payload['child_lock'] = strval($this->OnOff($Value));
                 break;
             case'Z2M_PowerOutageMemory':
-                $this->setPowerOutageMemory(strval($Value));
+                $Payload['power_outage_memory'] = strval($Value);
                 break;
             case'Z2M_PowerOnBehavior':
-                $this->setPowerOnBehavior(strval($Value));
+                $Payload['power_on_behavior'] = strval($Value);
                 break;
             case'Z2M_AutoOff':
-                $this->setAutoOff($this->OnOff($Value));
+                $Payload['auto_off'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_StateWindow':
-                $this->StateWindow($Value);
+                $Payload['state'] = strval($this->OpenClose($Value));
                 break;
             case 'Z2M_Sensitivity':
-                $this->setSensitivity($Value);
+                $Payload['sensitivity'] = strval($Value);
                 break;
             case 'Z2M_RadarSensitivity':
-                $this->setRadarSensitivity($Value);
+                $Payload['radar_sensitivity'] = strval($Value);
                 break;
             case 'Z2M_RadarScene':
-                $this->setRadarScene($Value);
+                $Payload['radar_scene'] = strval($Value);
                 break;
             case 'Z2M_BoostHeating':
-                $this->setBoostHeating($Value);
+                $Payload['boost_heating'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_Force':
-                $this->setForce($Value);
+                $Payload['boost_heating'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_Moving':
-                $this->setMoving($Value);
+                $Payload['moving'] = strval($Value);
                 break;
             case 'Z2M_TRVMode':
-                $this->setTRVMode($Value);
+                $Payload['trv_mode'] = strval($Value);
                 break;
             case 'Z2M_Calibration':
-                $this->setCalibration($Value);
+                $Payload['calibration'] = strval($Value);
                 break;
             case 'motor_reversal':
-                $this->setMotorReversal($Value);
+                $Payload['motor_reversal'] = strval($Value);
                 break;
             case 'Z2M_CurrentHeatingSetpoint':
-                $this->setCurrentHeatingSetpoint($Value);
+                $Payload['current_heating_setpoint'] = strval($Value);
                 break;
             case 'Z2M_CurrentHeatingSetpointAuto':
-                $this->setCurrentHeatingSetpointAuto($Value);
+                $Payload['current_heating_setpoint_auto'] = strval($Value);
                 break;
             case 'Z2M_OccupiedHeatingSetpoint':
-                $this->setOccupiedHeatingSetpoint($Value);
+                $Payload['occupied_heating_setpoint'] = strval($Value);
                 break;
             case 'Z2M_LocalTemperatureCalibration':
-                $this->setLocalTemperatureCalibration($Value);
+                $Payload['local_temperature_calibration'] = strval($Value);
                 break;
             case 'Z2M_Preset':
-                $this->setThermostatPreset($Value);
+                $Payload['preset'] = strval($Value);
                 break;
             case 'Z2M_AwayPresetDays':
-                $this->setThermostatAwayPresetDays(intval($Value));
+                $Payload['away_preset_days'] = strval($Value);
                 break;
             case 'Z2M_AwayMode':
-                $this->setThermostatAwayMode($Value);
+                $Payload['away_mode'] = strval($Value);
                 break;
             case 'Z2M_BoostTime':
-                $this->setThermostatBoostTime(intval($Value));
+                $Payload['boost_time'] = strval($Value);
                 break;
             case 'Z2M_SystemMode':
-                $this->setSystemMode($Value);
+                $Payload['system_mode'] = strval($Value);
                 break;
             case 'Z2M_Color':
                 $this->SendDebug(__FUNCTION__ . ' Color', $Value, 0);
@@ -133,24 +133,30 @@ trait Zigbee2MQTTHelper
                 $this->setColor($Value, 'cie', 'color_rgb');
                 break;
             case 'Z2M_Position':
+                $Payload['position'] = strval($Value);
                 $this->setPosition($Value);
                 break;
             case 'Z2M_MotorSpeed':
+                $Payload['motor_speed'] = strval($Value);
                 $this->setMotorSpeed($Value);
                 break;
             case 'Z2M_MotionSensitivity':
-                $this->setMotionSensitivity($Value);
+                $Payload['motion_sensitivity'] = strval($Value);
                 break;
             case 'Z2M_OccupancyTimeout':
-                $this->setOccupancyTimeout($Value);
+                $Payload['occupancy_timeout'] = strval($Value);
                 break;
             case 'Z2M_OverloadProtection':
-                $this->setOverloadProtection($Value);
+                $Payload['overload_protection'] = strval($Value);
                 break;
             default:
                 $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
+                return false;
                 break;
         }
+
+        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+        $this->Z2MSet($PayloadJSON);
     }
 
     public function getDeviceInfo()
@@ -832,244 +838,6 @@ trait Zigbee2MQTTHelper
         }
     }
 
-    private function setDimmer(int $value)
-    {
-        $Payload['brightness'] = strval($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setBrightnessWhite(int $value)
-    {
-        $Payload['brightness_white'] = strval($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setBrightnessRGB(int $value)
-    {
-        $Payload['brightness_rgb'] = strval($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setColorTemperature(int $value, $z2mmode = 'color_temp')
-    {
-        if ($Z2MMode = 'color_temp') {
-            $Payload['color_temp'] = strval($value);
-        } elseif ($Z2MMode == 'color_temp_rgb') {
-            $Payload['color_temp_rgb'] = strval($value);
-        } else {
-            return;
-        }
-
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setPosition(int $value)
-    {
-        $Payload['position'] = strval($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setMotorSpeed(int $value)
-    {
-        $Payload['motor_speed'] = strval($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setWindowDetection(bool $value)
-    {
-        $Payload['window_detection'] = $this->OnOff($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setChildLock(bool $value)
-    {
-        $Payload['child_lock'] = $this->OnOff($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setRunningState(string $value)
-    {
-        $Payload['running_state'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function SwitchMode(bool $value)
-    {
-        $Payload['state'] = $this->OnOff($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function SwitchModeRGB(bool $value)
-    {
-        $Payload['state_rgb'] = $this->OnOff($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function SwitchModeWhite(bool $value)
-    {
-        $Payload['state_white'] = $this->OnOff($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function SwitchModeLEDDisabledNight(bool $value)
-    {
-        $Payload['led_disabled_night'] = strval($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setPowerOutageMemory(string $value)
-    {
-        $Payload['power_outage_memory'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setPowerOnBehavior(string $value)
-    {
-        $Payload['power_on_behavior'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setAutoOff(string $Value)
-    {
-        $Payload['auto_off'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function StateWindow(bool $value)
-    {
-        $Payload['state'] = $this->OpenClose($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setColorMode(int $mode)
-    {
-        $Payload['color_mode'] = strval($mode);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setForce(string $value)
-    {
-        $Payload['force'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setMoving(string $value)
-    {
-        $Payload['moving'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setTRVMode(string $value)
-    {
-        $Payload['trv_mode'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setCalibration($value)
-    {
-        $Payload['calibration'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setMotorReversal($value)
-    {
-        $Payload['motor_reversal'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setBoostHeating(bool $value)
-    {
-        $Payload['boost_heating'] = $this->OnOff($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setCurrentHeatingSetpoint(float $value)
-    {
-        $Payload['current_heating_setpoint'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setCurrentHeatingSetpointAuto(float $value)
-    {
-        $Payload['current_heating_setpoint_auto'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setOccupiedHeatingSetpoint(float $value)
-    {
-        $Payload['local_temperature_calibration'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setLocalTemperatureCalibration(float $value)
-    {
-        $Payload['occupied_heating_setpoint'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setOverloadProtection(int $Value)
-    {
-        $Payload['overload_protection'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setThermostatPreset(string $value)
-    {
-        $Payload['preset'] = $preset;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setThermostatAwayMode(bool $Value)
-    {
-        $Payload['away_mode'] = $this->OnOff($Value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setThermostatAwayPresetDays(int $Value)
-    {
-        $Payload['away_preset_days'] = strval($Value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setThermostatBoostTime(int $Value)
-    {
-        $Payload['boost_time'] = strval($Value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
     private function setColor(int $color, string $mode, string $Z2MMode = 'color')
     {
         switch ($mode) {
@@ -1092,49 +860,6 @@ trait Zigbee2MQTTHelper
                 break;
         }
     }
-
-    private function setSensitivity(int $value)
-    {
-        $Payload['sensitivity'] = strval($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setRadarSensitivity(int $value)
-    {
-        $Payload['radar_sensitivity'] = strval($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setRadarScene(string $value)
-    {
-        $Payload['radar_scene'] = strval($value);
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setOccupancyTimeout(int $value)
-    {
-        $Payload['occupancy_timeout'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setMotionSensitivity(string $value)
-    {
-        $Payload['motion_sensitivity'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
-    private function setSystemMode(string $value)
-    {
-        $Payload['system_mode'] = $value;
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
-    }
-
     private function OnOff(bool $Value)
     {
         switch ($Value) {
@@ -1301,7 +1026,7 @@ trait Zigbee2MQTTHelper
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Climate', '', '', [
                                     ['1', $this->Translate('Manual (Valve Position)'), '', 0x00FF00],
-                                    ['2', $this->Translate('Automaitc'), '', 0xFF8800],
+                                    ['2', $this->Translate('Automatic'), '', 0xFF8800],
                                 ]);
                             }
                             break;
@@ -1945,7 +1670,7 @@ trait Zigbee2MQTTHelper
                         break;
                     }
                     break; //numeric break
-                default: // Expos Type default
+                default: // Expose Type default
                     break;
             }
         }
