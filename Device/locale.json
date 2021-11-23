@@ -15,10 +15,14 @@
       "restore": "Wiederherstellen",
       "Temperature": "Temperatur",
       "Local Temperature": "Lokale Temperatur",
+      "Local Temperature Calibration": "lokale Temperaturkalibrierung",
       "Max Temperature": "Max Temperatur",
       "Min Temperature": "Min Temperatur",
       "Preset": "Default",
       "Boost": "Boost",
+      "Manual": "Manuell",
+      "Holiday": "Urlaub",
+      "Schedule": "Geplant",
       "Complexes Program": "Komplexes Programm",
       "Comfort": "Komfort",
       "Eco": "Eco",
@@ -30,10 +34,14 @@
       "Eco Temperature": "Eco Temperatur",
       "Heating": "Heizt",
       "Current Heating Setpoint": "Aktueller Heizsollwert",
+      "Current Heating Setpoint Auto": "Aktueller Heizsollwert auto",
       "Occupied Heating Setpoint": "Besetzter Heizungssollwert",
       "Boost Heating Countdown": "Boost-Heizungs-Countdown",
       "Boost Heating": "Boost-Heizung",
       "Valve Position": "Ventilstellung",
+      "Valve Position (Heating Demand)": "Ventilstellung (Heizbedarf)",
+      "Manual (Valve Position)": "Manuell (Ventilstellung)",
+      "Automatic": "Automatisch",
       "Mode": "Modus",
       "Running State": "Betriebszustand",
       "Linkquality": "Verbindungsqualität",
@@ -124,7 +132,13 @@
       "Action angle": "Aktionswinkel",
       "Action from side": "Aktion von der Seite",
       "Action side": "Aktion Seite",
-      "Action to side": "Aktion zur Seite"
+      "Action to side": "Aktion zur Seite",
+      "Off": "Aus",
+      "Auto": "Automatisch",
+      "Window Detection": "Fenstererkennung",
+      "Child Lock": "Kindersicherung",
+      "Idle": "Standby"
+
     }
   }
 }
