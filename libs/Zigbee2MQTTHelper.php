@@ -1264,6 +1264,7 @@ trait Zigbee2MQTTHelper
                                             //Variable with Profile ~Switch
                                             if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
                                                 $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
+                                                $this->EnableAction('Z2M_State');
                                             }
                                             break;
                                         default:
