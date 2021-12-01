@@ -398,6 +398,10 @@ trait Zigbee2MQTTHelper
                     $this->EnableAction('Z2M_Radar_Scene');
                     $this->SetValue('Z2M_Radar_Scene', $Payload->radar_scene);
                 }
+                if (property_exists($Payload, 'vibration')) {
+                    $this->RegisterVariableBoolean('Z2M_Vibration', $this->Translate('Vibration'), '~Alert');
+                    $this->SetValue('Z2M_Vibration', $Payload->vibration);
+                }
                 if (property_exists($Payload, 'illuminance')) {
                     $this->RegisterVariableInteger('Z2M_Illuminance', $this->Translate('Illuminance'), '');
                     $this->SetValue('Z2M_Illuminance', $Payload->illuminance);
