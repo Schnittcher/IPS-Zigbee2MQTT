@@ -164,6 +164,11 @@ trait Zigbee2MQTTHelper
         $this->Command('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/getDevice', $this->ReadPropertyString('MQTTTopic'));
     }
 
+    public function getGroupInfo()
+    {
+        $this->Command('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/getGroup', $this->ReadPropertyString('MQTTTopic'));
+    }
+
     public function ReceiveData($JSONString)
     {
         if (!empty($this->ReadPropertyString('MQTTTopic'))) {
@@ -191,6 +196,11 @@ trait Zigbee2MQTTHelper
                     }
                 }
             }
+            if (fnmatch('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/groupInfo', $Buffer['Topic'])) {
+                    if (is_array($Payload)) {
+                        $this->mapExposesToVariables($Payload);
+                    }
+                }
 
             $Payload = json_decode($Buffer['Payload'], true);
             if (is_array($Payload)) {

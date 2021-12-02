@@ -2,7 +2,7 @@
   "elements": [
     {
       "type": "ValidationTextBox",
-      "name": "MQTTTBaseTopic",
+      "name": "MQTTBaseTopic",
       "caption": "MQTT Base Topic"
     },
     {
@@ -12,6 +12,11 @@
     }
   ],
   "actions": [
+    {
+      "type": "Button",
+      "label": "Get Device Infos",
+      "onClick": "Z2M_getGroupInfo($id);"
+    },
     {
       "type": "Label",
       "caption": "Spenden / Schenkung"

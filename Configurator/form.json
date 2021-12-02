@@ -93,6 +93,12 @@
                },
                "columns": [
                   {
+                     "caption": "ID",
+                     "name": "id",
+                     "width": "auto",
+                     "visible": false
+                  },
+                  {
                      "caption": "Friendlyname",
                      "name": "name",
                      "width": "auto"
