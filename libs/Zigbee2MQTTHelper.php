@@ -1101,6 +1101,15 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.sensitivity.b8421401':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
+                                    ['low', $this->Translate('Low'), '', 0x00FF00],
+                                    ['medium', $this->Translate('Medium'), '', 0xFF8800],
+                                    ['high', $this->Translate('High'), '', 0xFF0000]
+                                ]);
+                            }
+                            break;
                         default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
@@ -1453,6 +1462,9 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
                             }
                             break;
+                        case 'vibration':
+                            $this->RegisterVariableBoolean('Z2M_Vibration', $this->Translate('Vibration'), '~Alert');
+                        break;
                         case 'occupancy':
                             $this->RegisterVariableBoolean('Z2M_Occupancy', $this->Translate('Occupancy'), '~Motion');
                         break;

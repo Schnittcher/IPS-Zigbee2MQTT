@@ -137,8 +137,8 @@
       "Auto": "Automatisch",
       "Window Detection": "Fenstererkennung",
       "Child Lock": "Kindersicherung",
-      "Idle": "Standby"
-
+      "Idle": "Standby",
+      "Vibration": "Vibration"
     }
   }
 }
