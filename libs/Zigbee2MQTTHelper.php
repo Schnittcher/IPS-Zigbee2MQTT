@@ -127,11 +127,11 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Color':
                 $this->SendDebug(__FUNCTION__ . ' Color', $Value, 0);
                 $this->setColor($Value, 'cie');
-                break;
+                return;
             case 'Z2M_ColorRGB':
                 $this->SendDebug(__FUNCTION__ . ' :: Color RGB', $Value, 0);
                 $this->setColor($Value, 'cie', 'color_rgb');
-                break;
+                return;
             case 'Z2M_Position':
                 $Payload['position'] = strval($Value);
                 $this->setPosition($Value);
