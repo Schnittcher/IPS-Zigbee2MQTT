@@ -4,7 +4,7 @@
 	"name": "Zigbee2MQTT",
 	"url": "https://github.com/Schnittcher/IPS-Zigbee2MQTT",
 	"compatibility": {
-        "version": "6.0"
+        "version": "6.1"
     },
 	"version": "4.0",
 	"build": 0,
