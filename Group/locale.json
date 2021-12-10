@@ -34,6 +34,7 @@
       "Occupancy": "Bewegung",
       "Strength": "Stärke",
       "Color Temperature": "Farbtemperatur",
+      "Color Temperature Kelvin": "Farbtemperatur Kelvin",
       "Single": "Einmal",
       "Double": "Zweimal",
       "Triple": "Dreimal",
@@ -44,7 +45,8 @@
       "connected": "Verbunden",
       "Presencez": "Präsenz",
       "Seconds": "Sekunden",
-      "Effect": "Effekt"
+      "Effect": "Effekt",
+      "Get Device Infos": "Geräteinformationen abrufen"
     }
   }
 }
