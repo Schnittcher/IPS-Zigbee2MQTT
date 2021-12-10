@@ -197,10 +197,10 @@ trait Zigbee2MQTTHelper
                 }
             }
             if (fnmatch('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/groupInfo', $Buffer['Topic'])) {
-                    if (is_array($Payload)) {
-                        $this->mapExposesToVariables($Payload);
-                    }
+                if (is_array($Payload)) {
+                    $this->mapExposesToVariables($Payload);
                 }
+            }
 
             $Payload = json_decode($Buffer['Payload'], true);
             if (is_array($Payload)) {
