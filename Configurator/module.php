@@ -40,7 +40,6 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $Devices = json_decode($this->GetBuffer('Devices'), true);
         $this->SendDebug('Buffer Devices', json_encode($Devices), 0);
         $ValuesDevices = [];
-        $this->LogMessage(print_r($Devices, true), KL_NOTIFY);
 
         foreach ($Devices as $device) {
             $instanceID = $this->getDeviceInstanceID($device['friendly_name']);
@@ -102,13 +101,6 @@ class Zigbee2MQTTConfigurator extends IPSModule
             if (fnmatch('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/groups', $Buffer['Topic'])) {
                 $Payload = json_decode($Buffer['Payload'], true);
                 $this->SetBuffer('Groups', json_encode($Payload));
-            }
-            if (fnmatch('*/log', $Buffer['Topic'])) {
-                $Payload = json_decode($Buffer['Payload'], true);
-
-                if ($Payload['type'] == 'groups') {
-                    $this->SetBuffer('Groups', json_encode($Payload['message']));
-                }
             }
         }
     }
