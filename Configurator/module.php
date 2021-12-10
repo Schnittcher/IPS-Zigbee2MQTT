@@ -16,9 +16,6 @@ class Zigbee2MQTTConfigurator extends IPSModule
 
         $this->SetBuffer('Devices', '{}');
         $this->SetBuffer('Groups', '{}');
-
-        //$this->RegisterAttributeBoolean('ReceiveDataFilterActive', true);
-        $this->RegisterTimer('Z2M_ActivateReceiveDataFilter', 0, 'Z2M_ActivateReceiveDataFilter($_IPS[\'TARGET\']);');
     }
 
     public function ApplyChanges()
@@ -26,7 +23,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
         //Never delete this line!
         parent::ApplyChanges();
 
-        //Setze Filter fÃ¼r ReceiveData
+        //Setze Filter für ReceiveData
         $topic = 'symcon/' . $this->ReadPropertyString('MQTTBaseTopic');
         $this->SetReceiveDataFilter('.*' . $topic . '.*');
         $this->getDevices();
@@ -46,7 +43,6 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $this->LogMessage(print_r($Devices, true), KL_NOTIFY);
 
         foreach ($Devices as $device) {
-
             $instanceID = $this->getDeviceInstanceID($device['friendly_name']);
             $Value['name'] = $device['friendly_name'];
             $Value['ieee_address'] = $device['ieeeAddr'];
@@ -117,39 +113,14 @@ class Zigbee2MQTTConfigurator extends IPSModule
         }
     }
 
-    public function getDeviceVariables($FriendlyName)
-    {
-        $Payload['from'] = $FriendlyName;
-        $Payload['to'] = $FriendlyName . 'Z2MSymcon';
-        $Payload['homeassistant_rename'] = false;
-        $this->Command('request/device/rename', json_encode($Payload));
-
-        $Payload['from'] = $FriendlyName . 'Z2MSymcon';
-        $Payload['to'] = $FriendlyName;
-        $Payload['homeassistant_rename'] = false;
-        $this->Command('request/device/rename', json_encode($Payload));
-    }
-
-    public function ActivateReceiveDataFilter()
-    {
-        $topic = $this->ReadPropertyString('MQTTTopic');
-        $this->SetReceiveDataFilter('.*' . $topic . '.*');
-        $this->SetTimerInterval('Z2M_ActivateReceiveDataFilter', 0);
-    }
-
     private function getDevices()
     {
-        //$this->SetReceiveDataFilter('');
-
         $this->Command('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/getDevices', '');
-
-        //$this->SetTimerInterval('Z2M_ActivateReceiveDataFilter', 30000);
     }
 
     private function getGroups()
     {
         $this->Command('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/getGroups', '');
-        //$this->Command('config/groups/', '');
     }
 
     private function getDeviceInstanceID($FriendlyName)
