@@ -1057,6 +1057,15 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.power_outage_memory.198b1127':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['on', $this->Translate('On'), '', 0x0000FF],
+                                    ['off', $this->Translate('Off'), '', 0x0000FF],
+                                    ['restore', $this->Translate('Restore'), '', 0x0000FF]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.power_on_behavior.b0d55aad':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
