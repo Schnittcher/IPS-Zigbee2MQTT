@@ -1149,14 +1149,13 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.mode.fecb2e2f':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
-                                    ['burglar', $this->Translate('Burglar'), '', 0x00FF00],
-                                    ['emergency', $this->Translate('Emergency'), '', 0xFF8800],
+                                    ['burglar', $this->Translate('Burglar'), '', 0xFFC0CB],
+                                    ['emergency', $this->Translate('Emergency'), '', 0xFFFF00],
                                     ['emergency_panic', $this->Translate('Emergency Panic'), '', 0xFF8800],
-                                    ['fire', $this->Translate('Fire'), '', 0xFF8800],
-                                    ['fire_panic', $this->Translate('Fire Panic'), '', 0xFF8800],
-                                    ['Police_panic', $this->Translate('Police Panic'), '', 0xFF8800],
-                                    ['Police_panic', $this->Translate('Police Panic'), '', 0xFF8800],
-                                    ['stop', $this->Translate('Stop'), '', 0xFF0000]
+                                    ['fire', $this->Translate('Fire'), '', 0xFF0000],
+                                    ['fire_panic', $this->Translate('Fire Panic'), '', 0x880000],
+                                    ['Police_panic', $this->Translate('Police Panic'), '', 0x4169E1],
+                                    ['stop', $this->Translate('Stop'), '', 0x000000]
                                 ]);
                             }
                             break;
