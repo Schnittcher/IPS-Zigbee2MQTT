@@ -1,5 +1,6 @@
 # Configurator
-Mit dieser Instanz werden die Geräte gesucht und können in IPS angelegt werden.
+Mit dieser Instanz werden die Geräte und Gruppen gesucht und können in Symcon angelegt werden.
+
 ## Inhaltverzeichnis
 1. [Konfiguration](#1-konfiguration)
 2. [Funktionen](#2-funktionen)
@@ -8,17 +9,9 @@ Mit dieser Instanz werden die Geräte gesucht und können in IPS angelegt werden
 
 Feld | Beschreibung
 ------------ | -------------
-MQTT Topic | Hier wird das Topic der Zigbee2MQTT Bridge eingetragen.
+MQTT Topic | Hier wird das Topic des Systems eingetragen (Standardwert: zigbee2mqtt)
 
 ## 2. Funktionen
-
-### Z2M_getDeviceVariables($FriendlyName)
-Mit diewser Funktion werden alle Variablen von dem Gerät abgerufen, welches als Parameter übergeben wird.
-Diese Funktion ist mit äußerster vorsicht zu benutzen, da diese Funktion das Gerät umbenennt und danach wieder in den Ursprung benennt, denn dann werden alle Werte von Zigbee2MQTT per MQTT versendet und dadruch die Variablen in Symocn angelegt!
-
-```php
-Z2M_getDeviceVariables('Lampe1');
-```
 
 ### Z2M_Command(string $topic, string $value)
 Mit dies Funktion kann ein Befehl über MQTT abgesetzt werden.

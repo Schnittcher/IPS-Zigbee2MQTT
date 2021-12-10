@@ -1,5 +1,5 @@
-# IPS-Z2MDevice
-   Anbindung von www.zigbee2mqtt.io an IP-Symcon.
+# Group
+   Mit dieser INstanz werden die Geräte von Zigbee2MQTT in IP-Symcon abgebildet.
      
    ## Inhaltverzeichnis
    1. [Konfiguration](#1-konfiguration)
@@ -9,26 +9,21 @@
    
    Feld | Beschreibung
    ------------ | -------------
-   MQTT Topic | Hier wird das Topic vom Device eingetragen.
-   Philips HUE Beleuchtungsstärke | Muss ausgewählt werden, wenn es sich um einen HUE Bewegungsmelder handelt.
+   MQTT Base Topic | Hier wird das Base Topic von Zigbee2MQTT eingetragen, dieses wird standardmäßig über den Konfigurator gesetzt.
+   MQTT Topic | Hier wird der Gerätenamen eingetragen, dieser wird auch standardmäßig über den Konfigurator gesetzt.
+   Geräteinformationen abrufen | Mit diesem Button können alle Variablen für das Gerät abgerufen werden, dies geschieht ebenfall Anlegen über den Konfigurator automatisch oder beim Speichern der Form.
    
    ## 2. Funktionen
-   
-   **Z2M_SwitchMode($InstanceID, $Value)**\
-   Mit dieser Funktion ist es möglich das Gerät ein- bzw. auszuschalten.
+
    ```php
-   Z2M_SwitchMode(25537, true) //Einschalten;
-   Z2M_SwitchMode(25537,false) //Ausschalten;
+   RequestAction($VariablenID, $Value);
    ```
+   Mit dieser Funktion können alle Aktionen einer Variable ausgelöst werden.
+
+   **Beispiel:**
    
-   **Z2M_setDimmer($InstanceID, $Value)**\
-   Mit dieser Funktion ist es möglich das Gerät zu dimmen.
+   Variable ID Status: 12345
    ```php
-   Z2M_setDimmer(25537,50) //auf 50% dimmen;
-   ```
-   
-   **2M_setSensitivity($InstanceID, $Value)**\
-   Mit dieser Funktion ist es möglich die Empfindlichkeit einzustellen.
-   ```php
-   2M_setSensitivity(25537,1) //1 = Medium, 2 = Low, 3 = High
+   RequestAction(12345, true); //Einschalten
+   RequestAction(12345, false); //Ausschalten
    ```
