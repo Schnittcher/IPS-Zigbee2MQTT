@@ -138,7 +138,11 @@
       "Window Detection": "Fenstererkennung",
       "Child Lock": "Kindersicherung",
       "Idle": "Standby",
-      "Vibration": "Vibration"
+      "Vibration": "Vibration",
+      "Level": "Stufe",
+      "Strobe Level": "Stroboskop-Stufe",
+      "Strobe Duty Cycle": "Stroboskopische Einschaltdauer",
+      "Duration": "Dauer"
     }
   }
 }

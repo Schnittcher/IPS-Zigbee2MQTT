@@ -149,6 +149,24 @@ trait Zigbee2MQTTHelper
             case 'Z2M_OverloadProtection':
                 $Payload['overload_protection'] = strval($Value);
                 break;
+            case 'Z2M_Mode':
+                $Payload['mode'] = strval($Value);
+                break;
+            case 'Z2M_Level':
+                $Payload['level'] = strval($Value);
+                break;
+            case 'Z2M_StrobeLevel':
+                $Payload['strobe_level'] = strval($Value);
+                break;
+            case 'Z2M_Strobe':
+                $Payload['strobe'] = strval($Value);
+                break;
+            case 'Z2M_StrobeDutyCycle':
+                $Payload['strobe_duty_cycle'] = strval($Value);
+                break;
+            case 'Z2M_Duration':
+                $Payload['duration'] = strval($Value);
+                break;
             default:
                 $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
                 return false;
@@ -1772,6 +1790,77 @@ trait Zigbee2MQTTHelper
                         break;
                     }
                     break; //numeric break
+                case 'composite':
+                    if (array_key_exists('features', $expose)) {
+                        foreach ($expose['features'] as $key => $feature) {
+                            switch ($feature['type']) {
+                                case 'binary':
+                                    switch ($feature['property']) {
+                                        case 'strobe':
+                                            $this->RegisterVariableBoolean('Z2M_Strobe', $this->Translate('Strobe'), '~Switch');
+                                            $this->EnableAction('Z2M_Strobe');
+                                            break;
+                                        default:
+                                        // Default composite binary
+                                        $missedVariables['composite'][] = $feature;
+                                        break;
+                                    }
+                                break; //Composite binaray break;
+                                case 'numeric':
+                                    switch ($feature['property']) {
+                                        case 'strobe_duty_cycle':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableString('Z2M_StrobeDutyCycle', $this->Translate('Strobe Duty Cycle'), $ProfileName);
+                                            }
+                                            $this->EnableAction('Z2M_StrobeDutyCycle');
+                                            break;
+                                        case 'duration':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableString('Z2M_Duration', $this->Translate('Duration'), $ProfileName);
+                                            }
+                                            $this->EnableAction('Z2M_Duration');
+                                            break;
+                                        default:
+                                        // Default composite binary
+                                        $missedVariables['composite'][] = $feature;
+                                        break;
+                                    }
+                                    break; //Composite numeric break;
+                                case 'enum':
+                                    switch ($feature['property']) {
+                                        case 'mode':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableString('Z2M_Mode', $this->Translate('Mode'), $ProfileName);
+                                            }
+                                            $this->EnableAction('Z2M_Mode');
+                                            break;
+                                        case 'level':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableString('Z2M_Level', $this->Translate('Level'), $ProfileName);
+                                            }
+                                            $this->EnableAction('Z2M_Level');
+                                            break;
+                                        case 'strobe_level':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableString('Z2M_StrobeLevel', $this->Translate('Strobe Level'), $ProfileName);
+                                            }
+                                            $this->EnableAction('Z2M_StrobeLevel');
+                                            break;
+                                        default:
+                                        // Default composite enum
+                                        $missedVariables['composite'][] = $feature;
+                                        break;
+                                    }
+                                    break; //Composite enum break;
+                            }
+                        }
+                    }
+                    break; //Lock break
                 default: // Expose Type default
                     break;
             }
