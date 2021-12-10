@@ -65,15 +65,6 @@
                   }
                ],
                "values": []
-            },
-            {
-               "type": "Label",
-               "caption": "Please use this function with attention!"
-            },
-            {
-               "type": "Button",
-               "caption": "Read Variables",
-               "onClick": "Z2M_getDeviceVariables($id,$DeviceConfigurator['name']);"
             }
          ]
       },
