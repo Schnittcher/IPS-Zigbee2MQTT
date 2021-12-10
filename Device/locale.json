@@ -58,7 +58,7 @@
       "Contact": "Kontakt",
       "Illuminance": "Beleuchtungsstärke",
       "Illuminance Lux": "Beleuchtungsstärke Lux",
-      "Carbon Monoxide":"Kohlenmonoxid",
+      "Carbon Monoxide": "Kohlenmonoxid",
       "Smoke": "Rauch",
       "Smoke Density": "Rauchdichte",
       "Tamper": "Manipuliert",
@@ -129,7 +129,7 @@
       "Motor Reversal": "Motorumkehr",
       "Get Device Infos": "Geräteinformationen abrufen",
       "Power on behavior": "Einschaltverhalten",
-      "Previous" : "Vorherig",
+      "Previous": "Vorherig",
       "Action angle": "Aktionswinkel",
       "Action from side": "Aktion von der Seite",
       "Action side": "Aktion Seite",
@@ -142,7 +142,14 @@
       "Vibration": "Vibration",
       "Level": "Stufe",
       "Strobe Level": "Stroboskop-Stufe",
-      "Strobe Duty Cycle": "Stroboskopische Einschaltdauer"
+      "Strobe Duty Cycle": "Stroboskopische Einschaltdauer",
+      "Burglar": "Einbrecher",
+      "Emergency": "Notfall",
+      "Emergency Panic": "Notfall-Panik",
+      "Fire": "Feuer",
+      "Fire Panic": "Feuer-Panik",
+      "Police Panic": "Polizei-Panik",
+      "Stop": "Stop"
     }
   }
 }
