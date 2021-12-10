@@ -1146,6 +1146,31 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.mode.fecb2e2f':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
+                                    ['burglar', $this->Translate('Burglar'), '', 0x00FF00],
+                                    ['emergency', $this->Translate('Emergency'), '', 0xFF8800],
+                                    ['emergency_panic', $this->Translate('Emergency Panic'), '', 0xFF8800],
+                                    ['fire', $this->Translate('Fire'), '', 0xFF8800],
+                                    ['fire_panic', $this->Translate('Fire Panic'), '', 0xFF8800],
+                                    ['Police_panic', $this->Translate('Police Panic'), '', 0xFF8800],
+                                    ['Police_panic', $this->Translate('Police Panic'), '', 0xFF8800],
+                                    ['stop', $this->Translate('Stop'), '', 0xFF0000]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.level.ae420ac':
+                        case 'Z2M.strobe_level.ae420ac':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Gear', '', '', [
+                                    ['low', $this->Translate('Low'), '', 0x00FF00],
+                                    ['medium', $this->Translate('Medium'), '', 0xFF8800],
+                                    ['high', $this->Translate('High'), '', 0xFF0000],
+                                    ['very_high', $this->Translate('Very High'), '', 0xFF8800],
+                                ]);
+                            }
+                            break;
                         default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
@@ -1224,12 +1249,23 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileInteger($ProfileName, 'Electricity', '', ' ' . $this->Translate('Watt'), $expose['value_min'], $expose['value_max'], 0);
                         }
                         break;
+                    case 'Z2M.strobe_duty_cycle':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ', $expose['value_min'], $expose['value_max'], 0);
+                        }
+                        break;
+                    case 'Z2M.duration':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', $this->Translate('Seconds'), 0, 0, 0);
+                        }
+                        break;
                     default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
                         break;
                 }
-
                 break;
             default:
                 # code...
