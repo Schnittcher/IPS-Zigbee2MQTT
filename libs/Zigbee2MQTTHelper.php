@@ -295,13 +295,13 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('state_left', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: state_left');
+                    $this->LogMessage('Please contact module developer. Undefined variable: state_left', KL_WARNING);
                     //$this->RegisterVariableString('Z2M_StateLeft', $this->Translate('State Left'), '');
                     //$this->SetValue('Z2M_StateLeft', $Payload['state_left']);
                 }
 
                 if (array_key_exists('state_right', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: state_right');
+                    $this->LogMessage('Please contact module developer. Undefined variable: state_right', KL_WARNING);
                     //$this->RegisterVariableString('Z2M_StateRight', $this->Translate('State Right'), '');
                     //$this->SetValue('Z2M_StateRight', $Payload['state_right']);
                 }
@@ -343,7 +343,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('click', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: click');
+                    $this->LogMessage('Please contact module developer. Undefined variable: click', KL_WARNING);
                     //$this->RegisterVariableString('Z2M_Click', $this->Translate('Click'), '');
                     //$this->SetValue('Z2M_Click', $Payload['click']);
                 }
@@ -353,14 +353,14 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('brightness_rgb', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: brightness_rgb');
+                    $this->LogMessage('Please contact module developer. Undefined variable: brightness_rgb', KL_WARNING);
                     //$this->RegisterVariableInteger('Z2M_BrightnessRGB', $this->Translate('Brightness RGB'), 'Z2M.Intensity.254');
                     //$this->EnableAction('Z2M_BrightnessRGB');
                     //$this->SetValue('Z2M_BrightnessRGB', $Payload['brightness_rgb']);
                 }
 
                 if (array_key_exists('brightness_white', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: brightness_white');
+                    $this->LogMessage('Please contact module developer. Undefined variable: brightness_white', KL_WARNING);
                     //$this->RegisterVariableInteger('Z2M_BrightnessWhite', $this->Translate('Brightness White'), 'Z2M.Intensity.254');
                     //$this->EnableAction('Z2M_BrightnessWhite');
                     //$this->SetValue('Z2M_BrightnessWhite', $Payload['brightness_white']);
@@ -371,7 +371,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('motor_speed', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: motor_speed');
+                    $this->LogMessage('Please contact module developer. Undefined variable: motor_speed', KL_WARNING);
                     //$this->RegisterVariableInteger('Z2M_MotorSpeed', $this->Translate('Motor Speed'), '~Intensity.255');
                     //$this->EnableAction('Z2M_MotorSpeed');
                     //$this->SetValue('Z2M_MotorSpeed', $Payload['motor_speed']);
@@ -390,50 +390,50 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('presence', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: presence');
+                    $this->LogMessage('Please contact module developer. Undefined variable: presence', KL_WARNING);
                     //$this->RegisterVariableBoolean('Z2M_Presence', $this->Translate('Presence'), '~Presence');
                     //$this->SetValue('Z2M_Presence', $Payload['presence']);
                 }
 
                 if (array_key_exists('motion', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: motion');
+                    $this->LogMessage('Please contact module developer. Undefined variable: motion', KL_WARNING);
                     //$this->RegisterVariableBoolean('Z2M_Motion', $this->Translate('Motion'), '~Motion');
                     //$this->SetValue('Z2M_Motion', $Payload['motion']);
                 }
 
                 if (array_key_exists('motion_state', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: motion_state');
+                    $this->LogMessage('Please contact module developer. Undefined variable: motion_state', KL_WARNING);
                     //$this->RegisterVariableBoolean('Z2M_Motion_State', $this->Translate('Motion State'), '~Motion');
                     //$this->SetValue('Z2M_Motion_State', $Payload['motion_state']);
                 }
 
                 if (array_key_exists('motion_direction', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: motion_direction');
+                    $this->LogMessage('Please contact module developer. Undefined variable: motion_direction', KL_WARNING);
                     //$this->RegisterVariableString('Z2M_Motion_Direction', $this->Translate('Motion Direction'), '');
                     //$this->SetValue('Z2M_Motion_Direction', $Payload['motion_direction']);
                 }
 
                 if (array_key_exists('scene', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: scene');
+                    $this->LogMessage('Please contact module developer. Undefined variable: scene', KL_WARNING);
                     //$this->RegisterVariableString('Z2M_Scene', $this->Translate('Scene'), '');
                     //$this->SetValue('Z2M_Scene', $Payload['scene']);
                 }
 
                 if (array_key_exists('motion_speed', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: motion_speed');
+                    $this->LogMessage('Please contact module developer. Undefined variable: motion_speed', KL_WARNING);
                     //$this->RegisterVariableInteger('Z2M_Motion_Speed', $this->Translate('Motionspeed'), '');
                     //$this->SetValue('Z2M_Motion_Speed', $Payload['motion_speed']);
                 }
 
                 if (array_key_exists('radar_sensitivity', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: radar_sensitivity');
+                    $this->LogMessage('Please contact module developer. Undefined variable: radar_sensitivity', KL_WARNING);
                     //$this->RegisterVariableInteger('Z2M_Radar_Sensitivity', $this->Translate('Radar Sensitivity'), 'Z2M.RadarSensitivity');
                     //$this->EnableAction('Z2M_Radar_Sensitivity');
                     //$this->SetValue('Z2M_Radar_Sensitivity', $Payload['radar_sensitivity']);
                 }
 
                 if (array_key_exists('radar_scene', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: radar_scene');
+                    $this->LogMessage('Please contact module developer. Undefined variable: radar_scene', KL_WARNING);
                     //$this->RegisterVariableString('Z2M_Radar_Scene', $this->Translate('Radar Scene'), 'Z2M.RadarScene');
                     //$this->EnableAction('Z2M_Radar_Scene');
                     //$this->SetValue('Z2M_Radar_Scene', $Payload['radar_scene']);
@@ -470,7 +470,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('smoke_density', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: smoke_density');
+                    $this->LogMessage('Please contact module developer. Undefined variable: smoke_density', KL_WARNING);
                     //$this->RegisterVariableInteger('Z2M_SmokeDensity', $this->Translate('Smoke Density'), '');
                     //$this->SetValue('Z2M_SmokeDensity', $Payload['smoke_density']);
                 }
@@ -480,25 +480,25 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('enrolled', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: enrolled');
+                    $this->LogMessage('Please contact module developer. Undefined variable: enrolled', KL_WARNING);
                     //$this->RegisterVariableBoolean('Z2M_Enrolled', $this->Translate('Enrolled'), '');
                     //$this->SetValue('Z2M_Enrolled', $Payload['enrolled']);
                 }
 
                 if (array_key_exists('restore_reports', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: restore_reports');
+                    $this->LogMessage('Please contact module developer. Undefined variable: restore_reports', KL_WARNING);
                     //$this->RegisterVariableBoolean('Z2M_RestoreReports', $this->Translate('Restore Reports'), '');
                     //$this->SetValue('Z2M_RestoreReports', $Payload['restore_reports']);
                 }
 
                 if (array_key_exists('supervision_reports', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: supervision_reports');
+                    $this->LogMessage('Please contact module developer. Undefined variable: supervision_reports', KL_WARNING);
                     //$this->RegisterVariableBoolean('Z2M_SupervisionReports', $this->Translate('Supervision Reports'), '');
                     //$this->SetValue('Z2M_SupervisionReports', $Payload['supervision_reports']);
                 }
 
                 if (array_key_exists('trouble', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: trouble');
+                    $this->LogMessage('Please contact module developer. Undefined variable: trouble', KL_WARNING);
                     //$this->RegisterVariableBoolean('Z2M_Trouble', $this->Translate('Trouble'), '');
                     //$this->SetValue('Z2M_Trouble', $Payload['trouble']);
                 }
@@ -520,13 +520,13 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('angle_x_absolute', $Payload)) {
-                    $this->LogMessage('Please Contact Module Developer. Undefined Variable angle_x_absolute');
+                    $this->LogMessage('Please Contact Module Developer. Undefined Variable angle_x_absolute', KL_WARNING);
                     //$this->RegisterVariableFloat('Z2M_Angle_X_Absolute', $this->Translate('Angle_X_Absolute'), '');
                     //$this->SetValue('Z2M_Angle_X_Absolute', $Payload['angle_x_absolute']);
                 }
 
                 if (array_key_exists('angle_y_absolute', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: angle_y_absolute');
+                    $this->LogMessage('Please contact module developer. Undefined variable: angle_y_absolute', KL_WARNING);
                     //$this->RegisterVariableFloat('Z2M_Angle_Y_Absolute', $this->Translate('Angle_Y_Absolute'), '');
                     //$this->SetValue('Z2M_Angle_Y_Absolute', $Payload['angle_y_absolute']);
                 }
@@ -556,7 +556,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('consumption', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: consumption');
+                    $this->LogMessage('Please contact module developer. Undefined variable: consumption', KL_WARNING);
                     //$this->RegisterVariableFloat('Z2M_Consumption', $this->Translate('Consumption'), '~Electricity');
                     //$this->SetValue('Z2M_Consumption', $Payload['consumption']);
                 }
@@ -570,13 +570,13 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('duration', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: duration');
+                    $this->LogMessage('Please contact module developer. Undefined variable: duration', KL_WARNING);
                     //$this->RegisterVariableFloat('Z2M_Duration', $this->Translate('Duration'), '');
                     //$this->SetValue('Z2M_Duration', $Payload['duration']);
                 }
 
                 if (array_key_exists('counter', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: counter');
+                    $this->LogMessage('Please contact module developer. Undefined variable: counter', KL_WARNING);
                     //$this->RegisterVariableFloat('Z2M_Counter', $this->Translate('Counter'), '');
                     //$this->SetValue('Z2M_Counter', $Payload['counter']);
                 }
@@ -601,7 +601,7 @@ trait Zigbee2MQTTHelper
                         $RGBColor = ltrim($this->CIEToRGB($Payload['color_rgb']['x'], $Payload['color_rgb']['y']), '#');
                     }
                     $this->SendDebug(__FUNCTION__ . ' Color :: RGB HEX', $RGBColor, 0);
-                    $this->LogMessage('Please contact module developer. Undefined variable: color_rgb');
+                    $this->LogMessage('Please contact module developer. Undefined variable: color_rgb', KL_WARNING);
                     //$this->RegisterVariableInteger('Z2M_ColorRGB', $this->Translate('Color'), 'HexColor');
                     //$this->EnableAction('Z2M_ColorRGB');
                     $this->SetValue('Z2M_ColorRGB', hexdec(($RGBColor)));
@@ -620,7 +620,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('color_temp_rgb', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: color_temp_rgb');
+                    $this->LogMessage('Please contact module developer. Undefined variable: color_temp_rgb', KL_WARNING);
                     //$this->RegisterVariableInteger('Z2M_ColorTempRGB', $this->Translate('Color Temperature RGB'), 'Z2M.ColorTemperature');
                     //$this->EnableAction('Z2M_ColorTempRGB');
                     //$this->SetValue('Z2M_ColorTempRGB', $Payload['color_temp_rgb']);
@@ -635,13 +635,13 @@ trait Zigbee2MQTTHelper
                             $this->SetValue('Z2M_State', false);
                             break;
                         case 'OPEN':
-                            $this->LogMessage('Please contact module developer. Undefined variable: Z2M_StateWindow');
+                            $this->LogMessage('Please contact module developer. Undefined variable: Z2M_StateWindow', KL_WARNING);
                             //$this->RegisterVariableBoolean('Z2M_StateWindow', $this->Translate('State'), '~Window');
                             //$this->EnableAction('Z2M_StateWindow');
                             //$this->SetValue('Z2M_StateWindow', true);
                             break;
                         case 'CLOSE':
-                            $this->LogMessage('Please contact module developer. Undefined variable: Z2M_StateWindow');
+                            $this->LogMessage('Please contact module developer. Undefined variable: Z2M_StateWindow', KL_WARNING);
                             //$this->RegisterVariableBoolean('Z2M_StateWindow', $this->Translate('State'), '~Window');
                             //$this->EnableAction('Z2M_StateWindow');
                             //$this->SetValue('Z2M_StateWindow', false);
@@ -657,7 +657,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('state_rgb', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: state_rgb');
+                    $this->LogMessage('Please contact module developer. Undefined variable: state_rgb', KL_WARNING);
                     switch ($Payload['state_rgb']) {
                         case 'ON':
                             //$this->RegisterVariableBoolean('Z2M_StateRGB', $this->Translate('State RGB'), '~Switch');
@@ -676,7 +676,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('state_white', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: state_white');
+                    $this->LogMessage('Please contact module developer. Undefined variable: state_white', KL_WARNING);
                     switch ($Payload['state_white']) {
                         case 'ON':
                             //$this->RegisterVariableBoolean('Z2M_StateWhite', $this->Translate('State White'), '~Switch');
