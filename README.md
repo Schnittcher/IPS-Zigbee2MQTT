@@ -59,7 +59,7 @@ Z2M_BoostTime | Integer | - | variabel | Integer
 
 ### 3.1 Installation der IP-Symcon Extension in Zigbee2MQTT
 
-Die Datei [IPSymconExtension.js](libs/IP-SymconExtension.js) muss im Verzeichnis "data/extension" abgelegt werden.
+Die Datei [IPSymconExtension.js](libs/IPSymconExtension.js) muss im Verzeichnis "data/extension" abgelegt werden.
 Alternativ kann über das Frontend die Datei angelegt werden und der Inhalt eingefügt werden.
 
 ## 4. Konfiguration in IP-Symcon
