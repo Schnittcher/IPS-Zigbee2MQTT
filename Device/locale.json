@@ -141,8 +141,7 @@
       "Vibration": "Vibration",
       "Level": "Stufe",
       "Strobe Level": "Stroboskop-Stufe",
-      "Strobe Duty Cycle": "Stroboskopische Einschaltdauer",
-      "Duration": "Dauer"
+      "Strobe Duty Cycle": "Stroboskopische Einschaltdauer"
     }
   }
 }
