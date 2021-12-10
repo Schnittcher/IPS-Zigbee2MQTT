@@ -40,5 +40,7 @@ class Zigbee2MQTTGroup extends IPSModule
 
         $this->SendDebug('Filter ', '.*(' . $Filter1 . '|' . $Filter2 . ').*', 0);
         $this->SetReceiveDataFilter('.*(' . $Filter1 . '|' . $Filter2 . ').*');
+
+        $this->getGroupInfo();
     }
 }

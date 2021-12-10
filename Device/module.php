@@ -37,6 +37,6 @@ class Zigbee2MQTTDevice extends IPSModule
         $this->SendDebug('Filter ', '.*(' . $Filter1 . '|' . $Filter2 . ').*', 0);
         $this->SetReceiveDataFilter('.*(' . $Filter1 . '|' . $Filter2 . ').*');
 
-        $this->Command('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/getDevice', $this->ReadPropertyString('MQTTTopic'));
+        $this->getDeviceInfo();
     }
 }
