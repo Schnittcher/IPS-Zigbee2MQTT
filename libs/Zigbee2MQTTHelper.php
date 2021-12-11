@@ -1031,8 +1031,20 @@ trait Zigbee2MQTTHelper
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['manual', $this->Translate('Manual'), '', 0x00FF00],
-                                    ['schedule', $this->Translate('Schedule'), '', 0xFFFF00],
+                                    ['schedule', $this->Translate('Schedule'), '', 0x8800FF],
                                     ['holiday', $this->Translate('Holiday'), '', 0xFFa500],
+                                    ['boost', $this->Translate('Boost'), '', 0xFF0000]
+                                ]);
+                            }
+                            break;
+                        case'Z2M.preset.1d99b46a':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['comfort', $this->Translate('Comfort'), '', 0xFFFF00],
+                                    ['complex', $this->Translate('Complex'), '', 0x0000FF],
+                                    ['eco', $this->Translate('Eco'), '', 0x00FF00],
+                                    ['manual', $this->Translate('Manual'), '', 0x00FF00],
+                                    ['schedule', $this->Translate('Schedule'), '', 0x8800FF],
                                     ['boost', $this->Translate('Boost'), '', 0xFF0000]
                                 ]);
                             }
@@ -1112,6 +1124,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'Z2M.force.85dac8d5':
+                        case 'Z2M.force.2bd28f19':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
                                     ['normal', $this->Translate('Normal'), '', 0x00FF00],
