@@ -390,15 +390,11 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('presence', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: presence', KL_WARNING);
-                    //$this->RegisterVariableBoolean('Z2M_Presence', $this->Translate('Presence'), '~Presence');
-                    //$this->SetValue('Z2M_Presence', $Payload['presence']);
+                    $this->SetValue('Z2M_Presence', $Payload['presence']);
                 }
 
                 if (array_key_exists('motion', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: motion', KL_WARNING);
-                    //$this->RegisterVariableBoolean('Z2M_Motion', $this->Translate('Motion'), '~Motion');
-                    //$this->SetValue('Z2M_Motion', $Payload['motion']);
+                    $this->SetValue('Z2M_Motion', $Payload['motion']);
                 }
 
                 if (array_key_exists('motion_state', $Payload)) {
@@ -408,9 +404,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('motion_direction', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: motion_direction', KL_WARNING);
-                    //$this->RegisterVariableString('Z2M_Motion_Direction', $this->Translate('Motion Direction'), '');
-                    //$this->SetValue('Z2M_Motion_Direction', $Payload['motion_direction']);
+                    $this->SetValue('Z2M_MotionDirection', $Payload['motion_direction']);
                 }
 
                 if (array_key_exists('scene', $Payload)) {
@@ -420,23 +414,15 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('motion_speed', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: motion_speed', KL_WARNING);
-                    //$this->RegisterVariableInteger('Z2M_Motion_Speed', $this->Translate('Motionspeed'), '');
-                    //$this->SetValue('Z2M_Motion_Speed', $Payload['motion_speed']);
+                    $this->SetValue('Z2M_MotionSpeed', $Payload['motion_speed']);
                 }
 
                 if (array_key_exists('radar_sensitivity', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: radar_sensitivity', KL_WARNING);
-                    //$this->RegisterVariableInteger('Z2M_Radar_Sensitivity', $this->Translate('Radar Sensitivity'), 'Z2M.RadarSensitivity');
-                    //$this->EnableAction('Z2M_Radar_Sensitivity');
-                    //$this->SetValue('Z2M_Radar_Sensitivity', $Payload['radar_sensitivity']);
+                    $this->SetValue('Z2M_RadarSensitivity', $Payload['radar_sensitivity']);
                 }
 
                 if (array_key_exists('radar_scene', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: radar_scene', KL_WARNING);
-                    //$this->RegisterVariableString('Z2M_Radar_Scene', $this->Translate('Radar Scene'), 'Z2M.RadarScene');
-                    //$this->EnableAction('Z2M_Radar_Scene');
-                    //$this->SetValue('Z2M_Radar_Scene', $Payload['radar_scene']);
+                    $this->SetValue('Z2M_RadarScene', $Payload['radar_scene']);
                 }
 
                 if (array_key_exists('illuminance', $Payload)) {
@@ -1551,7 +1537,13 @@ trait Zigbee2MQTTHelper
                         break;
                         case 'occupancy':
                             $this->RegisterVariableBoolean('Z2M_Occupancy', $this->Translate('Occupancy'), '~Motion');
-                        break;
+                            break;
+                        case 'presence':
+                            $this->RegisterVariableBoolean('Z2M_Presence', $this->Translate('Presence'), '~Presence');
+                            break;
+                        case 'motion':
+                            $this->RegisterVariableBoolean('Z2M_Motion', $this->Translate('Motion'), '~Motion');
+                            break;
                         case 'battery_low':
                             $this->RegisterVariableBoolean('Z2M_Battery_Low', $this->Translate('Battery Low'), '~Battery');
                             break;
@@ -1673,6 +1665,12 @@ trait Zigbee2MQTTHelper
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_TRVMode', $this->Translate('TRV Mode'), $ProfileName);
                                 $this->EnableAction('Z2M_TRVMode');
+                            }
+                            break;
+                        case 'motion_direction':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_MotionDirection', $this->Translate('Motion Direction'), $ProfileName);
                             }
                             break;
                         default:
@@ -1832,6 +1830,23 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'action_to_side':
                             $this->RegisterVariableInteger('Z2M_ActionToSide', $this->Translate('Action to side'), '');
+                            break;
+                        case 'motion_speed':
+                            $this->RegisterVariableInteger('Z2M_MotionSpeed', $this->Translate('Motionspeed'), '');
+                            break;
+                        case 'radar_sensitivity':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_RadarSensitivity', $this->Translate('Radar Sensitivity'), $ProfileName);
+                                $this->EnableAction('Z2M_RadarSensitivity');
+                            }
+                            break;
+                        case 'radar_scene':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_RadarScene', $this->Translate('Radar Scene'), $ProfileName);
+                                $this->EnableAction('Z2M_RadarScene');
+                            }
                             break;
                         default:
                         $missedVariables[] = $expose;
