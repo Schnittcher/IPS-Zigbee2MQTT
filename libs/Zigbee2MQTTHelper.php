@@ -41,16 +41,16 @@ trait Zigbee2MQTTHelper
                 $Payload['led_disabled_night'] = strval($Value);
                 break;
             case 'Z2M_Statel1':
-                $Payload['l1'] = strval($this->OnOff($Value));
+                $Payload['state_l1'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_Statel2':
-                $Payload['l2'] = strval($this->OnOff($Value));
+                $Payload['state_l2'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_Statel3':
-                $Payload['l3'] = strval($this->OnOff($Value));
+                $Payload['state_l3'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_Statel4':
-                $Payload['l4'] = strval($this->OnOff($Value));
+                $Payload['state_l4'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_WindowDetection':
                 $Payload['window_detection'] = strval($this->OnOff($Value));
