@@ -19,7 +19,7 @@ trait MQTTHelper
         $Data['PacketType'] = 3;
         $Data['QualityOfService'] = 0;
         $Data['Retain'] = false;
-        $Data['Topic'] = $topic;
+        $Data['Topic'] = $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/' . $topic;
         $Data['Payload'] = $value;
         $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
         $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
