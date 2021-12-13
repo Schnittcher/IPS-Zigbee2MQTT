@@ -107,12 +107,12 @@ class Zigbee2MQTTConfigurator extends IPSModule
 
     private function getDevices()
     {
-        $this->Command('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/getDevices', '');
+        $this->symconExtensionCommand('getDevices', '');
     }
 
     private function getGroups()
     {
-        $this->Command('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/getGroups', '');
+        $this->symconExtensionCommand('getGroups', '');
     }
 
     private function getDeviceInstanceID($FriendlyName)
