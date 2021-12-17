@@ -959,6 +959,7 @@ trait Zigbee2MQTTHelper
                 break;
         }
     }
+
     private function OnOff(bool $Value)
     {
         switch ($Value) {
@@ -1133,6 +1134,15 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.motion_direction.1440af33':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Move', '', '', [
+                                    ['moving backword', $this->Translate('moving backword'), '', 0x00FF00],
+                                    ['moving forward', $this->Translate('moving forward'), '', 0xFF8800],
+                                    ['standing  still', $this->Translate('standing still'), '', 0xFF0000]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.force.85dac8d5':
                         case 'Z2M.force.2bd28f19':
                             if (!IPS_VariableProfileExists($ProfileName)) {
@@ -1281,6 +1291,13 @@ trait Zigbee2MQTTHelper
                     case 'Z2M.duration':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', $this->Translate('Seconds'), 0, 0, 0);
+                        }
+                        break;
+                    case 'Z2M.radar_sensitivity':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 0);
                         }
                         break;
                     default:
