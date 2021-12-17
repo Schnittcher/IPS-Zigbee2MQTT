@@ -342,12 +342,6 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_Action', $Payload['action']);
                 }
 
-                if (array_key_exists('click', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: click', KL_WARNING);
-                    //$this->RegisterVariableString('Z2M_Click', $this->Translate('Click'), '');
-                    //$this->SetValue('Z2M_Click', $Payload['click']);
-                }
-
                 if (array_key_exists('brightness', $Payload)) {
                     $this->SetValue('Z2M_Brightness', $Payload['brightness']);
                 }
