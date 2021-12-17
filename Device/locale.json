@@ -150,7 +150,11 @@
       "Fire": "Feuer",
       "Fire Panic": "Feuer-Panik",
       "Police Panic": "Polizei-Panik",
-      "Stop": "Stop"
+      "Stop": "Stop",
+      "moving backword": "Rückwärtsbewegung",
+      "moving forward": "Vorwärtsbewegung",
+      "standing  still": "Stillstehend"
+
     }
   }
 }
