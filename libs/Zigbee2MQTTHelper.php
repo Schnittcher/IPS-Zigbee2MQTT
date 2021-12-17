@@ -803,6 +803,42 @@ trait Zigbee2MQTTHelper
         }
     }
 
+    public function setColorExt($color, string $mode, array $params = [], string $Z2MMode = 'color')
+    {
+        switch ($mode) {
+            case 'cie':
+                $this->SendDebug(__FUNCTION__, $color, 0);
+                $this->SendDebug(__FUNCTION__, $mode, 0);
+                $this->SendDebug(__FUNCTION__, json_encode($params, JSON_UNESCAPED_SLASHES), 0);
+                $this->SendDebug(__FUNCTION__, $Z2MMode, 0);
+                if (preg_match('/^#[a-f0-9]{6}$/i', strval($color))) {
+                    $color = ltrim($color, '#');
+                    $color = hexdec($color);
+                }
+                $RGB = $this->HexToRGB($color);
+                $cie = $this->RGBToCIE($RGB[0], $RGB[1], $RGB[2]);
+                if ($Z2MMode = 'color') {
+                    $Payload['color'] = $cie;
+                } elseif ($Z2MMode == 'color_rgb') {
+                    $Payload['color_rgb'] = $cie;
+                } else {
+                    return;
+                }
+
+                foreach ($params as $key => $value) {
+                    $Payload[$key] = $value;
+                }
+
+                $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+                $this->SendDebug(__FUNCTION__, $PayloadJSON, 0);
+                $this->Z2MSet($PayloadJSON);
+                break;
+            default:
+                $this->SendDebug('setColor', 'Invalid Mode ' . $mode, 0);
+                break;
+        }
+    }
+
     protected function createVariableProfiles()
     {
 
