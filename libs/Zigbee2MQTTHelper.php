@@ -1281,19 +1281,19 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileInteger($ProfileName, 'Electricity', '', ' ' . $this->Translate('Watt'), $expose['value_min'], $expose['value_max'], 0);
                         }
                         break;
-                    case 'Z2M.strobe_duty_cycle':
+                    case 'strobe_duty_cycle':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ', $expose['value_min'], $expose['value_max'], 0);
                         }
                         break;
-                    case 'Z2M.duration':
+                    case 'duration':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', $this->Translate('Seconds'), 0, 0, 0);
                         }
                         break;
-                    case 'Z2M.radar_sensitivity':
+                    case 'radar_sensitivity':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
