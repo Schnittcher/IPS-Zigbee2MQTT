@@ -555,12 +555,6 @@ trait Zigbee2MQTTHelper
                     //$this->SetValue('Z2M_Duration', $Payload['duration']);
                 }
 
-                if (array_key_exists('counter', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: counter', KL_WARNING);
-                    //$this->RegisterVariableFloat('Z2M_Counter', $this->Translate('Counter'), '');
-                    //$this->SetValue('Z2M_Counter', $Payload['counter']);
-                }
-
                 if (array_key_exists('color', $Payload)) {
                     $this->SendDebug(__FUNCTION__ . ' Color', $Payload['color']['x'], 0);
                     if (array_key_exists('brightness', $Payload)) {
