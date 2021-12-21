@@ -1891,7 +1891,7 @@ trait Zigbee2MQTTHelper
                         case 'duration':
                         $ProfileName = $this->registerVariableProfile($expose);
                         if ($ProfileName != false) {
-                            $this->RegisterVariableString('Z2M_Duration', $this->Translate('Duration'), $ProfileName);
+                            $this->RegisterVariableInteger('Z2M_Duration', $this->Translate('Duration'), $ProfileName);
                         }
                         default:
                         $missedVariables[] = $expose;
