@@ -550,9 +550,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('duration', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: duration', KL_WARNING);
-                    //$this->RegisterVariableFloat('Z2M_Duration', $this->Translate('Duration'), '');
-                    //$this->SetValue('Z2M_Duration', $Payload['duration']);
+                    $this->SetValue('Z2M_Duration', $Payload['duration']);
                 }
 
                 if (array_key_exists('color', $Payload)) {
@@ -1289,8 +1287,9 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'duration':
+                        $ProFileName .= '_'.$expose['unit'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', $this->Translate('Seconds'), 0, 0, 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', $expose['unit'], 0, 0, 0);
                         }
                         break;
                     case 'radar_sensitivity':
@@ -1889,6 +1888,11 @@ trait Zigbee2MQTTHelper
                                 $this->EnableAction('Z2M_RadarScene');
                             }
                             break;
+                        case 'duration':
+                        $ProfileName = $this->registerVariableProfile($expose);
+                        if ($ProfileName != false) {
+                            $this->RegisterVariableString('Z2M_Duration', $this->Translate('Duration'), $ProfileName);
+                        }
                         default:
                         $missedVariables[] = $expose;
                         break;
