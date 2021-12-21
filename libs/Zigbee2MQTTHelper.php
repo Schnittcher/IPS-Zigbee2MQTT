@@ -1287,7 +1287,7 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'duration':
-                        $ProFileName .= '_'.$expose['unit'];
+                        $ProFileName .= '_' . $expose['unit'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', $expose['unit'], 0, 0, 0);
                         }
@@ -1889,10 +1889,11 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'duration':
-                        $ProfileName = $this->registerVariableProfile($expose);
-                        if ($ProfileName != false) {
-                            $this->RegisterVariableInteger('Z2M_Duration', $this->Translate('Duration'), $ProfileName);
-                        }
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_Duration', $this->Translate('Duration'), $ProfileName);
+                            }
+                            break;
                         default:
                         $missedVariables[] = $expose;
                         break;
@@ -1919,14 +1920,14 @@ trait Zigbee2MQTTHelper
                                         case 'strobe_duty_cycle':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
-                                                $this->RegisterVariableString('Z2M_StrobeDutyCycle', $this->Translate('Strobe Duty Cycle'), $ProfileName);
+                                                $this->RegisterVariableInteger('Z2M_StrobeDutyCycle', $this->Translate('Strobe Duty Cycle'), $ProfileName);
                                             }
                                             $this->EnableAction('Z2M_StrobeDutyCycle');
                                             break;
                                         case 'duration':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
-                                                $this->RegisterVariableString('Z2M_Duration', $this->Translate('Duration'), $ProfileName);
+                                                $this->RegisterVariableInteger('Z2M_Duration', $this->Translate('Duration'), $ProfileName);
                                             }
                                             $this->EnableAction('Z2M_Duration');
                                             break;
