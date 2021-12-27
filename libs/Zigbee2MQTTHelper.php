@@ -30,6 +30,7 @@ trait Zigbee2MQTTHelper
             case 'Z2M_State':
                 if ($variableType == 3) {
                     $Payload['state'] = strval($Value);
+                    break;
                 }
                 $Payload['state'] = strval($this->OnOff($Value));
                 break;
@@ -142,7 +143,6 @@ trait Zigbee2MQTTHelper
                 break;
             case 'Z2M_MotorSpeed':
                 $Payload['motor_speed'] = strval($Value);
-                $this->setMotorSpeed($Value);
                 break;
             case 'Z2M_MotionSensitivity':
                 $Payload['motion_sensitivity'] = strval($Value);
