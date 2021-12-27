@@ -6,6 +6,8 @@ trait Zigbee2MQTTHelper
 {
     public function RequestAction($Ident, $Value)
     {
+        $variableID = $this->GetIDForIdent($Ident);
+        $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
             case 'Z2M_Brightness':
                 $Payload['brightness'] = strval($Value);
@@ -26,6 +28,9 @@ trait Zigbee2MQTTHelper
                 $Payload['color_temp_rgb'] = strval($Value);
                 break;
             case 'Z2M_State':
+                if ($variableType == 3) {
+                    $Payload['state'] = strval($Value);
+                }
                 $Payload['state'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_RunningState':
@@ -609,16 +614,9 @@ trait Zigbee2MQTTHelper
                             $this->SetValue('Z2M_State', false);
                             break;
                         case 'OPEN':
-                            $this->LogMessage('Please contact module developer. Undefined variable: Z2M_StateWindow', KL_WARNING);
-                            //$this->RegisterVariableBoolean('Z2M_StateWindow', $this->Translate('State'), '~Window');
-                            //$this->EnableAction('Z2M_StateWindow');
-                            //$this->SetValue('Z2M_StateWindow', true);
-                            break;
                         case 'CLOSE':
-                            $this->LogMessage('Please contact module developer. Undefined variable: Z2M_StateWindow', KL_WARNING);
-                            //$this->RegisterVariableBoolean('Z2M_StateWindow', $this->Translate('State'), '~Window');
-                            //$this->EnableAction('Z2M_StateWindow');
-                            //$this->SetValue('Z2M_StateWindow', false);
+                        case 'STOP':
+                            $this->SetValue('Z2M_State', $Payload['state']);
                             break;
                         default:
                         $this->SendDebug('State', 'Undefined State: ' . $Payload['state'], 0);
