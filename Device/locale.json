@@ -151,11 +151,12 @@
       "Fire": "Feuer",
       "Fire Panic": "Feuer-Panik",
       "Police Panic": "Polizei-Panik",
-      "Stop": "Stop",
       "moving backward": "Entfernen",
       "moving forward": "Annähern",
-      "standing still": "Stillstand"
-
+      "standing still": "Stillstand",
+      "Open": "Öffnen",
+      "Close": "Schließen",
+      "Stop": "Stop"
     }
   }
 }
