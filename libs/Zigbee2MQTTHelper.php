@@ -1179,7 +1179,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.state.XXXX':
+                        case 'Z2M.state.7c75b7a3':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Shutter', '', '', [
                                     ['open', $this->Translate('Open'), '', 0x00FF00],
@@ -1939,6 +1939,10 @@ trait Zigbee2MQTTHelper
                                                 $this->RegisterVariableFloat('Z2M_Duration', $this->Translate('Duration'), $ProfileName);
                                             }
                                             $this->EnableAction('Z2M_Duration');
+                                            break;
+                                        case 'motor_speed':
+                                            $this->RegisterVariableFloat('Z2M_MotorSpeed', $this->Translate('Motor Speed'), '~Intensity.255');
+                                            $this->EnableAction('Z2M_MotorSpeed');
                                             break;
                                         default:
                                         // Default composite binary
