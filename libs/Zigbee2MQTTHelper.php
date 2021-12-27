@@ -134,7 +134,6 @@ trait Zigbee2MQTTHelper
                 return;
             case 'Z2M_Position':
                 $Payload['position'] = strval($Value);
-                $this->setPosition($Value);
                 break;
             case 'Z2M_MotorSpeed':
                 $Payload['motor_speed'] = strval($Value);
