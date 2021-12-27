@@ -552,6 +552,9 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_Duration', $Payload['duration']);
                 }
 
+                if (array_key_exists('duaction_durationration', $Payload)) {
+                    $this->SetValue('Z2M_ActionDuration', $Payload['action_duration']);
+                }            
                 if (array_key_exists('color', $Payload)) {
                     $this->SendDebug(__FUNCTION__ . ' Color', $Payload['color']['x'], 0);
                     if (array_key_exists('brightness', $Payload)) {
@@ -1285,10 +1288,10 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ', $expose['value_min'], $expose['value_max'], 0);
                         }
                         break;
-                    case 'duration':
+                    case 'action_duration':
                         $ProFileName .= '_' . $expose['unit'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0);
+                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 2);
                         }
                         break;
                     case 'radar_sensitivity':
@@ -1887,10 +1890,10 @@ trait Zigbee2MQTTHelper
                                 $this->EnableAction('Z2M_RadarScene');
                             }
                             break;
-                        case 'duration':
+                        case 'action_duration':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('Z2M_Duration', $this->Translate('Duration'), $ProfileName);
+                                $this->RegisterVariableFloat('Z2M_ActionDuration', $this->Translate('Action Duration'), $ProfileName);
                             }
                             break;
                         default:
@@ -1926,7 +1929,7 @@ trait Zigbee2MQTTHelper
                                         case 'duration':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
-                                                $this->RegisterVariableInteger('Z2M_Duration', $this->Translate('Duration'), $ProfileName);
+                                                $this->RegisterVariableFloat('Z2M_Duration', $this->Translate('Duration'), $ProfileName);
                                             }
                                             $this->EnableAction('Z2M_Duration');
                                             break;
