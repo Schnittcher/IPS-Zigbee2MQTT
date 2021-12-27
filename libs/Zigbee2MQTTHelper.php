@@ -463,30 +463,6 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_Tamper', $Payload['tamper']);
                 }
 
-                if (array_key_exists('enrolled', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: enrolled', KL_WARNING);
-                    //$this->RegisterVariableBoolean('Z2M_Enrolled', $this->Translate('Enrolled'), '');
-                    //$this->SetValue('Z2M_Enrolled', $Payload['enrolled']);
-                }
-
-                if (array_key_exists('restore_reports', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: restore_reports', KL_WARNING);
-                    //$this->RegisterVariableBoolean('Z2M_RestoreReports', $this->Translate('Restore Reports'), '');
-                    //$this->SetValue('Z2M_RestoreReports', $Payload['restore_reports']);
-                }
-
-                if (array_key_exists('supervision_reports', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: supervision_reports', KL_WARNING);
-                    //$this->RegisterVariableBoolean('Z2M_SupervisionReports', $this->Translate('Supervision Reports'), '');
-                    //$this->SetValue('Z2M_SupervisionReports', $Payload['supervision_reports']);
-                }
-
-                if (array_key_exists('trouble', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: trouble', KL_WARNING);
-                    //$this->RegisterVariableBoolean('Z2M_Trouble', $this->Translate('Trouble'), '');
-                    //$this->SetValue('Z2M_Trouble', $Payload['trouble']);
-                }
-
                 if (array_key_exists('battery_low', $Payload)) {
                     $this->SetValue('Z2M_Battery_Low', $Payload['battery_low']);
                 }
