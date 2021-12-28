@@ -369,10 +369,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('motor_speed', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: motor_speed', KL_WARNING);
-                    //$this->RegisterVariableInteger('Z2M_MotorSpeed', $this->Translate('Motor Speed'), '~Intensity.255');
-                    //$this->EnableAction('Z2M_MotorSpeed');
-                    //$this->SetValue('Z2M_MotorSpeed', $Payload['motor_speed']);
+                    $this->SetValue('Z2M_MotorSpeed', $Payload['motor_speed']);
                 }
 
                 if (array_key_exists('occupancy', $Payload)) {
@@ -1156,9 +1153,9 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.state.7c75b7a3':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Shutter', '', '', [
-                                    ['open', $this->Translate('Open'), '', 0x00FF00],
-                                    ['close', $this->Translate('Close'), '', 0xFF8800],
-                                    ['stop', $this->Translate('Stop'), '', 0xFF0000]
+                                    ['OPEN', $this->Translate('Open'), '', 0x00FF00],
+                                    ['CLOSE', $this->Translate('Close'), '', 0xFF8800],
+                                    ['STOP', $this->Translate('Stop'), '', 0xFF0000]
                                 ]);
                             }
                             break;
