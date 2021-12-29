@@ -1912,7 +1912,7 @@ trait Zigbee2MQTTHelper
                                             $this->EnableAction('Z2M_Duration');
                                             break;
                                         case 'motor_speed':
-                                            $this->RegisterVariableFloat('Z2M_MotorSpeed', $this->Translate('Motor Speed'), '~Intensity.255');
+                                            $this->RegisterVariableInteger('Z2M_MotorSpeed', $this->Translate('Motor Speed'), '~Intensity.255');
                                             $this->EnableAction('Z2M_MotorSpeed');
                                             break;
                                         default:
