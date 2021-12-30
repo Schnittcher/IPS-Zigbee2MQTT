@@ -1109,9 +1109,9 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.motion_direction.c4d8a6f1':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Move', '', '', [
-                                    ['moving backward', $this->Translate('moving backward'), '', 0x00FF00],
-                                    ['moving forward', $this->Translate('moving forward'), '', 0xFF0000],
-                                    ['standing still', $this->Translate('standing still'), '', 0xFFFF00]
+                                    ['moving_backward', $this->Translate('moving backward'), '', 0x00FF00],
+                                    ['moving_forward', $this->Translate('moving forward'), '', 0xFF0000],
+                                    ['standing_still', $this->Translate('standing still'), '', 0xFFFF00]
                                 ]);
                             }
                             break;
