@@ -1857,7 +1857,7 @@ trait Zigbee2MQTTHelper
                         case 'radar_sensitivity':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableString('Z2M_RadarSensitivity', $this->Translate('Radar Sensitivity'), $ProfileName);
+                                $this->RegisterVariableInteger('Z2M_RadarSensitivity', $this->Translate('Radar Sensitivity'), $ProfileName);
                                 $this->EnableAction('Z2M_RadarSensitivity');
                             }
                             break;
