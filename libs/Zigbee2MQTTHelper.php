@@ -868,18 +868,20 @@ trait Zigbee2MQTTHelper
          * $this->RegisterProfileInteger('Z2M.ColorTemperatureKelvin', 'Intensity', '', '', 2000, 6535, 1);
          * }
          */
-        if (!IPS_VariableProfileExists('Z2M.RadarScene')) {
-            $this->RegisterProfileStringEx('Z2M.RadarScene', 'Menu', '', '', [
-                ['default', $this->Translate('Default'), '', 0xFFFFFF],
-                ['area', $this->Translate('Area'), '', 0x0000FF],
-                ['toilet', $this->Translate('Toilet'), '', 0x0000FF],
-                ['bedroom', $this->Translate('Bedroom'), '', 0x0000FF],
-                ['parlour', $this->Translate('Parlour'), '', 0x0000FF],
-                ['office', $this->Translate('Office'), '', 0x0000FF],
-                ['hotel', $this->Translate('Hotel'), '', 0x0000FF]
-            ]);
-        }
 
+        /**
+         * if (!IPS_VariableProfileExists('Z2M.RadarScene')) {
+         * $this->RegisterProfileStringEx('Z2M.RadarScene', 'Menu', '', '', [
+         * ['default', $this->Translate('Default'), '', 0xFFFFFF],
+         * ['area', $this->Translate('Area'), '', 0x0000FF],
+         * ['toilet', $this->Translate('Toilet'), '', 0x0000FF],
+         * ['bedroom', $this->Translate('Bedroom'), '', 0x0000FF],
+         * ['parlour', $this->Translate('Parlour'), '', 0x0000FF],
+         * ['office', $this->Translate('Office'), '', 0x0000FF],
+         * ['hotel', $this->Translate('Hotel'), '', 0x0000FF]
+         * ]);
+         * }
+         */
         /**
          * if (!IPS_VariableProfileExists('Z2M.SystemMode')) {
          * $Associations = [];
@@ -1205,17 +1207,30 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.level.ae420ac':
-                        case 'Z2M.strobe_level.ae420ac':
-                            if (!IPS_VariableProfileExists($ProfileName)) {
-                                $this->RegisterProfileStringEx($ProfileName, 'Gear', '', '', [
-                                    ['low', $this->Translate('Low'), '', 0x00FF00],
-                                    ['medium', $this->Translate('Medium'), '', 0xFF8800],
-                                    ['high', $this->Translate('High'), '', 0xFF0000],
-                                    ['very_high', $this->Translate('Very High'), '', 0xFF8800],
-                                ]);
-                            }
-                            break;
+                            case 'Z2M.level.ae420ac':
+                            case 'Z2M.strobe_level.ae420ac':
+                                if (!IPS_VariableProfileExists($ProfileName)) {
+                                    $this->RegisterProfileStringEx($ProfileName, 'Gear', '', '', [
+                                        ['low', $this->Translate('Low'), '', 0x00FF00],
+                                        ['medium', $this->Translate('Medium'), '', 0xFF8800],
+                                        ['high', $this->Translate('High'), '', 0xFF0000],
+                                        ['very_high', $this->Translate('Very High'), '', 0xFF8800],
+                                    ]);
+                                }
+                                break;
+                            case 'Z2M.radar_scene.b071d907':
+                                if (!IPS_VariableProfileExists($ProfileName)) {
+                                    $this->RegisterProfileStringEx('Z2M.RadarScene', 'Menu', '', '', [
+                                        ['default', $this->Translate('Default'), '', 0xFFFFFF],
+                                        ['area', $this->Translate('Area'), '', 0xFF0000],
+                                        ['toilet', $this->Translate('Toilet'), '', 0xFF8800],
+                                        ['bedroom', $this->Translate('Bedroom'), '', 0x8800FF],
+                                        ['parlour', $this->Translate('Parlour'), '', 0x0000FF],
+                                        ['office', $this->Translate('Office'), '', 0x008800],
+                                        ['hotel', $this->Translate('Hotel'), '', 0xFFFF00]
+                                    ]);
+                                }
+                                break;
                         default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
