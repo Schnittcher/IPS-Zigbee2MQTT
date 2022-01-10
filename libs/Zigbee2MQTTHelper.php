@@ -1221,13 +1221,13 @@ trait Zigbee2MQTTHelper
                             case 'Z2M.radar_scene.b071d907':
                                 if (!IPS_VariableProfileExists($ProfileName)) {
                                     $this->RegisterProfileStringEx('Z2M.RadarScene', 'Menu', '', '', [
-                                        ['default', $this->Translate('Default'), '', 0xFFFFFF],
                                         ['area', $this->Translate('Area'), '', 0xFF0000],
-                                        ['toilet', $this->Translate('Toilet'), '', 0xFF8800],
                                         ['bedroom', $this->Translate('Bedroom'), '', 0x8800FF],
-                                        ['parlour', $this->Translate('Parlour'), '', 0x0000FF],
+                                        ['default', $this->Translate('Default'), '', 0xFFFFFF],
+                                        ['hotel', $this->Translate('Hotel'), '', 0xFFFF00],
                                         ['office', $this->Translate('Office'), '', 0x008800],
-                                        ['hotel', $this->Translate('Hotel'), '', 0xFFFF00]
+                                        ['parlour', $this->Translate('Parlour'), '', 0x0000FF],
+                                        ['toilet', $this->Translate('Toilet'), '', 0xFF8800]
                                     ]);
                                 }
                                 break;
