@@ -1220,7 +1220,7 @@ trait Zigbee2MQTTHelper
                                 break;
                             case 'Z2M.radar_scene.b071d907':
                                 if (!IPS_VariableProfileExists($ProfileName)) {
-                                    $this->RegisterProfileStringEx('Z2M.RadarScene', 'Menu', '', '', [
+                                    $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
                                         ['area', $this->Translate('Area'), '', 0xFF0000],
                                         ['bedroom', $this->Translate('Bedroom'), '', 0x8800FF],
                                         ['default', $this->Translate('Default'), '', 0xFFFFFF],
