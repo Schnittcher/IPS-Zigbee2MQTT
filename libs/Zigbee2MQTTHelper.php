@@ -962,7 +962,7 @@ trait Zigbee2MQTTHelper
         $Data['PacketType'] = 3;
         $Data['QualityOfService'] = 0;
         $Data['Retain'] = false;
-        $Data['Topic'] = MQTT_GROUP_TOPIC . '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
+        $Data['Topic'] = $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
         $Data['Payload'] = $payload;
         $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
         $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
