@@ -61,6 +61,12 @@ trait Zigbee2MQTTHelper
             case 'Z2M_WindowDetection':
                 $Payload['window_detection'] = strval($this->OnOff($Value));
                 break;
+            case 'Z2M_ValveDetection':
+                $Payload['valve_detection'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_AutoLock':
+                $Payload['auto_lock'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_ChildLock':
                 $Payload['child_lock'] = strval($this->OnOff($Value));
                 break;
@@ -725,6 +731,32 @@ trait Zigbee2MQTTHelper
                             break;
                     }
                 }
+                if (array_key_exists('valve_detection', $Payload)) {
+                    switch ($Payload['valve_detection']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_ValveDetection', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_ValveDetection', false);
+                            break;
+                        default:
+                            $this->SendDebug('Valve Detection', 'Undefined State: ' . $Payload['valve_detection'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('auto_lock', $Payload)) {
+                    switch ($Payload['auto_lock']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_AutoLock', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_AutoLock', false);
+                            break;
+                        default:
+                            $this->SendDebug('Auto Lock', 'Undefined State: ' . $Payload['auto_lock'], 0);
+                            break;
+                    }
+                }
                 if (array_key_exists('child_lock', $Payload)) {
                     switch ($Payload['child_lock']) {
                         case 'LOCK':
@@ -1339,6 +1371,14 @@ trait Zigbee2MQTTHelper
                                             $this->RegisterVariableBoolean('Z2M_WindowDetection', $this->Translate('Window Detection'), '~Window');
                                             $this->EnableAction('Z2M_WindowDetection');
                                             break;
+                                        case 'valve_detection':
+                                            $this->RegisterVariableBoolean('Z2M_ValveDetection', $this->Translate('Valve Detection'), '~Switch');
+                                            $this->EnableAction('Z2M_ValveDetection');
+                                            break;
+                                        case 'auto_lock':
+                                            $this->RegisterVariableBoolean('Z2M_AutoLock', $this->Translate('Auto Lock'), '~Switch');
+                                            $this->EnableAction('Z2M_AutoLock');
+                                            break;
                                         default:
                                         // Default Switch binary
                                         $missedVariables['switch'][] = $feature;
@@ -1440,6 +1480,10 @@ trait Zigbee2MQTTHelper
                             switch ($feature['type']) {
                                 case 'binary':
                                     switch ($feature['property']) {
+                                        case 'away_mode':
+                                            $this->RegisterVariableBoolean('Z2M_AwayMode', $this->Translate('Away Mode'), '~Switch');
+                                            $this->EnableAction('Z2M_AwayMode');
+                                            break;
                                         default:
                                         // Default climate binary
                                         $missedVariables['climate'][] = $feature;
