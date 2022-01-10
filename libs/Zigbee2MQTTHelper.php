@@ -1696,6 +1696,12 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableString('Z2M_MotionDirection', $this->Translate('Motion Direction'), $ProfileName);
                             }
                             break;
+                        case 'radar_scene':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_RadarScene', $this->Translate('Radar Scene'), $ProfileName);
+                            }
+                            break;
                         default:
                         $missedVariables[] = $expose;
                         break;
@@ -1860,13 +1866,6 @@ trait Zigbee2MQTTHelper
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_RadarSensitivity', $this->Translate('Radar Sensitivity'), $ProfileName);
                                 $this->EnableAction('Z2M_RadarSensitivity');
-                            }
-                            break;
-                        case 'radar_scene':
-                            $ProfileName = $this->registerVariableProfile($expose);
-                            if ($ProfileName != false) {
-                                $this->RegisterVariableString('Z2M_RadarScene', $this->Translate('Radar Scene'), $ProfileName);
-                                $this->EnableAction('Z2M_RadarScene');
                             }
                             break;
                         case 'action_duration':
