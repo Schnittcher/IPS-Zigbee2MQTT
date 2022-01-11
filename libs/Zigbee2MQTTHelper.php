@@ -1119,7 +1119,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case'Z2M.preset.9fca219c':
+                        case'Z2M.preset.72d7acf2':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['auto', $this->Translate('Auto'), '', 0xFFA500],
