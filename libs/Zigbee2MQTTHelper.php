@@ -1044,7 +1044,7 @@ trait Zigbee2MQTTHelper
         return $state;
     }
 
-    private function LockUnLock(bool $Value)
+    private function LockUnlock(bool $Value)
     {
         switch ($Value) {
             case true:
