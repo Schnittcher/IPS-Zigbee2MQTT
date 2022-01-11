@@ -1,0 +1,41 @@
+{
+    "id": "{4461D30E-9129-4208-B336-8C608CD838DD}",
+    "caption": "Color with Transition",
+    "form": [
+        {
+            "type": "NumberSpinner",
+            "name": "TransitionTime",
+            "caption": "Transition Time",
+            "suffix": "seconds"
+        },
+        {
+            "type": "SelectColor",
+            "name": "Color",
+            "caption": "Color"
+        }
+    ],
+    "priority": 1,
+    "action": [
+        "Z2M_setColorExt($_IPS['TARGET'], $_IPS['Color'], 'cie', ['transition' => $_IPS['TransitionTime'], 'state' => 'ON'], 'color');"
+    ],
+    "restrictions": {
+        "objectType": [
+            1
+        ],
+        "includeEnvironments": [
+            "Default",
+            "TestCommands"
+        ],
+        "hasIdent": [
+            "Z2M_Color"
+        ]
+    },
+    "locale": {
+        "de": {
+            "Color with Transition": "Farbe mit Übergang",
+            "Transition Time": "Übergangszeit",
+            "seconds": "Sekunden",
+            "Color": "Farbe"
+        }
+    }
+}
