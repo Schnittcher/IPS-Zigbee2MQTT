@@ -71,7 +71,7 @@ trait Zigbee2MQTTHelper
                 $Payload['auto_lock'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_ChildLock':
-                $Payload['child_lock'] = strval($this->OnOff($Value));
+                $Payload['child_lock'] = strval($this->LockUnlock($Value));
                 break;
             case'Z2M_PowerOutageMemory':
                 $Payload['power_outage_memory'] = strval($Value);
@@ -1043,6 +1043,20 @@ trait Zigbee2MQTTHelper
         }
         return $state;
     }
+
+    private function LockUnLock(bool $Value)
+    {
+        switch ($Value) {
+            case true:
+                $state = 'LOCK';
+                break;
+            case false:
+                $state = 'UNLOCK';
+                break;
+        }
+        return $state;
+    }
+
     private function OpenClose(bool $Value)
     {
         switch ($Value) {
