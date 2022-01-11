@@ -61,6 +61,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_WindowDetection':
                 $Payload['window_detection'] = strval($this->OnOff($Value));
                 break;
+            case 'Z2M_OpenWindow':
+                $Payload['open_window'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_ValveDetection':
                 $Payload['valve_detection'] = strval($this->OnOff($Value));
                 break;
@@ -94,6 +97,12 @@ trait Zigbee2MQTTHelper
             case 'Z2M_BoostHeating':
                 $Payload['boost_heating'] = strval($this->OnOff($Value));
                 break;
+            case 'Z2M_FrostProtection':
+                $Payload['frost_protection'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_HeatingStop':
+                $Payload['heating_stop'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_Force':
                 $Payload['boost_heating'] = strval($this->OnOff($Value));
                 break;
@@ -120,6 +129,15 @@ trait Zigbee2MQTTHelper
                 break;
             case 'Z2M_LocalTemperatureCalibration':
                 $Payload['local_temperature_calibration'] = strval($Value);
+                break;
+            case 'Z2M_OpenWindowTemperature':
+                $Payload['open_window_temperature'] = strval($Value);
+                break;
+            case 'Z2M_HolidayTemperature':
+                $Payload['holiday_temperature'] = strval($Value);
+                break;
+            case 'Z2M_BoostTimesetCountdown':
+                $Payload['boost_timeset_countdown'] = strval($Value);
                 break;
             case 'Z2M_Preset':
                 $Payload['preset'] = strval($Value);
@@ -731,6 +749,54 @@ trait Zigbee2MQTTHelper
                             break;
                     }
                 }
+                if (array_key_exists('open_window', $Payload)) {
+                    switch ($Payload['open_window']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_OpenWindow', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_OpenWindow', false);
+                            break;
+                        default:
+                            $this->SendDebug('Open Window', 'Undefined State: ' . $Payload['open_window'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('open_window_temperature', $Payload)) {
+                    $this->SetValue('Z2M_OpenWindowTemperature', $Payload['open_window_temperature']);
+                }
+                if (array_key_exists('holiday_temperature', $Payload)) {
+                    $this->SetValue('Z2M_HolidayTemperature', $Payload['holiday_temperature']);
+                }
+                if (array_key_exists('boost_timeset_countdown', $Payload)) {
+                    $this->SetValue('Z2M_BoostTimesetCountdown', $Payload['boost_timeset_countdown']);
+                }
+                if (array_key_exists('frost_protection', $Payload)) {
+                    switch ($Payload['frost_protection']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_FrostProtection', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_FrostProtection', false);
+                            break;
+                        default:
+                            $this->SendDebug('Frost Protection', 'Undefined State: ' . $Payload['frost_protection'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('heating_stop', $Payload)) {
+                    switch ($Payload['heating_stop']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_HeatingStop', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_HeatingStop', false);
+                            break;
+                        default:
+                            $this->SendDebug('Heating Stop', 'Undefined State: ' . $Payload['heating_stop'], 0);
+                            break;
+                    }
+                }
                 if (array_key_exists('valve_detection', $Payload)) {
                     switch ($Payload['valve_detection']) {
                         case 'ON':
@@ -1050,6 +1116,15 @@ trait Zigbee2MQTTHelper
                                     ['schedule', $this->Translate('Schedule'), '', 0x8800FF],
                                     ['holiday', $this->Translate('Holiday'), '', 0xFFa500],
                                     ['boost', $this->Translate('Boost'), '', 0xFF0000]
+                                ]);
+                            }
+                            break;
+                        case'Z2M.preset.9fca219c':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['auto', $this->Translate('Auto'), '', 0xFFA500],
+                                    ['holiday', $this->Translate('Holiday'), '', 0xFFa500],
+                                    ['manual', $this->Translate('Manual'), '', 0x00FF00]
                                 ]);
                             }
                             break;
@@ -1682,7 +1757,18 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableBoolean('Z2M_MotorReversal', $this->Translate('Motor Reversal'), '~Switch');
                             $this->EnableAction('Z2M_MotorReversal');
                             break;
-
+                        case 'open_window':
+                            $this->RegisterVariableBoolean('Z2M_OpenWindow', $this->Translate('Open Window'), '~Window');
+                            $this->EnableAction('Z2M_OpenWindow');
+                            break;
+                        case 'frost_protection':
+                            $this->RegisterVariableBoolean('Z2M_FrostProtection', $this->Translate('Frost Protection'), '~Switch');
+                            $this->EnableAction('Z2M_FrostProtection');
+                            break;
+                        case 'heating_stop':
+                            $this->RegisterVariableBoolean('Z2M_HeatingStop', $this->Translate('Heating Stop'), '~Switch');
+                            $this->EnableAction('Z2M_HeatingStop');
+                            break;
                     default:
                         $missedVariables[] = $expose;
                         break;
@@ -1853,6 +1939,14 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableFloat('Z2M_MinTemperature', $this->Translate('Min Temperature'), '~Temperature');
                             $this->EnableAction('Z2M_MinTemperature');
                             break;
+                        case 'open_window_temperature':
+                            $this->RegisterVariableFloat('Z2M_OpenWindowTemperature', $this->Translate('Open Window Temperature'), '~Temperature');
+                            $this->EnableAction('Z2M_OpenWindowTemperature');
+                            break;
+                        case 'holiday_temperature':
+                            $this->RegisterVariableFloat('Z2M_HolidayTemperature', $this->Translate('Holiday Temperature'), '~Temperature');
+                            $this->EnableAction('Z2M_HolidayTemperature');
+                            break;
                         case 'position':
                             $this->RegisterVariableInteger('Z2M_Position', $this->Translate('Position'), '~Intensity.100');
                             break;
@@ -1871,6 +1965,13 @@ trait Zigbee2MQTTHelper
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_BoostTime', $this->Translate('Boost Time'), $ProfileName);
                                 $this->EnableAction('Z2M_BoostTime');
+                            }
+                            break;
+                        case 'boost_timeset_countdown':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_BoostTimesetCountdown', $this->Translate('Boost Time'), $ProfileName);
+                                $this->EnableAction('Z2M_BoostTimesetCountdown');
                             }
                             break;
                         case 'comfort_temperature':

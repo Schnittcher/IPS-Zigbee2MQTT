@@ -156,7 +156,12 @@
       "standing still": "Stillstand",
       "Open": "Öffnen",
       "Close": "Schließen",
-      "Stop": "Stop"
+      "Stop": "Stop",
+      "Open Window": "Geöffnetes Fenster",
+      "Open Window Temperature": "Geöffnetes Fenster Temperatur",
+      "Holiday Temperature": "Urlaubstemperatur",
+      "Frost Protection":"Frostschutz",
+      "Heating Stop": "Heizung Stop"
     }
   }
 }
