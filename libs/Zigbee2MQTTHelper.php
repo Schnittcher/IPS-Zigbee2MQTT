@@ -1372,6 +1372,7 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'boost_time':
+                    case 'boost_timeset_countdown':
                     case 'calibration_time':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ' . $this->Translate('Seconds'), 0, 0, 0);
