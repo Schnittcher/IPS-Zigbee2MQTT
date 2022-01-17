@@ -94,6 +94,12 @@ trait Zigbee2MQTTHelper
             case 'Z2M_RadarScene':
                 $Payload['radar_scene'] = strval($Value);
                 break;
+            case 'Z2M_MotorWorkingMode':
+                $Payload['motor_working_mode'] = strval($Value);
+                break;
+            case 'Z2M_Control':
+                $Payload['control'] = strval($Value);
+                break;
             case 'Z2M_BoostHeating':
                 $Payload['boost_heating'] = strval($this->OnOff($Value));
                 break;
@@ -179,6 +185,12 @@ trait Zigbee2MQTTHelper
                 break;
             case 'Z2M_Mode':
                 $Payload['mode'] = strval($Value);
+                break;
+            case 'Z2M_ControlBackMode':
+                $Payload['control_back_mode'] = strval($Value);
+                break;
+            case 'Z2M_Border':
+                $Payload['border'] = strval($Value);
                 break;
             case 'Z2M_Level':
                 $Payload['level'] = strval($Value);
@@ -443,11 +455,24 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('radar_scene', $Payload)) {
                     $this->SetValue('Z2M_RadarScene', $Payload['radar_scene']);
                 }
-
+                if (array_key_exists('motor_working_mode', $Payload)) {
+                    $this->SetValue('Z2M_MotorWorkingMode', $Payload['motor_working_mode']);
+                }
+                if (array_key_exists('control', $Payload)) {
+                    $this->SetValue('Z2M_Control', $Payload['control']);
+                }
+                if (array_key_exists('mode', $Payload)) {
+                    $this->SetValue('Z2M_Mode', $Payload['mode']);
+                }
+                if (array_key_exists('control_back_mode', $Payload)) {
+                    $this->SetValue('Z2M_ControlBackMode', $Payload['control_back_mode']);
+                }
+                if (array_key_exists('border', $Payload)) {
+                    $this->SetValue('Z2M_Border', $Payload['border']);
+                }
                 if (array_key_exists('illuminance', $Payload)) {
                     $this->SetValue('Z2M_Illuminance', $Payload['illuminance']);
                 }
-
                 if (array_key_exists('illuminance_lux', $Payload)) {
                     if (@$this->GetIDForIdent('Z2M_Illuminance_Lux') > 0) {
                         $this->SetValue('Z2M_Illuminance_Lux', $Payload['illuminance_lux']);
@@ -556,6 +581,9 @@ trait Zigbee2MQTTHelper
 
                 if (array_key_exists('duaction_durationration', $Payload)) {
                     $this->SetValue('Z2M_ActionDuration', $Payload['action_duration']);
+                }
+                if (array_key_exists('percent_state', $Payload)) {
+                    $this->SetValue('Z2M_PercentState', $Payload['percent_state']);
                 }
                 if (array_key_exists('color', $Payload)) {
                     $this->SendDebug(__FUNCTION__ . ' Color', $Payload['color']['x'], 0);
@@ -1345,6 +1373,7 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'valve_position':
+                    case 'percent_state':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -1407,7 +1436,7 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'action_duration':
-                        $ProFileName .= '_' . $expose['unit'];
+                        $ProfileName .= '_' . $expose['unit'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 2);
                         }
@@ -2082,6 +2111,13 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_ActionDuration', $this->Translate('Action Duration'), $ProfileName);
+                            }
+                            break;
+                        case 'percent_state':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_PercentState', $this->Translate('PercentState'), $ProfileName);
+                                $this->EnableAction('Z2M_PercentState');
                             }
                             break;
                         default:
