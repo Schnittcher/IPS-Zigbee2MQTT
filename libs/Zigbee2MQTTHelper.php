@@ -1862,6 +1862,41 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableString('Z2M_RadarScene', $this->Translate('Radar Scene'), $ProfileName);
                             }
                             break;
+                        case 'motor_working_mode':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_MotorWorkingMode', $this->Translate('Motor Working Mode'), $ProfileName);
+                                $this->EnableAction('Z2M_MotorWorkingMode');
+                            }
+                            break;
+                        case 'control':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_Control', $this->Translate('Control'), $ProfileName);
+                                $this->EnableAction('Z2M_Control');
+                            }
+                            break;
+                        case 'mode':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_Mode', $this->Translate('Mode'), $ProfileName);
+                            }
+                            $this->EnableAction('Z2M_Mode');
+                            break;
+                        case 'control_back_mode':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_ControlBackMode', $this->Translate('Control back Mode'), $ProfileName);
+                            }
+                            $this->EnableAction('Z2M_ControlBackMode');
+                            break;
+                        case 'border':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_Border', $this->Translate('Border'), $ProfileName);
+                            }
+                            $this->EnableAction('Z2M_Border');
+                            break;
                         default:
                         $missedVariables[] = $expose;
                         break;
