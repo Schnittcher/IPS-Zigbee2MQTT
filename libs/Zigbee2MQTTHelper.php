@@ -1323,6 +1323,14 @@ trait Zigbee2MQTTHelper
                                     ['stop', $this->Translate('Stop'), '', 0x000000]
                                 ]);
                             }
+                            // FIXME: No break. Please add proper comment if intentional
+                        case 'Z2M.mode.be3d8da4':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
+                                    ['morning', $this->Translate('Morning'), '', 0xFFC0CB],
+                                    ['night', $this->Translate('Night'), '', 0xFFFF00]
+                                ]);
+                            }
                             break;
                             case 'Z2M.level.ae420ac':
                             case 'Z2M.strobe_level.ae420ac':
@@ -1348,6 +1356,42 @@ trait Zigbee2MQTTHelper
                                     ]);
                                 }
                                 break;
+                            case 'Z2M.motor_working_mode.12bc841d':
+                                if (!IPS_VariableProfileExists($ProfileName)) {
+                                    $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
+                                        ['continuous', $this->Translate('Continuous'), '', 0xFF0000],
+                                        ['intermittently', $this->Translate('Intermittently'), '', 0x8800FF]
+                                    ]);
+                                }
+                                break;
+                            case 'Z2M.control.a0c4f29e':
+                                if (!IPS_VariableProfileExists($ProfileName)) {
+                                    $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
+                                        ['close', $this->Translate('Close'), '', 0xFF8800],
+                                        ['continue', $this->Translate('Continue'), '', 0xFFFF00],
+                                        ['open', $this->Translate('Open'), '', 0x00FF00],
+                                        ['stop', $this->Translate('Stop'), '', 0xFF0000]
+                                    ]);
+                                }
+                                break;
+                            case 'Z2M.control_back_mode.cf88002f':
+                                if (!IPS_VariableProfileExists($ProfileName)) {
+                                    $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
+                                        ['back', $this->Translate('Back'), '', 0xFF8800],
+                                        ['forward', $this->Translate('Forward'), '', 0xFFFF00]
+                                    ]);
+                                }
+                                break;
+                            case 'Z2M.border.8e25e2eb':
+                                if (!IPS_VariableProfileExists($ProfileName)) {
+                                    $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
+                                        ['down', $this->Translate('Down'), '', 0xFF8800],
+                                        ['down_delete', $this->Translate('Down Delete'), '', 0xFFFF00],
+                                        ['up', $this->Translate('Up'), '', 0x00FF00]
+                                    ]);
+                                }
+                                break;
+
                         default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);

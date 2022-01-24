@@ -161,7 +161,16 @@
       "Open Window Temperature": "Geöffnetes Fenster Temperatur",
       "Holiday Temperature": "Urlaubstemperatur",
       "Frost Protection":"Frostschutz",
-      "Heating Stop": "Heizung Stop"
+      "Heating Stop": "Heizung Stop",
+      "Down": "Runter",
+      "Down Delete": "Runter löschen",
+      "Up": "Oben",
+      "Back": "Zurück",
+      "Continue": "Weiter",
+      "Continuous": "Kontinuierlich",
+      "Intermittently": "Intermittierend",
+      "Morning": "Morgens",
+      "Night": "Nachts"
     }
   }
 }
