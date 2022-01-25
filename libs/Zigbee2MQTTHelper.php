@@ -1230,6 +1230,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'Z2M.power_on_behavior.b0d55aad':
+                        case 'Z2M.power_on_behavior.8a599b04':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['on', $this->Translate('On'), '', 0x0000FF],
