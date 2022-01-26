@@ -387,10 +387,8 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('brightness_rgb', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: brightness_rgb', KL_WARNING);
-                    //$this->RegisterVariableInteger('Z2M_BrightnessRGB', $this->Translate('Brightness RGB'), 'Z2M.Intensity.254');
-                    //$this->EnableAction('Z2M_BrightnessRGB');
-                    //$this->SetValue('Z2M_BrightnessRGB', $Payload['brightness_rgb']);
+                    $this->EnableAction('Z2M_BrightnessRGB');
+                    $this->SetValue('Z2M_BrightnessRGB', $Payload['brightness_rgb']);
                 }
 
                 if (array_key_exists('brightness_white', $Payload)) {
@@ -500,9 +498,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('smoke_density', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: smoke_density', KL_WARNING);
-                    //$this->RegisterVariableInteger('Z2M_SmokeDensity', $this->Translate('Smoke Density'), '');
-                    //$this->SetValue('Z2M_SmokeDensity', $Payload['smoke_density']);
+                    $this->SetValue('Z2M_SmokeDensity', $Payload['smoke_density']);
                 }
 
                 if (array_key_exists('tamper', $Payload)) {
@@ -625,9 +621,10 @@ trait Zigbee2MQTTHelper
 
                 if (array_key_exists('color_temp_rgb', $Payload)) {
                     $this->LogMessage('Please contact module developer. Undefined variable: color_temp_rgb', KL_WARNING);
-                    //$this->RegisterVariableInteger('Z2M_ColorTempRGB', $this->Translate('Color Temperature RGB'), 'Z2M.ColorTemperature');
-                    //$this->EnableAction('Z2M_ColorTempRGB');
-                    //$this->SetValue('Z2M_ColorTempRGB', $Payload['color_temp_rgb']);
+                    $this->SetValue('Z2M_ColorTempRGB', $Payload['color_temp_rgb']);
+                    if ($Payload['color_temp_rgb'] > 0) {
+                        $this->SetValue('Z2M_ColorTempRGBKelvin', 1000000 / $Payload['color_temp_rgb']); //Convert to Kelvin
+                    }
                 }
 
                 if (array_key_exists('state', $Payload)) {
@@ -654,17 +651,14 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('state_rgb', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: state_rgb', KL_WARNING);
                     switch ($Payload['state_rgb']) {
                         case 'ON':
-                            //$this->RegisterVariableBoolean('Z2M_StateRGB', $this->Translate('State RGB'), '~Switch');
-                            //$this->EnableAction('Z2M_StateRGB');
-                            //$this->SetValue('Z2M_StateRGB', true);
+                            $this->EnableAction('Z2M_StateRGB');
+                            $this->SetValue('Z2M_StateRGB', true);
                             break;
                         case 'OFF':
-                            //$this->RegisterVariableBoolean('Z2M_StateRGB', $this->Translate('State RGB'), '~Switch');
-                            //$this->EnableAction('Z2M_StateRGB');
-                            //$this->SetValue('Z2M_StateRGB', false);
+                            $this->EnableAction('Z2M_StateRGB');
+                            $this->SetValue('Z2M_StateRGB', false);
                             break;
                         default:
                         $this->SendDebug('State RGB', 'Undefined State: ' . $Payload['state_rgb'], 0);
@@ -1598,6 +1592,12 @@ trait Zigbee2MQTTHelper
                                                 $this->EnableAction('Z2M_State');
                                             }
                                             break;
+                                        case 'state_rgb':
+                                            if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
+                                                $this->RegisterVariableBoolean('Z2M_StateRGB', $this->Translate('State RGB'), '~Switch');
+                                                $this->EnableAction('Z2M_StateRGB');
+                                            }
+                                            break;
                                         default:
                                             // Default light binary
                                             $missedVariables['light'][] = $feature;
@@ -1612,6 +1612,13 @@ trait Zigbee2MQTTHelper
                                                 $this->RegisterVariableInteger('Z2M_Brightness', $this->Translate('Brightness'), $ProfileName);
                                                 $this->EnableAction('Z2M_Brightness');
                                             }
+                                            // FIXME: No break. Please add proper comment if intentional
+                                        case 'brightness_rgb':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_BrightnessRGB', $this->Translate('Brightness RGB'), $ProfileName);
+                                                $this->EnableAction('Z2M_BrightnessRGB');
+                                            }
                                             break;
                                         case 'color_temp':
                                             //Color Temperature Mired
@@ -1621,7 +1628,6 @@ trait Zigbee2MQTTHelper
                                                 $this->EnableAction('Z2M_ColorTemp');
                                             }
                                             //TODO: Color Temp Presets
-
                                             // Color Temperature in Kelvin nicht automatisiert, deswegen nicht über die Funktion registerVariableProfile
                                             if (!IPS_VariableProfileExists('Z2M.ColorTemperatureKelvin')) {
                                                 $this->RegisterProfileInteger('Z2M.ColorTemperatureKelvin', 'Intensity', '', '', 2000, 6535, 1);
@@ -1629,6 +1635,22 @@ trait Zigbee2MQTTHelper
                                             $this->RegisterVariableInteger('Z2M_ColorTempKelvin', $this->Translate('Color Temperature Kelvin'), 'Z2M.ColorTemperatureKelvin');
                                             $this->EnableAction('Z2M_ColorTempKelvin');
                                             break;
+                                        case 'color_temp_rgb':
+                                            //Color Temperature Mired
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_ColorTempRGB', $this->Translate('Color Temperature RGB'), $ProfileName);
+                                                $this->EnableAction('Z2M_ColorTempRGB');
+                                            }
+                                            //TODO: Color Temp Presets
+                                            // Color Temperature in Kelvin nicht automatisiert, deswegen nicht über die Funktion registerVariableProfile
+                                            if (!IPS_VariableProfileExists('Z2M.ColorTemperatureKelvin')) {
+                                                $this->RegisterProfileInteger('Z2M.ColorTemperatureKelvin', 'Intensity', '', '', 2000, 6535, 1);
+                                            }
+                                            $this->RegisterVariableInteger('Z2M_ColorTempRGBKelvin', $this->Translate('Color Temperature RGB Kelvin'), 'Z2M.ColorTemperatureKelvin');
+                                            $this->EnableAction('Z2M_ColorTempRGBKelvin');
+                                            break;
+
                                         default:
                                         // Default light numeric
                                         $missedVariables['light'][] = $feature;
@@ -2038,6 +2060,9 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'angle_z':
                             $this->RegisterVariableFloat('Z2M_Angle_Z', $this->Translate('Angle Z'), '');
+                            break;
+                        case 'smoke_density':
+                            $this->RegisterVariableFloat('Z2M_SmokeDensity', $this->Translate('Smoke Density'), '');
                             break;
                         case 'power':
                             $this->RegisterVariableFloat('Z2M_Power', $this->Translate('Power'), '~Watt.3680');
