@@ -1318,7 +1318,7 @@ trait Zigbee2MQTTHelper
                                     ['stop', $this->Translate('Stop'), '', 0x000000]
                                 ]);
                             }
-                            // FIXME: No break. Please add proper comment if intentional
+                            break;
                         case 'Z2M.mode.be3d8da4':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
@@ -1398,6 +1398,7 @@ trait Zigbee2MQTTHelper
             case 'numeric':
                 switch ($expose['property']) {
                     case 'brightness':
+                    case 'brightness_rgb':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -1405,6 +1406,7 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'color_temp':
+                    case 'color_temp_rgb':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
