@@ -1612,7 +1612,7 @@ trait Zigbee2MQTTHelper
                                                 $this->RegisterVariableInteger('Z2M_Brightness', $this->Translate('Brightness'), $ProfileName);
                                                 $this->EnableAction('Z2M_Brightness');
                                             }
-                                            // FIXME: No break. Please add proper comment if intentional
+                                            break;
                                         case 'brightness_rgb':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
