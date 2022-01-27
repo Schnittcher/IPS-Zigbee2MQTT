@@ -575,7 +575,7 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_Duration', $Payload['duration']);
                 }
 
-                if (array_key_exists('duaction_durationration', $Payload)) {
+                if (array_key_exists('action_duration', $Payload)) {
                     $this->SetValue('Z2M_ActionDuration', $Payload['action_duration']);
                 }
                 if (array_key_exists('percent_state', $Payload)) {
