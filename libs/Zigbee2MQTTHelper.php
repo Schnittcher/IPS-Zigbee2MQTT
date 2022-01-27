@@ -1479,7 +1479,7 @@ trait Zigbee2MQTTHelper
                     case 'action_duration':
                         $ProfileName .= '_' . $expose['unit'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 2);
+                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
                         break;
                     case 'radar_sensitivity':
