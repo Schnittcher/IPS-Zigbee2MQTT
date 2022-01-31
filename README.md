@@ -36,26 +36,25 @@
 Ab der Version 4.0 dieses Moduls werden einige Variablen geändert, dadurch können Archivdaten verloren gehen!
 Die Nachfolgende Tabelle zeigt welche Variablen sich verändern.
 
-
 Ident | Alter Variablentyp | Altes Profil | Neuer Variablentyp | Neues Profil |
 ------------ | ------------- | ------------ | ------------- | -------------
-Z2M_Brightness | Integer | Z2M.Intensity.254 | variabel | Integer
-Z2M_ColorTemp | Integer | Z2M.ColorTemperature | variabel | Integer
-Z2M_CurrentHeatingSetpoint | Float | ~Temperature.Room | variabel | Float
-Z2M_OccupiedHeatingSetpoint | Float | ~Temperature.Room | variabel | Float
-Z2M_SystemMode | Integer | Z2M.SystemMode | variabel | String
-Z2M_Preset | Integer | Z2M.ThermostatPreset | variabel | String
-Z2M_RunningState | Integer | Z2M.Intensity.254 | variabel | String
-Z2M_Battery_Low | Boolean | - | ~Battery | Boolean
-Z2M_WaterLeak | Boolean | - | ~Alert | Integer
-Z2M_Contact | Boolean | - | ~Window.Reversed | Boolean
-Z2M_Consumer_Connected | Boolean | Z2M.ConsumerConnected | variabel | Boolean
+Z2M_Brightness | Integer | Z2M.Intensity.254 | Integer | variabel
+Z2M_ColorTemp | Integer | Z2M.ColorTemperature | Integer | variabel
+Z2M_CurrentHeatingSetpoint | Float | ~Temperature.Room | Float | variabel
+Z2M_OccupiedHeatingSetpoint | Float | ~Temperature.Room | Float | variabel
+Z2M_SystemMode | Integer | Z2M.SystemMode | String  | variabel
+Z2M_Preset | Integer | Z2M.ThermostatPreset | String | variabel
+Z2M_RunningState | Integer | Z2M.Intensity.254 | String | variabel
+Z2M_Battery_Low | Boolean | - | Boolean | ~Battery
+Z2M_WaterLeak | Boolean | - | Integer | ~Alert
+Z2M_Contact | Boolean | - | Boolean | ~Window.Reversed
+Z2M_Consumer_Connected | Boolean | Z2M.ConsumerConnected | Bolean | variabel
 Z2M_PowerOutageMemory | Integer | Z2M.PowerOutageMemory | variabel | variabel
-Z2M_MotionSensitivity | Integer | Z2M.Sensitivity | variabel | String
-Z2M_Linkquality | Integer | - | variabel | Integer
-Z2M_VOC | Float | - | variabel | Integer
-Z2M_Formaldehyd | Float | - | variabel | Integer
-Z2M_BoostTime | Integer | - | variabel | Integer
+Z2M_MotionSensitivity | Integer | Z2M.Sensitivity | String | variabel
+Z2M_Linkquality | Integer | - | Integer | variabel
+Z2M_VOC | Float | - | Integer | variabel
+Z2M_Formaldehyd | Float | - | Integer | variabel
+Z2M_BoostTime | Integer | - | Integer | variabel
 
 ### 3.1 Installation der IP-Symcon Extension in Zigbee2MQTT
 
