@@ -2320,4 +2320,13 @@ trait Zigbee2MQTTHelper
         }
         $this->SendDebug(__FUNCTION__ . ':: Missed Exposes', json_encode($missedVariables), 0);
     }
+
+    protected function SetValue($Ident, $Value)
+    {
+        if (@$this->GetIDForIdent($Ident)) {
+            parent::SetValue($Ident, $Value);
+        } else {
+            $this->SendDebug('Error :: No Expose for Value', 'Ident: ' . $Ident, 0);
+        }
+    }
 }
