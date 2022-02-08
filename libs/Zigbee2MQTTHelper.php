@@ -435,7 +435,9 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('motion_direction', $Payload)) {
                     $this->SetValue('Z2M_MotionDirection', $Payload['motion_direction']);
                 }
-
+                if (array_key_exists('motor_direction', $Payload)) {
+                    $this->SetValue('Z2M_MotorDirection', $Payload['motor_direction']);
+                }
                 if (array_key_exists('scene', $Payload)) {
                     $this->LogMessage('Please contact module developer. Undefined variable: scene', KL_WARNING);
                     //$this->RegisterVariableString('Z2M_Scene', $this->Translate('Scene'), '');
@@ -1260,7 +1262,7 @@ trait Zigbee2MQTTHelper
                                     ['standing_still', $this->Translate('standing still'), '', 0xFFFF00]
                                 ]);
                             }
-                            break;
+                            break;                           
                         case 'Z2M.force.85dac8d5':
                         case 'Z2M.force.2bd28f19':
                             if (!IPS_VariableProfileExists($ProfileName)) {
@@ -1918,6 +1920,13 @@ trait Zigbee2MQTTHelper
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_PowerOnBehavior', $this->Translate('Power on behavior'), $ProfileName);
                                 $this->EnableAction('Z2M_PowerOnBehavior');
+                            }
+                            break;
+                        case 'motor_direction':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_MotorDirection', $this->Translate('Motor Direction'), $ProfileName);
+                                $this->EnableAction('Z2M_MotorDirection');
                             }
                             break;
                         case 'motion_sensitivity':

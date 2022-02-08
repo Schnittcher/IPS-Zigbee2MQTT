@@ -171,7 +171,8 @@
       "Continuous": "Kontinuierlich",
       "Intermittently": "Intermittierend",
       "Morning": "Morgens",
-      "Night": "Nachts"
+      "Night": "Nachts",
+      "Motor Direction": "Motordrehrichtung"
     }
   }
 }
