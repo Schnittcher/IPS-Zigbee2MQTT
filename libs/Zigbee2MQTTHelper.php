@@ -932,6 +932,7 @@ trait Zigbee2MQTTHelper
         }
     }
 
+
     protected function createVariableProfiles()
     {
 
@@ -1094,7 +1095,7 @@ trait Zigbee2MQTTHelper
         return $state;
     }
 
-    private function Z2MSet($payload)
+    public function Z2MSet($payload)
     {
         $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
         $Data['PacketType'] = 3;
@@ -1274,6 +1275,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'Z2M.moving.fe5886c':
+                        case 'Z2M.moving.7ac27aed':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Move', '', '', [
                                     ['UP', $this->Translate('Up'), '', 0x00FF00],
