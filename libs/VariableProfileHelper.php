@@ -187,6 +187,7 @@ trait VariableProfileHelper
                 IPS_SetVariableProfileDigits($Name, $Digits);
                 // no break
                 // FIXME: No break. Please add proper comment if intentional
+                // No break. Add additional comment above this line if intentional
             case VARIABLETYPE_INTEGER:
                 IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
                 break;

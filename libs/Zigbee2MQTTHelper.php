@@ -932,6 +932,19 @@ trait Zigbee2MQTTHelper
         }
     }
 
+    public function Z2MSet($payload)
+    {
+        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
+        $Data['PacketType'] = 3;
+        $Data['QualityOfService'] = 0;
+        $Data['Retain'] = false;
+        $Data['Topic'] = $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
+        $Data['Payload'] = $payload;
+        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
+        $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
+        $this->SendDebug(__FUNCTION__ . ' Payload', $Data['Payload'], 0);
+        $this->SendDataToParent($DataJSON);
+    }
 
     protected function createVariableProfiles()
     {
@@ -1033,6 +1046,15 @@ trait Zigbee2MQTTHelper
         }
     }
 
+    protected function SetValue($Ident, $Value)
+    {
+        if (@$this->GetIDForIdent($Ident)) {
+            parent::SetValue($Ident, $Value);
+        } else {
+            $this->SendDebug('Error :: No Expose for Value', 'Ident: ' . $Ident, 0);
+        }
+    }
+
     private function setColor(int $color, string $mode, string $Z2MMode = 'color')
     {
         switch ($mode) {
@@ -1093,20 +1115,6 @@ trait Zigbee2MQTTHelper
                 break;
         }
         return $state;
-    }
-
-    public function Z2MSet($payload)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
-        $Data['Payload'] = $payload;
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__ . ' Payload', $Data['Payload'], 0);
-        $this->SendDataToParent($DataJSON);
     }
 
     private function registerVariableProfile($expose)
@@ -1263,7 +1271,7 @@ trait Zigbee2MQTTHelper
                                     ['standing_still', $this->Translate('standing still'), '', 0xFFFF00]
                                 ]);
                             }
-                            break;                           
+                            break;
                         case 'Z2M.force.85dac8d5':
                         case 'Z2M.force.2bd28f19':
                             if (!IPS_VariableProfileExists($ProfileName)) {
@@ -2330,14 +2338,5 @@ trait Zigbee2MQTTHelper
             }
         }
         $this->SendDebug(__FUNCTION__ . ':: Missed Exposes', json_encode($missedVariables), 0);
-    }
-
-    protected function SetValue($Ident, $Value)
-    {
-        if (@$this->GetIDForIdent($Ident)) {
-            parent::SetValue($Ident, $Value);
-        } else {
-            $this->SendDebug('Error :: No Expose for Value', 'Ident: ' . $Ident, 0);
-        }
     }
 }
