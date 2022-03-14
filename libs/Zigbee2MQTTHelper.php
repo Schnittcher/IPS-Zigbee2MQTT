@@ -868,6 +868,9 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('voc', $Payload)) {
                     $this->SetValue('Z2M_VOC', $Payload['voc']);
                 }
+                if (array_key_exists('pm25', $Payload)) {
+                    $this->SetValue('Z2M_PM25', $Payload['pm25']);
+                }
                 if (array_key_exists('co2', $Payload)) {
                     $this->SetValue('Z2M_CO2', $Payload['co2']);
                 }
@@ -1453,6 +1456,11 @@ trait Zigbee2MQTTHelper
                     case 'voc':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Leaf', '', ' ' . $expose['unit'], 0, 0, 0);
+                        }
+                        break;
+                    case 'pm25':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Leaf', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step']);
                         }
                         break;
                     case 'occupancy_timeout':
@@ -2056,6 +2064,12 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_VOC', $this->Translate('VOC'), $ProfileName);
+                            }
+                            break;
+                        case 'pm25':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_PM25', $this->Translate('PM25'), $ProfileName);
                             }
                             break;
                         case 'formaldehyd':
