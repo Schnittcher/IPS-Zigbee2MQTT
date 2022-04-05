@@ -564,13 +564,6 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('consumer_connected', $Payload)) {
                     $this->SetValue('Z2M_Consumer_Connected', $Payload['consumer_connected']);
                 }
-
-                if (array_key_exists('consumption', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: consumption', KL_WARNING);
-                    //$this->RegisterVariableFloat('Z2M_Consumption', $this->Translate('Consumption'), '~Electricity');
-                    //$this->SetValue('Z2M_Consumption', $Payload['consumption']);
-                }
-
                 if (array_key_exists('energy', $Payload)) {
                     $this->SetValue('Z2M_Energy', $Payload['energy']);
                 }
