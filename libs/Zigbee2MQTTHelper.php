@@ -2150,7 +2150,7 @@ trait Zigbee2MQTTHelper
                             $this->EnableAction('Z2M_HolidayTemperature');
                             break;
                         case 'position':
-                            $this->RegisterVariableInteger('Z2M_Position', $this->Translate('Position'), '~Intensity.100');
+                            $this->RegisterVariableInteger('Z2M_Position', $this->Translate('Position'), '~Shutter');
                             break;
                         case 'boost_heating_countdown':
                             $ProfileName = $this->registerVariableProfile($expose);
