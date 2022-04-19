@@ -1983,7 +1983,6 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_Moving', $this->Translate('Curent Action'), $ProfileName);
-                                $this->EnableAction('Z2M_Moving');
                             }
                             break;
                         case 'trv_mode':
