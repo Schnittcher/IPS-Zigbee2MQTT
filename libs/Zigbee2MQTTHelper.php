@@ -1318,8 +1318,8 @@ trait Zigbee2MQTTHelper
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Shutter', '', '', [
                                     ['OPEN', $this->Translate('Open'), '', 0x00FF00],
-                                    ['CLOSE', $this->Translate('Close'), '', 0xFF8800],
-                                    ['STOP', $this->Translate('Stop'), '', 0xFF0000]
+                                    ['STOP', $this->Translate('Stop'), '', 0xFF0000],
+                                    ['CLOSE', $this->Translate('Close'), '', 0xFF8800]
                                 ]);
                             }
                             break;
