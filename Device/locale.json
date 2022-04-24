@@ -173,7 +173,10 @@
             "Intermittently": "Intermittierend",
             "Morning": "Morgens",
             "Night": "Nachts",
-            "Motor Direction": "Motordrehrichtung"
+            "Motor Direction": "Motordrehrichtung",
+            "Brightness State": "Helligkeitszustand",
+            "Middle": "Mittel",
+            "Strong": "Stark"
         }
     }
 }

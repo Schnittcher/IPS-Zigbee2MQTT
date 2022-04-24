@@ -1412,6 +1412,16 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.brightness_state.2c0e1c8c':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
+                                    ['low', $this->Translate('Low'), '', 0x00FF00],
+                                    ['middle', $this->Translate('Middle'), '', 0xFF8800],
+                                    ['high', $this->Translate('High'), '', 0xFF0000],
+                                    ['strong', $this->Translate('Strong'), '', 0xFF8800]
+                                ]);
+                            }
+                            break;
                         default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
@@ -2038,6 +2048,12 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableString('Z2M_Border', $this->Translate('Border'), $ProfileName);
                             }
                             $this->EnableAction('Z2M_Border');
+                            break;
+                        case 'brightness_state':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_BrightnessSate', $this->Translate('Brightness State'), $ProfileName);
+                            }
                             break;
                         default:
                         $missedVariables[] = $expose;
