@@ -1412,7 +1412,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.brightness_state.2c0e1c8c':
+                        case 'Z2M.brightness_state.95110215':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
                                     ['low', $this->Translate('Low'), '', 0x00FF00],
