@@ -219,6 +219,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_DetectionDelay':
                 $Payload['detection_delay'] = strval($Value);
                 break;
+            case 'Z2M_Effect':
+                $Payload['effect'] = strval($Value);
+                break;
             default:
                 $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
                 return false;
