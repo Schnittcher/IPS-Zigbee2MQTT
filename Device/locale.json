@@ -176,7 +176,12 @@
             "Motor Direction": "Motordrehrichtung",
             "Brightness State": "Helligkeitszustand",
             "Middle": "Mittel",
-            "Strong": "Stark"
+            "Strong": "Stark",
+            "Target Distance": "Ziel Entfernung",
+            "Minimum Range": "Minimale Reichweite",
+            "Maximum Range": "Maximale Reichweite",
+            "Detection Delay": "Erkennungsverzögerung",
+            "Self Test": "Selbstest"
         }
     }
 }
