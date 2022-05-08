@@ -210,6 +210,18 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Duration':
                 $Payload['duration'] = strval($Value);
                 break;
+            case 'Z2M_MinimumRange':
+                $Payload['minimum_range'] = strval($Value);
+                break;
+            case 'Z2M_MaximumRange':
+                $Payload['maximum_range'] = strval($Value);
+                break;
+            case 'Z2M_DetectionDelay':
+                $Payload['detection_delay'] = strval($Value);
+                break;
+            case 'Z2M_Effect':
+                $Payload['effect'] = strval($Value);
+                break;
             default:
                 $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
                 return false;
@@ -897,6 +909,21 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('calibration_time', $Payload)) {
                     $this->SetValue('Z2M_CalibrationTime', $Payload['calibration_time']);
                 }
+                if (array_key_exists('target_distance', $Payload)) {
+                    $this->SetValue('Z2M_TargetDistance', $Payload['target_distance']);
+                }
+                if (array_key_exists('minimum_range', $Payload)) {
+                    $this->SetValue('Z2M_MinimumRange', $Payload['minum_range']);
+                }
+                if (array_key_exists('maximum_range', $Payload)) {
+                    $this->SetValue('Z2M_MaximumRange', $Payload['maximum_range']);
+                }
+                if (array_key_exists('detection_delay', $Payload)) {
+                    $this->SetValue('Z2M_DetectionDelay', $Payload['detection_delay']);
+                }
+                if (array_key_exists('self_test', $Payload)) {
+                    $this->SetValue('Z2M_SelfTest', $Payload['self_test']);
+                }
             }
         }
     }
@@ -1529,6 +1556,36 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 0);
                         }
                         break;
+                    case 'target_distance':
+                        $ProfileName .= '_' . $expose['unit'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Move', '', ' ' . $expose['unit'], 0, 0, 0, 2);
+                        }
+                        break;
+                    case 'minimum_range':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expos['value_step']);
+                        }
+                        // No break. Add additional comment above this line if intentional
+                    case 'maximum_range':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expos['value_step']);
+                        }
+                        break;
+                    case 'detection_delay':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expos['value_step']);
+                        }
+                        break;
+                    case 'detfading_timeection_delay':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expos['value_step']);
+                        }
+                        break;
                     default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
@@ -2055,6 +2112,12 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableString('Z2M_BrightnessSate', $this->Translate('Brightness State'), $ProfileName);
                             }
                             break;
+                        case 'self_test':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_SelfTest', $this->Translate('Self Test'), $ProfileName);
+                            }
+                            break;
                         default:
                         $missedVariables[] = $expose;
                         break;
@@ -2256,6 +2319,40 @@ trait Zigbee2MQTTHelper
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_PercentState', $this->Translate('PercentState'), $ProfileName);
                                 $this->EnableAction('Z2M_PercentState');
+                            }
+                            break;
+                        case 'target_distance':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_TargetDistance', $this->Translate('Target Distance'), $ProfileName);
+                            }
+                            break;
+                        case 'minimum_range':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_MinimumRange', $this->Translate('Minimum Range'), $ProfileName);
+                                $this->EnableAction('Z2M_MinimumRange');
+                            }
+                            break;
+                        case 'maximum_range':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_MaximumRange', $this->Translate('Maximum Range'), $ProfileName);
+                                $this->EnableAction('Z2M_MaximumRange');
+                            }
+                            break;
+                        case 'detection_delay':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_DetectionDelay', $this->Translate('Detection Delay'), $ProfileName);
+                                $this->EnableAction('Z2M_DetectionDelay');
+                            }
+                            break;
+                        case 'fading_time':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_FadingTime', $this->Translate('Fading Time'), $ProfileName);
+                                $this->EnableAction('Z2M_FadingTime');
                             }
                             break;
                         default:
