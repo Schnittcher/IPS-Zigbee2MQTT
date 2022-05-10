@@ -1604,7 +1604,7 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'fading_time':
-                        $ProfilName .= expose ['value_min'] . '_' . $expose['value_max'];
+                        $ProfilName .= expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step']);
