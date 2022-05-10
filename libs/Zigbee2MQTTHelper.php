@@ -222,6 +222,12 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Effect':
                 $Payload['effect'] = strval($Value);
                 break;
+            case 'Z2M_FadingTime':
+                $Payload['fading_time'] = strval($Value);
+                break;
+            case 'Z2M_SelfTest':
+                $Payload['self_test'] = strval($Value);
+                break;
             default:
                 $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
                 return false;
@@ -924,6 +930,9 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('self_test', $Payload)) {
                     $this->SetValue('Z2M_SelfTest', $Payload['self_test']);
                 }
+                if (array_key_exists('fading_time', $Payload)) {
+                    $this->SetValue('Z2M_FadingTime', $Payload['fading_time']);
+                }
             }
         }
     }
@@ -1449,6 +1458,18 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.self_test.f4bae49d':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
+                                    ['checking', $this->Translate('Checking'), '', 0xFFFF00],
+                                    ['check_success', $this->Translate('Check Success'), '', 0x00FF00],
+                                    ['check_failure', $this->Translate('Check Failure'), '', 0xFF0000],
+                                    ['others', $this->Translate('Others'), '', 0xFFFF00],
+                                    ['comm_fault', $this->Translate('Comm Fault'), '', 0xFF0000],
+                                    ['radar_fault', $this->Translate('Radar Fault'), '', 0xFF0000]
+                                ]);
+                            }
+                            break;
                         default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
@@ -1564,20 +1585,29 @@ trait Zigbee2MQTTHelper
                         break;
                     case 'minimum_range':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expos['value_step']);
+                            $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expos['value_step'], 2);
                         }
                         // No break. Add additional comment above this line if intentional
                     case 'maximum_range':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expos['value_step']);
+                            $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expos['value_step'], 2);
                         }
                         break;
                     case 'detection_delay':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expos['value_step']);
+                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expos['value_step'], 2);
+                        }
+                        break;
+                    case 'fading_time':
+                        $ProfilName .= expose ['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step']);
                         }
                         break;
                     case 'detfading_timeection_delay':
