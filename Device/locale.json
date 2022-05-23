@@ -181,7 +181,13 @@
             "Minimum Range": "Minimale Reichweite",
             "Maximum Range": "Maximale Reichweite",
             "Detection Delay": "Erkennungsverzögerung",
-            "Self Test": "Selbstest"
+            "Self Test": "Selbstest",
+            "Check Success": "Check erfolgreich",
+            "Checking": "Prüfung",
+            "Check Failure": "Check fehlerhaft",
+            "Others": "Andere",
+            "Comm Fault": "Kommunikationsfehler",
+            "Radar Fault": "Radarfehler"
         }
     }
 }
