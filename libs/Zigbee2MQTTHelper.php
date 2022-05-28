@@ -10,32 +10,32 @@ trait Zigbee2MQTTHelper
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
             case 'Z2M_Brightness':
-                $Payload['brightness'] = strval($Value);
+                $Payload['brightness'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_BrightnessRGB':
-                $Payload['brightness_rgb'] = strval($Value);
+                $Payload['brightness_rgb'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_BrightnessWhite':
-                $Payload['brightness_white'] = strval($Value);
+                $Payload['brightness_white'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_ColorTemp':
-                $Payload['color_temp'] = strval($Value);
+                $Payload['color_temp'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_ColorTempKelvin':
                 $Payload['color_temp'] = strval(intval(round(1000000 / $Value, 0)));
                 break;
             case 'Z2M_ColorTempRGB':
-                $Payload['color_temp_rgb'] = strval($Value);
+                $Payload['color_temp_rgb'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_State':
                 if ($variableType == 3) {
-                    $Payload['state'] = strval($Value);
+                    $Payload['state'] = str_replace(",",".",$Value);
                     break;
                 }
                 $Payload['state'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_RunningState':
-                $Payload['running_state'] = strval($Value);
+                $Payload['running_state'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_StateRGB':
                 $Payload['state_rgb'] = strval($this->OnOff($Value));
@@ -44,7 +44,7 @@ trait Zigbee2MQTTHelper
                 $Payload['state_white'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_LEDDisabledNight':
-                $Payload['led_disabled_night'] = strval($Value);
+                $Payload['led_disabled_night'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_Statel1':
                 $Payload['state_l1'] = strval($this->OnOff($Value));
@@ -74,10 +74,10 @@ trait Zigbee2MQTTHelper
                 $Payload['child_lock'] = strval($this->LockUnlock($Value));
                 break;
             case'Z2M_PowerOutageMemory':
-                $Payload['power_outage_memory'] = strval($Value);
+                $Payload['power_outage_memory'] = str_replace(",",".",$Value);
                 break;
             case'Z2M_PowerOnBehavior':
-                $Payload['power_on_behavior'] = strval($Value);
+                $Payload['power_on_behavior'] = str_replace(",",".",$Value);
                 break;
             case'Z2M_AutoOff':
                 $Payload['auto_off'] = strval($this->OnOff($Value));
@@ -86,19 +86,19 @@ trait Zigbee2MQTTHelper
                 $Payload['state'] = strval($this->OpenClose($Value));
                 break;
             case 'Z2M_Sensitivity':
-                $Payload['sensitivity'] = strval($Value);
+                $Payload['sensitivity'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_RadarSensitivity':
-                $Payload['radar_sensitivity'] = strval($Value);
+                $Payload['radar_sensitivity'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_RadarScene':
-                $Payload['radar_scene'] = strval($Value);
+                $Payload['radar_scene'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_MotorWorkingMode':
-                $Payload['motor_working_mode'] = strval($Value);
+                $Payload['motor_working_mode'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_Control':
-                $Payload['control'] = strval($Value);
+                $Payload['control'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_BoostHeating':
                 $Payload['boost_heating'] = strval($this->OnOff($Value));
@@ -113,52 +113,52 @@ trait Zigbee2MQTTHelper
                 $Payload['boost_heating'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_Moving':
-                $Payload['moving'] = strval($Value);
+                $Payload['moving'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_TRVMode':
-                $Payload['trv_mode'] = strval($Value);
+                $Payload['trv_mode'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_Calibration':
-                $Payload['calibration'] = strval($Value);
+                $Payload['calibration'] = str_replace(",",".",$Value);
                 break;
             case 'motor_reversal':
-                $Payload['motor_reversal'] = strval($Value);
+                $Payload['motor_reversal'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_CurrentHeatingSetpoint':
-                $Payload['current_heating_setpoint'] = strval($Value);
+                $Payload['current_heating_setpoint'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_CurrentHeatingSetpointAuto':
-                $Payload['current_heating_setpoint_auto'] = strval($Value);
+                $Payload['current_heating_setpoint_auto'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_OccupiedHeatingSetpoint':
-                $Payload['occupied_heating_setpoint'] = strval($Value);
+                $Payload['occupied_heating_setpoint'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_LocalTemperatureCalibration':
-                $Payload['local_temperature_calibration'] = strval($Value);
+                $Payload['local_temperature_calibration'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_OpenWindowTemperature':
-                $Payload['open_window_temperature'] = strval($Value);
+                $Payload['open_window_temperature'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_HolidayTemperature':
-                $Payload['holiday_temperature'] = strval($Value);
+                $Payload['holiday_temperature'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_BoostTimesetCountdown':
-                $Payload['boost_timeset_countdown'] = strval($Value);
+                $Payload['boost_timeset_countdown'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_Preset':
-                $Payload['preset'] = strval($Value);
+                $Payload['preset'] = str_replace(",",".",$Value)($Value);
                 break;
             case 'Z2M_AwayPresetDays':
-                $Payload['away_preset_days'] = strval($Value);
+                $Payload['away_preset_days'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_AwayMode':
-                $Payload['away_mode'] = strval($Value);
+                $Payload['away_mode'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_BoostTime':
-                $Payload['boost_time'] = strval($Value);
+                $Payload['boost_time'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_SystemMode':
-                $Payload['system_mode'] = strval($Value);
+                $Payload['system_mode'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_Color':
                 $this->SendDebug(__FUNCTION__ . ' Color', $Value, 0);
@@ -169,64 +169,67 @@ trait Zigbee2MQTTHelper
                 $this->setColor($Value, 'cie', 'color_rgb');
                 return;
             case 'Z2M_Position':
-                $Payload['position'] = strval($Value);
+                $Payload['position'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_MotorSpeed':
-                $Payload['motor_speed'] = strval($Value);
+                $Payload['motor_speed'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_MotionSensitivity':
-                $Payload['motion_sensitivity'] = strval($Value);
+                $Payload['motion_sensitivity'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_OccupancyTimeout':
-                $Payload['occupancy_timeout'] = strval($Value);
+                $Payload['occupancy_timeout'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_OverloadProtection':
-                $Payload['overload_protection'] = strval($Value);
+                $Payload['overload_protection'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_Mode':
-                $Payload['mode'] = strval($Value);
+                $Payload['mode'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_Week':
-                $Payload['week'] = strval($Value);
+                $Payload['week'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_ControlBackMode':
-                $Payload['control_back_mode'] = strval($Value);
+                $Payload['control_back_mode'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_Border':
-                $Payload['border'] = strval($Value);
+                $Payload['border'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_Level':
-                $Payload['level'] = strval($Value);
+                $Payload['level'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_StrobeLevel':
-                $Payload['strobe_level'] = strval($Value);
+                $Payload['strobe_level'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_Strobe':
-                $Payload['strobe'] = strval($Value);
+                $Payload['strobe'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_StrobeDutyCycle':
-                $Payload['strobe_duty_cycle'] = strval($Value);
+                $Payload['strobe_duty_cycle'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_Duration':
-                $Payload['duration'] = strval($Value);
+                $Payload['duration'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_MinimumRange':
-                $Payload['minimum_range'] = strval($Value);
+                $Payload['minimum_range'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_MaximumRange':
-                $Payload['maximum_range'] = strval($Value);
+                $Payload['maximum_range'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_DetectionDelay':
-                $Payload['detection_delay'] = strval($Value);
+                $Payload['detection_delay'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_Effect':
-                $Payload['effect'] = strval($Value);
+                $Payload['effect'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_FadingTime':
-                $Payload['fading_time'] = strval($Value);
+                $Payload['fading_time'] = str_replace(",",".",$Value);
                 break;
             case 'Z2M_SelfTest':
-                $Payload['self_test'] = strval($Value);
+                $Payload['self_test'] = str_replace(",",".",$Value);
+                break;
+            case 'Z2M_MaxTemperature':
+                $Payload['max_temperature'] = str_replace(",",".",$Value);
                 break;
             default:
                 $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
@@ -1574,7 +1577,7 @@ trait Zigbee2MQTTHelper
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], $expose['value_step']);
                         }
                         break;
                     case 'target_distance':
@@ -1614,6 +1617,13 @@ trait Zigbee2MQTTHelper
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step']);
+                        }
+                        break;
+                    case 'max_temperature':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
                     default:
@@ -2099,6 +2109,7 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_RadarScene', $this->Translate('Radar Scene'), $ProfileName);
+                                $this->EnableAction('Z2M_RadarScene');
                             }
                             break;
                         case 'motor_working_mode':
@@ -2242,8 +2253,11 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'max_temperature':
-                            $this->RegisterVariableFloat('Z2M_MaxTemperature', $this->Translate('Max Temperature'), '~Temperature');
-                            $this->EnableAction('Z2M_MaxTemperature');
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_MaxTemperature', $this->Translate('Max Temperature'), $ProfileName);
+                                $this->EnableAction('Z2M_MaxTemperature');
+                            }
                             break;
                         case 'min_temperature':
                             $this->RegisterVariableFloat('Z2M_MinTemperature', $this->Translate('Min Temperature'), '~Temperature');
