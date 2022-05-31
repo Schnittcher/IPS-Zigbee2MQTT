@@ -2262,7 +2262,7 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableFloat('Z2M_MaxTemperature', $this->Translate('Max Temperature'), $ProfileName);
                                 $this->EnableAction('Z2M_MaxTemperature');
                             }
-                            // No break. Add additional comment above this line if intentional
+                            break;
                         case 'min_temperature':
                             $this->RegisterVariableFloat('Z2M_MinTemperature', $this->Translate('Min Temperature'), '~Temperature');
                             $this->EnableAction('Z2M_MinTemperature');
