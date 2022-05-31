@@ -922,7 +922,7 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_TargetDistance', $Payload['target_distance']);
                 }
                 if (array_key_exists('minimum_range', $Payload)) {
-                    $this->SetValue('Z2M_MinimumRange', $Payload['minum_range']);
+                    $this->SetValue('Z2M_MinimumRange', $Payload['minimum_range']);
                 }
                 if (array_key_exists('maximum_range', $Payload)) {
                     $this->SetValue('Z2M_MaximumRange', $Payload['maximum_range']);
@@ -1577,7 +1577,7 @@ trait Zigbee2MQTTHelper
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], $expose['value_step']);
                         }
                         break;
                     case 'target_distance':
@@ -1616,9 +1616,16 @@ trait Zigbee2MQTTHelper
                     case 'detfading_timeection_delay':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step']);
+                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 1);
                         }
                         break;
+                    case 'max_temperature':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
+                        }
+                        // No break. Add additional comment above this line if intentional
                     default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
@@ -2106,6 +2113,7 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_RadarScene', $this->Translate('Radar Scene'), $ProfileName);
+                                $this->EnableAction('Z2M_RadarScene');
                             }
                             break;
                         case 'motor_working_mode':
@@ -2249,9 +2257,12 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'max_temperature':
-                            $this->RegisterVariableFloat('Z2M_MaxTemperature', $this->Translate('Max Temperature'), '~Temperature');
-                            $this->EnableAction('Z2M_MaxTemperature');
-                            break;
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_MaxTemperature', $this->Translate('Max Temperature'), $ProfileName);
+                                $this->EnableAction('Z2M_MaxTemperature');
+                            }
+                            // No break. Add additional comment above this line if intentional
                         case 'min_temperature':
                             $this->RegisterVariableFloat('Z2M_MinTemperature', $this->Translate('Min Temperature'), '~Temperature');
                             $this->EnableAction('Z2M_MinTemperature');
