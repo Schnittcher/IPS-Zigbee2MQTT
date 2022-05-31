@@ -27,7 +27,6 @@ class IPSymconExtension {
     }
     
 async onMQTTMessage(data) {
-
     switch (data.topic) {
         case this.symconTopic + '/' + this.baseTopic + '/getDevices':
             // let coordinator = await this.zigbee.getCoordinatorVersion();
@@ -60,9 +59,11 @@ async onMQTTMessage(data) {
             break;
         case this.symconTopic + '/' + this.baseTopic + '/getDevice':
             let device = this.zigbee.resolveEntity(data.message);
-            //this.logger.info('Symcon: publish device information for' + data.message);
-            //let device = this.zigbee.deviceByNetworkAddress(parseInt(data.message))
-            await this.mqtt.publish(device.name + '/deviceInfo', JSON.stringify(device), {retain: false, qos: 0}, this.symconTopic + '/' + this.baseTopic, false, false);
+			if (data.message) {
+				//this.logger.info('Symcon: publish device information for' + data.message);
+				//let device = this.zigbee.deviceByNetworkAddress(parseInt(data.message))
+				await this.mqtt.publish(device.name + '/deviceInfo', JSON.stringify(device), {retain: false, qos: 0}, this.symconTopic + '/' + this.baseTopic, false, false);
+			}
             break;
         case (this.symconTopic + '/' + this.baseTopic + '/getGroups'):
             var groups = this.settings.getGroups();
