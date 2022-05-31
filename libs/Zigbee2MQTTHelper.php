@@ -841,6 +841,9 @@ trait Zigbee2MQTTHelper
                             break;
                     }
                 }
+                if (array_key_exists('test', $Payload)) {
+                    $this->SetValue('Z2M_Test', $Payload['test']);
+                }
                 if (array_key_exists('valve_detection', $Payload)) {
                     switch ($Payload['valve_detection']) {
                         case 'ON':
@@ -2017,6 +2020,10 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableBoolean('Z2M_HeatingStop', $this->Translate('Heating Stop'), '~Switch');
                             $this->EnableAction('Z2M_HeatingStop');
                             break;
+                        case 'test':
+                            $this->RegisterVariableBoolean('Z2M_Test', $this->Translate('Test'), '~Switch');
+                            break;
+
                     default:
                         $missedVariables[] = $expose;
                         break;
