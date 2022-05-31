@@ -919,7 +919,7 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_TargetDistance', $Payload['target_distance']);
                 }
                 if (array_key_exists('minimum_range', $Payload)) {
-                    $this->SetValue('Z2M_MinimumRange', $Payload['minimum_range']);
+                    $this->SetValue('Z2M_MinimumRange', $Payload['minum_range']);
                 }
                 if (array_key_exists('maximum_range', $Payload)) {
                     $this->SetValue('Z2M_MaximumRange', $Payload['maximum_range']);
