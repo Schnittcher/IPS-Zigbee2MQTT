@@ -2158,9 +2158,13 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'self_test':
+                        case 'selftest':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_SelfTest', $this->Translate('Self Test'), $ProfileName);
+                                if ($expose['access'] == 1) {
+                                    $this->EnableAction('Z2M_SelfTest');
+                                }
                             }
                             break;
                         default:
