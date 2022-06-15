@@ -1093,6 +1093,7 @@ trait Zigbee2MQTTHelper
     protected function SetValue($Ident, $Value)
     {
         if (@$this->GetIDForIdent($Ident)) {
+            $this->SendDebug('Info :: SetValue for ' . $Ident, 'Value: ' . $Value, 0);
             parent::SetValue($Ident, $Value);
         } else {
             $this->SendDebug('Error :: No Expose for Value', 'Ident: ' . $Ident, 0);
