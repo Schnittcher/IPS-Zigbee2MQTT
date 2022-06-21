@@ -58,6 +58,12 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Statel4':
                 $Payload['state_l4'] = strval($this->OnOff($Value));
                 break;
+            case 'Z2M_state_left':
+                $Payload['state_left'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_state_right':
+                $Payload['state_right'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_WindowDetection':
                 $Payload['window_detection'] = strval($this->OnOff($Value));
                 break;
@@ -353,18 +359,6 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('running_state', $Payload)) {
                     $this->SetValue('Z2M_RunningState', $Payload['running_state']);
-                }
-
-                if (array_key_exists('state_left', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: state_left', KL_WARNING);
-                    //$this->RegisterVariableString('Z2M_StateLeft', $this->Translate('State Left'), '');
-                    //$this->SetValue('Z2M_StateLeft', $Payload['state_left']);
-                }
-
-                if (array_key_exists('state_right', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: state_right', KL_WARNING);
-                    //$this->RegisterVariableString('Z2M_StateRight', $this->Translate('State Right'), '');
-                    //$this->SetValue('Z2M_StateRight', $Payload['state_right']);
                 }
 
                 if (array_key_exists('linkquality', $Payload)) {
@@ -774,6 +768,32 @@ trait Zigbee2MQTTHelper
                             break;
                         default:
                             $this->SendDebug('State 5', 'Undefined State 5: ' . $Payload['state_l5'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('state_left', $Payload)) {
+                    switch ($Payload['state_left']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_state_left', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_state_left', false);
+                            break;
+                        default:
+                            $this->SendDebug('State Left', 'Undefined State Left: ' . $Payload['state_left'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('state_right', $Payload)) {
+                    switch ($Payload['state_right']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_state_right', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_state_right', false);
+                            break;
+                        default:
+                            $this->SendDebug('State Right', 'Undefined State Right: ' . $Payload['state_Right'], 0);
                             break;
                     }
                 }
@@ -1695,7 +1715,15 @@ trait Zigbee2MQTTHelper
                                         case 'away_mode':
                                             $this->RegisterVariableBoolean('Z2M_AwayMode', $this->Translate('Away Mode'), '~Switch');
                                             $this->EnableAction('Z2M_AwayMode');
-                                            // No break. Add additional comment above this line if intentional
+                                            break;
+                                        case 'state_left':
+                                            $this->RegisterVariableBoolean('Z2M_state_left', $this->Translate('State Left'), '~Switch');
+                                            $this->EnableAction('Z2M_state_left');
+                                            break;
+                                        case 'state_right':
+                                            $this->RegisterVariableBoolean('Z2M_state_right', $this->Translate('State Right'), '~Switch');
+                                            $this->EnableAction('Z2M_state_right');
+                                            break;
                                         default:
                                         // Default Switch binary
                                         $missedVariables['switch'][] = $feature;
