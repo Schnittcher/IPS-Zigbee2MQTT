@@ -181,7 +181,9 @@
             "Minimum Range": "Minimale Reichweite",
             "Maximum Range": "Maximale Reichweite",
             "Detection Delay": "Erkennungsverzögerung",
-            "Self Test": "Selbstest"
+            "Self Test": "Selbstest",
+            "Trigger Indicator": "Auslöseanzeige",
+            "Detection Interval": "Erkennungsintervall"
         }
     }
 }
