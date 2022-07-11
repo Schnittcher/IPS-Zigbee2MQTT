@@ -234,6 +234,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_SelfTest':
                 $Payload['self_test'] = strval($Value);
                 break;
+            case 'Z2M_BrightnessLevel':
+                $Payload['brightness_level'] = strval($Value);
+                break;
             default:
                 $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
                 return false;
@@ -966,6 +969,9 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('fading_time', $Payload)) {
                     $this->SetValue('Z2M_FadingTime', $Payload['fading_time']);
                 }
+               if (array_key_exists('brightness_level', $Payload)) {
+                    $this->SetValue('Z2M_BrightnessLevel', $Payload['brightness_level']);
+                } 
             }
         }
     }
@@ -1501,6 +1507,15 @@ trait Zigbee2MQTTHelper
                                     ['others', $this->Translate('Others'), '', 0xFFFF00],
                                     ['comm_fault', $this->Translate('Comm Fault'), '', 0xFF0000],
                                     ['radar_fault', $this->Translate('Radar Fault'), '', 0xFF0000]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.brightness_level.9e0e16e4':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
+                                    ['LOW', $this->Translate('Low'), '', 0x00FF00],
+                                    ['MEDIUM', $this->Translate('Medium'), '', 0xFF8800],
+                                    ['HIGH', $this->Translate('High'), '', 0xFF0000]
                                 ]);
                             }
                             break;
@@ -2203,6 +2218,15 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableString('Z2M_SelfTest', $this->Translate('Self Test'), $ProfileName);
                                 if ($expose['access'] == 1) {
                                     $this->EnableAction('Z2M_SelfTest');
+                                }
+                            }
+                            break;
+                        case 'brightness_level':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_BrightnessLevel', $this->Translate('Brightness Level'), $ProfileName);
+                                if ($expose['access'] == 1) {
+                                    $this->EnableAction('Z2M_BrightnessLevel');
                                 }
                             }
                             break;
