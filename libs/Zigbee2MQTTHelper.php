@@ -2088,7 +2088,7 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableBoolean('Z2M_Test', $this->Translate('Test'), '~Switch');
                             break;
                         case 'trigger_indicator':
-                            $this->RegisterVariableBoolean('Z2M_TriggerIndicator', this->Translate('Trigger Indicator', '~Switch');
+                            $this->RegisterVariableBoolean('Z2M_TriggerIndicator', this->Translate('Trigger Indicator'), '~Switch');
                             $this->EnableAction('Z2M_TriggerIndicator');
                             break;
 
