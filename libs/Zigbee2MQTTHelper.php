@@ -1656,7 +1656,7 @@ trait Zigbee2MQTTHelper
                         }
                         break; 
                     case 'fading_time':
-                        $ProfilName .= expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .=$expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
@@ -2088,7 +2088,7 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableBoolean('Z2M_Test', $this->Translate('Test'), '~Switch');
                             break;
                         case 'trigger_indicator':
-                            $this->RegisterVariableBoolean('Z2M_TriggerIndicator', this->Translate('Trigger Indicator'), '~Switch');
+                            $this->RegisterVariableBoolean('Z2M_TriggerIndicator', $this->Translate('Trigger Indicator'), '~Switch');
                             $this->EnableAction('Z2M_TriggerIndicator');
                             break;
 
@@ -2580,6 +2580,7 @@ trait Zigbee2MQTTHelper
                                                 $this->RegisterVariableInteger('Z2M_Position', $this->Translate('Position'), '~Intensity.100');
                                                 $this->EnableAction('Z2M_Position');
                                                 break;
+                                            default:
                                             // Default cover binary
                                             $missedVariables['cover'][] = $feature;
                                             break;
