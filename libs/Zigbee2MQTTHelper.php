@@ -246,7 +246,6 @@ trait Zigbee2MQTTHelper
             default:
                 $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
                 return false;
-                break;
         }
 
         $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
@@ -1535,7 +1534,6 @@ trait Zigbee2MQTTHelper
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
                             return false;
-                            break;
                     }
                 }
                 break;
