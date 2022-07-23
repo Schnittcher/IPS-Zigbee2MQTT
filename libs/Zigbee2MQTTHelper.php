@@ -986,6 +986,12 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('trigger_indicator', $Payload)) {
                     $this->SetValue('Z2M_TriggerIndicator', $Payload['trigger_indicator']);
                 }
+                if (array_key_exists('action_code', $Payload)) {
+                    $this->SetValue('Z2M_ActionCode', $Payload['action_code']);
+                }
+                if (array_key_exists('action_transaction', $Payload)) {
+                    $this->SetValue('Z2M_ActionTransaction', $Payload['action_transaction']);
+                }
             }
         }
     }
@@ -2499,8 +2505,20 @@ trait Zigbee2MQTTHelper
                         case 'detection_interval':
                             $ProfilName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->registerVariableFloat('Z2M_DetectionInterval', $this->translate('Detection Interval'), $ProfileName);
+                                $this->registerVariableFloat('Z2M_DetectionInterval', $this->Translate('Detection Interval'), $ProfileName);
                                 $this->EnableAction('Z2M_DetectionInterval');
+                            }
+                            break;
+                        case 'action_code':
+                            $ProfilName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->registerVariableFloat('Z2M_ActionCode', $this->Translate('Action Code'), $ProfileName);
+                            }
+                            break;
+                        case 'action_transaction':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->registerVariableFloat('Z2M_ActionTransaction', $this->Translate('Action Transaction'), $ProfileName);
                             }
                             break;
                         default:
