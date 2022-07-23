@@ -184,7 +184,8 @@
             "Detection Delay": "Erkennungsverzögerung",
             "Self Test": "Selbstest",
             "Trigger Indicator": "Auslöseanzeige",
-            "Detection Interval": "Erkennungsintervall"
+            "Detection Interval": "Erkennungsintervall",
+            "Device Temperature": "Geräte Temperatur"
         }
     }
 }
