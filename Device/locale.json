@@ -185,7 +185,9 @@
             "Self Test": "Selbstest",
             "Trigger Indicator": "Auslöseanzeige",
             "Detection Interval": "Erkennungsintervall",
-            "Device Temperature": "Geräte Temperatur"
+            "Device Temperature": "Geräte Temperatur",
+            "Action Code": "Aktions Code",
+            "Action Transaction": "Aktion Transaktion"
         }
     }
 }
