@@ -300,6 +300,9 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('temperature', $Payload)) {
                     $this->SetValue('Z2M_Temperature', $Payload['temperature']);
                 }
+                if (array_key_exists('device_temperature', $Payload)) {
+                    $this->SetValue('Z2M_DeviceTemperature', $Payload['device_temperature']);
+                }
                 if (array_key_exists('local_temperature', $Payload)) {
                     $this->SetValue('Z2M_LocalTemperature', $Payload['local_temperature']);
                 }
@@ -2275,6 +2278,9 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'temperature':
                             $this->RegisterVariableFloat('Z2M_Temperature', $this->Translate('Temperature'), '~Temperature');
+                            break;
+                        case 'device_temperature':
+                            $this->RegisterVariableFloat('Z2M_DeviceTemperature', $this->Translate('Device Temperature'), '~Temperature');
                             break;
                         case 'humidity':
                             $this->RegisterVariableFloat('Z2M_Humidity', $this->Translate('Humidity'), '~Humidity.F');
