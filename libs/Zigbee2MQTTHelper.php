@@ -2106,7 +2106,7 @@ trait Zigbee2MQTTHelper
                             $this->EnableAction('Z2M_GarageTrigger');
                             break;
                         case 'garage_door_contact':
-                            $this->RegisterVariableBoolean('Z2M_GarageDoorContact', $this->Translate('Garage Door Contact'), '~Switch');
+                            $this->RegisterVariableBoolean('Z2M_GarageDoorContact', $this->Translate('Garage Door Contact'), '~Window.Reversed');
                             break;
 
                     default:
