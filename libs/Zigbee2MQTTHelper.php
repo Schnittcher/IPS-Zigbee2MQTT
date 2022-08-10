@@ -237,7 +237,7 @@ trait Zigbee2MQTTHelper
             case 'Z2M_SelfTest':
                 $Payload['self_test'] = strval($Value);
                 break;
-            case 'Z2M_Garage_Trigger':
+            case 'Z2M_GarageTrigger':
                 $Payload['trigger'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_GarageDoorContact':
@@ -979,7 +979,7 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_FadingTime', $Payload['fading_time']);
                 }
                 if (array_key_exists('trigger', $Payload)) {
-                    switch ($Payload['Z2M_GarageTrigger']) {
+                    switch ($Payload['trigger']) {
                         case 'ON':
                             $this->SetValue('Z2M_GarageTrigger', true);
                             break;
@@ -992,29 +992,19 @@ trait Zigbee2MQTTHelper
                     }
                 }
                 if (array_key_exists('garage_door_contact', $Payload)) {
-                    switch ($Payload['Z2M_GarageDoorContact']) {
-                        case 'ON':
-                            $this->SetValue('Z2M_GarageDoorContact', false);
-                            break;
-                        case 'OFF':
-                            $this->SetValue('Z2M_GarageDoorContact', true);
-                            break;
-                        default:
-                            $this->SendDebug('Garage Door Contact', 'Undefined State: ' . $Payload['garage_door_contact'], 0);
-                            break;
-                    }
-                    if (array_key_exists('brightness_level', $Payload)) {
-                        $this->SetValue('Z2M_BrightnessLevel', $Payload['brightness_level']);
-                    }
-                    if (array_key_exists('trigger_indicator', $Payload)) {
-                        $this->SetValue('Z2M_TriggerIndicator', $Payload['trigger_indicator']);
-                    }
-                    if (array_key_exists('action_code', $Payload)) {
-                        $this->SetValue('Z2M_ActionCode', $Payload['action_code']);
-                    }
-                    if (array_key_exists('action_transaction', $Payload)) {
-                        $this->SetValue('Z2M_ActionTransaction', $Payload['action_transaction']);
-                    }
+                    $this->SetValue('Z2M_GarageDoorContact', $Payload['garage_door_contact']);
+                }
+                if (array_key_exists('brightness_level', $Payload)) {
+                    $this->SetValue('Z2M_BrightnessLevel', $Payload['brightness_level']);
+                }
+                if (array_key_exists('trigger_indicator', $Payload)) {
+                    $this->SetValue('Z2M_TriggerIndicator', $Payload['trigger_indicator']);
+                }
+                if (array_key_exists('action_code', $Payload)) {
+                    $this->SetValue('Z2M_ActionCode', $Payload['action_code']);
+                }
+                if (array_key_exists('action_transaction', $Payload)) {
+                    $this->SetValue('Z2M_ActionTransaction', $Payload['action_transaction']);
                 }
             }
         }
