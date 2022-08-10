@@ -55,6 +55,7 @@
             "Brightness": "Helligkeit",
             "Brightness RGB": "Helligkeit RGB",
             "Brightness White": "Helligkeit Weiß",
+            "Brightness Level": "Helligkeitsgrad",
             "Water Leak": "Wasserleck",
             "Contact": "Kontakt",
             "Illuminance": "Beleuchtungsstärke",
@@ -184,6 +185,11 @@
             "Self Test": "Selbstest",
             "Trigger": "Auslöser",
             "Garage Door Contact": "Garagentor Kontakt"
+            "Trigger Indicator": "Auslöseanzeige",
+            "Detection Interval": "Erkennungsintervall",
+            "Device Temperature": "Geräte Temperatur",
+            "Action Code": "Aktions Code",
+            "Action Transaction": "Aktion Transaktion"
         }
     }
 }
