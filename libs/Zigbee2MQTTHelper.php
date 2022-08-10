@@ -242,6 +242,7 @@ trait Zigbee2MQTTHelper
                 break;
             case 'Z2M_GarageDoorContact':
                 $Payload['garage_door_contact'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_BrightnessLevel':
                 $Payload['brightness_level'] = strval($Value);
                 break;
@@ -423,10 +424,7 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('brightness_white', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: brightness_white', KL_WARNING);
-                    //$this->RegisterVariableInteger('Z2M_BrightnessWhite', $this->Translate('Brightness White'), 'Z2M.Intensity.254');
-                    //$this->EnableAction('Z2M_BrightnessWhite');
-                    //$this->SetValue('Z2M_BrightnessWhite', $Payload['brightness_white']);
+                    $this->SetValue('Z2M_BrightnessWhite', $Payload['brightness_white']);
                 }
 
                 if (array_key_exists('position', $Payload)) {
@@ -489,7 +487,7 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('motor_working_mode', $Payload)) {
                     $this->SetValue('Z2M_MotorWorkingMode', $Payload['motor_working_mode']);
                 }
-                If (array_key_exists('detection_interval', $Payload)) {
+                if (array_key_exists('detection_interval', $Payload)) {
                     $this->SetValue('Z2M_DetectionInterval', $Payload['detection_interval']);
                 }
                 if (array_key_exists('control', $Payload)) {
@@ -633,9 +631,6 @@ trait Zigbee2MQTTHelper
                         $RGBColor = ltrim($this->CIEToRGB($Payload['color_rgb']['x'], $Payload['color_rgb']['y']), '#');
                     }
                     $this->SendDebug(__FUNCTION__ . ' Color :: RGB HEX', $RGBColor, 0);
-                    $this->LogMessage('Please contact module developer. Undefined variable: color_rgb', KL_WARNING);
-                    //$this->RegisterVariableInteger('Z2M_ColorRGB', $this->Translate('Color'), 'HexColor');
-                    //$this->EnableAction('Z2M_ColorRGB');
                     $this->SetValue('Z2M_ColorRGB', hexdec(($RGBColor)));
                 }
 
@@ -652,11 +647,14 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('color_temp_rgb', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: color_temp_rgb', KL_WARNING);
                     $this->SetValue('Z2M_ColorTempRGB', $Payload['color_temp_rgb']);
                     if ($Payload['color_temp_rgb'] > 0) {
                         $this->SetValue('Z2M_ColorTempRGBKelvin', 1000000 / $Payload['color_temp_rgb']); //Convert to Kelvin
                     }
+                }
+
+                if (array_key_exists('color_temp_startup_rgb', $Payload)) {
+                    $this->SetValue('Z2M_ColorTempStartupRGB', $Payload['color_temp_rgb']);
                 }
 
                 if (array_key_exists('state', $Payload)) {
@@ -699,17 +697,12 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('state_white', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: state_white', KL_WARNING);
                     switch ($Payload['state_white']) {
                         case 'ON':
-                            //$this->RegisterVariableBoolean('Z2M_StateWhite', $this->Translate('State White'), '~Switch');
-                            //$this->EnableAction('Z2M_StateWhite');
-                            //$this->SetValue('Z2M_StateWhite', true);
+                            $this->SetValue('Z2M_StateWhite', true);
                             break;
                         case 'OFF':
-                            //$this->RegisterVariableBoolean('Z2M_StateWhite', $this->Translate('State White'), '~Switch');
-                            //$this->EnableAction('Z2M_StateWhite');
-                            //$this->SetValue('Z2M_StateWhite', false);
+                            $this->SetValue('Z2M_StateWhite', false);
                             break;
                         default:
                         $this->SendDebug('State White', 'Undefined State: ' . $Payload['state_white'], 0);
@@ -1010,17 +1003,18 @@ trait Zigbee2MQTTHelper
                             $this->SendDebug('Garage Door Contact', 'Undefined State: ' . $Payload['garage_door_contact'], 0);
                             break;
                     }
-                if (array_key_exists('brightness_level', $Payload)) {
-                    $this->SetValue('Z2M_BrightnessLevel', $Payload['brightness_level']);
-                }
-                if (array_key_exists('trigger_indicator', $Payload)) {
-                    $this->SetValue('Z2M_TriggerIndicator', $Payload['trigger_indicator']);
-                }
-                if (array_key_exists('action_code', $Payload)) {
-                    $this->SetValue('Z2M_ActionCode', $Payload['action_code']);
-                }
-                if (array_key_exists('action_transaction', $Payload)) {
-                    $this->SetValue('Z2M_ActionTransaction', $Payload['action_transaction']);
+                    if (array_key_exists('brightness_level', $Payload)) {
+                        $this->SetValue('Z2M_BrightnessLevel', $Payload['brightness_level']);
+                    }
+                    if (array_key_exists('trigger_indicator', $Payload)) {
+                        $this->SetValue('Z2M_TriggerIndicator', $Payload['trigger_indicator']);
+                    }
+                    if (array_key_exists('action_code', $Payload)) {
+                        $this->SetValue('Z2M_ActionCode', $Payload['action_code']);
+                    }
+                    if (array_key_exists('action_transaction', $Payload)) {
+                        $this->SetValue('Z2M_ActionTransaction', $Payload['action_transaction']);
+                    }
                 }
             }
         }
@@ -1580,6 +1574,7 @@ trait Zigbee2MQTTHelper
                 switch ($expose['property']) {
                     case 'brightness':
                     case 'brightness_rgb':
+                    case 'brightness_white':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -1588,6 +1583,7 @@ trait Zigbee2MQTTHelper
                         break;
                     case 'color_temp':
                     case 'color_temp_rgb':
+                    case 'color_temp__startup_rgb':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -1702,13 +1698,13 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'detection_interval':
-                        $ProfileName .=$expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 1);
                         }
-                        break; 
+                        break;
                     case 'fading_time':
-                        $ProfileName .=$expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
@@ -1812,6 +1808,13 @@ trait Zigbee2MQTTHelper
                                     break; //Switch binaray break;
                                 case 'numeric':
                                     switch ($feature['property']) {
+                                        case 'brightness_white':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_BrightnessWhite', $this->Translate('Brightness White'), $ProfileName);
+                                                $this->EnableAction('Z2M_BrightnessWhite');
+                                            }
+                                            break;
                                         default:
                                         // Default Switch binary
                                         $missedVariables['switch'][] = $feature;
@@ -1902,7 +1905,13 @@ trait Zigbee2MQTTHelper
                                             $this->RegisterVariableInteger('Z2M_ColorTempRGBKelvin', $this->Translate('Color Temperature RGB Kelvin'), 'Z2M.ColorTemperatureKelvin');
                                             $this->EnableAction('Z2M_ColorTempRGBKelvin');
                                             break;
-
+                                        case 'color_temp__startup_rgb':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_ColorTempStartupRGB', $this->Translate('Color Temperature Startup RGB'), $ProfileName);
+                                                $this->EnableAction('Z2M_ColorTempRZ2M_ColorTempStartupRGBGB');
+                                            }
+                                            break;
                                         default:
                                         // Default light numeric
                                         $missedVariables['light'][] = $feature;
@@ -1914,6 +1923,12 @@ trait Zigbee2MQTTHelper
                                             if ($feature['name'] == 'color_xy') {
                                                 $this->RegisterVariableInteger('Z2M_Color', $this->Translate('Color'), 'HexColor');
                                                 $this->EnableAction('Z2M_Color');
+                                            }
+                                            break;
+                                        case 'color_rgb':
+                                            if ($feature['name'] == 'color_xy') {
+                                                $this->RegisterVariableInteger('Z2M_Color', $this->Translate('Color'), 'HexColor');
+                                                $this->EnableAction('Z2M_ColorRGB');
                                             }
                                             break;
                                         default:
@@ -2017,6 +2032,12 @@ trait Zigbee2MQTTHelper
                                         case 'child_lock':
                                             $this->RegisterVariableBoolean('Z2M_ChildLock', $this->Translate('Child Lock'), '~Switch');
                                             $this->EnableAction('Z2M_ChildLock');
+                                            break;
+                                        case 'state_white':
+                                            if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
+                                                $this->RegisterVariableBoolean('Z2M_StateWhite', $this->Translate('State White'), '~Switch');
+                                                $this->EnableAction('Z2M_StateWhite');
+                                            }
                                             break;
                                         default:
                                         // Default lock binary
@@ -2145,6 +2166,7 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'garage_door_contact':
                             $this->RegisterVariableBoolean('Z2M_GarageDoorContact', $this->Translate('Garage Door Contact'), '~Window.Reversed');
+                            // No break. Add additional comment above this line if intentional
                         case 'trigger_indicator':
                             $this->RegisterVariableBoolean('Z2M_TriggerIndicator', $this->Translate('Trigger Indicator'), '~Switch');
                             $this->EnableAction('Z2M_TriggerIndicator');

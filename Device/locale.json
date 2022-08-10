@@ -98,6 +98,7 @@
             "Color Temperature Kelvin": "Farbtemperatur Kelvin",
             "Color Temperature RGB Kelvin": "Farbtemperatur RGB Kelvin",
             "Color Temperature RGB": "Farbtemperatur RGB",
+            "Color Temperature Startup RGB": "Start Farbtemperatur RGB",
             "Single": "Einmal",
             "Double": "Zweimal",
             "Triple": "Dreimal",
@@ -184,7 +185,7 @@
             "Detection Delay": "Erkennungsverzögerung",
             "Self Test": "Selbstest",
             "Trigger": "Auslöser",
-            "Garage Door Contact": "Garagentor Kontakt"
+            "Garage Door Contact": "Garagentor Kontakt",
             "Trigger Indicator": "Auslöseanzeige",
             "Detection Interval": "Erkennungsintervall",
             "Device Temperature": "Geräte Temperatur",
