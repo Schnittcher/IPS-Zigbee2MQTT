@@ -238,7 +238,7 @@ trait Zigbee2MQTTHelper
                 $Payload['self_test'] = strval($Value);
                 break;
             case 'Z2M_GarageTrigger':
-                $Payload['trigger'] = strval($Value);
+                $Payload['trigger'] = $Value;
                 break;
             case 'Z2M_GarageDoorContact':
                 $Payload['garage_door_contact'] = strval($this->OnOff($Value));
