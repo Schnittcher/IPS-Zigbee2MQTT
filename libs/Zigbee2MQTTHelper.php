@@ -1808,13 +1808,6 @@ trait Zigbee2MQTTHelper
                                     break; //Switch binaray break;
                                 case 'numeric':
                                     switch ($feature['property']) {
-                                        case 'brightness_white':
-                                            $ProfileName = $this->registerVariableProfile($feature);
-                                            if ($ProfileName != false) {
-                                                $this->RegisterVariableInteger('Z2M_BrightnessWhite', $this->Translate('Brightness White'), $ProfileName);
-                                                $this->EnableAction('Z2M_BrightnessWhite');
-                                            }
-                                            break;
                                         default:
                                         // Default Switch binary
                                         $missedVariables['switch'][] = $feature;
@@ -1927,7 +1920,7 @@ trait Zigbee2MQTTHelper
                                             break;
                                         case 'color_rgb':
                                             if ($feature['name'] == 'color_xy') {
-                                                $this->RegisterVariableInteger('Z2M_Color', $this->Translate('Color'), 'HexColor');
+                                                $this->RegisterVariableInteger('Z2M_ColorRGB', $this->Translate('Color'), 'HexColor');
                                                 $this->EnableAction('Z2M_ColorRGB');
                                             }
                                             break;
@@ -2577,6 +2570,13 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->registerVariableFloat('Z2M_ActionTransaction', $this->Translate('Action Transaction'), $ProfileName);
+                            }
+                            break;
+                        case 'brightness_white':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_BrightnessWhite', $this->Translate('Brightness White'), $ProfileName);
+                                $this->EnableAction('Z2M_BrightnessWhite');
                             }
                             break;
                         default:
