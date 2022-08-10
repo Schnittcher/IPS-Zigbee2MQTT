@@ -237,6 +237,11 @@ trait Zigbee2MQTTHelper
             case 'Z2M_SelfTest':
                 $Payload['self_test'] = strval($Value);
                 break;
+            case 'Z2M_Garage_Trigger':
+                $Payload['trigger'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_GarageDoorContact':
+                $Payload['garage_door_contact'] = strval($this->OnOff($Value));
             case 'Z2M_BrightnessLevel':
                 $Payload['brightness_level'] = strval($Value);
                 break;
@@ -980,6 +985,31 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('fading_time', $Payload)) {
                     $this->SetValue('Z2M_FadingTime', $Payload['fading_time']);
                 }
+                if (array_key_exists('trigger', $Payload)) {
+                    switch ($Payload['Z2M_GarageTrigger']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_GarageTrigger', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_GarageTrigger', false);
+                            break;
+                        default:
+                            $this->SendDebug('Garage Trigger', 'Undefined State: ' . $Payload['trigger'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('garage_door_contact', $Payload)) {
+                    switch ($Payload['Z2M_GarageDoorContact']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_GarageDoorContact', false);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_GarageDoorContact', true);
+                            break;
+                        default:
+                            $this->SendDebug('Garage Door Contact', 'Undefined State: ' . $Payload['garage_door_contact'], 0);
+                            break;
+                    }
                 if (array_key_exists('brightness_level', $Payload)) {
                     $this->SetValue('Z2M_BrightnessLevel', $Payload['brightness_level']);
                 }
@@ -2109,6 +2139,12 @@ trait Zigbee2MQTTHelper
                         case 'test':
                             $this->RegisterVariableBoolean('Z2M_Test', $this->Translate('Test'), '~Switch');
                             break;
+                        case 'trigger':
+                            $this->RegisterVariableBoolean('Z2M_GarageTrigger', $this->Translate('Garage Trigger'), '~Switch');
+                            $this->EnableAction('Z2M_GarageTrigger');
+                            break;
+                        case 'garage_door_contact':
+                            $this->RegisterVariableBoolean('Z2M_GarageDoorContact', $this->Translate('Garage Door Contact'), '~Window.Reversed');
                         case 'trigger_indicator':
                             $this->RegisterVariableBoolean('Z2M_TriggerIndicator', $this->Translate('Trigger Indicator'), '~Switch');
                             $this->EnableAction('Z2M_TriggerIndicator');

@@ -183,6 +183,8 @@
             "Maximum Range": "Maximale Reichweite",
             "Detection Delay": "Erkennungsverzögerung",
             "Self Test": "Selbstest",
+            "Trigger": "Auslöser",
+            "Garage Door Contact": "Garagentor Kontakt"
             "Trigger Indicator": "Auslöseanzeige",
             "Detection Interval": "Erkennungsintervall",
             "Device Temperature": "Geräte Temperatur",
