@@ -55,6 +55,7 @@
             "Brightness": "Helligkeit",
             "Brightness RGB": "Helligkeit RGB",
             "Brightness White": "Helligkeit Weiß",
+            "Brightness Level": "Helligkeitsgrad",
             "Water Leak": "Wasserleck",
             "Contact": "Kontakt",
             "Illuminance": "Beleuchtungsstärke",
@@ -181,7 +182,12 @@
             "Minimum Range": "Minimale Reichweite",
             "Maximum Range": "Maximale Reichweite",
             "Detection Delay": "Erkennungsverzögerung",
-            "Self Test": "Selbstest"
+            "Self Test": "Selbstest",
+            "Trigger Indicator": "Auslöseanzeige",
+            "Detection Interval": "Erkennungsintervall",
+            "Device Temperature": "Geräte Temperatur",
+            "Action Code": "Aktions Code",
+            "Action Transaction": "Aktion Transaktion"
         }
     }
 }
