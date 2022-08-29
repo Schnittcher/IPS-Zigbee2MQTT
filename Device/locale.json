@@ -190,7 +190,10 @@
             "Detection Interval": "Erkennungsintervall",
             "Device Temperature": "Geräte Temperatur",
             "Action Code": "Aktions Code",
-            "Action Transaction": "Aktion Transaktion"
+            "Action Transaction": "Aktion Transaktion",
+            "Duration of Attendance": "Anwesenheitszeit",
+            "Duration of Absence": "Abwesenheitszeit",
+            "LED State": "LED-Status"
         }
     }
 }
