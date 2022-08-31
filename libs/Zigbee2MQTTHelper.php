@@ -11,6 +11,7 @@ trait Zigbee2MQTTHelper
         switch ($Ident) {
             case 'Z2M_BacklightMode':
                 $Payload['backlight_mode'] = strval($Value);
+                // no break
             case 'Z2M_Brightness':
                 $Payload['brightness'] = strval($Value);
                 break;
@@ -331,15 +332,15 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('away_mode', $Payload)) {
                     switch ($Payload['away_mode']) {
-                    case 'ON':
-                        $this->SetValue('Z2M_AwayMode', true);
-                        break;
-                    case 'OFF':
-                        $this->SetValue('Z2M_AwayMode', false);
-                        break;
-                    default:
-                        $this->SendDebug('SetValue AwayMode', 'Invalid Value: ' . $Payload['away_mode'], 0);
-                        break;
+                        case 'ON':
+                            $this->SetValue('Z2M_AwayMode', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_AwayMode', false);
+                            break;
+                        default:
+                            $this->SendDebug('SetValue AwayMode', 'Invalid Value: ' . $Payload['away_mode'], 0);
+                            break;
                     }
                 }
 
@@ -676,9 +677,9 @@ trait Zigbee2MQTTHelper
                             $this->SetValue('Z2M_State', $Payload['state']);
                             break;
                         default:
-                        $this->SendDebug('State', 'Undefined State: ' . $Payload['state'], 0);
-                        break;
-                        }
+                            $this->SendDebug('State', 'Undefined State: ' . $Payload['state'], 0);
+                            break;
+                    }
                 }
 
                 if (array_key_exists('led_disabled_night', $Payload)) {
@@ -696,9 +697,9 @@ trait Zigbee2MQTTHelper
                             $this->SetValue('Z2M_StateRGB', false);
                             break;
                         default:
-                        $this->SendDebug('State RGB', 'Undefined State: ' . $Payload['state_rgb'], 0);
-                        break;
-                        }
+                            $this->SendDebug('State RGB', 'Undefined State: ' . $Payload['state_rgb'], 0);
+                            break;
+                    }
                 }
 
                 if (array_key_exists('state_white', $Payload)) {
@@ -710,9 +711,9 @@ trait Zigbee2MQTTHelper
                             $this->SetValue('Z2M_StateWhite', false);
                             break;
                         default:
-                        $this->SendDebug('State White', 'Undefined State: ' . $Payload['state_white'], 0);
-                        break;
-                        }
+                            $this->SendDebug('State White', 'Undefined State: ' . $Payload['state_white'], 0);
+                            break;
+                    }
                 }
 
                 if (array_key_exists('power_outage_memory', $Payload)) {
@@ -1067,7 +1068,6 @@ trait Zigbee2MQTTHelper
 
     protected function createVariableProfiles()
     {
-
         /**
          * if (!IPS_VariableProfileExists('Z2M.Sensitivity')) {
          * $Associations = [];
@@ -1256,7 +1256,6 @@ trait Zigbee2MQTTHelper
                     default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         break;
-
                 }
                 break;
             case 'enum':
@@ -1568,8 +1567,8 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         default:
-                        $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
-                        $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
+                            $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
+                            $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
                             return false;
                     }
                 }
@@ -1643,7 +1642,6 @@ trait Zigbee2MQTTHelper
                         break;
                     case 'boost_time':
                     case 'boost_timeset_countdown':
-                    case 'calibration_time':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ' . $this->Translate('Seconds'), 0, 0, 0);
                         }
@@ -1687,7 +1685,7 @@ trait Zigbee2MQTTHelper
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
                         }
-                        // No break. Add additional comment above this line if intentional
+                        // no break. Add additional comment above this line if intentional
                     case 'maximum_range':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -1732,7 +1730,7 @@ trait Zigbee2MQTTHelper
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
-                        // No break. Add additional comment above this line if intentional
+                        // no break. Add additional comment above this line if intentional
                     default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
@@ -1763,8 +1761,8 @@ trait Zigbee2MQTTHelper
                                 case 'binary':
                                     switch ($feature['property']) {
                                         case 'state':
-                                                $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
-                                                $this->EnableAction('Z2M_State');
+                                            $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
+                                            $this->EnableAction('Z2M_State');
                                             break;
                                         case 'state_l1':
                                             $this->RegisterVariableBoolean('Z2M_Statel1', $this->Translate('State 1'), '~Switch');
@@ -1811,25 +1809,25 @@ trait Zigbee2MQTTHelper
                                             $this->EnableAction('Z2M_state_right');
                                             break;
                                         default:
-                                        // Default Switch binary
-                                        $missedVariables['switch'][] = $feature;
-                                        break;
+                                            // Default Switch binary
+                                            $missedVariables['switch'][] = $feature;
+                                            break;
                                     }
                                     break; //Switch binaray break;
                                 case 'numeric':
                                     switch ($feature['property']) {
                                         default:
-                                        // Default Switch binary
-                                        $missedVariables['switch'][] = $feature;
-                                        break;
+                                            // Default Switch binary
+                                            $missedVariables['switch'][] = $feature;
+                                            break;
                                     }
                                     break; //Switch numeric break;
                                 case 'enum':
                                     switch ($feature['property']) {
                                         default:
-                                        // Default Switch enum
-                                        $missedVariables['switch'][] = $feature;
-                                        break;
+                                            // Default Switch enum
+                                            $missedVariables['switch'][] = $feature;
+                                            break;
                                     }
                                     break; //Switch enum break;
                             }
@@ -1916,8 +1914,8 @@ trait Zigbee2MQTTHelper
                                             }
                                             break;
                                         default:
-                                        // Default light numeric
-                                        $missedVariables['light'][] = $feature;
+                                            // Default light numeric
+                                            $missedVariables['light'][] = $feature;
                                     }
                                     break; //Light numeric break
                                 case 'composite':
@@ -1956,9 +1954,9 @@ trait Zigbee2MQTTHelper
                                             $this->EnableAction('Z2M_AwayMode');
                                             break;
                                         default:
-                                        // Default climate binary
-                                        $missedVariables['climate'][] = $feature;
-                                        break;
+                                            // Default climate binary
+                                            $missedVariables['climate'][] = $feature;
+                                            break;
                                     }
                                     break; //Climate binaray break;
                                 case 'numeric':
@@ -1988,9 +1986,9 @@ trait Zigbee2MQTTHelper
                                             $this->RegisterVariableInteger('Z2M_Pi_Heating_Demand', $this->Translate('Valve Position (Heating Demand)'), '~Intensity.100');
                                             break;
                                         default:
-                                        // Default Climate binary
-                                        $missedVariables['climate'][] = $feature;
-                                        break;
+                                            // Default Climate binary
+                                            $missedVariables['climate'][] = $feature;
+                                            break;
                                     }
                                     break; //Climate numeric break;
                                 case 'enum':
@@ -2017,9 +2015,9 @@ trait Zigbee2MQTTHelper
                                             }
                                             break;
                                         default:
-                                        // Default Climate enum
-                                        $missedVariables['climate'][] = $feature;
-                                        break;
+                                            // Default Climate enum
+                                            $missedVariables['climate'][] = $feature;
+                                            break;
                                     }
                                     break; //Climate enum break;
                             }
@@ -2043,25 +2041,25 @@ trait Zigbee2MQTTHelper
                                             }
                                             break;
                                         default:
-                                        // Default lock binary
-                                        $missedVariables['lock'][] = $feature;
-                                        break;
+                                            // Default lock binary
+                                            $missedVariables['lock'][] = $feature;
+                                            break;
                                     }
-                                break; //Lock binaray break;
+                                    break; //Lock binaray break;
                                 case 'numeric':
                                     switch ($feature['property']) {
                                         default:
-                                        // Default lock binary
-                                        $missedVariables['lock'][] = $feature;
-                                        break;
+                                            // Default lock binary
+                                            $missedVariables['lock'][] = $feature;
+                                            break;
                                     }
                                     break; //Lock numeric break;
                                 case 'enum':
                                     switch ($feature['property']) {
                                         default:
-                                        // Default lock enum
-                                        $missedVariables['lock'][] = $feature;
-                                        break;
+                                            // Default lock enum
+                                            $missedVariables['lock'][] = $feature;
+                                            break;
                                     }
                                     break; //Lock enum break;
                             }
@@ -2078,7 +2076,7 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'vibration':
                             $this->RegisterVariableBoolean('Z2M_Vibration', $this->Translate('Vibration'), '~Alert');
-                        break;
+                            break;
                         case 'occupancy':
                             $this->RegisterVariableBoolean('Z2M_Occupancy', $this->Translate('Occupancy'), '~Motion');
                             break;
@@ -2169,15 +2167,15 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'garage_door_contact':
                             $this->RegisterVariableBoolean('Z2M_GarageDoorContact', $this->Translate('Garage Door Contact'), '~Window.Reversed');
-                            // No break. Add additional comment above this line if intentional
+                            // no break. Add additional comment above this line if intentional
                         case 'trigger_indicator':
                             $this->RegisterVariableBoolean('Z2M_TriggerIndicator', $this->Translate('Trigger Indicator'), '~Switch');
                             $this->EnableAction('Z2M_TriggerIndicator');
                             break;
 
-                    default:
-                        $missedVariables[] = $expose;
-                        break;
+                        default:
+                            $missedVariables[] = $expose;
+                            break;
                     }
                     break; //binary break
                 case 'enum':
@@ -2188,14 +2186,14 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableString('Z2M_BacklightMode', $this->Translate('Backlight Mode'), $ProfileName);
                                 $this->EnableAction('Z2M_BacklightMode');
                             }
-                        break;
+                            break;
                         case 'effect':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_Effect', $this->Translate('Effect'), $ProfileName);
                                 $this->EnableAction('Z2M_Effect');
                             }
-                        break;
+                            break;
                         case 'action':
                             $this->RegisterVariableString('Z2M_Action', $this->Translate('Action'), '');
                             break;
@@ -2328,9 +2326,9 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         default:
-                        $missedVariables[] = $expose;
-                        break;
-                        }
+                            $missedVariables[] = $expose;
+                            break;
+                    }
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
@@ -2597,8 +2595,8 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         default:
-                        $missedVariables[] = $expose;
-                        break;
+                            $missedVariables[] = $expose;
+                            break;
                     }
                     break; //numeric break
                 case 'composite':
@@ -2612,11 +2610,11 @@ trait Zigbee2MQTTHelper
                                             $this->EnableAction('Z2M_Strobe');
                                             break;
                                         default:
-                                        // Default composite binary
-                                        $missedVariables['composite'][] = $feature;
-                                        break;
+                                            // Default composite binary
+                                            $missedVariables['composite'][] = $feature;
+                                            break;
                                     }
-                                break; //Composite binaray break;
+                                    break; //Composite binaray break;
                                 case 'numeric':
                                     switch ($feature['property']) {
                                         case 'strobe_duty_cycle':
@@ -2638,9 +2636,9 @@ trait Zigbee2MQTTHelper
                                             $this->EnableAction('Z2M_MotorSpeed');
                                             break;
                                         default:
-                                        // Default composite binary
-                                        $missedVariables['composite'][] = $feature;
-                                        break;
+                                            // Default composite binary
+                                            $missedVariables['composite'][] = $feature;
+                                            break;
                                     }
                                     break; //Composite numeric break;
                                 case 'enum':
@@ -2674,58 +2672,58 @@ trait Zigbee2MQTTHelper
                                             $this->EnableAction('Z2M_StrobeLevel');
                                             break;
                                         default:
-                                        // Default composite enum
-                                        $missedVariables['composite'][] = $feature;
-                                        break;
+                                            // Default composite enum
+                                            $missedVariables['composite'][] = $feature;
+                                            break;
                                     }
                                     break; //Composite enum break;
                             }
                         }
                     }
                     break; //Composite break
-                    case 'cover':
-                        if (array_key_exists('features', $expose)) {
-                            foreach ($expose['features'] as $key => $feature) {
-                                switch ($feature['type']) {
-                                    case 'binary':
-                                        switch ($feature['property']) {
-                                            default:
+                case 'cover':
+                    if (array_key_exists('features', $expose)) {
+                        foreach ($expose['features'] as $key => $feature) {
+                            switch ($feature['type']) {
+                                case 'binary':
+                                    switch ($feature['property']) {
+                                        default:
                                             // Default cover binary
                                             $missedVariables['cover'][] = $feature;
                                             break;
-                                        }
+                                    }
                                     break; //Cover binaray break;
-                                    case 'numeric':
-                                        switch ($feature['property']) {
-                                            case 'position':
-                                                $this->RegisterVariableInteger('Z2M_Position', $this->Translate('Position'), '~Intensity.100');
-                                                $this->EnableAction('Z2M_Position');
-                                                break;
-                                            default:
+                                case 'numeric':
+                                    switch ($feature['property']) {
+                                        case 'position':
+                                            $this->RegisterVariableInteger('Z2M_Position', $this->Translate('Position'), '~Intensity.100');
+                                            $this->EnableAction('Z2M_Position');
+                                            break;
+                                        default:
                                             // Default cover binary
                                             $missedVariables['cover'][] = $feature;
                                             break;
-                                        }
-                                        break; //Cover numeric break;
-                                    case 'enum':
-                                        switch ($feature['property']) {
-                                            case 'state':
-                                                $ProfileName = $this->registerVariableProfile($feature);
-                                                if ($ProfileName != false) {
-                                                    $this->RegisterVariableString('Z2M_State', $this->Translate('State'), $ProfileName);
-                                                }
-                                                $this->EnableAction('Z2M_State');
-                                                break;
-                                            default:
+                                    }
+                                    break; //Cover numeric break;
+                                case 'enum':
+                                    switch ($feature['property']) {
+                                        case 'state':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableString('Z2M_State', $this->Translate('State'), $ProfileName);
+                                            }
+                                            $this->EnableAction('Z2M_State');
+                                            break;
+                                        default:
                                             // Default cover enum
                                             $missedVariables['cover'][] = $feature;
                                             break;
-                                        }
-                                        break; //Cover enum break;
-                                }
+                                    }
+                                    break; //Cover enum break;
                             }
                         }
-                        break; //Cover break
+                    }
+                    break; //Cover break
                 default: // Expose Type default
                     break;
             }
