@@ -2171,12 +2171,11 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'garage_door_contact':
                             $this->RegisterVariableBoolean('Z2M_GarageDoorContact', $this->Translate('Garage Door Contact'), '~Window.Reversed');
-                            // no break. Add additional comment above this line if intentional
+                            break;
                         case 'trigger_indicator':
                             $this->RegisterVariableBoolean('Z2M_TriggerIndicator', $this->Translate('Trigger Indicator'), '~Switch');
                             $this->EnableAction('Z2M_TriggerIndicator');
-                            break;
-
+                            // no break. Add additional comment above this line if intentional
                     default:
                         $missedVariables[] = $expose;
                         break;
