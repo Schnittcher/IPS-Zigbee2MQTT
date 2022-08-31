@@ -190,7 +190,8 @@
             "Detection Interval": "Erkennungsintervall",
             "Device Temperature": "Geräte Temperatur",
             "Action Code": "Aktions Code",
-            "Action Transaction": "Aktion Transaktion"
+            "Action Transaction": "Aktion Transaktion",
+            "Backlight Mode": "Hintergrundbeleuchtung"
         }
     }
 }
