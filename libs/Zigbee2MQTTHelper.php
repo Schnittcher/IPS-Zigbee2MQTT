@@ -1736,7 +1736,7 @@ trait Zigbee2MQTTHelper
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
                         break;
                 }
-                break;
+                // no break. Add additional comment above this line in intentional
             default:
                 # code...
                 break;
