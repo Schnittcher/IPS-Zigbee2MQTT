@@ -2077,7 +2077,7 @@ trait Zigbee2MQTTHelper
                         case 'led_state':
                                 $this->RegisterVariableBoolean('Z2M_LedState', $this->Translate('LED State'), '~Switch');
                                 $this->EnableAction('Z2M_LedState');
-                            break;    
+                            break;
                         case 'vibration':
                             $this->RegisterVariableBoolean('Z2M_Vibration', $this->Translate('Vibration'), '~Alert');
                         break;
