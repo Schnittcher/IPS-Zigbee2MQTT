@@ -1575,7 +1575,7 @@ trait Zigbee2MQTTHelper
             case 'numeric':
                 switch ($expose['property']) {
                     case 'duration_of_absence':
-                    Case 'duration_of_attendance':
+                    case 'duration_of_attendance':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0);
                         }
@@ -1691,7 +1691,7 @@ trait Zigbee2MQTTHelper
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
                         }
-                        // No break. Add additional comment above this line if intentional
+                        // no break. Add additional comment above this line if intentional
                     case 'maximum_range':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -1730,7 +1730,7 @@ trait Zigbee2MQTTHelper
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
                         }
-                        // No break. Add additional comment above this line if intentional
+                        // no break. Add additional comment above this line if intentional
                     default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
@@ -2171,7 +2171,7 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'garage_door_contact':
                             $this->RegisterVariableBoolean('Z2M_GarageDoorContact', $this->Translate('Garage Door Contact'), '~Window.Reversed');
-                            // No break. Add additional comment above this line if intentional
+                            // no break. Add additional comment above this line if intentional
                         case 'trigger_indicator':
                             $this->RegisterVariableBoolean('Z2M_TriggerIndicator', $this->Translate('Trigger Indicator'), '~Switch');
                             $this->EnableAction('Z2M_TriggerIndicator');
