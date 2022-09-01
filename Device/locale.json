@@ -190,7 +190,12 @@
             "Detection Interval": "Erkennungsintervall",
             "Device Temperature": "Geräte Temperatur",
             "Action Code": "Aktions Code",
-            "Action Transaction": "Aktion Transaktion"
+            "Action Transaction": "Aktion Transaktion",
+            "Action Color Temperature": "Aktion Farbtemperatur",
+            "Action Group": "Aktionsgruppe",
+            "Action Transition Time": "Aktion Übergangszeit",
+            "Action Step Size": "Aktion Schrittweite",
+            "Action Rate": "Aktionsrate"
         }
     }
 }
