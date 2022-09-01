@@ -11,6 +11,20 @@ trait Zigbee2MQTTHelper
         switch ($Ident) {
             case 'Z2M_LedState':
                 $Payload['led_state'] = strval($Value);
+            case 'Z2M_ActionRate':
+                $Payload['action_rate'] = strval($Value);
+                break;
+            case 'Z2M_ActionStepSize':
+                $Payload['action_step_size'] = strval($Value);
+                break;
+            case 'Z2M_ActionTransTime':
+                $Payload['action_transition_time'] = strval($Value);
+                break;
+            case 'Z2M_ActionGroup':
+                $Payload['action_group'] = strval($Value);
+                break;
+            case 'Z2M_ActionColorTemp':
+                $Payload['action_color_temperature'] = strval($Value);
                 break;
             case 'Z2M_Brightness':
                 $Payload['brightness'] = strval($Value);
@@ -314,6 +328,20 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('duration_of_attendance', $Payload)) {
                     $this->SetValue('Z2M_Attendance', $Payload['duration_of_attendance']);
+                if (array_key_exists('action_rate', $Payload)) {
+                    $this->SetValue('Z2M_ActionRate', $Payload['action_rate']);
+                }
+                if (array_key_exists('action_step_size', $Payload)) {
+                    $this->SetValue('Z2M_ActionStepSize', $Payload['action_step_size']);
+                }
+                if (array_key_exists('action_transition_time', $Payload)) {
+                    $this->SetValue('Z2M_ActionTransTime', $Payload['action_transition_time']);
+                }
+                if (array_key_exists('action_group', $Payload)) {
+                    $this->SetValue('Z2M_ActionGroup', $Payload['action_group']);
+                }
+                if (array_key_exists('action_color_temperature', $Payload)) {
+                    $this->SetValue('Z2M_ActionColorTemp', $Payload['action_color_temperature']);
                 }
                 if (array_key_exists('temperature', $Payload)) {
                     $this->SetValue('Z2M_Temperature', $Payload['temperature']);
@@ -1590,6 +1618,7 @@ trait Zigbee2MQTTHelper
                     case 'color_temp':
                     case 'color_temp_rgb':
                     case 'color_temp__startup_rgb':
+                    case 'action_color_temperature':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -1665,6 +1694,7 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'action_duration':
+                    case 'action_transition_time':
                         $ProfileName .= '_' . $expose['unit'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
@@ -2326,6 +2356,33 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'action_rate':
+                            $this->RegisterVariableInteger('Z2M_ActionRate', $this->Translate('Action Rate'), );
+                            break;
+                        case 'action_step_size':
+                            $Profilename = $this->registerVariableProfile($expose);
+                            if ($Profilename != false) {
+                                $this->RegisterVariableInteger('Z2M_ActionStepSize', $this->Translate('Action Step Size'), $ProfileName);
+                            }
+                            break;
+                        case 'action_transition_time':
+                            $Profilename = $this->registerVariableProfile($expose);
+                            if ($Profilename != false) {
+                                $this->RegisterVariableInteger('Z2M_ActionTransTime', $this->Translate('Action Transition Time'), $ProfileName);
+                            }
+                            break;
+                        case 'action_group':
+                            $Profilename = $this->registerVariableProfile($expose);
+                            if ($Profilename != false) {
+                                $this->RegisterVariableInteger('Z2M_ActionGroup', $this->Translate('Action Group'), $ProfileName);
+                            }
+                            break;
+                        case 'action_color_temperature':
+                            $Profilename = $this->registerVariableProfile($expose);
+                            if ($Profilename != false) {
+                                $this->RegisterVariableInteger('Z2M_ActionColorTemp', $this->Translate('Action Color Temperature'), $ProfileName);
+                            }
+                            break;
                         case 'linkquality':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
