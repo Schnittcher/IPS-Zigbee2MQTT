@@ -9,8 +9,12 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_BacklightMode':
+                $Payload['backlight_mode'] = strval($Value);
+                break;
             case 'Z2M_LedState':
                 $Payload['led_state'] = strval($Value);
+                break;
             case 'Z2M_ActionRate':
                 $Payload['action_rate'] = strval($Value);
                 break;
@@ -320,6 +324,8 @@ trait Zigbee2MQTTHelper
 
             $Payload = json_decode($Buffer['Payload'], true);
             if (is_array($Payload)) {
+                if (array_key_exists('backlight_mode', $Payload)) {
+                    $this->SetValue('Z2M_BacklightMode', $Payload['backlight_mode']);
                 if (array_key_exists('led_state', $Payload)) {
                     $this->SetValue('Z2M_LedState', $Payload['led_state']);
                 }
@@ -1300,6 +1306,15 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.backlight_mode.9e0e16e4':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Light', '', '', [
+                                    ['low', $this->Translate('Low'), '', 0xFFA500],
+                                    ['medium', $this->Translate('Medium'), '', 0xFF0000],
+                                    ['high', $this->Translate('High'), '', 0x000000]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.system_mode.3aabe70a':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -1674,7 +1689,6 @@ trait Zigbee2MQTTHelper
                         break;
                     case 'boost_time':
                     case 'boost_timeset_countdown':
-                    case 'calibration_time':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ' . $this->Translate('Seconds'), 0, 0, 0);
                         }
@@ -1758,7 +1772,13 @@ trait Zigbee2MQTTHelper
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
                         }
-                        // no break. Add additional comment above this line if intentional
+                        break;
+                    case 'calibration_time':
+                        $ProfileName .= '_' . $expose['unit'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
+                        }
+                        break;
                     default:
                         $this->SendDebug(__FUNCTION__ . ':: Variableprofile missing', $ProfileName, 0);
                         $this->SendDebug(__FUNCTION__ . ':: ProfileName Values', json_encode($expose['values']), 0);
@@ -2203,7 +2223,7 @@ trait Zigbee2MQTTHelper
                         case 'trigger_indicator':
                             $this->RegisterVariableBoolean('Z2M_TriggerIndicator', $this->Translate('Trigger Indicator'), '~Switch');
                             $this->EnableAction('Z2M_TriggerIndicator');
-                            // no break. Add additional comment above this line if intentional
+                            break;
                         default:
                             $missedVariables[] = $expose;
                             break;
@@ -2211,6 +2231,13 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'backlight_mode':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_BacklightMode', $this->Translate('Backlight Mode'), $ProfileName);
+                                $this->EnableAction('Z2M_BacklightMode');
+                            }
+                            break;
                         case 'effect':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -2559,7 +2586,7 @@ trait Zigbee2MQTTHelper
                         case 'calibration_time':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('Z2M_CalibrationTime', $this->Translate('Calibration Time'), $ProfileName);
+                                $this->RegisterVariableFloat('Z2M_CalibrationTime', $this->Translate('Calibration Time'), $ProfileName);
                             }
                             break;
                         case 'action_angle':
