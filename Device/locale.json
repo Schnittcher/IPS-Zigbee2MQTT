@@ -191,7 +191,15 @@
             "Device Temperature": "Geräte Temperatur",
             "Action Code": "Aktions Code",
             "Action Transaction": "Aktion Transaktion",
-            "Backlight Mode": "Hintergrundbeleuchtung"
+            "Backlight Mode": "Hintergrundbeleuchtung",
+            "Duration of Attendance": "Anwesenheitszeit",
+            "Duration of Absence": "Abwesenheitszeit",
+            "LED State": "LED-Status",
+            "Action Color Temperature": "Aktion Farbtemperatur",
+            "Action Group": "Aktionsgruppe",
+            "Action Transition Time": "Aktion Übergangszeit",
+            "Action Step Size": "Aktion Schrittweite",
+            "Action Rate": "Aktionsrate"
         }
     }
 }
