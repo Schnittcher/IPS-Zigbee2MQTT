@@ -1904,6 +1904,12 @@ trait Zigbee2MQTTHelper
                                                 $this->EnableAction('Z2M_StateRGB');
                                             }
                                             break;
+                                        case 'state_white':
+                                            if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
+                                                $this->RegisterVariableBoolean('Z2M_StateWhite', $this->Translate('State White'), '~Switch');
+                                                $this->EnableAction('Z2M_StateWhite');
+                                            }
+                                            break;
                                         default:
                                             // Default light binary
                                             $missedVariables['light'][] = $feature;
@@ -1924,6 +1930,12 @@ trait Zigbee2MQTTHelper
                                             if ($ProfileName != false) {
                                                 $this->RegisterVariableInteger('Z2M_BrightnessRGB', $this->Translate('Brightness RGB'), $ProfileName);
                                                 $this->EnableAction('Z2M_BrightnessRGB');
+                                            }
+                                        case 'brightness_white':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_BrightnessWhite', $this->Translate('Brightness White'), $ProfileName);
+                                                $this->EnableAction('Z2M_BrightnessWhite');
                                             }
                                             break;
                                         case 'color_temp':
@@ -2083,12 +2095,6 @@ trait Zigbee2MQTTHelper
                                         case 'child_lock':
                                             $this->RegisterVariableBoolean('Z2M_ChildLock', $this->Translate('Child Lock'), '~Switch');
                                             $this->EnableAction('Z2M_ChildLock');
-                                            break;
-                                        case 'state_white':
-                                            if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
-                                                $this->RegisterVariableBoolean('Z2M_StateWhite', $this->Translate('State White'), '~Switch');
-                                                $this->EnableAction('Z2M_StateWhite');
-                                            }
                                             break;
                                         default:
                                             // Default lock binary
