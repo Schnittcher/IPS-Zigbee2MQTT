@@ -1,0 +1,45 @@
+{
+    "id": "{8F75ACEC-3265-4D9D-BF2E-997539B36B37}",
+    "caption": "Brightness with Transition",
+    "form": [
+        "$id = IPS_GetObjectIDByIdent('Z2M_Brightness', $_IPS['TARGET']);",
+        "return [",
+        "   [",
+        "       'type' => 'SelectValue',",
+        "       'name' => 'Brightness',",
+        "       'caption' => 'Brightness Variable',",
+        "       'variableID' => $id",
+        "   ],",
+        "   [",
+        "       'type' => 'NumberSpinner',",
+        "       'name' => 'TransitionTime',",
+        "       'caption' => 'Transition Time',",
+        "       'suffix' => 'seconds'",
+        "   ]",
+        "];"
+    ],
+    "priority": 1,
+    "action": [
+        "Z2M_Z2MSet($_IPS['TARGET'], ['brightness' => $_IPS['Brightness'], 'transition' => $_IPS['TransitionTime']])"
+    ],
+    "restrictions": {
+        "objectType": [
+            1
+        ],
+        "includeEnvironments": [
+            "Default",
+            "TestCommands"
+        ],
+        "hasIdent": [
+            "Z2M_Brightness"
+        ]
+    },
+    "locale": {
+        "de": {
+            "Brightness with Transition": "Helligkeit mit Übergang",
+            "Transition Time": "Übergangszeit",
+            "seconds": "Sekunden",
+            "Brightness Variable": "Helligkeitsvariable"
+        }
+    }
+}
