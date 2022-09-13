@@ -1963,7 +1963,7 @@ trait Zigbee2MQTTHelper
                                                 $this->RegisterVariableInteger('Z2M_BrightnessRGB', $this->Translate('Brightness RGB'), $ProfileName);
                                                 $this->EnableAction('Z2M_BrightnessRGB');
                                             }
-                                            // No break. Add additional comment above this line if intentional
+                                            break;
                                         case 'brightness_white':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
@@ -2309,7 +2309,7 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableString('Z2M_PowerOnBehavior', $this->Translate('Power on behavior'), $ProfileName);
                                 $this->EnableAction('Z2M_PowerOnBehavior');
                             }
-                            // No break. Add additional comment above this line if intentional
+                            break;
                         case 'power_on_behaviorl1':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
