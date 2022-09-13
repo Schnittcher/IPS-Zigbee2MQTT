@@ -34,6 +34,7 @@
             "Comfort Temperature": "Komfort Temperatur",
             "Eco Temperature": "Eco Temperatur",
             "Heating": "Heizt",
+            "Heat": "Heizen",
             "Current Heating Setpoint": "Aktueller Heizsollwert",
             "Current Heating Setpoint Auto": "Aktueller Heizsollwert auto",
             "Occupied Heating Setpoint": "Besetzter Heizungssollwert",
@@ -199,7 +200,9 @@
             "Action Group": "Aktionsgruppe",
             "Action Transition Time": "Aktion Übergangszeit",
             "Action Step Size": "Aktion Schrittweite",
-            "Action Rate": "Aktionsrate"
+            "Action Rate": "Aktionsrate",
+            "Cool": "Kühlen",
+            "Program": "Programm"
         }
     }
 }

@@ -1350,6 +1350,14 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.system_mode.e9feae72':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['heat', $this->Translate('Heat'), '', 0xFF0000],
+                                    ['off', $this->Translate('Off'), '', 0x000000]
+                                ]);
+                            }
+                            break;
                         case'Z2M.preset.9fca219c':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -1955,6 +1963,7 @@ trait Zigbee2MQTTHelper
                                                 $this->RegisterVariableInteger('Z2M_BrightnessRGB', $this->Translate('Brightness RGB'), $ProfileName);
                                                 $this->EnableAction('Z2M_BrightnessRGB');
                                             }
+                                            // No break. Add additional comment above this line if intentional
                                         case 'brightness_white':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
@@ -2300,6 +2309,7 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableString('Z2M_PowerOnBehavior', $this->Translate('Power on behavior'), $ProfileName);
                                 $this->EnableAction('Z2M_PowerOnBehavior');
                             }
+                            // No break. Add additional comment above this line if intentional
                         case 'power_on_behaviorl1':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
