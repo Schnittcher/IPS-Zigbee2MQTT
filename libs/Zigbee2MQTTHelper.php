@@ -58,6 +58,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_RunningState':
                 $Payload['running_state'] = strval($Value);
                 break;
+            case 'Z2M_Sensor':
+                $Payload['sensor'] = strval($Value);
+                break;
             case 'Z2M_StateRGB':
                 $Payload['state_rgb'] = strval($this->OnOff($Value));
                 break;
@@ -255,6 +258,12 @@ trait Zigbee2MQTTHelper
             case 'Z2M_MaximumRange':
                 $Payload['maximum_range'] = strval($Value);
                 break;
+            case 'Z2M_DeadzoneTemperature':
+                $Payload['deadzone_temperature'] = strval($Value);
+                break;
+            case 'Z2M_MaxTemperatureLimit':
+                $Payload['max_temperature_limit'] = strval($Value);
+                break;
             case 'Z2M_DetectionDelay':
                 $Payload['detection_delay'] = strval($Value);
                 break;
@@ -437,7 +446,9 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('running_state', $Payload)) {
                     $this->SetValue('Z2M_RunningState', $Payload['running_state']);
                 }
-
+                if (array_key_exists('sensor', $Payload)) {
+                    $this->SetValue('Z2M_Sensor', $Payload['sensor']);
+                }
                 if (array_key_exists('linkquality', $Payload)) {
                     $this->SetValue('Z2M_Linkquality', $Payload['linkquality']);
                 }
@@ -1041,6 +1052,12 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('maximum_range', $Payload)) {
                     $this->SetValue('Z2M_MaximumRange', $Payload['maximum_range']);
                 }
+                if (array_key_exists('deadzone_temperature', $Payload)) {
+                    $this->SetValue('Z2M_DeadzoneTemperature', $Payload['deadzone_temperature']);
+                }
+                if (array_key_exists('max_temperature_limit', $Payload)) {
+                    $this->SetValue('Z2M_MaxTemperatureLimit', $Payload['max_temperature_limit']);
+                }
                 if (array_key_exists('detection_delay', $Payload)) {
                     $this->SetValue('Z2M_DetectionDelay', $Payload['detection_delay']);
                 }
@@ -1394,6 +1411,15 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['heat', $this->Translate('Heat'), '', 0xFF0000],
                                     ['idle', $this->Translate('Idle'), '', 0x000000]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.sensor.489ea162':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['IN', $this->Translate('IN'), '', 0xFF0000],
+                                    ['AL', $this->Translate('AL'), '', 0x00FF00],
+                                    ['OU', $this->Translate('OU'), '', 0x0000FF]
                                 ]);
                             }
                             break;
@@ -1775,6 +1801,20 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
                         }
                         break;
+                    case 'deadzone_temperature':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Temperature', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
+                        }
+                        break;
+                    case 'max_temperature_limit':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Temperature', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
+                        }
+                        break;
                     case 'detection_delay':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -2107,6 +2147,13 @@ trait Zigbee2MQTTHelper
                                             if ($ProfileName != false) {
                                                 $this->RegisterVariableString('Z2M_RunningState', $this->Translate('Running State'), $ProfileName);
                                                 $this->EnableAction('Z2M_RunningState');
+                                            }
+                                            break;
+                                        case 'sensor':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableString('Z2M_Sensor', $this->Translate('Sensor'), $ProfileName);
+                                                $this->EnableAction('Z2M_Sensor');
                                             }
                                             break;
                                         default:
@@ -2716,6 +2763,20 @@ trait Zigbee2MQTTHelper
                                 $this->EnableAction('Z2M_MaximumRange');
                             }
                             break;
+                        case 'deadzone_temperature':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_DeadzoneTemperature', $this->Translate('Deadzone Temperature'), $ProfileName);
+                                $this->EnableAction('Z2M_DeadzoneTemperature');
+                            }
+                            break; 
+                        case 'max_temperature_limit':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_MaxTemperatureLimit', $this->Translate('Max Temperature Limit'), $ProfileName);
+                                $this->EnableAction('Z2M_MaxTemperatureLimit');
+                            }
+                            break;                            
                         case 'detection_delay':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {

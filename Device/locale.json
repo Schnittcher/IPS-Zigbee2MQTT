@@ -202,7 +202,12 @@
             "Action Step Size": "Aktion Schrittweite",
             "Action Rate": "Aktionsrate",
             "Cool": "Kühlen",
-            "Program": "Programm"
+            "Program": "Programm",
+            "Deadzone Temperature": "Totzonentemperatur",
+            "Max Temperature Limit": "Maximale Temperaturgrenze",
+            "IN": "IN",
+            "AL": "AL",
+            "OU": "OU"
         }
     }
 }
