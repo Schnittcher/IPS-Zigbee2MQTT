@@ -2769,14 +2769,14 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableFloat('Z2M_DeadzoneTemperature', $this->Translate('Deadzone Temperature'), $ProfileName);
                                 $this->EnableAction('Z2M_DeadzoneTemperature');
                             }
-                            break; 
+                            break;
                         case 'max_temperature_limit':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_MaxTemperatureLimit', $this->Translate('Max Temperature Limit'), $ProfileName);
                                 $this->EnableAction('Z2M_MaxTemperatureLimit');
                             }
-                            break;                            
+                            break;
                         case 'detection_delay':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
