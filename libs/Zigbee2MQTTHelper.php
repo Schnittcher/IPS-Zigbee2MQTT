@@ -1394,6 +1394,15 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case'Z2M.preset.400bed67':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['hold', $this->Translate('Hold'), '', 0xFFA500],
+                                    ['programm', $this->Translate('Program'), '', 0xFFa500],
+
+                                ]);
+                            }
+                            break;
                         case'Z2M.preset.1d99b46a':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -1414,11 +1423,20 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.sensor.489ea162':
+                        case 'Z2M.running_state.95941f91':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
-                                    ['IN', $this->Translate('IN'), '', 0xFF0000],
-                                    ['AL', $this->Translate('AL'), '', 0x00FF00],
+                                    ['cool', $this->Translate('Cool'), '', 0x0000FF],
+                                    ['heat', $this->Translate('Heat'), '', 0xFF0000],
+                                    ['idle', $this->Translate('Idle'), '', 0x000000]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.sensor.183d8cee':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['AL', $this->Translate('AL'), '', 0xFF0000],
+                                    ['IN', $this->Translate('IN'), '', 0x00FF00],
                                     ['OU', $this->Translate('OU'), '', 0x0000FF]
                                 ]);
                             }
