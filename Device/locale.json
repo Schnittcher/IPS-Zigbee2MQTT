@@ -207,7 +207,12 @@
             "Max Temperature Limit": "Maximale Temperaturgrenze",
             "IN": "IN",
             "AL": "AL",
-            "OU": "OU"
+            "OU": "OU",
+            "Humidity Alarm": "Alarm Luftfeuchtigkeit",
+            "Temperature Alarm": "Alarm Temperatur",
+            "Melody": "Melodie",
+            "Volume": "Lautstärke",
+            "Power Type": "Stromquelle"
         }
     }
 }
