@@ -207,7 +207,17 @@
             "Max Temperature Limit": "Maximale Temperaturgrenze",
             "IN": "IN",
             "AL": "AL",
-            "OU": "OU"
+            "OU": "OU",
+            "Humidity Min": "Luftfeuchtigkeitsgrenze min",
+            "Humidity Max": "Luftfeuchtigkeitgrenze max",
+            "Temperature Max": "Temperaturgrenze max",
+            "Temperature Min": "Temperaturgrenze min",
+            "Humidity Alarm": "Luftfeuchtigkeits Alarm",
+            "Temperature Alarm": "Temperatur Alarm",
+            "Melody": "Signalton",
+            "Power Type": "Stromquelle",
+            "Volume": "Lautstärke",
+            "Alarm Duration": "Alarm Dauer"
         }
     }
 }
