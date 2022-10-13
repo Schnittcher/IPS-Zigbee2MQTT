@@ -377,25 +377,25 @@ trait Zigbee2MQTTHelper
             if (is_array($Payload)) {
                 if (array_key_exists('temperature_alarm', $Payload)) {
                     $this->SetValue('Z2M_TemperatureAlarm', $Payload['temperature_alarm']);
-                }    
+                }
                 if (array_key_exists('humidity_alarm', $Payload)) {
                     $this->SetValue('Z2M_HumidityAlarm', $Payload['humidity_alarm']);
-                }  
+                }
                 if (array_key_exists('alarm', $Payload)) {
                     $this->SetValue('Z2M_Alarm', $Payload['alarm']);
-                }  
+                }
                 if (array_key_exists('melody', $Payload)) {
                     $this->SetValue('Z2M_Melody', $Payload['melody']);
-                }  
+                }
                 if (array_key_exists('power_type', $Payload)) {
                     $this->SetValue('Z2M_PowerType', $Payload['power_type']);
-                } 
+                }
                 if (array_key_exists('volume', $Payload)) {
                     $this->SetValue('Z2M_Volume', $Payload['volume']);
-                } 
+                }
                 if (array_key_exists('humidity_max', $Payload)) {
                     $this->SetValue('Z2M_HumidityMax', $Payload['humidity_max']);
-                } 
+                }
                 if (array_key_exists('humidity_min', $Payload)) {
                     $this->SetValue('Z2M_HumidityMin', $Payload['humidity_min']);
                 }
@@ -1803,7 +1803,7 @@ trait Zigbee2MQTTHelper
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' S', $expose['value_min'], $expose['value_max'], 1);
                         }
-                        break;    
+                        break;
                     case 'humidity_max':
                     case 'humidity_min':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
@@ -1817,7 +1817,7 @@ trait Zigbee2MQTTHelper
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Temperature', '', ' °C', $expose['value_min'], $expose['value_max'], 1);
                         }
-                        break;    
+                        break;
                     case 'duration_of_absence':
                     case 'duration_of_attendance':
                         if (!IPS_VariableProfileExists($ProfileName)) {
