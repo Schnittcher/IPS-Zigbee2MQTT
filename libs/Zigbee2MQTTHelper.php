@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'power_outage_count':
+                $Payload['power_outage_count'] = strval($Value);
+                break;
             case 'Z2M_SwitchType':
                 $Payload['switch_type'] = strval($Value);
                 break;
@@ -381,6 +384,9 @@ trait Zigbee2MQTTHelper
 
             $Payload = json_decode($Buffer['Payload'], true);
             if (is_array($Payload)) {
+                if (array_key_exists('power_outage_count', $Payload)) {
+                    $this->SetValue('Z2M_PowerOutageCount', $Payload['power_outage_count']);
+                }
                 if (array_key_exists('switch_type', $Payload)) {
                     $this->SetValue('Z2M_SwitchType', $Payload['switch_type']);
                 }
@@ -1837,6 +1843,11 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'power_outage_count':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ', 0, 0, 0);
+                        }
+                        break;
                     case 'duration':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -2727,6 +2738,12 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'power_outage_count':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_PowerOutageCount', $this->Translate('Power Outage Count'), $ProfileName);
+                            }
+                            break;
                         case 'duration':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
