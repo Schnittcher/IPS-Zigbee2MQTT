@@ -146,16 +146,16 @@ trait Zigbee2MQTTHelper
                 $Payload['power_on_behavior'] = strval($Value);
                 break;
             case'Z2M_PowerOnBehaviorL1':
-                $Payload['power_on_behaviorl1'] = strval($Value);
+                $Payload['power_on_behavior_l1'] = strval($Value);
                 break;
             case'Z2M_PowerOnBehaviorL2':
-                $Payload['power_on_behaviorl2'] = strval($Value);
+                $Payload['power_on_behavior_l2'] = strval($Value);
                 break;
             case'Z2M_PowerOnBehaviorL3':
-                $Payload['power_on_behaviorl3'] = strval($Value);
+                $Payload['power_on_behavior_l3'] = strval($Value);
                 break;
             case'Z2M_PowerOnBehaviorL4':
-                $Payload['power_on_behaviorl4'] = strval($Value);
+                $Payload['power_on_behavior_l4'] = strval($Value);
                 break;
             case'Z2M_AutoOff':
                 $Payload['auto_off'] = strval($this->OnOff($Value));
@@ -860,17 +860,17 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('power_on_behavior', $Payload)) {
                     $this->SetValue('Z2M_PowerOnBehavior', $Payload['power_on_behavior']);
                 }
-                if (array_key_exists('power_on_behaviorl1', $Payload)) {
-                    $this->SetValue('Z2M_PowerOnBehaviorL1', $Payload['power_on_behaviorl1']);
+                if (array_key_exists('power_on_behavior_l1', $Payload)) {
+                    $this->SetValue('Z2M_PowerOnBehaviorL1', $Payload['power_on_behavior_l1']);
                 }
-                if (array_key_exists('power_on_behaviorl2', $Payload)) {
-                    $this->SetValue('Z2M_PowerOnBehaviorL2', $Payload['power_on_behaviorl2']);
+                if (array_key_exists('power_on_behavior_l2', $Payload)) {
+                    $this->SetValue('Z2M_PowerOnBehaviorL2', $Payload['power_on_behavior_l2']);
                 }
-                if (array_key_exists('power_on_behaviorl3', $Payload)) {
-                    $this->SetValue('Z2M_PowerOnBehaviorL3', $Payload['power_on_behaviorl3']);
+                if (array_key_exists('power_on_behavior_l3', $Payload)) {
+                    $this->SetValue('Z2M_PowerOnBehaviorL3', $Payload['power_on_behavior_l3']);
                 }
-                if (array_key_exists('power_on_behaviorl4', $Payload)) {
-                    $this->SetValue('Z2M_PowerOnBehaviorL4', $Payload['power_on_behaviorl4']);
+                if (array_key_exists('power_on_behavior_l4', $Payload)) {
+                    $this->SetValue('Z2M_PowerOnBehaviorL4', $Payload['power_on_behavior_l4']);
                 }
 
                 if (array_key_exists('state_l1', $Payload)) {
@@ -2585,28 +2585,28 @@ trait Zigbee2MQTTHelper
                                 $this->EnableAction('Z2M_PowerOnBehavior');
                             }
                             break;
-                        case 'power_on_behaviorl1':
+                        case 'power_on_behavior_l1':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_PowerOnBehaviorL1', $this->Translate('Power on behavior L1'), $ProfileName);
                                 $this->EnableAction('Z2M_PowerOnBehaviorL1');
                             }
                             break;
-                        case 'power_on_behaviorl2':
+                        case 'power_on_behavior_l2':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_PowerOnBehaviorL2', $this->Translate('Power on behavior L2'), $ProfileName);
                                 $this->EnableAction('Z2M_PowerOnBehaviorL2');
                             }
                             break;
-                        case 'power_on_behaviorl3':
+                        case 'power_on_behavior_l3':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_PowerOnBehaviorL3', $this->Translate('Power on behavior L3'), $ProfileName);
                                 $this->EnableAction('Z2M_PowerOnBehaviorL3');
                             }
                             break;
-                        case 'power_on_behaviorl4':
+                        case 'power_on_behavior_l4':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_PowerOnBehaviorL4', $this->Translate('Power on behavior L4'), $ProfileName);

@@ -224,7 +224,12 @@
             "On": "An",
             "Switch Type": "Schalter Modus",
             "Momentary": "Moment",
-            "Toggle": "Wechsel"
+            "Toggle": "Wechsel",
+            "Forward": "Vorwärts",
+            "Power on behavior L1": "Einschaltverhalten nach Stromausfall L1",
+            "Power on behavior L2": "Einschaltverhalten nach Stromausfall L2",
+            "Power on behavior L3": "Einschaltverhalten nach Stromausfall L3",
+            "Power on behavior L4": "Einschaltverhalten nach Stromausfall L4"
         }
     }
 }
