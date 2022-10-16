@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_SwitchType':
+                $Payload['switch_type'] = strval($Value);
+                break;
             case 'Z2M_IndicatorMode':
                 $Payload['indicator_mode'] = strval($Value);
                 break;
@@ -378,6 +381,9 @@ trait Zigbee2MQTTHelper
 
             $Payload = json_decode($Buffer['Payload'], true);
             if (is_array($Payload)) {
+                if (array_key_exists('switch_type', $Payload)) {
+                    $this->SetValue('Z2M_SwitchType', $Payload['switch_type']);
+                }
                 if (array_key_exists('indicator_mode', $Payload)) {
                     $this->SetValue('Z2M_IndicatorMode', $Payload['indicator_mode']);
                 }
@@ -1415,6 +1421,24 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.switch_type.7c047117':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['toggle', $this->Translate('Toggle'), '', 0x00FF00],
+                                    ['state', $this->Translate('State'), '', 0xFFFF00],
+                                    ['momentary', $this->Translate('Momentary'), '', 0xFF9900],
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.indicator_mode.c2a87bbe':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['off', $this->Translate('Off'), '', 0x00FF00],
+                                    ['off_on', $this->Translate('Off/On'), '', 0xFFFF00],
+                                    ['on_off', $this->Translate('On/Off'), '', 0xFF9900],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.indicator_mode.593418f7':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -2489,6 +2513,13 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'switch_type':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_SwitchType', $this->Translate('Switch Type'), $ProfileName);
+                                $this->EnableAction('Z2M_SwitchType');
+                            }
+                            break;
                         case 'indicator_mode':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {

@@ -221,7 +221,10 @@
             "Indicator Mode": "Anzeigemodus",
             "On/Off": "An/Aus",
             "Off/On": "Aus/An",
-            "On": "An"
+            "On": "An",
+            "Switch Type": "Schalter Modus",
+            "Momentary": "Moment",
+            "Toggle": "Wechsel"
         }
     }
 }
