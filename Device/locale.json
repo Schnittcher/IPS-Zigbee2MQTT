@@ -217,7 +217,11 @@
             "Melody": "Signalton",
             "Power Type": "Stromquelle",
             "Volume": "Lautstärke",
-            "Alarm Duration": "Alarm Dauer"
+            "Alarm Duration": "Alarm Dauer",
+            "Indicator Mode": "Anzeigemodus",
+            "On/Off": "An/Aus",
+            "Off/On": "Aus/An",
+            "On": "An"
         }
     }
 }

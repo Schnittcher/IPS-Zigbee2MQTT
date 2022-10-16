@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_IndicatorMode':
+                $Payload['indicator_mode'] = strval($Value);
+                break;
             case 'Z2M_TemperatureAlarm':
                 $Payload['temperature_alarm'] = strval($Value);
                 break;
@@ -375,6 +378,9 @@ trait Zigbee2MQTTHelper
 
             $Payload = json_decode($Buffer['Payload'], true);
             if (is_array($Payload)) {
+                if (array_key_exists('indicator_mode', $Payload)) {
+                    $this->SetValue('Z2M_IndicatorMode', $Payload['indicator_mode']);
+                }
                 if (array_key_exists('temperature_alarm', $Payload)) {
                     $this->SetValue('Z2M_TemperatureAlarm', $Payload['temperature_alarm']);
                 }
@@ -1409,6 +1415,15 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.indicator_mode.593418f7':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['off', $this->Translate('Off'), '', 0x00FF00],
+                                    ['off/on', $this->Translate('Off/On'), '', 0xFFFF00],
+                                    ['on/off', $this->Translate('On/Off'), '', 0xFF9900],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.melody.a0adcd38':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Speaker', '', '', [
@@ -2474,6 +2489,13 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'indicator_mode':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_IndicatorMode', $this->Translate('Indicator Mode'), $ProfileName);
+                                $this->EnableAction('Z2M_IndicatorMode');
+                            }
+                            break;
                         case 'melody':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
