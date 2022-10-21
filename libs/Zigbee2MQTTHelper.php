@@ -9,6 +9,15 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'power_outage_count':
+                $Payload['power_outage_count'] = strval($Value);
+                break;
+            case 'Z2M_SwitchType':
+                $Payload['switch_type'] = strval($Value);
+                break;
+            case 'Z2M_IndicatorMode':
+                $Payload['indicator_mode'] = strval($Value);
+                break;
             case 'Z2M_TemperatureAlarm':
                 $Payload['temperature_alarm'] = strval($Value);
                 break;
@@ -140,16 +149,16 @@ trait Zigbee2MQTTHelper
                 $Payload['power_on_behavior'] = strval($Value);
                 break;
             case'Z2M_PowerOnBehaviorL1':
-                $Payload['power_on_behaviorl1'] = strval($Value);
+                $Payload['power_on_behavior_l1'] = strval($Value);
                 break;
             case'Z2M_PowerOnBehaviorL2':
-                $Payload['power_on_behaviorl2'] = strval($Value);
+                $Payload['power_on_behavior_l2'] = strval($Value);
                 break;
             case'Z2M_PowerOnBehaviorL3':
-                $Payload['power_on_behaviorl3'] = strval($Value);
+                $Payload['power_on_behavior_l3'] = strval($Value);
                 break;
             case'Z2M_PowerOnBehaviorL4':
-                $Payload['power_on_behaviorl4'] = strval($Value);
+                $Payload['power_on_behavior_l4'] = strval($Value);
                 break;
             case'Z2M_AutoOff':
                 $Payload['auto_off'] = strval($this->OnOff($Value));
@@ -375,6 +384,15 @@ trait Zigbee2MQTTHelper
 
             $Payload = json_decode($Buffer['Payload'], true);
             if (is_array($Payload)) {
+                if (array_key_exists('power_outage_count', $Payload)) {
+                    $this->SetValue('Z2M_PowerOutageCount', $Payload['power_outage_count']);
+                }
+                if (array_key_exists('switch_type', $Payload)) {
+                    $this->SetValue('Z2M_SwitchType', $Payload['switch_type']);
+                }
+                if (array_key_exists('indicator_mode', $Payload)) {
+                    $this->SetValue('Z2M_IndicatorMode', $Payload['indicator_mode']);
+                }
                 if (array_key_exists('temperature_alarm', $Payload)) {
                     $this->SetValue('Z2M_TemperatureAlarm', $Payload['temperature_alarm']);
                 }
@@ -848,17 +866,17 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('power_on_behavior', $Payload)) {
                     $this->SetValue('Z2M_PowerOnBehavior', $Payload['power_on_behavior']);
                 }
-                if (array_key_exists('power_on_behaviorl1', $Payload)) {
-                    $this->SetValue('Z2M_PowerOnBehaviorL1', $Payload['power_on_behaviorl1']);
+                if (array_key_exists('power_on_behavior_l1', $Payload)) {
+                    $this->SetValue('Z2M_PowerOnBehaviorL1', $Payload['power_on_behavior_l1']);
                 }
-                if (array_key_exists('power_on_behaviorl2', $Payload)) {
-                    $this->SetValue('Z2M_PowerOnBehaviorL2', $Payload['power_on_behaviorl2']);
+                if (array_key_exists('power_on_behavior_l2', $Payload)) {
+                    $this->SetValue('Z2M_PowerOnBehaviorL2', $Payload['power_on_behavior_l2']);
                 }
-                if (array_key_exists('power_on_behaviorl3', $Payload)) {
-                    $this->SetValue('Z2M_PowerOnBehaviorL3', $Payload['power_on_behaviorl3']);
+                if (array_key_exists('power_on_behavior_l3', $Payload)) {
+                    $this->SetValue('Z2M_PowerOnBehaviorL3', $Payload['power_on_behavior_l3']);
                 }
-                if (array_key_exists('power_on_behaviorl4', $Payload)) {
-                    $this->SetValue('Z2M_PowerOnBehaviorL4', $Payload['power_on_behaviorl4']);
+                if (array_key_exists('power_on_behavior_l4', $Payload)) {
+                    $this->SetValue('Z2M_PowerOnBehaviorL4', $Payload['power_on_behavior_l4']);
                 }
 
                 if (array_key_exists('state_l1', $Payload)) {
@@ -1409,6 +1427,33 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.switch_type.7c047117':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['toggle', $this->Translate('Toggle'), '', 0x00FF00],
+                                    ['state', $this->Translate('State'), '', 0xFFFF00],
+                                    ['momentary', $this->Translate('Momentary'), '', 0xFF9900],
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.indicator_mode.c2a87bbe':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['off', $this->Translate('Off'), '', 0x00FF00],
+                                    ['off_on', $this->Translate('Off/On'), '', 0xFFFF00],
+                                    ['on_off', $this->Translate('On/Off'), '', 0xFF9900],
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.indicator_mode.593418f7':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['off', $this->Translate('Off'), '', 0x00FF00],
+                                    ['off/on', $this->Translate('Off/On'), '', 0xFFFF00],
+                                    ['on/off', $this->Translate('On/Off'), '', 0xFF9900],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.melody.a0adcd38':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Speaker', '', '', [
@@ -1798,6 +1843,11 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'power_outage_count':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ', 0, 0, 0);
+                        }
+                        break;
                     case 'duration':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -2474,6 +2524,20 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'switch_type':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_SwitchType', $this->Translate('Switch Type'), $ProfileName);
+                                $this->EnableAction('Z2M_SwitchType');
+                            }
+                            break;
+                        case 'indicator_mode':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_IndicatorMode', $this->Translate('Indicator Mode'), $ProfileName);
+                                $this->EnableAction('Z2M_IndicatorMode');
+                            }
+                            break;
                         case 'melody':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -2532,28 +2596,28 @@ trait Zigbee2MQTTHelper
                                 $this->EnableAction('Z2M_PowerOnBehavior');
                             }
                             break;
-                        case 'power_on_behaviorl1':
+                        case 'power_on_behavior_l1':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_PowerOnBehaviorL1', $this->Translate('Power on behavior L1'), $ProfileName);
                                 $this->EnableAction('Z2M_PowerOnBehaviorL1');
                             }
                             break;
-                        case 'power_on_behaviorl2':
+                        case 'power_on_behavior_l2':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_PowerOnBehaviorL2', $this->Translate('Power on behavior L2'), $ProfileName);
                                 $this->EnableAction('Z2M_PowerOnBehaviorL2');
                             }
                             break;
-                        case 'power_on_behaviorl3':
+                        case 'power_on_behavior_l3':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_PowerOnBehaviorL3', $this->Translate('Power on behavior L3'), $ProfileName);
                                 $this->EnableAction('Z2M_PowerOnBehaviorL3');
                             }
                             break;
-                        case 'power_on_behaviorl4':
+                        case 'power_on_behavior_l4':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_PowerOnBehaviorL4', $this->Translate('Power on behavior L4'), $ProfileName);
@@ -2674,6 +2738,12 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'power_outage_count':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_PowerOutageCount', $this->Translate('Power Outage Count'), $ProfileName);
+                            }
+                            break;
                         case 'duration':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {

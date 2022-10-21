@@ -135,7 +135,7 @@
             "Calibration Time": "Kalibrierzeit",
             "Motor Reversal": "Motorumkehr",
             "Get Device Infos": "Geräteinformationen abrufen",
-            "Power on behavior": "Einschaltverhalten",
+            "Power on behavior": "Einschaltverhalten nach Stromausfall",
             "Previous": "Vorherig",
             "Action angle": "Aktionswinkel",
             "Action from side": "Aktion von der Seite",
@@ -217,7 +217,20 @@
             "Melody": "Signalton",
             "Power Type": "Stromquelle",
             "Volume": "Lautstärke",
-            "Alarm Duration": "Alarm Dauer"
+            "Alarm Duration": "Alarm Dauer",
+            "Indicator Mode": "Anzeigemodus",
+            "On/Off": "An/Aus",
+            "Off/On": "Aus/An",
+            "On": "An",
+            "Switch Type": "Schalter Modus",
+            "Momentary": "Moment",
+            "Toggle": "Wechsel",
+            "Forward": "Vorwärts",
+            "Power on behavior L1": "Einschaltverhalten nach Stromausfall L1",
+            "Power on behavior L2": "Einschaltverhalten nach Stromausfall L2",
+            "Power on behavior L3": "Einschaltverhalten nach Stromausfall L3",
+            "Power on behavior L4": "Einschaltverhalten nach Stromausfall L4",
+            "Power Outage Count": "Anzahl der Stromausfälle"
         }
     }
 }
