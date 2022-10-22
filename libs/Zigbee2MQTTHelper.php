@@ -94,6 +94,12 @@ trait Zigbee2MQTTHelper
                 }
                 $Payload['state'] = strval($this->OnOff($Value));
                 break;
+            // case 'Z2M_StateLeft':
+            //     $Payload['state_left'] = strval($Value);
+            //     break;
+            // case 'Z2M_StateRight':
+            //     $Payload['state_right'] = strval($Value);
+            //     break;
             case 'Z2M_RunningState':
                 $Payload['running_state'] = strval($Value);
                 break;
@@ -122,9 +128,17 @@ trait Zigbee2MQTTHelper
                 $Payload['state_l4'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_state_left':
+                if ($variableType == 3) {
+                    $Payload['state_left'] = strval($Value);
+                    break;
+                }
                 $Payload['state_left'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_state_right':
+                if ($variableType == 3) {
+                    $Payload['state_right'] = strval($Value);
+                    break;
+                }
                 $Payload['state_right'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_WindowDetection':
@@ -196,14 +210,32 @@ trait Zigbee2MQTTHelper
             case 'Z2M_Moving':
                 $Payload['moving'] = strval($Value);
                 break;
+            case 'Z2M_MovingLeft':
+                $Payload['moving_left'] = strval($Value);
+                break;
+            case 'Z2M_MovingRight':
+                $Payload['moving_right'] = strval($Value);
+                break;
             case 'Z2M_TRVMode':
                 $Payload['trv_mode'] = strval($Value);
                 break;
             case 'Z2M_Calibration':
                 $Payload['calibration'] = strval($this->OnOff($Value));
                 break;
+            case 'Z2M_CalibrationLeft':
+                $Payload['calibration_left'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_CalibrationRight':
+                $Payload['calibration_right'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_MotorReversal':
                 $Payload['motor_reversal'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_MotorReversalLeft':
+                $Payload['motor_reversal_left'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_MotorReversalRight':
+                $Payload['motor_reversal_right'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_CurrentHeatingSetpoint':
                 $Payload['current_heating_setpoint'] = strval($Value);
@@ -251,6 +283,12 @@ trait Zigbee2MQTTHelper
                 return;
             case 'Z2M_Position':
                 $Payload['position'] = strval($Value);
+                break;
+            case 'Z2M_PositionLeft':
+                $Payload['position_left'] = strval($Value);
+                break;
+            case 'Z2M_PositionRight':
+                $Payload['position_right'] = strval($Value);
                 break;
             case 'Z2M_MotorSpeed':
                 $Payload['motor_speed'] = strval($Value);
@@ -578,6 +616,14 @@ trait Zigbee2MQTTHelper
 
                 if (array_key_exists('position', $Payload)) {
                     $this->SetValue('Z2M_Position', $Payload['position']);
+                }
+
+                if (array_key_exists('position_left', $Payload)) {
+                    $this->SetValue('Z2M_PositionLeft', $Payload['position_left']);
+                }
+
+                if (array_key_exists('position_right', $Payload)) {
+                    $this->SetValue('Z2M_PositionRight', $Payload['position_right']);
                 }
 
                 if (array_key_exists('motor_speed', $Payload)) {
@@ -952,8 +998,13 @@ trait Zigbee2MQTTHelper
                             case 'OFF':
                                 $this->SetValue('Z2M_state_left', false);
                                 break;
+                            case 'OPEN':
+                            case 'CLOSE':
+                            case 'STOP':
+                                $this->SetValue('Z2M_state_left', $Payload['state_left']);
+                                break;
                             default:
-                                $this->SendDebug('State Left', 'Undefined State Left: ' . $Payload['state_left'], 0);
+                                $this->SendDebug('State left', 'Undefined State: ' . $Payload['state_left'], 0);
                                 break;
                         }
                 }
@@ -965,8 +1016,13 @@ trait Zigbee2MQTTHelper
                             case 'OFF':
                                 $this->SetValue('Z2M_state_right', false);
                                 break;
+                            case 'OPEN':
+                            case 'CLOSE':
+                            case 'STOP':
+                                $this->SetValue('Z2M_state_right', $Payload['state_right']);
+                                break;
                             default:
-                                $this->SendDebug('State Right', 'Undefined State Right: ' . $Payload['state_Right'], 0);
+                                $this->SendDebug('State right', 'Undefined State: ' . $Payload['state_right'], 0);
                                 break;
                         }
                 }
@@ -1099,6 +1155,12 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('moving', $Payload)) {
                     $this->SetValue('Z2M_Moving', $Payload['moving']);
                 }
+                if (array_key_exists('moving_left', $Payload)) {
+                    $this->SetValue('Z2M_MovingLeft', $Payload['moving_left']);
+                }
+                if (array_key_exists('moving_right', $Payload)) {
+                    $this->SetValue('Z2M_MovingRight', $Payload['moving_right']);
+                }
                 if (array_key_exists('trv_mode', $Payload)) {
                     $this->SetValue('Z2M_TRVMode', $Payload['trv_mode']);
                 }
@@ -1115,6 +1177,32 @@ trait Zigbee2MQTTHelper
                             break;
                     }
                 }
+                if (array_key_exists('calibration_left', $Payload)) {
+                    switch ($Payload['calibration_left']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_CalibrationLeft', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_CalibrationLeft', false);
+                            break;
+                        default:
+                            $this->SendDebug('Calibration_left', 'Undefined State: ' . $Payload['calibration_left'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('calibration_right', $Payload)) {
+                    switch ($Payload['calibration_right']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_CalibrationRight', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_CalibrationRight', false);
+                            break;
+                        default:
+                            $this->SendDebug('Calibration_right', 'Undefined State: ' . $Payload['calibration_right'], 0);
+                            break;
+                    }
+                }
                 if (array_key_exists('motor_reversal', $Payload)) {
                     switch ($Payload['motor_reversal']) {
                         case 'ON':
@@ -1128,8 +1216,40 @@ trait Zigbee2MQTTHelper
                             break;
                     }
                 }
+                if (array_key_exists('motor_reversal_left', $Payload)) {
+                    switch ($Payload['motor_reversal_left']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_MotorReversalLeft', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_MotorReversalLeft', false);
+                            break;
+                        default:
+                            $this->SendDebug('Motor Reversal Left', 'Undefined State: ' . $Payload['motor_reversal_left'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('motor_reversal_right', $Payload)) {
+                    switch ($Payload['motor_reversal_right']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_MotorReversalRight', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_MotorReversalRight', false);
+                            break;
+                        default:
+                            $this->SendDebug('Motor Reversal Right', 'Undefined State: ' . $Payload['motor_reversal_right'], 0);
+                            break;
+                    }
+                }
                 if (array_key_exists('calibration_time', $Payload)) {
                     $this->SetValue('Z2M_CalibrationTime', $Payload['calibration_time']);
+                }
+                if (array_key_exists('calibration_time_left', $Payload)) {
+                    $this->SetValue('Z2M_CalibrationTimeLeft', $Payload['calibration_time_left']);
+                }
+                if (array_key_exists('calibration_time_right', $Payload)) {
+                    $this->SetValue('Z2M_CalibrationTimeRight', $Payload['calibration_time_right']);
                 }
                 if (array_key_exists('target_distance', $Payload)) {
                     $this->SetValue('Z2M_TargetDistance', $Payload['target_distance']);
@@ -1650,6 +1770,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.backlight_mode':
                         case 'Z2M.motion_sensitivity.b8421401':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
@@ -1690,6 +1811,16 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'Z2M.moving.fe5886c':
                         case 'Z2M.moving.7ac27aed':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Move', '', '', [
+                                    ['UP', $this->Translate('Up'), '', 0x00FF00],
+                                    ['STOP', $this->Translate('Stop'), '', 0xFF8800],
+                                    ['DOWN', $this->Translate('Down'), '', 0xFF0000]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.moving_left':
+                        case 'Z2M.moving_right':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Move', '', '', [
                                     ['UP', $this->Translate('Up'), '', 0x00FF00],
@@ -2053,7 +2184,19 @@ trait Zigbee2MQTTHelper
                     case 'calibration_time':
                         $ProfileName .= '_' . $expose['unit'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
+                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
+                        }
+                        break;
+                    case 'calibration_time_left':
+                        $ProfileName .= '_' . $expose['unit'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
+                        }
+                        break;
+                    case 'calibration_time_right':
+                        $ProfileName .= '_' . $expose['unit'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
                         break;
                     default:
@@ -2493,9 +2636,25 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableBoolean('Z2M_Calibration', $this->Translate('Calibration'), '~Switch');
                             $this->EnableAction('Z2M_Calibration');
                             break;
+                        case 'calibration_left':
+                            $this->RegisterVariableBoolean('Z2M_CalibrationLeft', $this->Translate('Calibration Left'), '~Switch');
+                            $this->EnableAction('Z2M_CalibrationLeft');
+                            break;
+                        case 'calibration_right':
+                            $this->RegisterVariableBoolean('Z2M_CalibrationRight', $this->Translate('Calibration Right'), '~Switch');
+                            $this->EnableAction('Z2M_CalibrationRight');
+                            break;
                         case 'motor_reversal':
                             $this->RegisterVariableBoolean('Z2M_MotorReversal', $this->Translate('Motor Reversal'), '~Switch');
                             $this->EnableAction('Z2M_MotorReversal');
+                            break;
+                        case 'motor_reversal_left':
+                            $this->RegisterVariableBoolean('Z2M_MotorReversalLeft', $this->Translate('Motor Reversal Left'), '~Switch');
+                            $this->EnableAction('Z2M_MotorReversalLeft');
+                            break;
+                        case 'motor_reversal_right':
+                            $this->RegisterVariableBoolean('Z2M_MotorReversalRight', $this->Translate('Motor Reversal Right'), '~Switch');
+                            $this->EnableAction('Z2M_MotorReversalRight');
                             break;
                         case 'open_window':
                             $this->RegisterVariableBoolean('Z2M_OpenWindow', $this->Translate('Open Window'), '~Window');
@@ -2658,7 +2817,19 @@ trait Zigbee2MQTTHelper
                         case 'moving':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableString('Z2M_Moving', $this->Translate('Curent Action'), $ProfileName);
+                                $this->RegisterVariableString('Z2M_Moving', $this->Translate('Current Action'), $ProfileName);
+                            }
+                            break;
+                        case 'moving_left':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_MovingLeft', $this->Translate('Current Action Left'), $ProfileName);
+                            }
+                            break;
+                        case 'moving_right':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_MovingRight', $this->Translate('Current Action Right'), $ProfileName);
                             }
                             break;
                         case 'trv_mode':
@@ -2942,6 +3113,12 @@ trait Zigbee2MQTTHelper
                         case 'position':
                             $this->RegisterVariableInteger('Z2M_Position', $this->Translate('Position'), '~Shutter');
                             break;
+                        case 'position_left':
+                            $this->RegisterVariableInteger('Z2M_PositionLeft', $this->Translate('Position Left'), '~Shutter');
+                            break;
+                        case 'position_right':
+                            $this->RegisterVariableInteger('Z2M_PositionRight', $this->Translate('Position Right'), '~Shutter');
+                            break;
                         case 'boost_heating_countdown':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -2996,6 +3173,18 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_CalibrationTime', $this->Translate('Calibration Time'), $ProfileName);
+                            }
+                            break;
+                        case 'calibration_time_left':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_CalibrationTimeLeft', $this->Translate('Calibration Time Left'), $ProfileName);
+                            }
+                            break;
+                        case 'calibration_time_right':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_CalibrationTimeRight', $this->Translate('Calibration Time Right'), $ProfileName);
                             }
                             break;
                         case 'action_angle':
@@ -3212,6 +3401,14 @@ trait Zigbee2MQTTHelper
                                             $this->RegisterVariableInteger('Z2M_Position', $this->Translate('Position'), '~Intensity.100');
                                             $this->EnableAction('Z2M_Position');
                                             break;
+                                        case 'position_left':
+                                            $this->RegisterVariableInteger('Z2M_PositionLeft', $this->Translate('Position Left'), '~Intensity.100');
+                                            $this->EnableAction('Z2M_PositionLeft');
+                                            break;
+                                        case 'position_right':
+                                            $this->RegisterVariableInteger('Z2M_PositionRight', $this->Translate('Position Right'), '~Intensity.100');
+                                            $this->EnableAction('Z2M_PositionRight');
+                                            break;
                                         default:
                                             // Default cover binary
                                             $missedVariables['cover'][] = $feature;
@@ -3226,6 +3423,20 @@ trait Zigbee2MQTTHelper
                                                 $this->RegisterVariableString('Z2M_State', $this->Translate('State'), $ProfileName);
                                             }
                                             $this->EnableAction('Z2M_State');
+                                            break;
+                                        case 'state_left':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableString('Z2M_state_left', $this->Translate('State Left'), $ProfileName);
+                                            }
+                                            $this->EnableAction('Z2M_state_left');
+                                            break;
+                                        case 'state_right':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableString('Z2M_state_right', $this->Translate('State Right'), $ProfileName);
+                                            }
+                                            $this->EnableAction('Z2M_state_right');
                                             break;
                                         default:
                                             // Default cover enum

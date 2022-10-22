@@ -130,7 +130,7 @@
             "Overload Protection": "Überspannungschutz",
             "Force": "Erzwingen",
             "Moving": "Bewegung",
-            "Curent Action": "Aktuelle Aktion",
+            "Current Action": "Aktuelle Aktion",
             "Calibration": "Kalibrierung",
             "Calibration Time": "Kalibrierzeit",
             "Motor Reversal": "Motorumkehr",
@@ -230,7 +230,17 @@
             "Power on behavior L2": "Einschaltverhalten nach Stromausfall L2",
             "Power on behavior L3": "Einschaltverhalten nach Stromausfall L3",
             "Power on behavior L4": "Einschaltverhalten nach Stromausfall L4",
-            "Power Outage Count": "Anzahl der Stromausfälle"
+            "Power Outage Count": "Anzahl der Stromausfälle",
+            "Calibration Time Left": "Calibrierzeit links",
+            "Calibration Time Right": "Calibrierzeit Rechts",
+            "Calibration Left": "Calibrierung Links",
+            "Calibration Right": "Calibrierung Rechts",
+            "Current Action Left": "Aktuelle Aktion Links",
+            "Current Action Right": "Aktuelle Aktion Rechts",
+            "Motor Reversal Left": "Motorumkehr Links",
+            "Motor Reversal Right": "Motorumkehr Rechts",
+            "Position Left": "Position Links",
+            "Position Right": "Position Rechts"
         }
     }
 }
