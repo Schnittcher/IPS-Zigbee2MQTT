@@ -200,9 +200,9 @@ trait Zigbee2MQTTHelper
                 $Payload['trv_mode'] = strval($Value);
                 break;
             case 'Z2M_Calibration':
-                $Payload['calibration'] = strval($Value);
+                $Payload['calibration'] = strval($this->OnOff($Value));
                 break;
-            case 'motor_reversal':
+            case 'Z2M_MotorReversal':
                 $Payload['motor_reversal'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_CurrentHeatingSetpoint':
@@ -1103,20 +1103,30 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_TRVMode', $Payload['trv_mode']);
                 }
                 if (array_key_exists('calibration', $Payload)) {
-                    $this->SetValue('Z2M_Calibration', $Payload['calibration']);
+                    switch ($Payload['calibration']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_Calibration', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_Calibration', false);
+                            break;
+                        default:
+                            $this->SendDebug('Calibration', 'Undefined State: ' . $Payload['calibration'], 0);
+                            break;
+                    }
                 }
                 if (array_key_exists('motor_reversal', $Payload)) {
                     switch ($Payload['motor_reversal']) {
-                            case 'ON':
-                                $this->SetValue('Z2M_MotorReversal', true);
-                                break;
-                            case 'OFF':
-                                $this->SetValue('Z2M_MotorReversal', false);
-                                break;
-                            default:
-                                $this->SendDebug('Motor Reversal', 'Undefined State: ' . $Payload['motor_reversal'], 0);
-                                break;
-                        }
+                        case 'ON':
+                            $this->SetValue('Z2M_MotorReversal', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_MotorReversal', false);
+                            break;
+                        default:
+                            $this->SendDebug('Motor Reversal', 'Undefined State: ' . $Payload['motor_reversal'], 0);
+                            break;
+                    }
                 }
                 if (array_key_exists('calibration_time', $Payload)) {
                     $this->SetValue('Z2M_CalibrationTime', $Payload['calibration_time']);
@@ -1502,9 +1512,9 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.backlight_mode.9e0e16e4':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Light', '', '', [
-                                    ['low', $this->Translate('Low'), '', 0xFFA500],
-                                    ['medium', $this->Translate('Medium'), '', 0xFF0000],
-                                    ['high', $this->Translate('High'), '', 0x000000]
+                                    ['LOW', $this->Translate('Low'), '', 0xFFA500],
+                                    ['MEDIUM', $this->Translate('Medium'), '', 0xFF0000],
+                                    ['HIGH', $this->Translate('High'), '', 0x000000]
                                 ]);
                             }
                             break;
