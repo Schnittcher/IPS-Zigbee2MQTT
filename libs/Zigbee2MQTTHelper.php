@@ -491,6 +491,18 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('temperature', $Payload)) {
                     $this->SetValue('Z2M_Temperature', $Payload['temperature']);
                 }
+                if (array_key_exists('temperature_l1', $Payload)) {
+                    $this->SetValue('Z2M_TemperatureL1', $Payload['temperature_l1']);
+                }
+                if (array_key_exists('temperature_l2', $Payload)) {
+                    $this->SetValue('Z2M_TemperatureL1', $Payload['temperature_l2']);
+                }
+                if (array_key_exists('temperature_l3', $Payload)) {
+                    $this->SetValue('Z2M_TemperatureL1', $Payload['temperature_l3']);
+                }
+                if (array_key_exists('temperature_l4', $Payload)) {
+                    $this->SetValue('Z2M_TemperatureL1', $Payload['temperature_l4']);
+                }
                 if (array_key_exists('device_temperature', $Payload)) {
                     $this->SetValue('Z2M_DeviceTemperature', $Payload['device_temperature']);
                 }
@@ -3020,6 +3032,18 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'temperature':
                             $this->RegisterVariableFloat('Z2M_Temperature', $this->Translate('Temperature'), '~Temperature');
+                            break;
+                        case 'temperature_l1':
+                            $this->RegisterVariableFloat('Z2M_TemperatureL1', $this->Translate('Temperature L1'), '~Temperature');
+                            break;
+                        case 'temperature_l2':
+                            $this->RegisterVariableFloat('Z2M_TemperatureL2', $this->Translate('Temperature L2'), '~Temperature');
+                            break;
+                        case 'temperature_l3':
+                            $this->RegisterVariableFloat('Z2M_TemperatureL3', $this->Translate('Temperature L3'), '~Temperature');
+                            break;
+                        case 'temperature_l4':
+                            $this->RegisterVariableFloat('Z2M_TemperatureL4', $this->Translate('Temperature L4'), '~Temperature');
                             break;
                         case 'device_temperature':
                             $this->RegisterVariableFloat('Z2M_DeviceTemperature', $this->Translate('Device Temperature'), '~Temperature');

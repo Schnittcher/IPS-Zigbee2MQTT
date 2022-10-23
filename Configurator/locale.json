@@ -21,7 +21,11 @@
             "Battery": "Batterie",
             "Mains (single phase)": "Netz (einphasig)",
             "Please use this function with attention!": "Bitte benutzen Sie diese Funktion mit Aufmerksamkeit!",
-            "Read Variables": "Rufe Variablen ab"
+            "Read Variables": "Rufe Variablen ab",
+            "Temperature L1": "Temperatur L1",
+            "Temperature L2": "Temperatur L2",
+            "Temperature L3": "Temperatur L3",
+            "Temperature L4": "Temperatur L4"
         }
     }
 }
