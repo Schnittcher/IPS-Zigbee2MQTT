@@ -495,13 +495,13 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_TemperatureL1', $Payload['temperature_l1']);
                 }
                 if (array_key_exists('temperature_l2', $Payload)) {
-                    $this->SetValue('Z2M_TemperatureL1', $Payload['temperature_l2']);
+                    $this->SetValue('Z2M_TemperatureL2', $Payload['temperature_l2']);
                 }
                 if (array_key_exists('temperature_l3', $Payload)) {
-                    $this->SetValue('Z2M_TemperatureL1', $Payload['temperature_l3']);
+                    $this->SetValue('Z2M_TemperatureL3', $Payload['temperature_l3']);
                 }
                 if (array_key_exists('temperature_l4', $Payload)) {
-                    $this->SetValue('Z2M_TemperatureL1', $Payload['temperature_l4']);
+                    $this->SetValue('Z2M_TemperatureL4', $Payload['temperature_l4']);
                 }
                 if (array_key_exists('device_temperature', $Payload)) {
                     $this->SetValue('Z2M_DeviceTemperature', $Payload['device_temperature']);
