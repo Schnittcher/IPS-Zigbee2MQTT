@@ -720,7 +720,46 @@ trait Zigbee2MQTTHelper
                         $this->SetValue('Z2M_Illuminance_Lux', $Payload['illuminance_lux']);
                     }
                 }
-
+                if (array_key_exists('illuminance_lux_l1', $Payload)) {
+                    if (@$this->GetIDForIdent('Z2M_Illuminance_Lux_l1') > 0) {
+                        $this->SetValue('Z2M_Illuminance_Lux_l1', $Payload['illuminance_lux_l1']);
+                    }
+                }
+                if (array_key_exists('illuminance_lux_l2', $Payload)) {
+                    if (@$this->GetIDForIdent('Z2M_Illuminance_Lux_l2') > 0) {
+                        $this->SetValue('Z2M_Illuminance_Lux_l2', $Payload['illuminance_lux_l2']);
+                    }
+                }
+                if (array_key_exists('illuminance_lux_l3', $Payload)) {
+                    if (@$this->GetIDForIdent('Z2M_Illuminance_Lux_l3') > 0) {
+                        $this->SetValue('Z2M_Illuminance_Lux_l3', $Payload['illuminance_lux_l3']);
+                    }
+                }
+                if (array_key_exists('illuminance_lux_l4', $Payload)) {
+                    if (@$this->GetIDForIdent('Z2M_Illuminance_Lux_l4') > 0) {
+                        $this->SetValue('Z2M_Illuminance_Lux_l4', $Payload['illuminance_lux_l4']);
+                    }
+                }
+                if (array_key_exists('illuminance_lux_l5', $Payload)) {
+                    if (@$this->GetIDForIdent('Z2M_Illuminance_Lux_l5') > 0) {
+                        $this->SetValue('Z2M_Illuminance_Lux_l5', $Payload['illuminance_lux_l5']);
+                    }
+                }
+                if (array_key_exists('illuminance_lux_l6', $Payload)) {
+                    if (@$this->GetIDForIdent('Z2M_Illuminance_Lux_l6') > 0) {
+                        $this->SetValue('Z2M_Illuminance_Lux_l6', $Payload['illuminance_lux_l6']);
+                    }
+                }
+                if (array_key_exists('illuminance_lux_l7', $Payload)) {
+                    if (@$this->GetIDForIdent('Z2M_Illuminance_Lux_l7') > 0) {
+                        $this->SetValue('Z2M_Illuminance_Lux_l7', $Payload['illuminance_lux_l7']);
+                    }
+                }
+                if (array_key_exists('illuminance_lux_l8', $Payload)) {
+                    if (@$this->GetIDForIdent('Z2M_Illuminance_Lux_l8') > 0) {
+                        $this->SetValue('Z2M_Illuminance_Lux_l8', $Payload['illuminance_lux_l8']);
+                    }
+                }
                 if (array_key_exists('strength', $Payload)) {
                     $this->SetValue('Z2M_Strength', $Payload['strength']);
                 }
@@ -3080,6 +3119,30 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'illuminance_lux':
                             $this->RegisterVariableInteger('Z2M_Illuminance_Lux', $this->Translate('Illuminance Lux'), '~Illumination');
+                            break;
+                        case 'illuminance_lux_l1':
+                            $this->RegisterVariableInteger('Z2M_Illuminance_Lux_l1', $this->Translate('Illuminance Lux l1'), '~Illumination');
+                            break;
+                        case 'illuminance_lux_l2':
+                            $this->RegisterVariableInteger('Z2M_Illuminance_Lux_l2', $this->Translate('Illuminance Lux l2'), '~Illumination');
+                            break;
+                        case 'illuminance_lux_l3':
+                            $this->RegisterVariableInteger('Z2M_Illuminance_Lux_l3', $this->Translate('Illuminance Lux l3'), '~Illumination');
+                            break;
+                        case 'illuminance_lux_l4':
+                            $this->RegisterVariableInteger('Z2M_Illuminance_Lux_l4', $this->Translate('Illuminance Lux l4'), '~Illumination');
+                            break;
+                        case 'illuminance_lux_l5':
+                            $this->RegisterVariableInteger('Z2M_Illuminance_Lux_l5', $this->Translate('Illuminance Lux l5'), '~Illumination');
+                            break;
+                        case 'illuminance_lux_l6':
+                            $this->RegisterVariableInteger('Z2M_Illuminance_Lux_l6', $this->Translate('Illuminance Lux l6'), '~Illumination');
+                            break;
+                        case 'illuminance_lux_l7':
+                            $this->RegisterVariableInteger('Z2M_Illuminance_Lux_l7', $this->Translate('Illuminance Lux l7'), '~Illumination');
+                            break;
+                        case 'illuminance_lux_l8':
+                            $this->RegisterVariableInteger('Z2M_Illuminance_Lux_l8', $this->Translate('Illuminance Lux l8'), '~Illumination');
                             break;
                         case 'illuminance':
                             $this->RegisterVariableInteger('Z2M_Illuminance', $this->Translate('Illuminance'), '');

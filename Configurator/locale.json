@@ -25,7 +25,15 @@
             "Temperature L1": "Temperatur L1",
             "Temperature L2": "Temperatur L2",
             "Temperature L3": "Temperatur L3",
-            "Temperature L4": "Temperatur L4"
+            "Temperature L4": "Temperatur L4",
+            "Illuminance Lux l1": "Helligkeit Lux l1",
+            "Illuminance Lux l2": "Helligkeit Lux l2",
+            "Illuminance Lux l3": "Helligkeit Lux l3",
+            "Illuminance Lux l4": "Helligkeit Lux l4",
+            "Illuminance Lux l5": "Helligkeit Lux l5",
+            "Illuminance Lux l6": "Helligkeit Lux l6",
+            "Illuminance Lux l7": "Helligkeit Lux l7",
+            "Illuminance Lux l8": "Helligkeit Lux l8"
         }
     }
 }
