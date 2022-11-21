@@ -259,7 +259,13 @@
             "Illuminance Lux l5": "Helligkeit Lux l5",
             "Illuminance Lux l6": "Helligkeit Lux l6",
             "Illuminance Lux l7": "Helligkeit Lux l7",
-            "Illuminance Lux l8": "Helligkeit Lux l8"
+            "Illuminance Lux l8": "Helligkeit Lux l8",
+            "Boost Heating Countdown Time Set": "Countdown-Zeit für Boost",
+            "Valve State": "Ventil Status",
+            "Window": "Fenster",
+            "programming": "Programm",
+            "temporary_manual": "Vorrübergehend Manuell",
+            "Eco Mode": "Eco Modus"
         }
     }
 }
