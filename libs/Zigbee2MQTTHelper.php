@@ -1806,7 +1806,6 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.preset.879ced8a':
                         case 'Z2M.preset.9fca219c':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -1817,10 +1816,10 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case'Z2M.preset.9fca219c':
+                        case 'Z2M.preset.879ced8a':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
-                                    ['manual', $this->Translate('HoliManualday'), '', 0x00FF00],
+                                    ['manual', $this->Translate('Manual'), '', 0x00FF00],
                                     ['programming', $this->Translate('Programming'), '', 0x8800FF],
                                     ['holiday', $this->Translate('Holiday'), '', 0xFFa500],
                                     ['temporary_manual', $this->Translate('Temporary Manual'), '', 0xFF0000]
