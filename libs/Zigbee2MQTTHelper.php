@@ -2453,7 +2453,7 @@ trait Zigbee2MQTTHelper
                                             $this->EnableAction('Z2M_Statel8');
                                             break;
                                         case 'window_detection':
-                                            $this->RegisterVariableBoolean('Z2M_WindowDetection', $this->Translate('Window Detection'), '~Window');
+                                            $this->RegisterVariableBoolean('Z2M_WindowDetection', $this->Translate('Window Detection'), '~Switch');
                                             $this->EnableAction('Z2M_WindowDetection');
                                             break;
                                         case 'valve_detection':
