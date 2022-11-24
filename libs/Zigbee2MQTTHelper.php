@@ -2037,7 +2037,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.week.hashfehlt':
+                        case 'Z2M.week.4e05e759':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Calendar', '', '', [
                                     ['5+2', $this->Translate('5+2'), '', 0x00FF00],
