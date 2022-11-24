@@ -1868,7 +1868,7 @@ trait Zigbee2MQTTHelper
                                     ['away', $this->Translate('Away'), '', 0xFFa500]
                                 ]);
                             }
-                            break; 
+                            break;
                         case 'Z2M.running_state.8d38f7dc':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
