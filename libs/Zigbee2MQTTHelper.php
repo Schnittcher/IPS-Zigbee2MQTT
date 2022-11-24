@@ -2155,13 +2155,13 @@ trait Zigbee2MQTTHelper
                     case 'min_temperature':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Temperature', '', ' ' . $expose('unit'), $expose['value_min'], $expose['value_max'], 1);
+                            $this->RegisterProfileInteger($ProfileName, 'Temperature', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
                     case 'max_temperature':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Temperature', '', ' ' . $expose('unit'), $expose['value_min'], $expose['value_max'], 1);
+                            $this->RegisterProfileInteger($ProfileName, 'Temperature', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
                     case 'eco_temperature':
