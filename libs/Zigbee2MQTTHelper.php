@@ -1826,7 +1826,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case'Z2M.preset.72d7acf2':
+                        case 'Z2M.preset.72d7acf2':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['auto', $this->Translate('Auto'), '', 0xFFA500],
@@ -1835,7 +1835,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case'Z2M.preset.400bed67':
+                        case 'Z2M.preset.400bed67':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['hold', $this->Translate('Hold'), '', 0xFFA500],
@@ -1844,7 +1844,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case'Z2M.preset.1d99b46a':
+                        case 'Z2M.preset.1d99b46a':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['comfort', $this->Translate('Comfort'), '', 0xFFFF00],
@@ -1853,6 +1853,19 @@ trait Zigbee2MQTTHelper
                                     ['manual', $this->Translate('Manual'), '', 0x00FF00],
                                     ['schedule', $this->Translate('Schedule'), '', 0x8800FF],
                                     ['boost', $this->Translate('Boost'), '', 0xFF0000]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.preset.e1df23ef':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['comfort', $this->Translate('Comfort'), '', 0xFFFF00],
+                                    ['complex', $this->Translate('Complex'), '', 0x0000FF],
+                                    ['eco', $this->Translate('Eco'), '', 0x00FF00],
+                                    ['manual', $this->Translate('Manual'), '', 0x00FF00],
+                                    ['schedule', $this->Translate('Schedule'), '', 0x8800FF],
+                                    ['boost', $this->Translate('Boost'), '', 0xFF0000],
+                                    ['away', $this->Translate('Away'), '', 0xFFa500]
                                 ]);
                             }
                             break;
