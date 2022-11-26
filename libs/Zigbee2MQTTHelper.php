@@ -2055,7 +2055,7 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterProfileStringEx($ProfileName, 'Calendar', '', '', [
                                     ['5+2', $this->Translate('5+2'), '', 0x00FF00],
                                     ['6+1', $this->Translate('6+1'), '', 0xFF8800],
-                                    ['6+1', $this->Translate('7'), '', 0xFF0000]
+                                    ['7', $this->Translate('7'), '', 0xFF0000]
                                 ]);
                             }
                             break;
