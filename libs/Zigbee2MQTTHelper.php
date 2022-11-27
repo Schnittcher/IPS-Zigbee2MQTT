@@ -1622,7 +1622,7 @@ trait Zigbee2MQTTHelper
             ]);
         }
         if (!IPS_VariableProfileExists('Z2M.AutoLock')) {
-            $this->RegisterProfileBooleanEx('Z2M.AutoLock', 'Network', '', '', [
+            $this->RegisterProfileBooleanEx('Z2M.AutoLock', 'Key', '', '', [
                 [false, $this->Translate('Manual'),  '', 0xFF0000],
                 [true, $this->Translate('Auto'),  '', 0x00FF00]
             ]);
