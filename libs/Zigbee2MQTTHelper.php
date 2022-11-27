@@ -1275,10 +1275,10 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('auto_lock', $Payload)) {
                     switch ($Payload['auto_lock']) {
-                            case 'ON':
+                            case 'AUTO':
                                 $this->SetValue('Z2M_AutoLock', true);
                                 break;
-                            case 'OFF':
+                            case 'MANUAL':
                                 $this->SetValue('Z2M_AutoLock', false);
                                 break;
                             default:
