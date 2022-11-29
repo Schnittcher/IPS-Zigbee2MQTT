@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_AutoLock':
+                $Payload['auto_lock'] = strval($this->AutoManual($Value));
+                break;
             case 'Z2M_BoostHeatingCountdownTimeSet':
                 $Payload['boost_heating_countdown_time_set'] = strval($Value);
                 break;
@@ -180,9 +183,6 @@ trait Zigbee2MQTTHelper
             case 'Z2M_ValveDetection':
                 $Payload['valve_detection'] = strval($this->OnOff($Value));
                 break;
-            case 'Z2M_AutoLock':
-                $Payload['auto_lock'] = strval($this->OnOff($Value));
-                break;
             case 'Z2M_ChildLock':
                 $Payload['child_lock'] = strval($this->LockUnlock($Value));
                 break;
@@ -235,7 +235,7 @@ trait Zigbee2MQTTHelper
                 $Payload['heating_stop'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_Force':
-                $Payload['boost_heating'] = strval($this->OnOff($Value));
+                $Payload['force'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_Moving':
                 $Payload['moving'] = strval($Value);
@@ -452,6 +452,19 @@ trait Zigbee2MQTTHelper
 
             $Payload = json_decode($Buffer['Payload'], true);
             if (is_array($Payload)) {
+                if (array_key_exists('boost_heating', $Payload)) {
+                    switch ($Payload['boost_heating']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_BoostHeating', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_BoostHeating', false);
+                            break;
+                        default:
+                            $this->SendDebug('Boost Heating', 'Undefined State: ' . $Payload['boost_heating'], 0);
+                            break;
+                    }
+                }
                 if (array_key_exists('boost_heating_countdown_time_set', $Payload)) {
                     $this->SetValue('Z2M_BoostHeatingCountdownTimeSet', $Payload['boost_heating_countdown_time_set']);
                 }
@@ -459,7 +472,17 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_ValveState', $Payload['valve_state']);
                 }
                 if (array_key_exists('eco_mode', $Payload)) {
-                    $this->SetValue('Z2M_EcoMode', $Payload['eco_mode']);
+                    switch ($Payload['eco_mode']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_EcoMode', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_EcoMode', false);
+                            break;
+                        default:
+                            $this->SendDebug('Z2M_EcoMode', 'Undefined State: ' . $Payload['eco_mode'], 0);
+                            break;
+                    }
                 }
                 if (array_key_exists('power_outage_count', $Payload)) {
                     $this->SetValue('Z2M_PowerOutageCount', $Payload['power_outage_count']);
@@ -1252,16 +1275,16 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('auto_lock', $Payload)) {
                     switch ($Payload['auto_lock']) {
-                            case 'ON':
+                            case 'AUTO':
                                 $this->SetValue('Z2M_AutoLock', true);
                                 break;
-                            case 'OFF':
+                            case 'MANUAL':
                                 $this->SetValue('Z2M_AutoLock', false);
                                 break;
                             default:
                                 $this->SendDebug('Auto Lock', 'Undefined State: ' . $Payload['auto_lock'], 0);
                                 break;
-                        }
+                    }
                 }
                 if (array_key_exists('child_lock', $Payload)) {
                     switch ($Payload['child_lock']) {
@@ -1598,6 +1621,12 @@ trait Zigbee2MQTTHelper
                 [true, 'Online',  '', 0x00FF00]
             ]);
         }
+        if (!IPS_VariableProfileExists('Z2M.AutoLock')) {
+            $this->RegisterProfileBooleanEx('Z2M.AutoLock', 'Key', '', '', [
+                [false, $this->Translate('Manual'),  '', 0xFF0000],
+                [true, $this->Translate('Auto'),  '', 0x00FF00]
+            ]);
+        }
     }
 
     protected function SetValue($Ident, $Value)
@@ -1667,6 +1696,18 @@ trait Zigbee2MQTTHelper
                 break;
             case false:
                 $state = 'CLOSE';
+                break;
+        }
+        return $state;
+    }
+    private function AutoManual(bool $Value)
+    {
+        switch ($Value) {
+            case true:
+                $state = 'AUTO';
+                break;
+            case false:
+                $state = 'MANUAL';
                 break;
         }
         return $state;
@@ -2474,7 +2515,7 @@ trait Zigbee2MQTTHelper
                                             $this->EnableAction('Z2M_ValveDetection');
                                             break;
                                         case 'auto_lock':
-                                            $this->RegisterVariableBoolean('Z2M_AutoLock', $this->Translate('Auto Lock'), '~Switch');
+                                            $this->RegisterVariableBoolean('Z2M_AutoLock', $this->Translate('Auto Lock'), 'Z2M.AutoLock');
                                             $this->EnableAction('Z2M_AutoLock');
                                             break;
                                         case 'away_mode':
@@ -2830,6 +2871,7 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'boost_heating':
                             $this->RegisterVariableBoolean('Z2M_BoostHeating', $this->Translate('Boost Heating'), '~Switch');
+                            $this->EnableAction('Z2M_BoostHeating');
                             break;
                         case 'away_mode':
                             $this->RegisterVariableBoolean('Z2M_AwayMode', $this->Translate('Away Mode'), '~Switch');
