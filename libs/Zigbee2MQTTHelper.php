@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_Vibration':
+                $Payload['vibration'] = strval($Value);
+                break;
             case 'Z2M_AutoLock':
                 $Payload['auto_lock'] = strval($this->AutoManual($Value));
                 break;
@@ -882,15 +885,15 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('angle_x_absolute', $Payload)) {
-                    $this->LogMessage('Please Contact Module Developer. Undefined Variable angle_x_absolute', KL_WARNING);
+                    //$this->LogMessage('Please Contact Module Developer. Undefined Variable angle_x_absolute', KL_WARNING);
                     //$this->RegisterVariableFloat('Z2M_Angle_X_Absolute', $this->Translate('Angle_X_Absolute'), '');
-                    //$this->SetValue('Z2M_Angle_X_Absolute', $Payload['angle_x_absolute']);
+                    $this->SetValue('Z2M_AngleXAbsolute', $Payload['angle_x_absolute']);
                 }
 
                 if (array_key_exists('angle_y_absolute', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: angle_y_absolute', KL_WARNING);
+                    //$this->LogMessage('Please contact module developer. Undefined variable: angle_y_absolute', KL_WARNING);
                     //$this->RegisterVariableFloat('Z2M_Angle_Y_Absolute', $this->Translate('Angle_Y_Absolute'), '');
-                    //$this->SetValue('Z2M_Angle_Y_Absolute', $Payload['angle_y_absolute']);
+                    $this->SetValue('Z2M_AngleYAbsolute', $Payload['angle_y_absolute']);
                 }
 
                 if (array_key_exists('angle_z', $Payload)) {
@@ -3383,8 +3386,14 @@ trait Zigbee2MQTTHelper
                         case 'angle_x':
                             $this->RegisterVariableFloat('Z2M_Angle_X', $this->Translate('Angle X'), '');
                             break;
+                        case 'angle_x_absolute':
+                            $this->RegisterVariableFloat('Z2M_AngleXAbsolute', $this->Translate('Angle X Absolute'), '');
+                            break;
                         case 'angle_y':
                             $this->RegisterVariableFloat('Z2M_Angle_Y', $this->Translate('Angle Y'), '');
+                            break;
+                        case 'angle_y_absolute':
+                            $this->RegisterVariableFloat('Z2M_AngleYAbsolute', $this->Translate('Angle Y Absolute'), '');
                             break;
                         case 'angle_z':
                             $this->RegisterVariableFloat('Z2M_Angle_Z', $this->Translate('Angle Z'), '');
