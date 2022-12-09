@@ -266,7 +266,12 @@
             "programming": "Programm",
             "temporary_manual": "Vorrübergehend Manuell",
             "Eco Mode": "Eco Modus",
-            "Away": "Abwesend"
+            "Away": "Abwesend",
+            "Angle X Absolute": "Winkel X absolut",
+            "Angle Y Absolute": "Winkel Y Absolute",
+            "Angle Y": "Winkel Y",
+            "Angle X": "Winkel X",
+            "Angle Z": "Winkel Z"
         }
     }
 }
