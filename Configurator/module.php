@@ -28,6 +28,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $this->SetReceiveDataFilter('.*' . $topic . '.*');
         $this->getDevices();
         $this->getGroups();
+        $this->SetStatus(102);
     }
 
     public function GetConfigurationForm()
