@@ -1473,6 +1473,9 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('action_transaction', $Payload)) {
                     $this->SetValue('Z2M_ActionTransaction', $Payload['action_transaction']);
                 }
+                if (array_key_exists('vibration', $Payload)) {
+                    $this->SetValue('Z2M_Vibration', $Payload['vibration']);
+                }
             }
         }
     }
