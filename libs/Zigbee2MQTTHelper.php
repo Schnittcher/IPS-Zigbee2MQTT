@@ -455,6 +455,11 @@ trait Zigbee2MQTTHelper
 
             $Payload = json_decode($Buffer['Payload'], true);
             if (is_array($Payload)) {
+                if (array_key_exists('last_seen', $Payload)) {
+                    //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
+                    $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
+                    $this->SetValue('Z2M_LastSeen', $Payload['last_seen']);
+                }
                 if (array_key_exists('boost_heating', $Payload)) {
                     switch ($Payload['boost_heating']) {
                         case 'ON':
