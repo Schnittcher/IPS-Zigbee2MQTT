@@ -271,7 +271,8 @@
             "Angle Y Absolute": "Winkel Y Absolute",
             "Angle Y": "Winkel Y",
             "Angle X": "Winkel X",
-            "Angle Z": "Winkel Z"
+            "Angle Z": "Winkel Z",
+            "Last Seen": "Zuletzt gesehen"
         }
     }
 }
