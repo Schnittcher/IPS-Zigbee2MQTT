@@ -29,7 +29,7 @@ class Zigbee2MQTTDevice extends IPSModule
         parent::ApplyChanges();
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
         //Setze Filter für ReceiveData
-        $Filter1 = preg_quote('"Topic":"' . $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '"');
+        $Filter1 = preg_quote('"Topic":"' . $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic')) . '.*"';
         $Filter2 = preg_quote('"Topic":"symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/');
         //$this->SendDebug('Filter ::', $MQTTTopic, 0);
         //$this->SetReceiveDataFilter('.*' . $MQTTTopic . '.*');
