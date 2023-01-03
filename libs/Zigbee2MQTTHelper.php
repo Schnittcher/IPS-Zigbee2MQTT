@@ -428,6 +428,10 @@ trait Zigbee2MQTTHelper
         if (!empty($this->ReadPropertyString('MQTTTopic'))) {
             $Buffer = json_decode($JSONString, true);
 
+            if (IPS_GetKernelDate() > 1670886000) {
+                $Buffer['Payload'] = utf8_decode($Buffer['Payload']);
+            }
+
             $this->SendDebug('MQTT Topic', $Buffer['Topic'], 0);
             $this->SendDebug('MQTT Payload', $Buffer['Payload'], 0);
 
@@ -458,9 +462,6 @@ trait Zigbee2MQTTHelper
 
             $Payload = json_decode($Buffer['Payload'], true);
             if (is_array($Payload)) {
-                if (array_key_exists('gradient_scene', $payload)) {
-                    $this->SetValue('Z2M_GradientScene', $Payload['gradient_scene']);
-                }
                 if (array_key_exists('boost_heating', $Payload)) {
                     switch ($Payload['boost_heating']) {
                         case 'ON':
@@ -1478,6 +1479,9 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('action_transaction', $Payload)) {
                     $this->SetValue('Z2M_ActionTransaction', $Payload['action_transaction']);
+                }
+                if (array_key_exists('vibration', $Payload)) {
+                    $this->SetValue('Z2M_Vibration', $Payload['vibration']);
                 }
             }
         }

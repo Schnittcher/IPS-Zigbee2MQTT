@@ -28,6 +28,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $this->SetReceiveDataFilter('.*' . $topic . '.*');
         $this->getDevices();
         $this->getGroups();
+        $this->SetStatus(102);
     }
 
     public function GetConfigurationForm()
@@ -94,6 +95,9 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $Buffer = json_decode($JSONString, true);
 
         if (array_key_exists('Topic', $Buffer)) {
+            if (IPS_GetKernelDate() > 1670886000) {
+                $Buffer['Payload'] = utf8_decode($Buffer['Payload']);
+            }
             if (fnmatch('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/devices', $Buffer['Topic'])) {
                 $Payload = json_decode($Buffer['Payload'], true);
                 $this->SetBuffer('Devices', json_encode($Payload));
