@@ -2697,6 +2697,7 @@ trait Zigbee2MQTTHelper
                                             break;
                                     }
                                     break; //Light binary break
+
                                 case 'numeric':
                                     switch ($feature['property']) {
                                         case 'brightness':
@@ -2762,7 +2763,23 @@ trait Zigbee2MQTTHelper
                                             $missedVariables['light'][] = $feature;
                                     }
                                     break; //Light numeric break
-                                case 'composite':
+
+                                    case 'enum':
+                                    switch ($feature['property']) {
+                                        case 'color_temp_startup':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_ColorTempStartupRGB', $this->Translate('Color Temperature Startup RGB'), $ProfileName);
+                                                $this->EnableAction('Z2M_ColorTempRZ2M_ColorTempStartupRGBGB');
+                                            }
+                                            break;
+                                        default:
+                                            // Default Climate enum
+                                            $missedVariables['light'][] = $feature;
+                                    }
+                                    break; // Light enum break
+
+                                    case 'composite':
                                     switch ($feature['property']) {
                                         case 'color':
                                             if ($feature['name'] == 'color_xy') {
