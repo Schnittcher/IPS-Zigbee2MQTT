@@ -1817,7 +1817,7 @@ trait Zigbee2MQTTHelper
                                     ['spring_blossom', $this->Translate('Spring Blossom'), '', 0x00FF00],
                                     ['midsummer_sun', $this->Translate('Midsummer Sun'), '', 0x00FF00],
                                     ['autumn_gold', $this->Translate('Autumn Gold'), '', 0x00FF00],
-                                    ['spring_lake', $thia->Translate('Spring Lake'), '', 0x00FF00],
+                                    ['spring_lake', $this->Translate('Spring Lake'), '', 0x00FF00],
                                     ['winter_mountain', $this->Translate('Winter Mountain'), '', 0x00FF00],
                                     ['midwinter', $this->Translate('Midwinter'), '', 0x00FF00],
                                     ['amber_bloom', $this->Translate('Amber Bloom'), '', 0x00FF00],
