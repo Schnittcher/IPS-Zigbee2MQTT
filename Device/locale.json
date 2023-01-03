@@ -264,7 +264,7 @@
             "Valve State": "Ventil Status",
             "Window": "Fenster",
             "programming": "Programm",
-            "temporary manual": "Vorrübergehend Manuell",
+            "temporary_manual": "Vorrübergehend Manuell",
             "Eco Mode": "Eco Modus",
             "Away": "Abwesend",
             "Angle X Absolute": "Winkel X absolut",
@@ -348,7 +348,6 @@
             "Festive Fun": "Festlicher Spaß",
             "Colour Burst": "Farbexplosion",
             "Crystalline": "Kristallin"
-
         }
     }
 }
