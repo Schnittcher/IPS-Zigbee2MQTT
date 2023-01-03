@@ -459,7 +459,6 @@ trait Zigbee2MQTTHelper
                     $this->mapExposesToVariables($Payload);
                 }
             }
-
             $Payload = json_decode($Buffer['Payload'], true);
             if (is_array($Payload)) {
                 if (array_key_exists('last_seen', $Payload)) {
