@@ -1760,7 +1760,7 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M.gradient_scene.':
+                        case 'Z2M.gradient_scene.da30b2e':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Light', '', '', [
                                     ['blossom', $this->Translate('Blossom'), '', 0x00FF00],
