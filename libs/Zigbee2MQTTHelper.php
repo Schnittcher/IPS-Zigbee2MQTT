@@ -1959,11 +1959,11 @@ trait Zigbee2MQTTHelper
                                     ['breathe', $this->Translate('Breathe'), '', 0x0000FF],
                                     ['okay', $this->Translate('Okay'), '', 0x0000FF],
                                     ['channel_change', $this->Translate('Channel Change'), '', 0x0000FF],
-                                    ['candle', $this->Translate('Candle'), ', 0x0000FF'],
-                                    ['fireplace', $this->Translate('Fireplace'), ', 0x0000FF'],
-                                    ['colorloop', $this->Translate('Colorloop'), ', 0x0000FF'],
-                                    ['sunrise', $this->Translate('Sunrise'), ', 0x0000FF'],
-                                    ['stop_hue_effect', $this->Translate('Stop Hue Effect'), ', 0x0000FF'],
+                                    ['candle', $this->Translate('Candle'), '', 0x0000FF],
+                                    ['fireplace', $this->Translate('Fireplace'), '', 0x0000FF],
+                                    ['colorloop', $this->Translate('Colorloop'), '', 0x0000FF],
+                                    ['sunrise', $this->Translate('Sunrise'), '', 0x0000FF],
+                                    ['stop_hue_effect', $this->Translate('Stop Hue Effect'), '', 0x0000FF],
                                     ['finish_effect', $this->Translate('Finish Effect'), '', 0x0000FF],
                                     ['stop_effect', $this->Translate('Stop Effect'), '', 0x0000FF]
                                 ]);
