@@ -2754,10 +2754,12 @@ trait Zigbee2MQTTHelper
                                             break;
                                         case 'color_temp_startup':
                                             $ProfileName = $this->registerVariableProfile($feature);
-                                            if ($ProfileName != false) {
-                                                $this->RegisterVariableInteger('Z2M.color_temp_startup', $this->Translate('Color Temperature Startup'), $ProfileName);
-                                                $this->EnableAction('Z2M.color_temp_startup');
+                                            if (!IPS_VariableProfileExists('Z2M.color_temperature_startup')) {
+                                                $this->RegisterProfileInteger('Z2M.color_temperature_startup', 'Intensity', '', '', 153, 500, 1);
                                             }
+                                                $this->RegisterVariableInteger('Z2M_ColorTempStartup', $this->Translate('Color Temperature Startup'), $ProfileName);
+                                                $this->EnableAction('Z2M_ColorTempStartup');
+                                            break;
                                         case 'color_temp_startup_rgb':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
