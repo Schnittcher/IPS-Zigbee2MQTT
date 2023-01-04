@@ -2752,11 +2752,16 @@ trait Zigbee2MQTTHelper
                                             $this->EnableAction('Z2M_ColorTempRGBKelvin');
                                             break;
                                         case 'color_temp_startup':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_ColorTempStartup', $this->Translate('Color Temperature Startup'), $ProfileName);
+                                                $this->EnableAction('Z2M_ColorTempStartup');
+                                            }
                                         case 'color_temp_startup_rgb':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
                                                 $this->RegisterVariableInteger('Z2M_ColorTempStartupRGB', $this->Translate('Color Temperature Startup RGB'), $ProfileName);
-                                                $this->EnableAction('Z2M_ColorTempRZ2M_ColorTempStartupRGBGB');
+                                                $this->EnableAction('Z2M_ColorTempStartupRGB');
                                             }
                                             break;
                                         default:
