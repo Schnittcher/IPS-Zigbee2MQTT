@@ -1561,6 +1561,9 @@ trait Zigbee2MQTTHelper
         if (!IPS_VariableProfileExists('Z2M.RadarSensitivity')) {
             $this->RegisterProfileInteger('Z2M.RadarSensitivity', 'Intensity', '', '', 0, 10, 1);
         }
+        if (!IPS_VariableProfileExists('Z2M.color_temperature_startup')) {
+            $this->RegisterProfileInteger('Z2M.color_temperature_startup', 'Intensity', '', '', 0, 10, 1);
+        }
 
         /**
          * if (!IPS_VariableProfileExists('Z2M.ColorTemperatureKelvin')) {
