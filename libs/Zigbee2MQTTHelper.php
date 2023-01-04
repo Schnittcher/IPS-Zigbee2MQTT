@@ -1955,7 +1955,7 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.effect.dd503500':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
-                                    ['blink', $this->Translate('Blink'), '', 0xFFFFFF],
+                                    ['blink', $this->Translate('Blink'), '', 0x0000FF],
                                     ['breathe', $this->Translate('Breathe'), '', 0x0000FF],
                                     ['okay', $this->Translate('Okay'), '', 0x0000FF],
                                     ['channel_change', $this->Translate('Channel Change'), '', 0x0000FF],
