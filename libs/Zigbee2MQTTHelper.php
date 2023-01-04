@@ -2757,7 +2757,7 @@ trait Zigbee2MQTTHelper
                                             break;
                                         case 'color_temp_startup':
                                             $ProfileName = $this->registerVariableProfile($feature);
-                                            if (!IPS_VariableProfileExists('Z2M_ColorTempStartup')) {
+                                            if $ProfileName != false) {
                                                 $this->RegisterProfileInteger('Z2M_ColorTempStartup', $this->Translate('Color Temperature Startup'), $ProfileName);
                                                 $this->EnableAction('Z2M_ColorTempStartup');
                                             }
