@@ -991,8 +991,12 @@ trait Zigbee2MQTTHelper
                     }
                 }
 
+                if (array_key_exists('color_temp_startup', $Payload)) {
+                    $this->SetValue('Z2M_ColorTempStartup', $Payload['color_temp_startup']);
+                }
+
                 if (array_key_exists('color_temp_startup_rgb', $Payload)) {
-                    $this->SetValue('Z2M_ColorTempStartupRGB', $Payload['color_temp_rgb']);
+                    $this->SetValue('Z2M_ColorTempStartupRGB', $Payload['color_temp_startup_rgb']);
                 }
 
                 if (array_key_exists('state', $Payload)) {
@@ -1561,10 +1565,6 @@ trait Zigbee2MQTTHelper
         if (!IPS_VariableProfileExists('Z2M.RadarSensitivity')) {
             $this->RegisterProfileInteger('Z2M.RadarSensitivity', 'Intensity', '', '', 0, 10, 1);
         }
-        // if (!IPS_VariableProfileExists('Z2M.color_temp_startup')) {
-        //    $this->RegisterProfileInteger('Z2M.color_temp_startup', 'Intensity', '', '', 0, 10, 1);
-        // }
-
         /**
          * if (!IPS_VariableProfileExists('Z2M.ColorTemperatureKelvin')) {
          * $this->RegisterProfileInteger('Z2M.ColorTemperatureKelvin', 'Intensity', '', '', 2000, 6535, 1);
@@ -2379,7 +2379,7 @@ trait Zigbee2MQTTHelper
                     case 'color_temp':
                     case 'color_temp_rgb':
                     case 'color_temp_startup_rgb':
-                    case 'color_teemp_startup':
+                    case 'color_temp_startup':
                     case 'action_color_temperature':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -2757,11 +2757,10 @@ trait Zigbee2MQTTHelper
                                             break;
                                         case 'color_temp_startup':
                                             $ProfileName = $this->registerVariableProfile($feature);
-                                            if (!IPS_VariableProfileExists('Z2M.color_temp_startup')) {
-                                                $this->RegisterProfileInteger('Z2M.color_temp_startup', 'Intensity', '', '', 153, 500, 1);
-                                            }
-                                                $this->RegisterVariableInteger('Z2M_ColorTempStartup', $this->Translate('Color Temperature Startup'), $ProfileName);
+                                            if (!IPS_VariableProfileExists('Z2M_ColorTempStartup')) {
+                                                $this->RegisterProfileInteger('Z2M_ColorTempStartup', $this->Translate('Color Temperature Startup'), $ProfileName);
                                                 $this->EnableAction('Z2M_ColorTempStartup');
+                                            }
                                             break;
                                         case 'color_temp_startup_rgb':
                                             $ProfileName = $this->registerVariableProfile($feature);
