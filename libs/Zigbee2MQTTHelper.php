@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_ColorTempStartup':
+                $Payload['color_temp_startup'] = strval($Value);
+                break;
             case 'Z2M_GradientScene':
                 $Payload['gradient_scene'] = strval($Value);
                 break;
