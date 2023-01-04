@@ -2000,6 +2000,16 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.power_on_behavior.420a27e2':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['on', $this->Translate('On'), '', 0x0000FF],
+                                    ['off', $this->Translate('Off'), '', 0x0000FF],
+                                    ['previous', $this->Translate('Previous'), '', 0x0000FF],
+                                    ['toggle', $this->Translate('Toggle'), '', 0x0000FF]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.backlight_mode':
                         case 'Z2M.motion_sensitivity.b8421401':
                             if (!IPS_VariableProfileExists($ProfileName)) {
