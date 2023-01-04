@@ -470,6 +470,28 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('color_temp_startup', $Payload)) {
+                    switch ($Payload['color_temp_startup']) {
+                        case '153':
+                            $this->SetValue('Z2MColorTempStartupPreset', 'coolest');
+                            break;
+                        case '250':
+                            $this->SetValue('Z2MColorTempStartupPreset', 'cool');
+                            break;
+                        case '370':
+                            $this->SetValue('Z2MColorTempStartupPreset', 'neutral');
+                            break;
+                        case '454':
+                            $this->SetValue('Z2MColorTempStartupPreset', 'warm');
+                            break;
+                        case '65535':
+                            $this->SetValue('Z2MColorTempStartupPreset', 'previous');
+                            break;
+                        default:
+                            $this->SendDebug('Boost Heating', 'Undefined State: ' . $Payload['boost_heating'], 0);
+                            break;
+                    }
+                }
                 if (array_key_exists('boost_heating', $Payload)) {
                     switch ($Payload['boost_heating']) {
                         case 'ON':
@@ -988,6 +1010,7 @@ trait Zigbee2MQTTHelper
 
                 if (array_key_exists('color_temp_startup', $Payload)) {
                     $this->SetValue('Z2M_ColorTempStartup', $Payload['color_temp_startup']);
+                    $this->SetValue('Z2M_ColorTempStartupPreset', $Payload['color_temp_startup']);
                 }
 
                 if (array_key_exists('color_temp_startup_rgb', $Payload)) {
@@ -2755,6 +2778,8 @@ trait Zigbee2MQTTHelper
                                             if ($ProfileName != false) {
                                                 $this->RegisterVariableInteger('Z2M_ColorTempStartup', $this->Translate('Color Temperature Startup'), $ProfileName);
                                                 $this->EnableAction('Z2M_ColorTempStartup');
+                                                $this->RegisterVariableString('Z2M_ColorTempStartupPreset', $this->Translate('Color Temperature Start Preset'), $Profilname);
+                                                $this->EnableAction('Z2M_ColorTempStartupPreset');
                                             }
                                             break;
                                         case 'color_temp_startup_rgb':
