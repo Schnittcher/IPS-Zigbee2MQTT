@@ -2376,6 +2376,7 @@ trait Zigbee2MQTTHelper
                     case 'color_temp':
                     case 'color_temp_rgb':
                     case 'color_temp_startup_rgb':
+                    case 'color_teemp_startup':
                     case 'action_color_temperature':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -2769,21 +2770,6 @@ trait Zigbee2MQTTHelper
                                             $missedVariables['light'][] = $feature;
                                     }
                                     break; //Light numeric break
-
-                                case 'enum':
-                                    switch ($feature['property']) {
-                                        case 'color_temp_startup':
-                                            $ProfileName = $this->registerVariableProfile($feature);
-                                            if ($ProfileName != false) {
-                                                $this->RegisterVariableInteger('Z2M_ColorTempStartupRGB', $this->Translate('Color Temperature Startup RGB'), $ProfileName);
-                                                $this->EnableAction('Z2M_ColorTempStartupRGB');
-                                            }
-                                            break;
-                                        default:
-                                            // Default Climate enum
-                                            $missedVariables['light'][] = $feature;
-                                    }
-                                    break; // Light enum break
 
                                     case 'composite':
                                     switch ($feature['property']) {
