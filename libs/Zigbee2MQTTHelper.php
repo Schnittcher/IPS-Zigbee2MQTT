@@ -979,14 +979,6 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_Sensitivity', $Payload['sensitivity']);
                 }
 
-                if (array_key_exists('color_temp', $Payload)) {
-                    $this->SetValue('Z2M_ColorTemp', $Payload['color_temp']);
-                    //Color Temperature in Kelvin
-                    if ($Payload['color_temp'] > 0) {
-                        $this->SetValue('Z2M_ColorTempKelvin', 1000000 / $Payload['color_temp']); //Convert to Kelvin
-                    }
-                }
-
                 if (array_key_exists('color_temp_rgb', $Payload)) {
                     $this->SetValue('Z2M_ColorTempRGB', $Payload['color_temp_rgb']);
                     if ($Payload['color_temp_rgb'] > 0) {
@@ -2758,8 +2750,14 @@ trait Zigbee2MQTTHelper
                                             $this->RegisterVariableInteger('Z2M_ColorTempRGBKelvin', $this->Translate('Color Temperature RGB Kelvin'), 'Z2M.ColorTemperatureKelvin');
                                             $this->EnableAction('Z2M_ColorTempRGBKelvin');
                                             break;
-                                        case 'color_temp_startup_rgb':
                                         case 'color_temp_startup':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_ColorTempStartup', $this->Translate('Color Temperature Startup'), $ProfileName);
+                                                $this->EnableAction('Z2M_ColorTempStartup');
+                                            }
+                                            break;
+                                        case 'color_temp_startup_rgb':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
                                                 $this->RegisterVariableInteger('Z2M_ColorTempStartupRGB', $this->Translate('Color Temperature Startup RGB'), $ProfileName);
