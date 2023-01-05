@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_GradientScene':
+                $Payload['gradient_scene'] = strval($Value);
+                break;
             case 'Z2M_Vibration':
                 $Payload['vibration'] = strval($Value);
                 break;
@@ -1757,6 +1760,87 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.gradient_scene.da30b2e':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Light', '', '', [
+                                    ['blossom', $this->Translate('Blossom'), '', 0x00FF00],
+                                    ['crocus', $this->Translate('Crocus'), '', 0x00FF00],
+                                    ['precious', $this->Translate('Precious'), '', 0x00FF00],
+                                    ['narcissa', $this->Translate('Narcissa'), '', 0x00FF00],
+                                    ['beginnings', $this->Translate('Beginnings'), '', 0x00FF00],
+                                    ['first_light', $this->Translate('First Light'), '', 0x00FF00],
+                                    ['horizon', $this->Translate('Horizon'), '', 0x00FF00],
+                                    ['valley_dawn', $this->Translate('Valley Down'), '', 0x00FF00],
+                                    ['sunflare', $this->Translate('Sunflare'), '', 0x00FF00],
+                                    ['emerald_flutter', $this->Translate('Emerald Flutter'), '', 0x00FF00],
+                                    ['memento', $this->Translate('Memento'), '', 0x00FF00],
+                                    ['resplendent', $this->Translate('Resplendent'), '', 0x00FF00],
+                                    ['scarlet_dream', $this->Translate('Scarlet Dream'), '', 0x00FF00],
+                                    ['lovebirds', $this->Translate('Lovebirds'), '', 0x00FF00],
+                                    ['smitten', $this->Translate('Smitten'), '', 0x00FF00],
+                                    ['glitz_and_glam', $this->Translate('Glitz and Glam'), '', 0x00FF00],
+                                    ['promise', $this->Translate('Promise'), '', 0x00FF00],
+                                    ['ruby_romance', $this->Translate('Ruby Romance'), '', 0x00FF00],
+                                    ['city_of_love', $this->Translate('City of Love'), '', 0x00FF00],
+                                    ['honolulu', $this->Translate('Honolulu'), '', 0x00FF00],
+                                    ['savanna_sunset', $this->Translate('Savanna Sunset'), '', 0x00FF00],
+                                    ['golden_pond', $this->Translate('Golden Pond'), '', 0x00FF00],
+                                    ['runy_glow', $this->Translate('Runny Glow'), '', 0x00FF00],
+                                    ['tropical_twilight', $this->Translate('Tropical Twilight'), '', 0x00FF00],
+                                    ['miami', $this->Translate('Miami'), '', 0x00FF00],
+                                    ['cancun', $this->Translate('Cancun'), '', 0x00FF00],
+                                    ['rio', $this->Translate('Rio'), '', 0x00FF00],
+                                    ['chinatown', $this->Translate('Chinatown'), '', 0x00FF00],
+                                    ['ibiza', $this->Translate('Ibiza'), '', 0x00FF00],
+                                    ['osaka', $this->Translate('Osaka'), '', 0x00FF00],
+                                    ['tokyo', $this->Translate('Tokyo'), '', 0x00FF00],
+                                    ['motown', $this->Translate('Motown'), '', 0x00FF00],
+                                    ['fairfax', $this->Translate('Fairfax'), '', 0x00FF00],
+                                    ['galaxy', $this->Translate('Galaxy'), '', 0x00FF00],
+                                    ['starlight', $this->Translate('Starlight'), '', 0x00FF00],
+                                    ['blood moon', $this->Translate('Blood Moon'), '', 0x00FF00],
+                                    ['artic_aurora', $this->Translate('Artic Aurora'), '', 0x00FF00],
+                                    ['moonlight', $this->Translate('Moonlight'), '', 0x00FF00],
+                                    ['nebula', $this->Translate('Nebula'), '', 0x00FF00],
+                                    ['sundown', $this->Translate('Sundown'), '', 0x00FF00],
+                                    ['blue_lagoon', $this->Translate('Blue Lagoon'), '', 0x00FF00],
+                                    ['palm_beach', $this->Translate('Palm Beach'), '', 0x00FF00],
+                                    ['lake_placid', $this->Translate('Lake Placid'), '', 0x00FF00],
+                                    ['mountain_breeze', $this->Translate('Mountain Breeze'), '', 0x00FF00],
+                                    ['lake_mist', $this->Translate('Lake Mist'), '', 0x00FF00],
+                                    ['ocean_dawn', $this->Translate('Ocean Dawn'), '', 0x00FF00],
+                                    ['frosty_dawn', $this->Translate('Frosty Dawn'), '', 0x00FF00],
+                                    ['sunday_morning', $this->Translate('Sunday Morning'), '', 0x00FF00],
+                                    ['emerald_isle', $this->Translate('Emerald Isle'), '', 0x00FF00],
+                                    ['spring_blossom', $this->Translate('Spring Blossom'), '', 0x00FF00],
+                                    ['midsummer_sun', $this->Translate('Midsummer Sun'), '', 0x00FF00],
+                                    ['autumn_gold', $this->Translate('Autumn Gold'), '', 0x00FF00],
+                                    ['spring_lake', $this->Translate('Spring Lake'), '', 0x00FF00],
+                                    ['winter_mountain', $this->Translate('Winter Mountain'), '', 0x00FF00],
+                                    ['midwinter', $this->Translate('Midwinter'), '', 0x00FF00],
+                                    ['amber_bloom', $this->Translate('Amber Bloom'), '', 0x00FF00],
+                                    ['lily', $this->Translate('Lily'), '', 0x00FF00],
+                                    ['painted_sky', $this->Translate('Painted Sky'), '', 0x00FF00],
+                                    ['winter_beauty', $this->Translate('Winter Beauty'), '', 0x00FF00],
+                                    ['orange_fields', $this->Translate('Orange Fields'), '', 0x00FF00],
+                                    ['forest_adventure', $this->Translate('Forest Adventure'), '', 0x00FF00],
+                                    ['blue_planet', $this->Translate('Blue Planet'), '', 0x00FF00],
+                                    ['soho', $this->Translate('Soho'), '', 0x00FF00],
+                                    ['vapor_wave', $this->Translate('Vapor Wave'), '', 0x00FF00],
+                                    ['magneto', $this->Translate('Magneto'), '', 0x00FF00],
+                                    ['tyrell', $this->Translate('Tyrell'), '', 0x00FF00],
+                                    ['disturbia', $this->Translate('Disturbia'), '', 0x00FF00],
+                                    ['hal', $this->Translate('Hal'), '', 0x00FF00],
+                                    ['golden_star', $this->Translate('Golden Star'), '', 0x00FF00],
+                                    ['under_the_tree', $this->Translate('Under the Tree'), '', 0x00FF00],
+                                    ['silent_night', $this->Translate('Silent Night'), '', 0x00FF00],
+                                    ['rosy_sparkle', $this->Translate('Rosy Sparkle'), '', 0x00FF00],
+                                    ['festive_fun', $this->Translate('Festive Fun'), '', 0x00FF00],
+                                    ['colour_burst', $this->Translate('Colour Burst'), '', 0x00FF00],
+                                    ['crystalline', $this->Translate('Crystalline'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.system_mode.ba44e6f8':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -2980,6 +3064,13 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'gradient_scene':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_GradientScene', $this->Translate('Gradient Scene'), $ProfileName);
+                                $this->EnableAction('Z2M_GradientScene');
+                            }
+                            break;
                         case 'switch_type':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
