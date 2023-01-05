@@ -992,6 +992,10 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_ColorTempStartupRGB', $Payload['color_temp_rgb']);
                 }
 
+                if (array_key_exists('color_temp_startup', $Payload)) {
+                    $this->SetValue('Z2M_ColorTempStartupRGB', $Payload['color_temp_rgb']);
+                }
+
                 if (array_key_exists('state', $Payload)) {
                     switch ($Payload['state']) {
                             case 'ON':
@@ -2281,6 +2285,7 @@ trait Zigbee2MQTTHelper
                         break;
                     case 'color_temp':
                     case 'color_temp_rgb':
+                    case 'color_temp_startup':
                     case 'color_temp_startup_rgb':
                     case 'action_color_temperature':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
@@ -2656,6 +2661,7 @@ trait Zigbee2MQTTHelper
                                             $this->RegisterVariableInteger('Z2M_ColorTempRGBKelvin', $this->Translate('Color Temperature RGB Kelvin'), 'Z2M.ColorTemperatureKelvin');
                                             $this->EnableAction('Z2M_ColorTempRGBKelvin');
                                             break;
+                                        case 'color_temp_startup':
                                         case 'color_temp_startup_rgb':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
