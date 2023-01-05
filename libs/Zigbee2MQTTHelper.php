@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_ColorTempStartup':
+                $Payload['color_temp_startup'] = strval($Value);
+                break;
             case 'Z2M_GradientScene':
                 $Payload['gradient_scene'] = strval($Value);
                 break;
@@ -993,6 +996,12 @@ trait Zigbee2MQTTHelper
 
                 if (array_key_exists('color_temp_startup_rgb', $Payload)) {
                     $this->SetValue('Z2M_ColorTempStartupRGB', $Payload['color_temp_rgb']);
+                    $this->EnableAction('Z2M_ColorTempStartupRGB');
+                }
+
+                if (array_key_exists('color_temp_startup', $Payload)) {
+                    $this->SetValue('Z2M_ColorTempStartup', $Payload['color_temp_startup']);
+                    $this->EnableAction('Z2M_ColorTempStartupRGB');
                 }
 
                 if (array_key_exists('state', $Payload)) {
@@ -2381,6 +2390,7 @@ trait Zigbee2MQTTHelper
                         break;
                     case 'color_temp':
                     case 'color_temp_rgb':
+                    case 'color_temp_startup':
                     case 'color_temp_startup_rgb':
                     case 'action_color_temperature':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
@@ -2760,7 +2770,14 @@ trait Zigbee2MQTTHelper
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
                                                 $this->RegisterVariableInteger('Z2M_ColorTempStartupRGB', $this->Translate('Color Temperature Startup RGB'), $ProfileName);
-                                                $this->EnableAction('Z2M_ColorTempRZ2M_ColorTempStartupRGBGB');
+                                                $this->EnableAction('Z2M_ColorTempStartupBGB');
+                                            }
+                                            break;
+                                        case 'color_temp_startup':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_ColorTempStartup', $this->Translate('Color Temperature Startup RGB'), $ProfileName);
+                                                $this->EnableAction('Z2M_ColorTempStartup');
                                             }
                                             break;
                                         default:
