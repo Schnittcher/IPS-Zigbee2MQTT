@@ -1001,7 +1001,7 @@ trait Zigbee2MQTTHelper
 
                 if (array_key_exists('color_temp_startup', $Payload)) {
                     $this->SetValue('Z2M_ColorTempStartup', $Payload['color_temp_startup']);
-                    $this->EnableAction('Z2M_ColorTempStartupRGB');
+                    $this->EnableAction('Z2M_ColorTempStartup');
                 }
 
                 if (array_key_exists('state', $Payload)) {
