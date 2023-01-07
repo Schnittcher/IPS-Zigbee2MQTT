@@ -1730,7 +1730,7 @@ trait Zigbee2MQTTHelper
         }
         return $state;
     }
-    
+
     private function LockUnlock(bool $Value)
     {
         switch ($Value) {
@@ -1756,6 +1756,7 @@ trait Zigbee2MQTTHelper
         }
         return $state;
     }
+
     private function AutoManual(bool $Value)
     {
         switch ($Value) {
