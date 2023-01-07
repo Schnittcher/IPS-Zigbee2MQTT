@@ -28,7 +28,7 @@ trait Zigbee2MQTTHelper
                 $Payload['eco_temperature'] = strval($Value);
                 break;
             case 'Z2M_ValveState':
-                $Payload['valve_state'] = strval($this->OnOff($Value));
+                $Payload['valve_state'] = strval($this->ValveState($Value));
                 break;
             case 'Z2M_EcoMode':
                 $Payload['eco_mode'] = strval($this->OnOff($Value));
@@ -487,7 +487,17 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_BoostHeatingCountdownTimeSet', $Payload['boost_heating_countdown_time_set']);
                 }
                 if (array_key_exists('valve_state', $Payload)) {
-                    $this->SetValue('Z2M_ValveState', $Payload['valve_state']);
+                    switch ($Payload['valve_state']) {
+                        case 'OPEN':
+                            $this->SetValue('Z2M_ValveState', true);
+                            break;
+                        case 'CLOSED':
+                            $this->SetValue('Z2M_ValveState', false);
+                            break;
+                        default:
+                            $this->SendDebug('Valve State', 'Undefined State: ' . $Payload['valve_state'], 0);
+                            break;
+                    }
                 }
                 if (array_key_exists('eco_mode', $Payload)) {
                     switch ($Payload['eco_mode']) {
@@ -1654,6 +1664,12 @@ trait Zigbee2MQTTHelper
                 [true, $this->Translate('Auto'),  '', 0x00FF00]
             ]);
         }
+        if (!IPS_VariableProfileExists('Z2M.ValveState')) {
+            $this->RegisterProfileBooleanEx('Z2M.ValveState', 'Radiator', '', '', [
+                [false, $this->Translate('Valve Closed'),  '', 0xFF0000],
+                [true, $this->Translate('Valve Open'),  '', 0x00FF00]
+            ]);
+        }
     }
 
     protected function SetValue($Ident, $Value)
@@ -1702,6 +1718,19 @@ trait Zigbee2MQTTHelper
         return $state;
     }
 
+    private function ValveState(bool $Value)
+    {
+        switch ($Value) {
+            case true:
+                $state = 'OPEN';
+                break;
+            case false:
+                $state = 'CLOSED';
+                break;
+        }
+        return $state;
+    }
+    
     private function LockUnlock(bool $Value)
     {
         switch ($Value) {
@@ -2938,7 +2967,7 @@ trait Zigbee2MQTTHelper
                 case 'binary':
                     switch ($expose['property']) {
                         case 'valve_state':
-                            $this->RegisterVariableBoolean('Z2M_ValveState', $this->Translate('Valve State'), '~Switch');
+                            $this->RegisterVariableBoolean('Z2M_ValveState', $this->Translate('Valve State'), 'Z2M.ValveState');
                             break;
                         case 'eco_mode':
                             $this->RegisterVariableBoolean('Z2M_EcoMode', $this->Translate('Eco Mode'), '~Switch');
