@@ -3744,14 +3744,14 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'detection_interval':
-                            $ProfilName = $this->registerVariableProfile($expose);
+                            $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->registerVariableFloat('Z2M_DetectionInterval', $this->Translate('Detection Interval'), $ProfileName);
                                 $this->EnableAction('Z2M_DetectionInterval');
                             }
                             break;
                         case 'action_code':
-                            $ProfilName = $this->registerVariableProfile($expose);
+                            $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->registerVariableFloat('Z2M_ActionCode', $this->Translate('Action Code'), $ProfileName);
                             }
