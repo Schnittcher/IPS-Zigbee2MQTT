@@ -73,10 +73,10 @@ trait Zigbee2MQTTHelper
                 $Payload['humidity_min'] = strval($Value);
                 break;
             case 'Z2M_TemperatureMax':
-                $Payload['temperature_max'] = number_format($Value, 2, '.','');
+                $Payload['temperature_max'] = number_format($Value, 2, '.' , '');
                 break;
             case 'Z2M_TemperatureMin':
-                $Payload['temperature_min'] = number_format($Value, 2, '.','');
+                $Payload['temperature_min'] = number_format($Value, 2, '.' , '');
                 break;
             case 'Z2M_BacklightMode':
                 $Payload['backlight_mode'] = strval($Value);
@@ -277,22 +277,22 @@ trait Zigbee2MQTTHelper
                 $Payload['motor_reversal_right'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_CurrentHeatingSetpoint':
-                $Payload['current_heating_setpoint'] = number_format($Value, 2, '.','');
+                $Payload['current_heating_setpoint'] = number_format($Value, 2, '.' , '');
                 break;
             case 'Z2M_CurrentHeatingSetpointAuto':
-                $Payload['current_heating_setpoint_auto'] = number_format($Value, 2, '.','');
+                $Payload['current_heating_setpoint_auto'] = number_format($Value, 2, '.' , '');
                 break;
             case 'Z2M_OccupiedHeatingSetpoint':
-                $Payload['occupied_heating_setpoint'] = number_format($Value, 2, '.','');
+                $Payload['occupied_heating_setpoint'] = number_format($Value, 2, '.' , '');
                 break;
             case 'Z2M_LocalTemperatureCalibration':
-                $Payload['local_temperature_calibration'] = number_format($Value, 2, '.','');
+                $Payload['local_temperature_calibration'] = number_format($Value, 2, '.' , '');
                 break;
             case 'Z2M_OpenWindowTemperature':
-                $Payload['open_window_temperature'] = number_format($Value, 2, '.','');
+                $Payload['open_window_temperature'] = number_format($Value, 2, '.' , '');
                 break;
             case 'Z2M_HolidayTemperature':
-                $Payload['holiday_temperature'] = number_format($Value, 2, '.','');
+                $Payload['holiday_temperature'] = number_format($Value, 2, '.' , '');
                 break;
             case 'Z2M_BoostTimesetCountdown':
                 $Payload['boost_timeset_countdown'] = strval($Value);
