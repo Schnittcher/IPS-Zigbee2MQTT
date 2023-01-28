@@ -1914,6 +1914,16 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.indicator_mode.45cba34f':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['on', $this->Translate('On'), '', 0xFF00],
+                                    ['off', $this->Translate('Off'), '', 0x00FF00],
+                                    ['off/on', $this->Translate('Off/On'), '', 0xFFFF00],
+                                    ['on/off', $this->Translate('On/Off'), '', 0xFF9900],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.melody.a0adcd38':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Speaker', '', '', [
