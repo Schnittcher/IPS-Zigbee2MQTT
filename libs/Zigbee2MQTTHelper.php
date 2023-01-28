@@ -25,7 +25,7 @@ trait Zigbee2MQTTHelper
                 $Payload['boost_heating_countdown_time_set'] = strval($Value);
                 break;
             case 'Z2M_EcoTemperature':
-                $Payload['eco_temperature'] = number_format($Value, 2, '.','');
+                $Payload['eco_temperature'] = number_format($Value, 2, '.' , '');
                 break;
             case 'Z2M_ValveState':
                 $Payload['valve_state'] = strval($this->ValveState($Value));
@@ -34,10 +34,10 @@ trait Zigbee2MQTTHelper
                 $Payload['eco_mode'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_MaxTemperature':
-                $Payload['max_temperature'] = number_format($Value, 2, '.','');
+                $Payload['max_temperature'] = number_format($Value, 2, '.' , '');
                 break;
             case 'Z2M_MinTemperature':
-                $Payload['min_temperature'] = number_format($Value, 2, '.','');
+                $Payload['min_temperature'] = number_format($Value, 2, '.' , '');
                 break;
             case 'Z2M_PowerOutageCount':
                 $Payload['power_outage_count'] = strval($Value);
