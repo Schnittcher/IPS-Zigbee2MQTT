@@ -1799,6 +1799,14 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.action.5e7f11cc':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['vibration', $this->Translate('Vibration'), '', 0x00FF00],
+                                    ['tilt', $this->Translate('Tilt'), '', 0xFFFF00],
+                                    ['drop', $this->Translate('Drop'), '', 0xFF9900],
+                                ]);
+                            }
                         case 'Z2M.gradient_scene.da30b2e':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Light', '', '', [
