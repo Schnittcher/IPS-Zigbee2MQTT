@@ -3183,7 +3183,10 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'action':
-                            $this->RegisterVariableString('Z2M_Action', $this->Translate('Action'), '');
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_Action', $this->Translate('Action'), $ProfileName);
+                            }
                             break;
                         case 'sensitivity':
                             $ProfileName = $this->registerVariableProfile($expose);
