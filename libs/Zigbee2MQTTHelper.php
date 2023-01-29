@@ -10,7 +10,7 @@ trait Zigbee2MQTTHelper
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
             case 'Z2M_ComfortTemperature':
-                $Payload['comfort_temperature'] = number_format($Value, 2, '.','');
+                $Payload['comfort_temperature'] = number_format($Value, 2, '.',' ');
                 break;
             case 'Z2M_ColorTempStartup':
                 $Payload['color_temp_startup'] = strval($Value);
