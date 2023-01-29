@@ -1807,6 +1807,7 @@ trait Zigbee2MQTTHelper
                                     ['drop', $this->Translate('Drop'), '', 0xFF9900]
                                 ]);
                             }
+                            break;
                         case 'Z2M.gradient_scene.da30b2e':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Light', '', '', [
