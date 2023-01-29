@@ -1804,7 +1804,7 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['vibration', $this->Translate('Vibration'), '', 0x00FF00],
                                     ['tilt', $this->Translate('Tilt'), '', 0xFFFF00],
-                                    ['drop', $this->Translate('Drop'), '', 0xFF9900],
+                                    ['drop', $this->Translate('Drop'), '', 0xFF9900]
                                 ]);
                             }
                         case 'Z2M.gradient_scene.da30b2e':
