@@ -26,15 +26,20 @@ class Zigbee2MQTTConfigurator extends IPSModule
         //Setze Filter für ReceiveData
         $topic = 'symcon/' . $this->ReadPropertyString('MQTTBaseTopic');
         $this->SetReceiveDataFilter('.*' . $topic . '.*');
-        $this->getDevices();
-        $this->getGroups();
+        if ($this->HasActiveParent) {
+            $this->getDevices();
+            $this->getGroups();
+        }
+
         $this->SetStatus(102);
     }
 
     public function GetConfigurationForm()
     {
-        $this->getDevices();
-        $this->getGroups();
+        if ($this->HasActiveParent) {
+            $this->getDevices();
+            $this->getGroups();
+        }
         $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
 
         //Devices
