@@ -990,6 +990,7 @@ trait Zigbee2MQTTHelper
 
                 if (array_key_exists('sensitivity', $Payload)) {
                     $this->SetValue('Z2M_Sensitivity', $Payload['sensitivity']);
+                    $this->EnableAction('Z2M_Sensitivity');
                 }
 
                 if (array_key_exists('color_temp', $Payload)) {
