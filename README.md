@@ -20,6 +20,11 @@
 * MQTT Server (IPS Modul) oder externer MQTT-Broker (z.B. Mosquitto)
 * Installierte Symcon Erweiterung in Zigbee2MQTT
 
+**Die Verknüpfung zwischen Coordinator und Symcon erfolgt nach dem folgenden Schema:**
+
+Coordinator → zigbee2mqtt → MQTT-Server (Symcon oder extern) → Symcon-Zigbee2MQTT
+
+**Coordinatoren können sowohl per USB als auch per LAN/WLAN in das System eingebunden werden. Hier bitte unbedingt die [Anleitung zu Zigbee2MQTT](https://www.zigbee2mqtt.io/guide/getting-started/) studieren!**
 
 ## 2. Enthaltene Module
 
