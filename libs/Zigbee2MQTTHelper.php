@@ -623,8 +623,18 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('min_temperature', $Payload)) {
                     $this->SetValue('Z2M_MinTemperature', $Payload['min_temperature']);
                 }
+featureWithUserExtension
                 if (array_key_exists('eco_temperature', $Payload)) {
                     $this->SetValue('Z2M_EcoTemperature', $Payload['eco_temperature']);
+
+                if (property_exists($Payload, 'vibration')) {
+                    $this->RegisterVariableBoolean('Z2M_Vibration', $this->Translate('Vibration'), '~Alert');
+                    $this->SetValue('Z2M_Vibration', $Payload->vibration);
+                }
+                if (property_exists($Payload, 'illuminance')) {
+                    $this->RegisterVariableInteger('Z2M_Illuminance', $this->Translate('Illuminance'), '');
+                    $this->SetValue('Z2M_Illuminance', $Payload->illuminance);
+master
                 }
                 if (array_key_exists('preset', $Payload)) {
                     $this->SetValue('Z2M_Preset', $Payload['preset']);
