@@ -36,7 +36,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
 
     public function GetConfigurationForm()
     {
-        if ($this->HasActiveParent()) {
+        if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
             $this->getDevices();
             $this->getGroups();
         }
