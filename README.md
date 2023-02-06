@@ -5,7 +5,7 @@
 
 # Zigbee2MQTT
    Anbindung von www.zigbee2mqtt.io an IP-Symcon.
- 
+
    ## Inhaltverzeichnis
    1. [Voraussetzungen](#1-voraussetzungen)
    2. [Enthaltene Module](#2-enthaltene-module)
@@ -13,11 +13,11 @@
    4. [Konfiguration in IP-Symcon](#4-konfiguration-in-ip-symcon)
    5. [Spenden](#5-spenden)
    6. [Lizenz](#6-lizenz)
-   
+
 ## 1. Voraussetzungen
 
 * mindestens IPS Version 6.1
-* MQTT Server (IPS Modul) 
+* MQTT Server (IPS Modul) oder externer MQTT-Broker (z.B. Mosquitto)
 * Installierte Symcon Erweiterung in Zigbee2MQTT
 
 
@@ -29,7 +29,7 @@
 * [Group](Group/README.md)
 
 ## 3. Installation
-Über den Module Store. (Beta Version)
+Über den Module Store.
 
 **Achtung**
 
@@ -59,15 +59,20 @@ Z2M_BoostTime | Integer | - | variabel | Integer
 
 ### 3.1 Installation der IP-Symcon Extension in Zigbee2MQTT
 
-Die Datei [IPSymconExtension.js](libs/IPSymconExtension.js) muss im Verzeichnis "data/extension" abgelegt werden.
+Um Devices im Konfigurator anzeigen zu können und diese anzulegen und Eigenschaften abholen zu können, benötigt das Modul eine Extension in Z2M.
+Dazu die Datei [IPSymconExtension.js](libs/IPSymconExtension.js) in das Verzeichnis **"/opt/zigbee2mqtt/data/extension"** auf dem Rechner, wo Z2M installiert ist ablegen.<br>
+
 Alternativ kann über das Frontend die Datei angelegt werden und der Inhalt eingefügt werden.
+
+Dazu geht Ihr auf den Punkt "Erweiterungen": <br> ![Erweiterungen](https://github.com/Burki24/IPS-Zigbee2MQTT/blob/featureWithUserExtension/docs/pictures/Erweiterung_Z2M.jpg)<br> Legt eine neue Extension über den Plus-Button an:  ![Erweiterungen](https://github.com/Burki24/IPS-Zigbee2MQTT/blob/featureWithUserExtension/docs/pictures/Erweiterung_erstellen_1.jpg)<br> Dann gebt Ihr der Erweiterung den Namen: symcon.js:<br> ![Erweiterung erstellen](https://github.com/Burki24/IPS-Zigbee2MQTT/blob/featureWithUserExtension/docs/pictures/Erweiterung_erstellen.jpg)<br> Danach öffnet sich ein Fenster für die Code-Eingabe:<br> ![Code Eingabe](https://github.com/Burki24/IPS-Zigbee2MQTT/blob/featureWithUserExtension/docs/pictures/Erweiterung_code.jpg). <br>Den dort bereits enthaltenen Code bitte komplett löschen. Danach wird der Code aus [IPSymconExtension.js](libs/IPSymconExtension.js) herein kopiert und gespeichert.<br> Danach Z2M bitte neu starten: <br>![Code Eingabe](https://github.com/Burki24/IPS-Zigbee2MQTT/blob/featureWithUserExtension/docs/pictures/Erweiterung_neustart.jpg)<br>
+
 
 ## 4. Konfiguration in IP-Symcon
 Bitte den einzelnen Modulen entnehmen.
 
 # 5. Spenden
 
-Dieses Modul ist für die nicht kommerzielle Nutzung kostenlos, Schenkungen als Unterstützung für den Autor werden hier akzeptiert:    
+Dieses Modul ist für die nicht kommerzielle Nutzung kostenlos, Schenkungen als Unterstützung für den Autor werden hier akzeptiert:
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EK4JRP87XLSHW" target="_blank"><img src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donate_LG.gif" border="0" /></a> <a href="https://www.amazon.de/hz/wishlist/ls/3JVWED9SZMDPK?ref_=wl_share" target="_blank">Amazon Wunschzettel</a>
 
