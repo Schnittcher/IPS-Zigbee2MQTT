@@ -126,7 +126,6 @@
       "Parlour": "Salon",
       "Office": "Büro",
       "Hotel": "Hotel",
- featureWithUserExtension
       "Seconds": "Sekunden",
       "Minutes": "Minutes",
       "Effect": "Effekt",
@@ -352,8 +351,6 @@
       "Gradient Scene": "Szene mit Farbverlauf",
       "Tilt": "Neigung",
       "Drop": "Gefallen"
-
- master
     }
   }
 }
