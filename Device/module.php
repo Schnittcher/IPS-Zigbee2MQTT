@@ -36,8 +36,9 @@ class Zigbee2MQTTDevice extends IPSModule
 
         $this->SendDebug('Filter ', '.*(' . $Filter1 . '|' . $Filter2 . ').*', 0);
         $this->SetReceiveDataFilter('.*(' . $Filter1 . '|' . $Filter2 . ').*');
-
-        $this->getDeviceInfo();
+        if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
+            $this->getDeviceInfo();
+        }
         $this->SetStatus(102);
     }
 }
