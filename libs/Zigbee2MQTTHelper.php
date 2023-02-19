@@ -1822,8 +1822,6 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-
-
                         case 'Z2M.action.c1844f92':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
