@@ -27,8 +27,8 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $topic = 'symcon/' . $this->ReadPropertyString('MQTTBaseTopic');
         $this->SetReceiveDataFilter('.*' . $topic . '.*');
         if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
-                $this->getDevices();
-                $this->getGroups();
+            $this->getDevices();
+            $this->getGroups();
         }
 
         $this->SetStatus(102);
