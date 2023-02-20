@@ -1803,6 +1803,61 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.action.bdac7927':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['arrow_left_click', $this->Translate('Arrow Left Click'), '', 0x00FF00],
+                                    ['arrow_left_hold', $this->Translate('Arrow Left Hold'), '', 0x00FF00],
+                                    ['arrow_left_release', $this->Translate('Arrow Left Release'), '', 0x00FF00],
+                                    ['arrow_right_click', $this->Translate('Arrow Right Click'), '', 0x00FF00],
+                                    ['arrow_right_hold', $this->Translate('Arrow Right Hold'), '', 0x00FF00],
+                                    ['arrow_right_release', $this->Translate('Arrow Right Release'), '', 0x00FF00],
+                                    ['brightness_down_click', $this->Translate('Brightness Down Click'), '', 0x00FF00],
+                                    ['brightness_down_hold', $this->Translate('Brightness DownHold'), '', 0x00FF00],
+                                    ['brightness_down_release', $this->Translate('Brightness Down Release'), '', 0x00FF00],
+                                    ['brightness_up_click', $this->Translate('Brightness Up Click'), '', 0x00FF00],
+                                    ['brightness_up_hold', $this->Translate('Brightness Up Hold'), '', 0x00FF00],
+                                    ['brightness_up_release', $this->Translate('Brightness Up Release'), '', 0x00FF00],
+                                    ['toggle', $this->Translate('toggle'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.action.c1844f92':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['button_1_hold', $this->Translate('Button 1 Hold'), '', 0x00FF00],
+                                    ['button_1_release', $this->Translate('Button 1 Release'), '', 0x00FF00],
+                                    ['button_1_single', $this->Translate('Button 1 Single'), '', 0x00FF00],
+                                    ['button_1_double', $this->Translate('Button 1 Double'), '', 0x00FF00],
+                                    ['button_1_triple', $this->Translate('Button 1 Tripple'), '', 0x00FF00],
+                                    ['button_2_hold', $this->Translate('Button 2 Hold'), '', 0x00FF00],
+                                    ['button_2_release', $this->Translate('Button 2 Release'), '', 0x00FF00],
+                                    ['button_2_single', $this->Translate('Button 2 Single'), '', 0x00FF00],
+                                    ['button_2_double', $this->Translate('Button 2 Double'), '', 0x00FF00],
+                                    ['button_2_triple', $this->Translate('Button 2 Tripple'), '', 0x00FF00],
+                                    ['button_3_hold', $this->Translate('Button 3 Hold'), '', 0x00FF00],
+                                    ['button_3_release', $this->Translate('Button 3 Release'), '', 0x00FF00],
+                                    ['button_3_single', $this->Translate('Button 3 Single'), '', 0x00FF00],
+                                    ['button_3_double', $this->Translate('Button 3 Double'), '', 0x00FF00],
+                                    ['button_3_triple', $this->Translate('Button 3 Tripple'), '', 0x00FF00],
+                                    ['button_4_hold', $this->Translate('Button 4 Hold'), '', 0x00FF00],
+                                    ['button_4_release', $this->Translate('Button 4 Release'), '', 0x00FF00],
+                                    ['button_4_single', $this->Translate('Button 4 Single'), '', 0x00FF00],
+                                    ['button_4_double', $this->Translate('Button 4 Double'), '', 0x00FF00],
+                                    ['button_4_triple', $this->Translate('Button 4 Tripple'), '', 0x00FF00],
+                                    ['button_5_hold', $this->Translate('Button 5 Hold'), '', 0x00FF00],
+                                    ['button_5_release', $this->Translate('Button 5 Release'), '', 0x00FF00],
+                                    ['button_5_single', $this->Translate('Button 5 Single'), '', 0x00FF00],
+                                    ['button_5_double', $this->Translate('Button 5 Double'), '', 0x00FF00],
+                                    ['button_5_triple', $this->Translate('Button 5 Tripple'), '', 0x00FF00],
+                                    ['button_6_hold', $this->Translate('Button 6 Hold'), '', 0x00FF00],
+                                    ['button_6_release', $this->Translate('Button 6 Release'), '', 0x00FF00],
+                                    ['button_6_single', $this->Translate('Button 6 Single'), '', 0x00FF00],
+                                    ['button_6_double', $this->Translate('Button 6 Double'), '', 0x00FF00],
+                                    ['button_6_triple', $this->Translate('Button 6 Tripple'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.action.5e7f11cc':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
