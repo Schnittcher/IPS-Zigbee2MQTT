@@ -515,7 +515,7 @@ trait Zigbee2MQTTHelper
                             break;
                     }
                 }
-                 if (array_key_exists('side', $Payload)) {
+                if (array_key_exists('side', $Payload)) {
                     $this->SetValue('Z2M_Side', $Payload['side']);
                 }
                 if (array_key_exists('power_outage_count', $Payload)) {
