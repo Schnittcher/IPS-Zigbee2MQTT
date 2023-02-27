@@ -1803,6 +1803,19 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.action.85b816e8':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['single', $this->Translate('Single'), '', 0x00FF00],
+                                    ['double', $this->Translate('Double'), '', 0x00FF00],
+                                    ['hold', $this->Translate('Hold'), '', 0x00FF00],
+                                    ['many', $this->Translate('Many'), '', 0x00FF00],
+                                    ['quadruple', $this->Translate('Quadruple'), '', 0x00FF00],
+                                    ['release', $this->Translate('Release'), '', 0x00FF00],
+                                    ['triple', $this->Translate('Triple'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.action.33dbe026':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [

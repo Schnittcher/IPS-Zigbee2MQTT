@@ -404,7 +404,10 @@
             "Single Right": "Rechts Einfach",
             "Triple Both": "Beide Dreifach",
             "Triple Left": "Links Dreifach",
-            "Triple Right": "Rechts Dreifach"
+            "Triple Right": "Rechts Dreifach",
+            "Quadriple": "Vierfach",
+            "Many": "Viele",
+
         }
     }
 }
