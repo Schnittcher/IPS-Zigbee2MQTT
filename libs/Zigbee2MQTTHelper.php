@@ -515,6 +515,9 @@ trait Zigbee2MQTTHelper
                             break;
                     }
                 }
+                if (array_key_exists('side', $Payload)) {
+                    $this->SetValue('Z2M_Side', $Payload['side']);
+                }
                 if (array_key_exists('power_outage_count', $Payload)) {
                     $this->SetValue('Z2M_PowerOutageCount', $Payload['power_outage_count']);
                 }
@@ -1803,6 +1806,21 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                            case 'Z2M.action.29611a11':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['fall', $this->Translate('Fall'), '', 0x00FF00],
+                                    ['flip180', $this->Translate('Flip 180'), '', 0x00FF00],
+                                    ['flip90', $this->Translate('Flip 90'), '', 0x00FF00],
+                                    ['rotate_left', $this->Translate('Rotate Left'), '', 0x00FF00],
+                                    ['rotate_right', $this->Translate('Rotate Right'), '', 0x00FF00],
+                                    ['shake', $this->Translate('Shake'), '', 0x00FF00],
+                                    ['slide', $this->Translate('Slide'), '', 0x00FF00],
+                                    ['tap', $this->Translate('Tap'), '', 0x00FF00],
+                                    ['throw', $this->Translate('Throw'), '', 0x00FF00],
+                                    ['wakeup', $this->Translate('Wakeup'), '', 0x00FF00]
+                                   ]);
+                            }
                         case 'Z2M.action.85b816e8':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -2474,6 +2492,12 @@ trait Zigbee2MQTTHelper
             case 'numeric':
                 switch ($expose['property']) {
 
+                    case 'side':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Shuffle', '', ' °', $expose['value_min'], $expose['value_max'], 1);
+                        }
+                        break;
                     case 'angle_x':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -3491,6 +3515,12 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'side':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('side', $this->Translate('Side'), $ProfileName);
+                            }
+                            break;
                         case 'angle_x':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
