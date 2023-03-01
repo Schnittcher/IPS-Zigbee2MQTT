@@ -1853,6 +1853,16 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.action.14fac83':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['brightness_move_down', $this->Translate('Brightness move down'), '', 0x00FF00],
+                                    ['brightness_move_up', $this->Translate('Brightness move up'), '', 0x00FF00],
+                                    ['off', $this->Translate('Off'), '', 0x00FF00],
+                                    ['on', $this->Translate('On'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.action.bdac7927':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [

@@ -417,7 +417,9 @@
             "Triple Left": "Links Dreifach",
             "Triple Right": "Rechts Dreifach",
             "Quadriple": "Vierfach",
-            "Many": "Viele"
+            "Many": "Viele",
+            "Brightness move down": "Helligkeit senken",
+            "Brightness move up": "Helligkeit erhöhen"
         }
     }
 }
