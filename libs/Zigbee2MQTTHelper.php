@@ -1819,8 +1819,9 @@ trait Zigbee2MQTTHelper
                                     ['tap', $this->Translate('Tap'), '', 0x00FF00],
                                     ['throw', $this->Translate('Throw'), '', 0x00FF00],
                                     ['wakeup', $this->Translate('Wakeup'), '', 0x00FF00]
-                                   ]);
+                                ]);
                             }
+                            break;
                         case 'Z2M.action.85b816e8':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
