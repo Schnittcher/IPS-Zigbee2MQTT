@@ -403,7 +403,21 @@
             "Tap": "Tippen",
             "Throw": "werfen",
             "Wakeup": "Aufwecken",
-            "Side": "Seite"
+            "Side": "Seite",
+            "Double Both": "Beide Doppelt",
+            "Double Left": "Links Doppelt",
+            "Double Right": "Rechts Doppelt",
+            "Hold Both": "Beide Halten",
+            "Hold Left": "Links Halten",
+            "Hold Right": "Rechts Halten",
+            "Single Both": "Beide Einfach",
+            "Single Left": "Links Einfach",
+            "Single Right": "Rechts Einfach",
+            "Triple Both": "Beide Dreifach",
+            "Triple Left": "Links Dreifach",
+            "Triple Right": "Rechts Dreifach",
+            "Quadriple": "Vierfach",
+            "Many": "Viele"
         }
     }
 }
