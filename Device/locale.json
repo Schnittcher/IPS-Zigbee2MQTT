@@ -419,7 +419,11 @@
             "Quadriple": "Vierfach",
             "Many": "Viele",
             "Brightness move down": "Helligkeit senken",
-            "Brightness move up": "Helligkeit erhöhen"
+            "Brightness move up": "Helligkeit erhöhen",
+            "Arrow Right click": "Rechts gedrückt",
+            "Brightness Down Hold": "Helligkeit senken halten",
+            "Brightness Down click": "Helligkeit senken gedrückt",
+            "Brightness Up click": "Helligkeit erhöhen gedrückt"
         }
     }
 }
