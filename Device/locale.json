@@ -423,7 +423,12 @@
             "Arrow Right click": "Rechts gedrückt",
             "Brightness Down Hold": "Helligkeit senken halten",
             "Brightness Down click": "Helligkeit senken gedrückt",
-            "Brightness Up click": "Helligkeit erhöhen gedrückt"
+            "Brightness Up click": "Helligkeit erhöhen gedrückt",
+            "Flipped": "Gespiegelt",
+            "Normal": "Normal",
+            "Display Orientation": "Display Ausrichtung",
+            "Display Ontime": "Display Einschaltdauer",
+            "Display Brightness": "Display Helligkeit"
         }
     }
 }
