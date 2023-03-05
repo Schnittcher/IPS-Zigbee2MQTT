@@ -1850,6 +1850,7 @@ trait Zigbee2MQTTHelper
                                     ['flipped', $this->Translate('Flipped'), '', 0x00FF00]
                                 ]);
                             }
+                            break;
                             case 'Z2M.action.bdac7927':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -2569,7 +2570,7 @@ trait Zigbee2MQTTHelper
                     case 'display_brightness':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Intansity', '', ' °', $expose['value_min'], $expose['value_max'], 1);
+                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' °', $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
                     case 'display_ontime':
