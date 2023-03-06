@@ -3,7 +3,7 @@
 
    ## Inhaltverzeichnis
    1. [Konfiguration](#1-konfiguration)
-   2. [Fehlende_Exposes] (#2-exposes)
+   2. [Fehlende Exposes](#2-exposes)
    3. [Funktionen](#3-funktionen)
    
 
