@@ -3,7 +3,9 @@
 
    ## Inhaltverzeichnis
    1. [Konfiguration](#1-konfiguration)
-   2. [Funktionen](#2-funktionen)
+   2. [Fehlende Exposes] (#2-exposes)
+   3. [Funktionen](#3-funktionen)
+   
 
    ## 1. Konfiguration
    ![Konfiguration Device](/docs/pictures/Device_Konfiguration.jpg)
@@ -21,7 +23,23 @@
    **10** | **Geräteinformationen abrufen** | Über diesen Button ruft Ihr einmalig alle Informationen zu einer Instanz über MQTT ab. Dies ist manchmal notwendig, wenn das Modul bezüglich der betreffenden Instanz ein Update erhalten hat (z.B. Variablen-, Profilanderungen). Beim Anlegen der Instanz wird dies vom Konfigurator übernommen, da ist es also nicht nötig, im Nachgang nochmal die Geräteinformationen abzuholen.
 
 
-   ## 2. Funktionen
+   
+   ## 2. Exposes   
+   
+   Um fehlende Exposes im Modul zu ergänzen, wird folgendes Vorgehen benötigt:
+   **Schritt** | **Screenshot** | **Aktion**
+   ------------ | ------------- | -------------
+   1 | ![Aktualisieren](/docs/pictures/liste-aktualisieren.png) | Das neue Gerät wird über Z2M ins Zigbee-Netzwerk integriert. Danach erscheint es im Konfigurator des Moduls. Beachtet: Teilweise dauert es einen Moment, bis es im Konfigurator auffindbar ist. Dazu bitte zwei mal auf "Aktualisieren" klicken.
+   2 | ![Anlegen](/docs/pictures/erstellen.png)| Dann das neue Gerät anlegen lassen.
+   2 | | Das Gerät im Objektbaum suchen und mit einem Doppelklick die Eigenschaften-Seite des Gerätes aufrufen
+   3 | ![Debug aktivieren](/docs/pictures/debug-aktivieren.png)| Das Debug des Gerätes aktivieren
+   4 | ![Informationen](/docs/pictures/geraeteinformationen.png) | Die Geräteinformationen abrufen
+   5 | | Im Debug-Fenster erhaltet Ihr jetzt folgende Informationen: MQTT Topic, MQTT Paload, mapExposesToVariables:: All Exposes, **mapExposesToVariables:: Missed Exposes** 
+   6 | | Wenn unter **mapExposesToVariables:: Missed Exposes** Einträge zu finden sind, dann weiter mit Schritt 7
+   7 | ![Download](/docs/pictures/download-debug.png) | Das Debug herunterladen
+   8 | | Dieses Debug uns zukommen lassen.
+   
+   ## 3. Funktionen
 
    ```php
    RequestAction($VariablenID, $Value);
