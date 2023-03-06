@@ -428,7 +428,16 @@
             "Normal": "Normal",
             "Display Orientation": "Display Ausrichtung",
             "Display Ontime": "Display Einschaltdauer",
-            "Display Brightness": "Display Helligkeit"
+            "Display Brightness": "Display Helligkeit",
+            "Smoke Density db/m": "Rauchdichte in db/m",
+            "Buzzer": "Buzzer",
+            "Mute": "Stumm",
+            "Alarm": "Alarm",
+            "Buzzer Manual Alarm": "Manueller Alarm",
+            "Buzzer Manual Mute": "Manuelle Stummschaltung",
+            "Heartbeat Indicator": "Funktions Indikator",
+            "Linkage Alarm": "Verknüpfungsalarm",
+            "Linkage Alarm State": "Verknüpfungsalarmzustand"
         }
     }
 }
