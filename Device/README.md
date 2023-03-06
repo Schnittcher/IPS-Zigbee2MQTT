@@ -3,7 +3,7 @@
 
    ## Inhaltverzeichnis
    1. [Konfiguration](#1-konfiguration)
-   2. [Fehlende Exposes] (#2-exposes)
+   2. [Fehlende_Exposes] (#2-exposes)
    3. [Funktionen](#3-funktionen)
    
 
@@ -38,6 +38,7 @@
    6 | | Wenn unter **mapExposesToVariables:: Missed Exposes** Einträge zu finden sind, dann weiter mit Schritt 7
    7 | ![Download](/docs/pictures/download-debug.png) | Das Debug herunterladen
    8 | | Dieses Debug uns zukommen lassen.
+   9 | | Sonderfall: Profile mit gerätespezifischen Meldungen (Enum). <br> Hier kommt es zu einer Meldung mit einer spezifischen Profil-Erweiterung und sieht dann z. B. folgendermaßen aus: <br> Z2M.buzzer.bdac7927 <br> Hier benötigen wir die letzte Position (also das bdac7927) um das Profil funktionsfähig zu machen. <br> Diese Meldung erscheint NICHT unter dem Punkt: missed Exposes, sondern an anderer Stelle des Debugs.
    
    ## 3. Funktionen
 
