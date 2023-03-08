@@ -419,7 +419,25 @@
             "Quadriple": "Vierfach",
             "Many": "Viele",
             "Brightness move down": "Helligkeit senken",
-            "Brightness move up": "Helligkeit erhöhen"
+            "Brightness move up": "Helligkeit erhöhen",
+            "Arrow Right click": "Rechts gedrückt",
+            "Brightness Down Hold": "Helligkeit senken halten",
+            "Brightness Down click": "Helligkeit senken gedrückt",
+            "Brightness Up click": "Helligkeit erhöhen gedrückt",
+            "Flipped": "Gespiegelt",
+            "Normal": "Normal",
+            "Display Orientation": "Display Ausrichtung",
+            "Display Ontime": "Display Einschaltdauer",
+            "Display Brightness": "Display Helligkeit",
+            "Smoke Density db/m": "Rauchdichte in db/m",
+            "Buzzer": "Buzzer",
+            "Mute": "Stumm",
+            "Alarm": "Alarm",
+            "Buzzer Manual Alarm": "Manueller Alarm",
+            "Buzzer Manual Mute": "Manuelle Stummschaltung",
+            "Heartbeat Indicator": "Funktions Indikator",
+            "Linkage Alarm": "Verknüpfungsalarm",
+            "Linkage Alarm State": "Verknüpfungsalarmzustand"
         }
     }
 }
