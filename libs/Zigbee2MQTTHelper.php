@@ -2613,7 +2613,7 @@ trait Zigbee2MQTTHelper
 
                     case 'smoke_density_dbm':
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Factory', '', ' ' . $expose['unit'], 0, 0, 0);
+                            $this->RegisterProfileFloat($ProfileName, 'Factory', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
                         break;
                     case 'display_brightness':
