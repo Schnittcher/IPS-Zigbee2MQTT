@@ -9,6 +9,63 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_AdaptationRunControl':
+                $Payload['adaptation_run_control'] = strval($Value);
+                break;
+            case 'Z2M_DayOfWeek':
+                $Payload['day_of_week'] = strval($Value);
+                break;
+            case 'Z2M_RegulationSetpointOffset':
+                $Payload['regulation_setpoint_offset'] = strval($Value);
+                break;
+            case 'Z2M_LoadRoomMean':
+                $Payload['load_room_mean'] = strval($Value);
+                break;
+            case 'Z2M_AlgorithmScaleFactor':
+                $Payload['algorithm_scale_factor'] = strval($Value);
+                break;
+            case 'Z2M_AdaptationRunSettings':
+                $Payload['adaptation_run_settings'] = strval($Value);
+                break;
+            case 'Z2M_TriggerTime':
+                $Payload['trigger_time'] = strval($Value);
+                break;
+            case 'Z2M_LoadBalancingEnable':
+                $Payload['load_balancing_enable'] = strval($Value);
+                break;
+            case 'Z2M_WindowOpenExternal':
+                $Payload['window_open_external'] = strval($Value);
+                break;
+            case 'Z2M_WindowOpenFeature':
+                $Payload['window_open_feature'] = strval($Value);
+                break;
+            case 'Z2M_RadiatorCovered':
+                $Payload['radiator_covered'] = strval($Value);
+                break;
+            case 'Z2M_ExternalMeasuredRoomSensor':
+                $Payload['external_measured_room_sensor'] = strval($Value);
+                break;
+            case 'Z2M_OccupiedHeatingSetpointScheduled':
+                $Payload['occupied_heating_setpoint_scheduled'] = number_format($Value, 2, '.', ' ');
+                break;
+            case 'Z2M_HeatAvailable':
+                $Payload['heat_available'] = strval($Value);
+                break;
+            case 'Z2M_ViewingDirection':
+                $Payload['viewing_direction'] = strval($Value);
+                break;
+            case 'Z2M_ThermostatVerticalOrientation':
+                $Payload['thermostat_vertical_orientation'] = strval($Value);
+                break;
+            case 'Z2M_MountedModeControl':
+                $Payload['mounted_mode_control'] = strval($Value);
+                break;
+            case 'Z2M_ProgrammingOperationMode':
+                $Payload['programming_operation_mode'] = strval($Value);
+                break;
+            case 'Z2M_Keypadlockout':
+                $Payload['keypad_lockout'] = strval($Value);
+                break;
             case 'Z2M_LinkageAlarm':
                 $Payload['linkage_alarm'] = strval($Value);
                 break;
@@ -502,6 +559,81 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('adaptation_run_control', $Payload)) {
+                    $this->SetValue('Z2M_AdaptationRunControl', $Payload['adaptation_run_control']);
+                }
+                if (array_key_exists('adaptation_run_status', $Payload)) {
+                    $this->SetValue('Z2M_AdaptationRunStatus', $Payload['adaptation_run_status']);
+                }
+                if (array_key_exists('day_of_week', $Payload)) {
+                    $this->SetValue('Z2M_Day_Of_Week', $Payload['day_of_week']);
+                }
+                if (array_key_exists('regulation_setpoint_offset', $Payload)) {
+                    $this->SetValue('Z2M_RegulationSetpointOffset', $Payload['regulation_setpoint_offset']);
+                }
+                if (array_key_exists('load_estimate', $Payload)) {
+                    $this->SetValue('Z2M_LoadEstimate', $Payload['load_estimate']);
+                }
+                if (array_key_exists('load_room_mean', $Payload)) {
+                    $this->SetValue('Z2M_LoadRoomMean', $Payload['load_room_mean']);
+                }
+                if (array_key_exists('algorithm_scale_factor', $Payload)) {
+                    $this->SetValue('Z2M_AlgorithmScaleFactor', $Payload['algorithm_scale_factor']);
+                }
+                if (array_key_exists('trigger_time', $Payload)) {
+                    $this->SetValue('Z2M_TriggerTime', $Payload['trigger_time']);
+                }
+                if (array_key_exists('window_open_internal', $Payload)) {
+                    $this->SetValue('Z2M_WindowOpenInternal', $Payload['window_open_internal']);
+                }
+                if (array_key_exists('adaptation_run_settings', $Payload)) {
+                    $this->SetValue('Z2M_AdaptationRunSettings', $Payload['adaptation_run_settings']);
+                }
+                if (array_key_exists('preheat_status', $Payload)) {
+                    $this->SetValue('Z2M_PreheatStatus', $Payload['preheat_status']);
+                }
+                if (array_key_exists('load_balancing_enable', $Payload)) {
+                    $this->SetValue('Z2M_LoadBalancingEnable', $Payload['load_balancing_enable']);
+                }
+                if (array_key_exists('window_open_external', $Payload)) {
+                    $this->SetValue('Z2M_WindowOpenExternal', $Payload['window_open_external']);
+                }
+                if (array_key_exists('window_open_feature', $Payload)) {
+                    $this->SetValue('Z2M_WindowOpenFeature', $Payload['window_open_feature']);
+                }
+                if (array_key_exists('radiator_covered', $Payload)) {
+                    $this->SetValue('Z2M_RadiatorCovered', $Payload['radiator_covered']);
+                }
+                if (array_key_exists('external_measured_room_sensor', $Payload)) {
+                    $this->SetValue('Z2M_ExternalMeasuredRoomSensor', $Payload['external_measured_room_sensor']);
+                }
+                if (array_key_exists('occupied_heating_setpoint_scheduled', $Payload)) {
+                    $this->SetValue('Z2M_OccupiedHeatingSetpointScheduled', $Payload['occupied_heating_setpoint_scheduled']);
+                }
+                if (array_key_exists('setpoint_change_source', $Payload)) {
+                    $this->SetValue('Z2M_SetpointChangeSource', $Payload['setpoint_change_source']);
+                }
+                if (array_key_exists('heat_required', $Payload)) {
+                    $this->SetValue('Z2M_HeatRequired', $Payload['heat_required']);
+                }
+                if (array_key_exists('heat_available', $Payload)) {
+                    $this->SetValue('Z2M_HeatAvailable', $Payload['heat_available']);
+                }
+                if (array_key_exists('viewing_direction', $Payload)) {
+                    $this->SetValue('Z2M_ViewingDirection', $Payload['viewing_direction']);
+                }
+                if (array_key_exists('thermostat_vertical_orientation', $Payload)) {
+                    $this->SetValue('Z2M_ThermostatVerticalOrientation', $Payload['thermostat_vertical_orientation']);
+                }
+                if (array_key_exists('mounted_mode_control', $Payload)) {
+                    $this->SetValue('Z2M_MountedModeControl', $Payload['mounted_mode_control']);
+                }
+                if (array_key_exists('programming_operation_mode', $Payload)) {
+                    $this->SetValue('Z2M_ProgrammingOperationMode', $Payload['programming_operation_mode']);
+                }
+                if (array_key_exists('keypad_lockout', $Payload)) {
+                    $this->SetValue('Z2M_KeypadLockout', $Payload['keypad_lockout']);
                 }
                 if (array_key_exists('linkage_alarm_state', $Payload)) {
                     $this->SetValue('Z2M_LinkageAlarmState', $Payload['linkage_alarm_state']);
@@ -1750,6 +1882,15 @@ trait Zigbee2MQTTHelper
                 [true, $this->Translate('Valve Open'),  '', 0x00FF00]
             ]);
         }
+        if (!IPS_VariableProfileExists('Z2M.WindowOpenInternal')) {
+            $Associations = [];
+            $Associations[] = [0, $this->Translate('Quarantine'), '', -1];
+            $Associations[] = [1, $this->Translate('Windows are closed'), '', -1];
+            $Associations[] = [2, $this->Translate('Hold'), '', -1];
+            $Associations[] = [3, $this->Translate('Open window detected'), '', -1];
+            $Associations[] = [4, $this->Translate('In window open state from external but detected closed locally'), '', -1];
+            $this->RegisterProfileIntegerEx('Z2M.WindowOpenInternal', '', '', '', $Associations);
+        }
     }
 
     protected function SetValue($Ident, $Value)
@@ -1879,7 +2020,67 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                            case 'Z2M.buzzer.':
+                        case 'Z2M.adaptation_run_control.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['none', $this->Translate('None'), '', 0x00FF00],
+                                    ['initiate_adaptation', $this->Translate('Initiate Adaptation'), '', 0x00FF00],
+                                    ['cancel_adaptation', $this->Translate('Cancel Adaptation'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.adaptation_run_status.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['none', $this->Translate('None'), '', 0x00FF00],
+                                    ['in_progress', $this->Translate('In Progress'), '', 0x00FF00],
+                                    ['found', $this->Translate('Found'), '', 0x00FF00],
+                                    ['lost', $this->Translate('Lost'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.day_of_week.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['sunday', $this->Translate('Sunday'), '', 0x00FF00],
+                                    ['monday', $this->Translate('Monday'), '', 0x00FF00],
+                                    ['tuesday', $this->Translate('Tuesday'), '', 0x00FF00],
+                                    ['wednesday', $this->Translate('Wednesday'), '', 0x00FF00],
+                                    ['thursday', $this->Translate('Thursday'), '', 0x00FF00],
+                                    ['Friday', $this->Translate('Friday'), '', 0x00FF00],
+                                    ['saturday', $this->Translate('Saturday'), '', 0x00FF00],
+                                    ['away_or_vacation', $this->Translate('Away Or Vacation'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.setpoint_change_source.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['manual', $this->Translate('manual'), '', 0x00FF00],
+                                    ['schedule', $this->Translate('Schedule'), '', 0x00FF00],
+                                    ['externally', $this->Translate('Externally'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.programming_operation_mode.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['setpoint', $this->Translate('Setpoint'), '', 0x00FF00],
+                                    ['schedule', $this->Translate('Schedule'), '', 0x00FF00],
+                                    ['eco', $this->Translate('Eco'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.keypad_lockout.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Alert', '', '', [
+                                    ['unlock', $this->Translate('Unlock'), '', 0x00FF00],
+                                    ['lock1', $this->Translate('Lock 1'), '', 0x00FF00],
+                                    ['lock2', $this->Translate('Lock 2'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.buzzer.':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Alert', '', '', [
                                     ['mute', $this->Translate('Mute'), '', 0x00FF00],
@@ -1895,7 +2096,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                            case 'Z2M.action.bdac7927':
+                        case 'Z2M.action.bdac7927':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['arrow_left_click', $this->Translate('Arrow Left Click'), '', 0x00FF00],
@@ -1914,7 +2115,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                            case 'Z2M.action.29611a11':
+                        case 'Z2M.action.29611a11':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['fall', $this->Translate('Fall'), '', 0x00FF00],
@@ -2610,7 +2811,41 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
-
+                    case 'regulation_setpoint_offset':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Temperature', '', ' °C', $expose['value_min'], $expose['value_max'], 1);
+                        }
+                        break;
+                    case 'load_estimate':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 1);
+                        }
+                        break;
+                    case 'load_room_mean':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 1);
+                        }
+                        break;
+                    case 'algorithm_scale_factor':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 1);
+                        }
+                        break;
+                    case 'trigger_time':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' Minutes', $expose['value_min'], $expose['value_max'], 1);
+                        }
+                        break;
+                    case 'external_measured_room_sensor':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Temperature', '', ' °', $expose['value_min'], $expose['value_max'], 1);
+                        }
+                        break;
                     case 'smoke_density_dbm':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Factory', '', ' ' . $expose['unit'], 0, 0, 0);
@@ -2738,6 +2973,7 @@ trait Zigbee2MQTTHelper
                     case 'current_heating_setpoint_auto':
                     case 'current_heating_setpoint':
                     case 'occupied_heating_setpoint':
+                    case 'occupied_heating_setpoint_scheduled':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -3264,8 +3500,54 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'adaptation_run_settings':
+                            $this->RegisterVariableBoolean('Z2M_AdaptationRunSettings', $this->Translate('Adaptation Run Settings'), '~Switch');
+                            $this->EnableAction('Z2M_AdaptationRunSettings');
+                            break;
+                        case 'preheat_status':
+                            $this->RegisterVariableBoolean('Z2M_PreheatStatus', $this->Translate('Preheat Status'), '~Switch');
+                            $this->EnableAction('Z2M_PreheatStatus');
+                            break;
+                        case 'load_balancing_enable':
+                            $this->RegisterVariableBoolean('Z2M_LoadBalancingEnable', $this->Translate('Load Balancing Enable'), '~Switch');
+                            $this->EnableAction('Z2M_LoadBalancingEnable');
+                            break;
+                        case 'window_open_external':
+                            $this->RegisterVariableBoolean('Z2M_WindowOpenExternal', $this->Translate('Window Open External'), '~Switch');
+                            $this->EnableAction('Z2M_WindowOpenExternal');
+                            break;
+                        case 'window_open_feature':
+                            $this->RegisterVariableBoolean('Z2M_Window_OpenFeature', $this->Translate('Window Open Feature'), '~Switch');
+                            $this->EnableAction('Z2M_Window_OpenFeature');
+                            break;
+                        case 'radiator_covered':
+                            $this->RegisterVariableBoolean('Z2M_RadiatorCovered', $this->Translate('Radiator Covered'), '~Switch');
+                            $this->EnableAction('Z2M_RadiatorCovered');
+                            break;
+                        case 'heat_required':
+                            $this->RegisterVariableBoolean('Z2M_HeatRequired', $this->Translate('Heat Required'), '~Switch');
+                            break;
+                        case 'heat_available':
+                            $this->RegisterVariableBoolean('Z2M_HeatAvailable', $this->Translate('Heat Available'), '~Switch');
+                            $this->EnableAction('Z2M_HeatAvailable');
+                            break;
+                        case 'viewing_direction':
+                            $this->RegisterVariableBoolean('Z2M_ViewingDirection', $this->Translate('Viewing Direction'), '~Switch');
+                            $this->EnableAction('Z2M_ViewingDirection');
+                            break;
+                        case 'thermostat_vertical_orientation':
+                            $this->RegisterVariableBoolean('Z2M_ThermostatVerticalOrientation', $this->Translate('Thermostat VerticalOrientation'), '~Switch');
+                            $this->EnableAction('Z2M_ThermostatVerticalOrientation');
+                            break;
+                        case 'mounted_mode_control':
+                            $this->RegisterVariableBoolean('Z2M_MountedModeControl', $this->Translate('Mounted Mode Control'), '~Switch');
+                            $this->EnableAction('Z2M_MountedModeControl');
+                            break;
+                        case 'mounted_mode_active':
+                            $this->RegisterVariableBoolean('Z2M_MountedModeActive', $this->Translate('Mounted Mode Active'), '~Switch');
+                            break;
                         case 'linkage_alarm_state':
-                            $this->RegisterVariableBoolean('Z2M_LinkageAlarmState', $this->Translate('Linkage Alarm'), '~Switch');
+                            $this->RegisterVariableBoolean('Z2M_LinkageAlarmState', $this->Translate('Linkage Alarm State'), '~Switch');
                             break;
                         case 'linkage_alarm':
                             $this->RegisterVariableBoolean('Z2M_LinkageAlarm', $this->Translate('Linkage Alarm'), '~Switch');
@@ -3438,6 +3720,46 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'adaptation_run_control':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_AdaptationRunControl', $this->Translate('Adaptation Run Control'), $ProfileName);
+                                $this->EnableAction('Z2M_AdaptationRunControl');
+                            }
+                            break;
+                        case 'adaptation_run_status':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_AdaptationRunStatus', $this->Translate('Adaptation Run Status'), $ProfileName);
+                            }
+                            break;
+                        case 'day_of_week':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_DayOfWeek', $this->Translate('Day Of Week'), $ProfileName);
+                                $this->EnableAction('Z2M_DayOfWeek');
+                            }
+                            break;
+                        case 'setpoint_change_source':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_SetpointChangeSource', $this->Translate('Setpoint Change Source'), $ProfileName);
+                            }
+                            break;
+                        case 'programming_operation_mode':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_ProgrammingOperationMode', $this->Translate('Programming Operation Mode'), $ProfileName);
+                                $this->EnableAction('Z2M_ProgrammingOperationMode');
+                            }
+                            break;
+                        case 'keypad_lockout':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_KeypadLockout', $this->Translate('Keypad Lockout'), $ProfileName);
+                                $this->EnableAction('Z2M_Keypad_Lockout');
+                            }
+                            break;
                         case 'buzzer':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -3688,30 +4010,85 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'occupied_heating_setpoint_scheduled':
+                            $ProfileName = $this->registerVariableProfile($feature);
+                            if ($ProfileName != false) {
+                            $this->RegisterVariableFloat('Z2M_OccupiedHeatingSetpointScheduled', $this->Translate('Occupied Heating Setpoint Scheduled'), $ProfileName);
+                            $this->EnableAction('Z2M_OccupiedHeatingSetpointScheduled');
+                            }
+                            break;
+                        case 'regulation_setpoint_offset':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_RegulationSetpointOffset', $this->Translate('Regulation Setpoint Offset'), $ProfileName);
+                                $this->EnableAction('Z2M_RegulationSetpointOffset');
+                            }
+                            break;
+                        case 'load_estimate':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_LoadEstimate', $this->Translate('Load Estimate'), $ProfileName);
+                                $this->EnableAction('Z2M_LoadEstimate');
+                            }
+                            break;
+                        case 'load_room_mean':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_LoadRoomMean', $this->Translate('Load Room Mean'), $ProfileName);
+                                $this->EnableAction('Z2M_LoadRoomMean');
+                            }
+                            break;
+                        case 'algorithm_scale_factor':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_AlgorithmScaleFactor', $this->Translate('Algorithm Scale Factor'), $ProfileName);
+                                $this->EnableAction('Z2M_AlgorithmScaleFactor');
+                            }
+                            break;
+                        case 'trigger_time':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_TriggerTime', $this->Translate('Trigger Time'), $ProfileName);
+                                $this->EnableAction('Z2M_TriggerTime');
+                            }
+                            break;
+                        case 'window_open_internal':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_WindowOpenInternal', $this->Translate('Window Open Internal'), 'Z2M.WindowOpenInternal');
+                            }
+                            break;
+                        case 'external_measured_room_sensor':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_ExternalMeasuredRoomSensor', $this->Translate('External Measured Room Sensor'), $ProfileName);
+                                $this->EnableAction('Z2M_ExternalMeasuredRoomSensor');
+                            }
+                            break;
                         case 'smoke_density_dbm':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableFloat('smoke_density_dbm', $this->Translate('Smoke Density db/m'), $ProfileName);
+                                $this->RegisterVariableFloat('Z2M_SmokeDensityDBM', $this->Translate('Smoke Density db/m'), $ProfileName);
                             }
                             break;
                         case 'display_brightness':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('display_ontime', $this->Translate('Display Brightness'), $ProfileName);
+                                $this->RegisterVariableInteger('Z2M_DisplayBrightness', $this->Translate('Display Brightness'), $ProfileName);
                                 $this->EnableAction('Z2M_DisplayBrightness');
                             }
                             break;
                         case 'display_ontime':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('display_ontime', $this->Translate('Display Ontime'), $ProfileName);
+                                $this->RegisterVariableInteger('Z2M_DisplayOntime', $this->Translate('Display Ontime'), $ProfileName);
                                 $this->EnableAction('Z2M_DisplayOntime');
                             }
                             break;
                         case 'side':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('side', $this->Translate('Side'), $ProfileName);
+                                $this->RegisterVariableInteger('Z2M_side', $this->Translate('Side'), $ProfileName);
                             }
                             break;
                         case 'angle_x':
