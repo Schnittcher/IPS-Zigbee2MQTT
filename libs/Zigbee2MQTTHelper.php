@@ -1887,7 +1887,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                            case 'Z2M.display_orientation.':
+                            case 'Z2M.display_orientation.d6fc8316':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['normal', $this->Translate('Normal'), '', 0x00FF00],
