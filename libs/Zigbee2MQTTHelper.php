@@ -4013,8 +4013,8 @@ trait Zigbee2MQTTHelper
                         case 'occupied_heating_setpoint_scheduled':
                             $ProfileName = $this->registerVariableProfile($feature);
                             if ($ProfileName != false) {
-                            $this->RegisterVariableFloat('Z2M_OccupiedHeatingSetpointScheduled', $this->Translate('Occupied Heating Setpoint Scheduled'), $ProfileName);
-                            $this->EnableAction('Z2M_OccupiedHeatingSetpointScheduled');
+                                $this->RegisterVariableFloat('Z2M_OccupiedHeatingSetpointScheduled', $this->Translate('Occupied Heating Setpoint Scheduled'), $ProfileName);
+                                $this->EnableAction('Z2M_OccupiedHeatingSetpointScheduled');
                             }
                             break;
                         case 'regulation_setpoint_offset':
