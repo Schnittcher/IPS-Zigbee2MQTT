@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_MuteBuzzer':
+                $Payload['mute_buzzer'] = strval($Value);
+                break;
             case 'Z2M_AdaptationRunControl':
                 $Payload['adaptation_run_control'] = strval($Value);
                 break;
@@ -559,6 +562,12 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('mute', $Payload)) {
+                    $this->SetValue('Z2M_Mute', $Payload['mute']);
+                }
+                if (array_key_exists('mute_buzzer', $Payload)) {
+                    $this->SetValue('Z2M_MuteBuzzer', $Payload['mute_buzzer']);
                 }
                 if (array_key_exists('adaptation_run_control', $Payload)) {
                     $this->SetValue('Z2M_AdaptationRunControl', $Payload['adaptation_run_control']);
@@ -2020,6 +2029,13 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.mute_buzzer.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Alert', '', '', [
+                                    ['Mute', $this->Translate('Mute'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.adaptation_run_control.':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -3500,6 +3516,9 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'mute':
+                            $this->RegisterVariableBoolean('Z2M_Mute', $this->Translate('Mute'), '~Switch');
+                            break;
                         case 'adaptation_run_settings':
                             $this->RegisterVariableBoolean('Z2M_AdaptationRunSettings', $this->Translate('Adaptation Run Settings'), '~Switch');
                             $this->EnableAction('Z2M_AdaptationRunSettings');
@@ -3720,6 +3739,13 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'mute_buzzer':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_MuteBuzzer', $this->Translate('Mute Buzzer'), $ProfileName);
+                                $this->EnableAction('Z2M_MuteBuzzer');
+                            }
+                            break;
                         case 'adaptation_run_control':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {

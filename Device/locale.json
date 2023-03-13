@@ -485,7 +485,8 @@
             "Adaptation Run Control": "Anpassungslaufsteuerung",
             "Initiate Adaptation": "Anpassung einleiten",
             "Cancel Adaptation": "Anpassung abbrechen",
-            "Regulation Setpoint Offset": "Regelsollwert-Offset"
+            "Regulation Setpoint Offset": "Regelsollwert-Offset",
+            "Mute Buzzer": "Alarm stumm schalten"
         }
     }
 }
