@@ -486,7 +486,8 @@
             "Initiate Adaptation": "Anpassung einleiten",
             "Cancel Adaptation": "Anpassung abbrechen",
             "Regulation Setpoint Offset": "Regelsollwert-Offset",
-            "Mute Buzzer": "Alarm stumm schalten"
+            "Mute Buzzer": "Alarm stumm schalten",
+            "Test": "Test"
         }
     }
 }

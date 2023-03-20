@@ -2042,14 +2042,21 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M.mute_buzzer.':
+                        case 'Z2M.selftest.784dd132':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
+                                    ['Test', $this->Translate('Test'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.mute_buzzer.6c8bdc62':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Alert', '', '', [
                                     ['Mute', $this->Translate('Mute'), '', 0x00FF00],
                                 ]);
                             }
                             break;
-                        case 'Z2M.adaptation_run_control.':
+                        case 'Z2M.adaptation_run_control.e596b9f2':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['none', $this->Translate('None'), '', 0x00FF00],
@@ -2058,7 +2065,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.adaptation_run_status.':
+                        case 'Z2M.adaptation_run_status.cc98878f':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['none', $this->Translate('None'), '', 0x00FF00],
@@ -2068,7 +2075,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.day_of_week.':
+                        case 'Z2M.day_of_week.87770221':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['sunday', $this->Translate('Sunday'), '', 0x00FF00],
@@ -2082,7 +2089,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.setpoint_change_source.':
+                        case 'Z2M.setpoint_change_source.2b697f02':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['manual', $this->Translate('manual'), '', 0x00FF00],
@@ -2091,7 +2098,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.programming_operation_mode.':
+                        case 'Z2M.programming_operation_mode.5dfa482f':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['setpoint', $this->Translate('Setpoint'), '', 0x00FF00],
@@ -2100,7 +2107,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.keypad_lockout.':
+                        case 'Z2M.keypad_lockout.84f3d9b9':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Alert', '', '', [
                                     ['unlock', $this->Translate('Unlock'), '', 0x00FF00],
@@ -2560,6 +2567,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.effect.988c295e':
                         case 'Z2M.effect.fe70ca86':
                         case 'Z2M.effect.efbfc77e':
                         case 'Z2M.effect.dd503500':

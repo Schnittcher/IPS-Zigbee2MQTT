@@ -20,7 +20,7 @@ trait MQTTHelper
         $Data['QualityOfService'] = 0;
         $Data['Retain'] = false;
         $Data['Topic'] = $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/' . $topic;
-        $Data['Payload'] = $value;
+        $Data['Payload'] = utf8_encode($value);
         $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
         $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
         $this->SendDebug(__FUNCTION__ . ' Payload', $Data['Payload'], 0);
@@ -34,7 +34,7 @@ trait MQTTHelper
         $Data['QualityOfService'] = 0;
         $Data['Retain'] = false;
         $Data['Topic'] = $this->ReadPropertyString('MQTTBaseTopic') . '/' . $topic;
-        $Data['Payload'] = $value;
+        $Data['Payload'] = utf8_encode($value);
         $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
         $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
         $this->SendDebug(__FUNCTION__ . ' Payload', $Data['Payload'], 0);
@@ -48,7 +48,7 @@ trait MQTTHelper
         $Data['QualityOfService'] = 0;
         $Data['Retain'] = false;
         $Data['Topic'] = 'symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/' . $topic;
-        $Data['Payload'] = $value;
+        $Data['Payload'] = utf8_encode($value);
         $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
         $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
         $this->SendDebug(__FUNCTION__ . ' Payload', $Data['Payload'], 0);
