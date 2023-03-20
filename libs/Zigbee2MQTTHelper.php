@@ -2878,13 +2878,13 @@ trait Zigbee2MQTTHelper
                     case 'display_brightness':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' °', $expose['value_min'], $expose['value_max'], 1);
+                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
                     case 'display_ontime':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Sleep', '', ' °', $expose['value_min'], $expose['value_max'], 1);
+                            $this->RegisterProfileInteger($ProfileName, 'Sleep', '', ' ', $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
                     case 'side':
