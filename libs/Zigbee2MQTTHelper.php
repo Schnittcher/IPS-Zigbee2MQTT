@@ -9,9 +9,6 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
-            case 'Z2M_WindowOpen':
-                $Payload['window_open'] = strval($this->OnOff($Value));
-                break;
             case 'Z2M_MuteBuzzer':
                 $Payload['mute_buzzer'] = strval($Value);
                 break;
@@ -1478,17 +1475,7 @@ trait Zigbee2MQTTHelper
                         }
                 }
                 if (array_key_exists('window_open', $Payload)) {
-                    switch ($Payload['window_open']) {
-                        case 'ON':
-                            $this->SetValue('Z2M_WindowOpen', true);
-                            break;
-                        case 'OFF':
-                            $this->SetValue('Z2M_WindowOpen', false);
-                            break;
-                        default:
-                            $this->SendDebug('Window Open', 'Undefined State: ' . $Payload['window_open'], 0);
-                            break;
-                    }
+                    $this->SetValue('Z2M_WindowOpen', $Payload['window_open']);
                 }
                 if (array_key_exists('open_window_temperature', $Payload)) {
                     $this->SetValue('Z2M_OpenWindowTemperature', $Payload['open_window_temperature']);
