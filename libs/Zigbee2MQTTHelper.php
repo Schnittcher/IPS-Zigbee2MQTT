@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_WindowOpen':
+                $Payload['mute_buzzer'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_MuteBuzzer':
                 $Payload['mute_buzzer'] = strval($Value);
                 break;
