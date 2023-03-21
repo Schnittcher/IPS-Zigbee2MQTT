@@ -2029,6 +2029,7 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.selftest.e0cc684':
                         case 'Z2M.selftest.784dd132':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
@@ -2103,7 +2104,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.buzzer.':
+                        case 'Z2M.buzzer.cd21c09a':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Alert', '', '', [
                                     ['mute', $this->Translate('Mute'), '', 0x00FF00],
