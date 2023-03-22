@@ -2876,7 +2876,7 @@ trait Zigbee2MQTTHelper
                 switch ($expose['property']) {
                     case 'soil_moisture':
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Drops', '', ' %', 0, 0, 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Drops', '', ' ' . $expose['unit'], 0, 0, 0);
                         }
                         break;
                     case 'regulation_setpoint_offset':
@@ -4104,12 +4104,6 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
-                        case 'soil_moisture':
-                            $ProfileName = $this->registerVariableProfile($feature);
-                            if ($ProfileName != false) {
-                                $this->RegisterVariableFloat('Z2M_SoilMoisture', $this->Translate('Soil Moisture'), $ProfileName);
-                            }
-                            break;
                         case 'occupied_heating_setpoint_scheduled':
                             $ProfileName = $this->registerVariableProfile($feature);
                             if ($ProfileName != false) {
@@ -4547,6 +4541,9 @@ trait Zigbee2MQTTHelper
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_CalibrationTimeRight', $this->Translate('Calibration Time Right'), $ProfileName);
                             }
+                            break;
+                        case 'soil_moisture':
+                                $this->RegisterVariableInteger('Z2M_SoilMoisture', $this->Translate('Soil Moisture'), '~Intensity.100');
                             break;
                         case 'action_angle':
                             $this->RegisterVariableInteger('Z2M_ActionAngle', $this->Translate('Action angle'), '');
