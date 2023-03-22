@@ -2050,7 +2050,7 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M.battery_state.':
+                        case 'Z2M.battery_state.b8421401':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Battery', '', '', [
                                     ['low', $this->Translate('Low'), '', 0x00FF00],
@@ -2059,7 +2059,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.temperature_unit.':
+                        case 'Z2M.temperature_unit.abf8ba6a':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Alert', '', '', [
                                     ['celsius', $this->Translate('Celsius'), '', 0x00FF00],
