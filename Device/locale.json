@@ -487,7 +487,19 @@
             "Cancel Adaptation": "Anpassung abbrechen",
             "Regulation Setpoint Offset": "Regelsollwert-Offset",
             "Mute Buzzer": "Alarm stumm schalten",
-            "Test": "Test"
+            "Test": "Test",
+            "On Press": "An gedrückt",
+            "On Hold": "An halten",
+            "On Hold Release": "An losgelassen",
+            "down_press": "Senken gredrückt",
+            "Down Hold": "Senken halten",
+            "Down Hold Release": "Senken losgelassen",
+            "Up Press": "Aufwärts gedrückt",
+            "Up Hold": "Aufwärts halten",
+            "Up Hold Release": "Abwärts losgelassen",
+            "Off Press": "Aus gedrückt",
+            "Off Hold": "Aus halten",
+            "Off Hold Release": "Aus losgelassen"
         }
     }
 }
