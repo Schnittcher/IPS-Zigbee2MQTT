@@ -2142,6 +2142,7 @@ trait Zigbee2MQTTHelper
                                     ['off_hold_release', $this->Translate('Off Hold Release'), '', 0x00FF00]
                                 ]);
                             }
+                            // No break. Add additional comment above this line if intentional
                             case 'Z2M.action.bdac7927':
                                 if (!IPS_VariableProfileExists($ProfileName)) {
                                     $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
