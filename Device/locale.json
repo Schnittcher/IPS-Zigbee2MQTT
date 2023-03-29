@@ -487,7 +487,12 @@
             "Cancel Adaptation": "Anpassung abbrechen",
             "Regulation Setpoint Offset": "Regelsollwert-Offset",
             "Mute Buzzer": "Alarm stumm schalten",
-            "Test": "Test"
+            "Test": "Test",
+            "Battery State": "Batteriestatus",
+            "Soil Moisture": "Bodenfeuchtigkeit",
+            "Temperature Unit": "Temperatureinheit",
+            "Button Lock": "Schalter verriegeln",
+            "LED disable night": "LED NAchtabschaltung"
         }
     }
 }
