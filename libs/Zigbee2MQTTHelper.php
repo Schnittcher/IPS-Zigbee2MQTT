@@ -1478,7 +1478,17 @@ trait Zigbee2MQTTHelper
                         }
                 }
                 if (array_key_exists('window_open', $Payload)) {
-                    $this->SetValue('Z2M_WindowOpen', $Payload['window_open']);
+                    switch ($Payload['window_open']) {
+                            case 'ON':
+                                $this->SetValue('Z2M_WindowOpen', true);
+                                break;
+                            case 'OFF':
+                                $this->SetValue('Z2M_WindowOpen', false);
+                                break;
+                            default:
+                                $this->SendDebug('WindowOpen', 'Undefined State: ' . $Payload['window_open'], 0);
+                                break;
+                        }
                 }
                 if (array_key_exists('open_window_temperature', $Payload)) {
                     $this->SetValue('Z2M_OpenWindowTemperature', $Payload['open_window_temperature']);
