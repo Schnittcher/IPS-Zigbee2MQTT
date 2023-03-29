@@ -2168,24 +2168,43 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.action.bdac7927':
+                        case 'Z2M.action.869d1272':
+                        case 'Z2M.action.ec8cf04f':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
-                                    ['arrow_left_click', $this->Translate('Arrow Left Click'), '', 0x00FF00],
-                                    ['arrow_left_hold', $this->Translate('Arrow Left Hold'), '', 0x00FF00],
-                                    ['arrow_left_release', $this->Translate('Arrow Left Release'), '', 0x00FF00],
-                                    ['arrow_right_click', $this->Translate('Arrow Right click'), '', 0x00FF00],
-                                    ['arrow_right_hold', $this->Translate('Arrow Right Hold'), '', 0x00FF00],
-                                    ['arrow_right_release', $this->Translate('Arrow Right Release'), '', 0x00FF00],
-                                    ['brightness_down_hold', $this->Translate('Brightness Down Hold'), '', 0x00FF00],
-                                    ['brightness_down_release', $this->Translate('Brightness Down Release'), '', 0x00FF00],
-                                    ['brightness_down_click', $this->Translate('Brightness Down click'), '', 0x00FF00],
-                                    ['brightness_up_click', $this->Translate('Brightness Up click'), '', 0x00FF00],
-                                    ['brightness_up_hold', $this->Translate('Brightness Up Hold'), '', 0x00FF00],
-                                    ['brightness_up_release', $this->Translate('Brightness Up Release'), '', 0x00FF00],
-                                    ['toggle', $this->Translate('Toggle'), '', 0x00FF00]
+                                    ['on_press', $this->Translate('On Press'), '', 0x00FF00],
+                                    ['on_hold', $this->Translate('On Hold'), '', 0x00FF00],
+                                    ['on_hold_release', $this->Translate('On Hold Release'), '', 0x00FF00],
+                                    ['up_press', $this->Translate('Up Press'), '', 0x00FF00],
+                                    ['up_hold', $this->Translate('Up Hold'), '', 0x00FF00],
+                                    ['up_hold_release', $this->Translate('Up Hold Release'), '', 0x00FF00],
+                                    ['down_press', $this->Translate('Down Press'), '', 0x00FF00],
+                                    ['down_hold', $this->Translate('Down Hold'), '', 0x00FF00],
+                                    ['down_hold_release', $this->Translate('Down Hold Release'), '', 0x00FF00],
+                                    ['off_press', $this->Translate('Off Press'), '', 0x00FF00],
+                                    ['off_hold', $this->Translate('Off Hold'), '', 0x00FF00],
+                                    ['off_hold_release', $this->Translate('Off Hold Release'), '', 0x00FF00]
                                 ]);
                             }
+                            // No break. Add additional comment above this line if intentional
+                            case 'Z2M.action.bdac7927':
+                                if (!IPS_VariableProfileExists($ProfileName)) {
+                                    $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                        ['arrow_left_click', $this->Translate('Arrow Left Click'), '', 0x00FF00],
+                                        ['arrow_left_hold', $this->Translate('Arrow Left Hold'), '', 0x00FF00],
+                                        ['arrow_left_release', $this->Translate('Arrow Left Release'), '', 0x00FF00],
+                                        ['arrow_right_click', $this->Translate('Arrow Right click'), '', 0x00FF00],
+                                        ['arrow_right_hold', $this->Translate('Arrow Right Hold'), '', 0x00FF00],
+                                        ['arrow_right_release', $this->Translate('Arrow Right Release'), '', 0x00FF00],
+                                        ['brightness_down_hold', $this->Translate('Brightness Down Hold'), '', 0x00FF00],
+                                        ['brightness_down_release', $this->Translate('Brightness Down Release'), '', 0x00FF00],
+                                        ['brightness_down_click', $this->Translate('Brightness Down click'), '', 0x00FF00],
+                                        ['brightness_up_click', $this->Translate('Brightness Up click'), '', 0x00FF00],
+                                        ['brightness_up_hold', $this->Translate('Brightness Up Hold'), '', 0x00FF00],
+                                        ['brightness_up_release', $this->Translate('Brightness Up Release'), '', 0x00FF00],
+                                        ['toggle', $this->Translate('Toggle'), '', 0x00FF00]
+                                    ]);
+                                }
                             break;
                         case 'Z2M.action.29611a11':
                             if (!IPS_VariableProfileExists($ProfileName)) {
