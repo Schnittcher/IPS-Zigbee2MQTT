@@ -9,8 +9,14 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_TemperatureUnit':
+                $Payload['temperature_unit'] = strval($Value);
+                break;
+            case 'Z2M_ButtonLock':
+                $Payload['button_lock'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_WindowOpen':
-                $Payload['mute_buzzer'] = strval($this->OnOff($Value));
+                $Payload['window_open'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_MuteBuzzer':
                 $Payload['mute_buzzer'] = strval($Value);
@@ -566,7 +572,15 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
-
+                if (array_key_exists('battery_state', $Payload)) {
+                    $this->SetValue('Z2M_BatteryState', $Payload['battery_state']);
+                }
+                if (array_key_exists('temperature_unit', $Payload)) {
+                    $this->SetValue('Z2M_TemperatureUnit', $Payload['temperature_unit']);
+                }
+                if (array_key_exists('soil_moisture', $Payload)) {
+                    $this->SetValue('Z2M_SoilMoisture', $Payload['soil_moisture']);
+                }
                 if (array_key_exists('mute', $Payload)) {
                     $this->SetValue('Z2M_Mute', $Payload['mute']);
                 }
@@ -1479,7 +1493,20 @@ trait Zigbee2MQTTHelper
                         }
                 }
                 if (array_key_exists('window_open', $Payload)) {
-                    $this->SetValue('Z2M_WindowOpen', $Payload['window_open']);
+                    switch ($Payload['window_open']) {
+                            case 'ON':
+                                $this->SetValue('Z2M_WindowOpen', true);
+                                break;
+                            case 'OFF':
+                                $this->SetValue('Z2M_WindowOpen', false);
+                                break;
+                            default:
+                                $this->SendDebug('WindowOpen', 'Undefined State: ' . $Payload['window_open'], 0);
+                                break;
+                        }
+                }
+                if (array_key_exists('button_lock', $Payload)) {
+                    $this->SetValue('Z2M_ButtonLock', $Payload['button_lock']);
                 }
                 if (array_key_exists('open_window_temperature', $Payload)) {
                     $this->SetValue('Z2M_OpenWindowTemperature', $Payload['open_window_temperature']);
@@ -2033,6 +2060,23 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.battery_state.b8421401':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Battery', '', '', [
+                                    ['low', $this->Translate('Low'), '', 0x00FF00],
+                                    ['medium', $this->Translate('Medium'), '', 0x00FF00],
+                                    ['high', $this->Translate('High'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.temperature_unit.abf8ba6a':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Alert', '', '', [
+                                    ['celsius', $this->Translate('Celsius'), '', 0x00FF00],
+                                    ['fahrenheit', $this->Translate('Fahrenheit'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.selftest.e0cc684':
                         case 'Z2M.selftest.784dd132':
                             if (!IPS_VariableProfileExists($ProfileName)) {
@@ -2859,6 +2903,11 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'soil_moisture':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Drops', '', ' ' . $expose['unit'], 0, 0, 0);
+                        }
+                        break;
                     case 'regulation_setpoint_offset':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Temperature', '', ' °C', $expose['value_min'], $expose['value_max'], 1);
@@ -3548,6 +3597,9 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'button_lock':
+                            $this->RegisterVariableBoolean('Z2M_ButtonLock', $this->Translate('Button Lock'), '~Switch');
+                            break;
                         case 'mute':
                             $this->RegisterVariableBoolean('Z2M_Mute', $this->Translate('Mute'), '~Switch');
                             break;
@@ -3771,6 +3823,19 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'battery_state':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_BatteryState', $this->Translate('Battery State'), $ProfileName);
+                            }
+                            break;
+                        case 'temperature_unit':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_TemperatureUnit', $this->Translate('Temperature Unit'), $ProfileName);
+                                $this->EnableAction('Z2M_TemperatureUnit');
+                            }
+                            break;
                         case 'mute_buzzer':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -4505,6 +4570,9 @@ trait Zigbee2MQTTHelper
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_CalibrationTimeRight', $this->Translate('Calibration Time Right'), $ProfileName);
                             }
+                            break;
+                        case 'soil_moisture':
+                                $this->RegisterVariableInteger('Z2M_SoilMoisture', $this->Translate('Soil Moisture'), '~Intensity.100');
                             break;
                         case 'action_angle':
                             $this->RegisterVariableInteger('Z2M_ActionAngle', $this->Translate('Action angle'), '');
