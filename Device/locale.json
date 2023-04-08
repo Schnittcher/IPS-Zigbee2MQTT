@@ -504,7 +504,11 @@
             "Soil Moisture": "Bodenfeuchtigkeit",
             "Temperature Unit": "Temperatureinheit",
             "Button Lock": "Schalter verriegeln",
-            "LED disable night": "LED NAchtabschaltung"
+            "LED disable night": "LED NAchtabschaltung",
+            "Target": "Ziel",
+            "Measured": "Gemessen",
+            "Remote Temperature": "Ferntemperatur",
+            "Displayed Temperature": "Angezeigte Temperatur"
         }
     }
 }

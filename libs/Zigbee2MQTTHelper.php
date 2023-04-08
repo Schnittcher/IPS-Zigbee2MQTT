@@ -9,6 +9,12 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_DisplayedTemperature':
+                $Payload['displayed_temperature'] = strval($Value);
+                break;
+            case 'Z2M_RemoteTemperature':
+                $Payload['remote_temperature'] = strval($Value);
+                break;
             case 'Z2M_TemperatureUnit':
                 $Payload['temperature_unit'] = strval($Value);
                 break;
@@ -571,6 +577,12 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('displayed_temperature', $Payload)) {
+                    $this->SetValue('Z2M_DisplayedTemperature', $Payload['displayed_temperature']);
+                }
+                if (array_key_exists('remote_temperature', $Payload)) {
+                    $this->SetValue('Z2M_RemoteTemperature', $Payload['remote_temperature']);
                 }
                 if (array_key_exists('battery_state', $Payload)) {
                     $this->SetValue('Z2M_BatteryState', $Payload['battery_state']);
@@ -2060,6 +2072,14 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.displayed_temperature.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['target', $this->Translate('Target'), '', 0x00FF00],
+                                    ['measured', $this->Translate('Medium'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.battery_state.b8421401':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Battery', '', '', [
@@ -3067,6 +3087,7 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' %', $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
+                    case 'remote_temperature':
                     case 'current_heating_setpoint_auto':
                     case 'current_heating_setpoint':
                     case 'occupied_heating_setpoint':
@@ -3823,6 +3844,12 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'displayed_temperature':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_DisplayedTemperature', $this->Translate('Displayed Temperature'), $ProfileName);
+                            }
+                            break;
                         case 'battery_state':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -4133,8 +4160,15 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'remote_temperature':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_RemoteTemperature', $this->Translate('Remote Temperature'), $ProfileName);
+                                $this->EnableAction('Z2M_RemoteTemperature');
+                            }
+                            break;
                         case 'occupied_heating_setpoint_scheduled':
-                            $ProfileName = $this->registerVariableProfile($feature);
+                            $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_OccupiedHeatingSetpointScheduled', $this->Translate('Occupied Heating Setpoint Scheduled'), $ProfileName);
                                 $this->EnableAction('Z2M_OccupiedHeatingSetpointScheduled');
