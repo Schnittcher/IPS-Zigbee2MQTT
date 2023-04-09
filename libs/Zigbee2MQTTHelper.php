@@ -2187,6 +2187,17 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             // No break. Add additional comment above this line if intentional
+                            case 'Z2M.action.f200af18':
+                                if (!IPS_VariableProfileExists($ProfileName)) {
+                                    $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                        ['double', $this->Translate('Double'), '', 0x00FF00],
+                                        ['hold', $this->Translate('Hold'), '', 0x00FF00],
+                                        ['release', $this->Translate('Release'), '', 0x00FF00],
+                                        ['shake', $this->Translate('Shake'), '', 0x00FF00],
+                                        ['single', $this->Translate('Single'), '', 0x00FF00]
+                                    ]);
+                                }
+                            break;
                             case 'Z2M.action.bdac7927':
                                 if (!IPS_VariableProfileExists($ProfileName)) {
                                     $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
