@@ -504,7 +504,23 @@
             "Soil Moisture": "Bodenfeuchtigkeit",
             "Temperature Unit": "Temperatureinheit",
             "Button Lock": "Schalter verriegeln",
-            "LED disable night": "LED NAchtabschaltung"
+            "LED disable night": "LED NAchtabschaltung",
+            "Dots 1 Double Press": "Taster 1 doppelt gedrückt",
+            "Dots 1 Initial Press": "Taster 1 zum ersten Mal gedrückt",
+            "Dots 1 Long Press": "Taster 1 lange gedrückt",
+            "Dots 1 Long Release": "Taster 1 nach langem druck gelöst",
+            "Dots 1 Short Release": "Taster 1 gelöst",
+            "Dots 2 Double Press": "Taster 2 doppelt gedrückt",
+            "Dots 2 Initial Press": "Taster 2 zum ersten Mal gedrückt",
+            "Dots 2 Long Press": "Taster 2 lange gedrückt",
+            "Dots 2 Long Release": "Taster 2 nach langem druck gelöst",
+            "Dots 2 Short Release": "Taster 2 gelöst",
+            "Next Track": "Nächster Titel",
+            "Previous Track": "Vorheriger Titel",
+            "Volume Down": "Leiser",
+            "Volume Down Hold": "Leiser gehalten",
+            "Volume Up": "Lauter",
+            "Volume Up Hold": "Lauter gehalten"
         }
     }
 }
