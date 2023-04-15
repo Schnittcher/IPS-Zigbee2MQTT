@@ -520,7 +520,11 @@
             "Volume Down": "Leiser",
             "Volume Down Hold": "Leiser gehalten",
             "Volume Up": "Lauter",
-            "Volume Up Hold": "Lauter gehalten"
+            "Volume Up Hold": "Lauter gehalten",
+            "Target": "Ziel",
+            "Measured": "Gemessen",
+            "Remote Temperature": "Ferntemperatur",
+            "Displayed Temperature": "Angezeigte Temperatur"
         }
     }
 }
