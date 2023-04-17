@@ -2072,7 +2072,7 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M.displayed_temperature.':
+                        case 'Z2M.displayed_temperature.f31d1694':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['target', $this->Translate('Target'), '', 0x00FF00],
