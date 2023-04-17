@@ -1179,7 +1179,7 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_ActionFromSide', $Payload['action_from_side']);
                 }
 
-                if (array_key_exists('battaction_sideery_low', $Payload)) {
+                if (array_key_exists('action_side', $Payload)) {
                     $this->SetValue('Z2M_ActionSide', $Payload['action_side']);
                 }
 
@@ -4298,7 +4298,7 @@ trait Zigbee2MQTTHelper
                         case 'side':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('Z2M_side', $this->Translate('Side'), $ProfileName);
+                                $this->RegisterVariableInteger('Z2M_Side', $this->Translate('Side'), $ProfileName);
                             }
                             break;
                         case 'angle_x':
