@@ -524,7 +524,10 @@
             "Target": "Ziel",
             "Measured": "Gemessen",
             "Remote Temperature": "Ferntemperatur",
-            "Displayed Temperature": "Angezeigte Temperatur"
+            "Displayed Temperature": "Angezeigte Temperatur",
+            "1 minute inactivity": "1 Minute inaktiv",
+            "Flip to side": "Auf die Seite drehen",
+            "Side up": "Seite oben"
         }
     }
 }
