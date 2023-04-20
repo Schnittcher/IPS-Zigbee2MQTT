@@ -524,7 +524,10 @@
             "Target": "Ziel",
             "Measured": "Gemessen",
             "Remote Temperature": "Ferntemperatur",
-            "Displayed Temperature": "Angezeigte Temperatur"
+            "Displayed Temperature": "Angezeigte Temperatur",
+            "Initial": "Ursprünglich",
+            "Customized": "Angepasst",
+            "Color Power On Behavior": "Einschaltverhalten der Farbe"
         }
     }
 }
