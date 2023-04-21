@@ -2072,6 +2072,14 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.motor_direction.cf88002f':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Shuffle', '', '', [
+                                    ['back', $this->Translate('Back'), '', 0x00FF00],
+                                    ['forward', $this->Translate('Forward'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.displayed_temperature.f31d1694':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
