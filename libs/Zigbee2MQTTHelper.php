@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_MotorDirection':
+                $Payload['motor_direction'] = strval($Value);
+                break;
             case 'Z2M_DisplayedTemperature':
                 $Payload['displayed_temperature'] = strval($Value);
                 break;
