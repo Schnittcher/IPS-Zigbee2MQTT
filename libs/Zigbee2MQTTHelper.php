@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_ColorPowerOnBehavior':
+                $Payload['color_power_on_behavior'] = strval($Value);
+                break;
             case 'Z2M_DisplayedTemperature':
                 $Payload['displayed_temperature'] = strval($Value);
                 break;
@@ -577,6 +580,9 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('color_power_on_behavior', $Payload)) {
+                    $this->SetValue('Z2M_ColorPowerOnBehavior', $Payload['color_power_on_behavior']);
                 }
                 if (array_key_exists('displayed_temperature', $Payload)) {
                     $this->SetValue('Z2M_DisplayedTemperature', $Payload['displayed_temperature']);
@@ -2072,6 +2078,15 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.color_power_on_behavior.ae76ffdc':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['initial', $this->Translate('Initial'), '', 0x00FF00],
+                                    ['previous', $this->Translate('Medium'), '', 0x00FF00],
+                                    ['cutomized', $this->Translate('Customized'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.displayed_temperature.f31d1694':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -3916,6 +3931,13 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'color_power_on_behavior':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_ColorPowerOnBehavior', $this->Translate('Color Power On Behavior'), $ProfileName);
+                                $this->EnableAction('Z2M_ColorPowerOnBehavior');
+                            }
+                            break;
                         case 'displayed_temperature':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
