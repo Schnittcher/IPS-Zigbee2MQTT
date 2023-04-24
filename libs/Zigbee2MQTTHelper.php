@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_DoNotDisturb':
+                $Payload['do_not_disturb'] = $Value;
+                break;
             case 'Z2M_MotorDirection':
                 $Payload['motor_direction'] = strval($Value);
                 break;
@@ -583,6 +586,9 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('do_not_disturb', $Payload)) {
+                    $this->SetValue('Z2M_DoNotDisturb', $Payload['do_not_disturb']);
                 }
                 if (array_key_exists('color_power_on_behavior', $Payload)) {
                     $this->SetValue('Z2M_ColorPowerOnBehavior', $Payload['color_power_on_behavior']);
@@ -3716,6 +3722,10 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'do_not_disturb':
+                            $this->RegisterVariableBoolean('Z2M_DoNotDisturb', $this->Translate('Do Not Disturb'), '~Switch');
+                            $this->EnableAction('Z2M_DoNotDisturb');
+                            break;
                         case 'button_lock':
                             $this->RegisterVariableBoolean('Z2M_ButtonLock', $this->Translate('Button Lock'), '~Switch');
                             break;
@@ -3942,6 +3952,13 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'do_not_disturb':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_DoNotDisturb', $this->Translate('Do not Disturb'), $ProfileName);
+                                $this->EnableAction('Z2M_DoNotDisturb');
+                            }
+                            break;
                         case 'color_power_on_behavior':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
