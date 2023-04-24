@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_MotorDirection':
+                $Payload['motor_direction'] = strval($Value);
+                break;
             case 'Z2M_ColorPowerOnBehavior':
                 $Payload['color_power_on_behavior'] = strval($Value);
                 break;
@@ -2078,6 +2081,14 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.motor_direction.cf88002f':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Shuffle', '', '', [
+                                    ['back', $this->Translate('Back'), '', 0x00FF00],
+                                    ['forward', $this->Translate('Forward'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.color_power_on_behavior.ae76ffdc':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
