@@ -527,7 +527,10 @@
             "Displayed Temperature": "Angezeigte Temperatur",
             "1 minute inactivity": "1 Minute inaktiv",
             "Flip to side": "Auf die Seite drehen",
-            "Side up": "Seite oben"
+            "Side up": "Seite oben",
+            "Initial": "Ursprünglich",
+            "Customized": "Angepasst",
+            "Color Power On Behavior": "Einschaltverhalten der Farbe"
         }
     }
 }
