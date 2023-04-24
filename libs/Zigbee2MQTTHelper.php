@@ -12,6 +12,12 @@ trait Zigbee2MQTTHelper
             case 'Z2M_DoNotDisturb':
                 $Payload['do_not_disturb'] = $Value;
                 break;
+            case 'Z2M_MotorDirection':
+                $Payload['motor_direction'] = strval($Value);
+                break;
+            case 'Z2M_ColorPowerOnBehavior':
+                $Payload['color_power_on_behavior'] = strval($Value);
+                break;
             case 'Z2M_DisplayedTemperature':
                 $Payload['displayed_temperature'] = strval($Value);
                 break;
@@ -583,6 +589,9 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('do_not_disturb', $Payload)) {
                     $this->SetValue('Z2M_DoNotDisturb', $Payload['do_not_disturb']);
+                }
+                if (array_key_exists('color_power_on_behavior', $Payload)) {
+                    $this->SetValue('Z2M_ColorPowerOnBehavior', $Payload['color_power_on_behavior']);
                 }
                 if (array_key_exists('displayed_temperature', $Payload)) {
                     $this->SetValue('Z2M_DisplayedTemperature', $Payload['displayed_temperature']);
@@ -2078,6 +2087,23 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.motor_direction.cf88002f':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Shuffle', '', '', [
+                                    ['back', $this->Translate('Back'), '', 0x00FF00],
+                                    ['forward', $this->Translate('Forward'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.color_power_on_behavior.ae76ffdc':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['initial', $this->Translate('Initial'), '', 0x00FF00],
+                                    ['previous', $this->Translate('Medium'), '', 0x00FF00],
+                                    ['cutomized', $this->Translate('Customized'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.displayed_temperature.f31d1694':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -3931,6 +3957,13 @@ trait Zigbee2MQTTHelper
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_DoNotDisturb', $this->Translate('Do not Disturb'), $ProfileName);
                                 $this->EnableAction('Z2M_DoNotDisturb');
+                            }
+                            break;
+                        case 'color_power_on_behavior':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_ColorPowerOnBehavior', $this->Translate('Color Power On Behavior'), $ProfileName);
+                                $this->EnableAction('Z2M_ColorPowerOnBehavior');
                             }
                             break;
                         case 'displayed_temperature':
