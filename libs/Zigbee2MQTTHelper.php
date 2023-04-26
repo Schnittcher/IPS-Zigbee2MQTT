@@ -9,6 +9,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_Pi_Heating_Demand':
+                $Payload['pi_heating_demand'] = $Value;
+                break;
             case 'Z2M_DoNotDisturb':
                 $Payload['do_not_disturb'] = $Value;
                 break;
@@ -3637,6 +3640,7 @@ trait Zigbee2MQTTHelper
                                             break;
                                         case 'pi_heating_demand':
                                             $this->RegisterVariableInteger('Z2M_Pi_Heating_Demand', $this->Translate('Valve Position (Heating Demand)'), '~Intensity.100');
+                                            $this->EnableAction('Z2M_Pi_Heating_Demand');
                                             break;
                                         default:
                                             // Default Climate binary
