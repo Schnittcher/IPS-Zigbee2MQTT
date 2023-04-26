@@ -530,7 +530,11 @@
             "Side up": "Seite oben",
             "Initial": "Ursprünglich",
             "Customized": "Angepasst",
-            "Color Power On Behavior": "Einschaltverhalten der Farbe"
+            "Color Power On Behavior": "Einschaltverhalten der Farbe",
+            "Press 1": "Drücke 1",
+            "Press 2": "Drücke 2",
+            "Press 3": "Drücke 3",
+            "Press 4": "Drücke 4",
         }
     }
 }
