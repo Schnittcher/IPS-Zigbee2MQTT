@@ -99,12 +99,6 @@ trait Zigbee2MQTTHelper
             case 'Z2M_HeartbeatIndicator':
                 $Payload['heartbeat_indicator'] = $Value;
                 break;
-            case 'Z2M_BuzzerManualMute':
-                $Payload['buzzer_manual_mute'] = strval($Value);
-                break;
-            case 'Z2M_BuzzerManualAlarm':
-                $Payload['buzzer_manual_alarm'] = strval($Value);
-                break;
             case 'Z2M_Buzzer':
                 $Payload['buzzer'] = strval($Value);
                 break;
@@ -3791,11 +3785,9 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'buzzer_manual_mute':
                             $this->RegisterVariableBoolean('Z2M_BuzzerManualMute', $this->Translate('Buzzer Manual Mute'), '~Switch');
-                            $this->EnableAction('Z2M_BuzzerManualMute');
                             break;
                         case 'buzzer_manual_alarm':
                             $this->RegisterVariableBoolean('Z2M_BuzzerManualAlarm', $this->Translate('Buzzer Manual Alarm'), '~Switch');
-                            $this->EnableAction('Z2M_BuzzerManualAlarm');
                             break;
                         case 'boost':
                             $this->RegisterVariableBoolean('Z2M_Boost', $this->Translate('Boost'), '~Switch');
