@@ -94,10 +94,10 @@ trait Zigbee2MQTTHelper
                 $Payload['keypad_lockout'] = strval($Value);
                 break;
             case 'Z2M_LinkageAlarm':
-                $Payload['linkage_alarm'] = strval($Value);
+                $Payload['linkage_alarm'] = $Value;
                 break;
             case 'Z2M_HeartbeatIndicator':
-                $Payload['heartbeat_indicator'] = strval($Value);
+                $Payload['heartbeat_indicator'] = $Value;
                 break;
             case 'Z2M_BuzzerManualMute':
                 $Payload['buzzer_manual_mute'] = strval($Value);
