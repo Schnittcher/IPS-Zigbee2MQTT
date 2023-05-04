@@ -2389,6 +2389,7 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['brightness_move_down', $this->Translate('Brightness move down'), '', 0x00FF00],
                                     ['brightness_move_up', $this->Translate('Brightness move up'), '', 0x00FF00],
+                                    ['brightness_stop', $this->Translate('Brightness Stop'), '', 0x00FF00],
                                     ['off', $this->Translate('Off'), '', 0x00FF00],
                                     ['on', $this->Translate('On'), '', 0x00FF00],
                                 ]);
