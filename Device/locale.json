@@ -534,7 +534,9 @@
             "Press 1": "Drücke 1",
             "Press 2": "Drücke 2",
             "Press 3": "Drücke 3",
-            "Press 4": "Drücke 4"
+            "Press 4": "Drücke 4",
+            "Brightness Stop": "Helligkeit Stopp",
+            "Brightness Move To Level": "Helligkeit auf Wert setzen"
         }
     }
 }
