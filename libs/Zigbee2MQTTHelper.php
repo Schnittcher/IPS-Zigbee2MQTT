@@ -361,7 +361,7 @@ trait Zigbee2MQTTHelper
                 $Payload['heating_stop'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_Force':
-                $Payload['force'] = strval($this->OnOff($Value));
+                $Payload['force'] = strval($Value);
                 break;
             case 'Z2M_Moving':
                 $Payload['moving'] = strval($Value);
