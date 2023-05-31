@@ -144,6 +144,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_ValveState':
                 $Payload['valve_state'] = strval($this->ValveState($Value));
                 break;
+            case 'Z2M_ValvePosition':
+                $Payload['valve_position'] = strval($Value);
+                break;
             case 'Z2M_EcoMode':
                 $Payload['eco_mode'] = strval($this->OnOff($Value));
                 break;
