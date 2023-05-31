@@ -2270,6 +2270,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'Z2M.action.bdac7927':
+                        case 'Z2M.action.301a3bd1':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['arrow_left_click', $this->Translate('Arrow Left Click'), '', 0x00FF00],
@@ -2284,7 +2285,12 @@ trait Zigbee2MQTTHelper
                                     ['brightness_up_click', $this->Translate('Brightness Up click'), '', 0x00FF00],
                                     ['brightness_up_hold', $this->Translate('Brightness Up Hold'), '', 0x00FF00],
                                     ['brightness_up_release', $this->Translate('Brightness Up Release'), '', 0x00FF00],
-                                    ['toggle', $this->Translate('Toggle'), '', 0x00FF00]
+                                    ['brightness_move_down', $this->Translate('Brightness Move Down'), '', 0x00FF00],
+                                    ['brightness_move_up', $this->Translate('Brightness Move Up'), '', 0x00FF00],
+                                    ['brightness_stop', $this->Translate('Brightness Stop'), '', 0x00FF00],
+                                    ['toggle', $this->Translate('Toggle'), '', 0x00FF00],
+                                    ['off', $this->Translate('Off'), '', 0x00FF00],
+                                    ['on', $this->Translate('On'), '', 0x00FF00]
                                 ]);
                             }
                             break;
@@ -2853,11 +2859,15 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'Z2M.force.85dac8d5':
                         case 'Z2M.force.2bd28f19':
+                        case 'Z2M.force.a420d592':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
                                     ['normal', $this->Translate('Normal'), '', 0x00FF00],
                                     ['open', $this->Translate('Open'), '', 0xFF8800],
-                                    ['close', $this->Translate('Close'), '', 0xFF0000]
+                                    ['close', $this->Translate('Close'), '', 0xFF0000],
+                                    ['high', $this->Translate('High'), '', 0xFF0000],
+                                    ['standard', $this->Translate('Standard'), '', 0xFF0000],
+                                    ['very_high', $this->Translate('Very High'), '', 0xFF0000]
                                 ]);
                             }
                             break;
