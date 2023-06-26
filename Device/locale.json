@@ -537,7 +537,14 @@
             "Press 4": "Drücke 4",
             "Brightness Stop": "Helligkeit Stopp",
             "Brightness Move To Level": "Helligkeit auf Wert setzen",
-            "Standard": "Standard"
+            "Standard": "Standard",
+            "Release 1": "Freigabe 1",
+            "Release 2": "Freigabe 2",
+            "Release 3": "Freigabe 3",
+            "Release 4": "Freigabe 4",
+            "Release 1 and 3": "Freigabe 1 und 3",
+            "Release 2 and 4": "Freigabe 2 und 4",
+            "Press Energy Bar": "Drücke Energy Bar"
         }
     }
 }
