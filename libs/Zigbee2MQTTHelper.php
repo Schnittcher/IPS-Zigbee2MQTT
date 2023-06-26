@@ -2239,7 +2239,7 @@ trait Zigbee2MQTTHelper
                                     ['press_2_and_4', $this->Translate('Press 2 and 4'), '', 0x00FF00],
                                     ['press_3', $this->Translate('Press 3'), '', 0x00FF00],
                                     ['press_4', $this->Translate('Press 4'), '', 0x00FF00],
-                                    ['press_energy_bar', $this->Translate(Press Energy Bar'), '', 0x00FF00],
+                                    ['press_energy_bar', $this->Translate('Press Energy Bar'), '', 0x00FF00],
                                     ['release_1', $this->Translate('Release 1'), '', 0x00FF00],
                                     ['release_1_and_3', $this->Translate('Release 1 and 3'), '', 0x00FF00],
                                     ['release_2', $this->Translate('Release 2'), '', 0x00FF00],
