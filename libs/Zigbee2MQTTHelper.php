@@ -2234,6 +2234,25 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.action.350f117':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['press_1', $this->Translate('Press 1'), '', 0x00FF00],
+                                    ['press_1_and_3', $this->Translate('Press 1 and 3'), '', 0x00FF00],
+                                    ['press_2', $this->Translate('Press 2'), '', 0x00FF00],
+                                    ['press_2_and_4', $this->Translate('Press 2 and 4'), '', 0x00FF00],
+                                    ['press_3', $this->Translate('Press 3'), '', 0x00FF00],
+                                    ['press_4', $this->Translate('Press 4'), '', 0x00FF00],
+                                    ['press_energy_bar', $this->Translate('Press Energy Bar'), '', 0x00FF00],
+                                    ['release_1', $this->Translate('Release 1'), '', 0x00FF00],
+                                    ['release_1_and_3', $this->Translate('Release 1 and 3'), '', 0x00FF00],
+                                    ['release_2', $this->Translate('Release 2'), '', 0x00FF00],
+                                    ['release_2_and_4', $this->Translate('Release 2 and 4'), '', 0x00FF00],
+                                    ['release_3', $this->Translate('Release 3'), '', 0x00FF00],
+                                    ['release_4', $this->Translate('Release 4'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.action.869d1272':
                         case 'Z2M.action.ec8cf04f':
                             if (!IPS_VariableProfileExists($ProfileName)) {
