@@ -2272,6 +2272,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.action.817f2757':
                         case 'Z2M.action.bdac7927':
                         case 'Z2M.action.301a3bd1':
                             if (!IPS_VariableProfileExists($ProfileName)) {
