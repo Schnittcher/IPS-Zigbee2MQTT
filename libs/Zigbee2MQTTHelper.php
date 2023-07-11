@@ -201,6 +201,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_LedState':
                 $Payload['led_state'] = strval($Value);
                 break;
+            case 'Z2M_LEDEnable':
+                $Payload['led_enable'] = strval($Value);
+                break;
             case 'Z2M_ActionRate':
                 $Payload['action_rate'] = strval($Value);
                 break;
@@ -3144,6 +3147,12 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
+                    case 'fan_speed':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 1);
+                        }
+                        break;
                     case 'load_room_mean':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -3828,8 +3837,19 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableBoolean('Z2M_DoNotDisturb', $this->Translate('Do Not Disturb'), '~Switch');
                             $this->EnableAction('Z2M_DoNotDisturb');
                             break;
+                        case 'led_enable':
+                            $this->RegisterVariableBoolean('Z2M_LEDEnable', $this->Translate('LED Enable'), '~Switch');
+                            $this->EnableAction('Z2M_LEDEnable');
+                            break;
                         case 'button_lock':
                             $this->RegisterVariableBoolean('Z2M_ButtonLock', $this->Translate('Button Lock'), '~Switch');
+                            break;
+                        case 'child_lock':
+                            $this->RegisterVariableBoolean('Z2M_ChildLock', $this->Translate('Child Lock'), '~Switch');
+                            $this->EnableAction('Z2M_ChildLock');
+                            break;
+                        case 'replace_filter':
+                            $this->RegisterVariableBoolean('Z2M_ReplaceFilter', $this->Translate('Replace Filter'), '~Switch');
                             break;
                         case 'mute':
                             $this->RegisterVariableBoolean('Z2M_Mute', $this->Translate('Mute'), '~Switch');
@@ -4052,6 +4072,12 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'air_quality':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_AirQuality', $this->Translate('Air Quality'), $ProfileName);
+                            }
+                            break;
                         case 'do_not_disturb':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -4387,6 +4413,11 @@ trait Zigbee2MQTTHelper
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_RemoteTemperature', $this->Translate('Remote Temperature'), $ProfileName);
                                 $this->EnableAction('Z2M_RemoteTemperature');
+                            }
+                            break;
+                        case 'filter_age':
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_FilterAge', $this->Translate('Filter Age'), '');
                             }
                             break;
                         case 'occupied_heating_setpoint_scheduled':
@@ -4850,6 +4881,12 @@ trait Zigbee2MQTTHelper
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_RadarSensitivity', $this->Translate('Radar Sensitivity'), $ProfileName);
                                 $this->EnableAction('Z2M_RadarSensitivity');
+                            }
+                            break;
+                        case 'fan_speed':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_FanSpeed', $this->Translate('Fan Speed'), $ProfileName);
                             }
                             break;
                         case 'action_duration':
