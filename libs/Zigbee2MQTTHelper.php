@@ -202,7 +202,7 @@ trait Zigbee2MQTTHelper
                 $Payload['led_state'] = strval($Value);
                 break;
             case 'Z2M_LEDEnable':
-                $Payload['led_enable'] = strval($Value);
+                $Payload['led_enable'] = $Value;
                 break;
             case 'Z2M_ActionRate':
                 $Payload['action_rate'] = strval($Value);
@@ -1058,11 +1058,15 @@ trait Zigbee2MQTTHelper
                 }
 
                 if (array_key_exists('led_enable', $Payload)) {
-                    $this->SetValue('Z2M_LedEnable', $Payload['led_enable']);
+                    $this->SetValue('Z2M_LEDEnable', $Payload['led_enable']);
                 }
 
                 if (array_key_exists('replace_filter', $Payload)) {
                     $this->SetValue('Z2M_ReplaceFilter', $Payload['replace_filter']);
+                }
+
+                if (array_key_exists('filter_age', $Payload)) {
+                    $this->SetValue('Z2M_FilterAge', $Payload['filter_age']);
                 }
 
                 if (array_key_exists('fan_speed', $Payload)) {
