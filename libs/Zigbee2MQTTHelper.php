@@ -1057,6 +1057,22 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_MotionSpeed', $Payload['motion_speed']);
                 }
 
+                if (array_key_exists('led_enable', $Payload)) {
+                    $this->SetValue('Z2M_LedEnable', $Payload['led_enable']);
+                }
+
+                if (array_key_exists('replace_filter', $Payload)) {
+                    $this->SetValue('Z2M_ReplaceFilter', $Payload['replace_filter']);
+                }
+
+                if (array_key_exists('fan_speed', $Payload)) {
+                    $this->SetValue('Z2M_FanSpeed', $Payload['fan_speed']);
+                }
+
+                if (array_key_exists('air_quality', $Payload)) {
+                    $this->SetValue('Z2M_AirQuality', $Payload['air_quality']);
+                }
+
                 if (array_key_exists('radar_sensitivity', $Payload)) {
                     $this->SetValue('Z2M_RadarSensitivity', $Payload['radar_sensitivity']);
                 }
@@ -2104,6 +2120,20 @@ trait Zigbee2MQTTHelper
                                     ['initial', $this->Translate('Initial'), '', 0x00FF00],
                                     ['previous', $this->Translate('Medium'), '', 0x00FF00],
                                     ['cutomized', $this->Translate('Customized'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.air_quality.ea904784':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['excellent', $this->Translate('Excellent'), '', 0x00FF00],
+                                    ['good', $this->Translate('Good'), '', 0x00CD00],
+                                    ['hazardous', $this->Translate('Hazardous'), '', 0xFF4500],
+                                    ['moderate', $this->Translate('Moderate'), '', 0xEE4000],
+                                    ['out_of_range', $this->Translate('Out of range'), '', 0xCD3700],
+                                    ['poor', $this->Translate('poor'), '', 0xFF3030],
+                                    ['unhealthy', $this->Translate('Unhealthy'), '', 0xFF0000],
+                                    ['unknown', $this->Translate('Unknown'), '', 0x000000],
                                 ]);
                             }
                             break;

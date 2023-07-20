@@ -548,7 +548,13 @@
             "Fan Speed": "Lüftergeschwindigkeit",
             "LED Enable": "LED Status",
             "Replace Filter": "Ersetze Filter",
-            "Filter Age": "Filter Alter"
+            "Filter Age": "Filter Alter",
+            "Excellent": "Exzellent",
+            "Good": "Gut",
+            "Moderate": "Mäßig",
+            "Out of range": "Außer Reichweite",
+            "Poor": "Schlecht",
+            "Unknown": "Unbekannt"
         }
     }
 }
