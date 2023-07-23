@@ -3514,6 +3514,7 @@ trait Zigbee2MQTTHelper
         $missedVariables['switch'] = [];
         $missedVariables['climate'] = [];
         $missedVariables['lock'] = [];
+        $missedVariables['fan'] = [];
 
         $this->SendDebug(__FUNCTION__ . ':: All Exposes', json_encode($exposes), 0);
 
@@ -3829,6 +3830,48 @@ trait Zigbee2MQTTHelper
                         }
                     }
                     break; //Climate break
+                case 'fan':
+                        if (array_key_exists('features', $expose)) {
+                            foreach ($expose['features'] as $key => $feature) {
+                                switch ($feature['type']) {
+                                    case 'binary':
+                                        switch ($feature['property']) {
+                                            case 'fan_state':
+                                                $this->RegisterVariableBoolean('Z2M_FanState', $this->Translate('Fan State'), '~Switch');
+                                                $this->EnableAction('Z2M_FanState');
+                                                break;
+                                            default:
+                                                // Default lock binary
+                                                $missedVariables['fan'][] = $feature;
+                                                break;
+                                        }
+                                        break; //Lock binaray break;
+                                    case 'numeric':
+                                        switch ($feature['property']) {
+                                            default:
+                                                // Default lock binary
+                                                $missedVariables['fan'][] = $feature;
+                                                break;
+                                        }
+                                        break; //Lock numeric break;
+                                    case 'enum':
+                                        switch ($feature['property']) {
+                                            case 'fan_mode':
+                                                $ProfileName = $this->registerVariableProfile($expose);
+                                                if ($ProfileName != false) {
+                                                    $this->RegisterVariableString('Z2M_FanMode', $this->Translate('Fan Mode'), $ProfileName);
+                                                }
+                                                break;
+                                            default:
+                                                // Default lock enum
+                                                $missedVariables['fan'][] = $feature;
+                                                break;
+                                        }
+                                        break; //Lock enum break;
+                                }
+                            }
+                        }
+                        // No break. Add additional comment above this line if intentional
                 case 'lock':
                     if (array_key_exists('features', $expose)) {
                         foreach ($expose['features'] as $key => $feature) {

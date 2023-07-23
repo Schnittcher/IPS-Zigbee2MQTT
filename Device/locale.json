@@ -546,6 +546,8 @@
             "Release 2 and 4": "Freigabe 2 und 4",
             "Press Energy Bar": "Drücke Energy Bar",
             "Fan Speed": "Lüftergeschwindigkeit",
+            "Fan State": "Lüfterstatus",
+            "Fan Mode": "Lüftermodus",
             "LED Enable": "LED Status",
             "Replace Filter": "Ersetze Filter",
             "Filter Age": "Filter Alter",
