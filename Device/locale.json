@@ -556,7 +556,9 @@
             "Moderate": "Mäßig",
             "Out of range": "Außer Reichweite",
             "Poor": "Schlecht",
-            "Unknown": "Unbekannt"
+            "Unknown": "Unbekannt",
+            "Brightness Step Down": "Helligkeit Schrittweise senken",
+            "Brightness Step Up": "Hellgikeit Schrittweise erhöhen"
         }
     }
 }
