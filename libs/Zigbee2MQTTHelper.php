@@ -3884,7 +3884,7 @@ trait Zigbee2MQTTHelper
                                 }
                             }
                         }
-                        // No break. Add additional comment above this line if intentional
+                        break;
                 case 'lock':
                     if (array_key_exists('features', $expose)) {
                         foreach ($expose['features'] as $key => $feature) {
