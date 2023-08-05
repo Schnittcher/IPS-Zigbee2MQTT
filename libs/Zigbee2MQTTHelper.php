@@ -722,6 +722,19 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('display_orientation', $Payload)) {
                     $this->SetValue('Z2M_DisplayOrientation', $Payload['display_orientation']);
                 }
+                if (array_key_exists('fan_state', $Payload)) {
+                    switch ($Payload['fan_state']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_FanState', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_FanState', false);
+                            break;
+                        default:
+                            $this->SendDebug('Fan State', 'Undefined State: ' . $Payload['fan_state'], 0);
+                            break;
+                    }
+                }
                 if (array_key_exists('boost', $Payload)) {
                     switch ($Payload['boost']) {
                         case 'ON':
