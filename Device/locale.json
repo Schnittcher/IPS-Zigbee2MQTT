@@ -558,7 +558,11 @@
             "Poor": "Schlecht",
             "Unknown": "Unbekannt",
             "Brightness Step Down": "Helligkeit Schrittweise senken",
-            "Brightness Step Up": "Hellgikeit Schrittweise erhöhen"
+            "Brightness Step Up": "Hellgikeit Schrittweise erhöhen",
+            "Up Press Release": "Aufwärts losgelassen",
+            "Down Press Release": "Abwärts losgelassen",
+            "On Press Release": "An losgelassen",
+            "Off Press Release": "Aus losgelassen"
         }
     }
 }
