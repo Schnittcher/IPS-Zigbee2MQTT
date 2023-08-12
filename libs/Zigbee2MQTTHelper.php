@@ -2320,15 +2320,19 @@ trait Zigbee2MQTTHelper
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['on_press', $this->Translate('On Press'), '', 0x00FF00],
+                                    ['on_press_release', $this->Translate('On Press Release'), '', 0x00FF00],
                                     ['on_hold', $this->Translate('On Hold'), '', 0x00FF00],
                                     ['on_hold_release', $this->Translate('On Hold Release'), '', 0x00FF00],
                                     ['up_press', $this->Translate('Up Press'), '', 0x00FF00],
+                                    ['up_press_release', $this->Translate('Up Press Release'), '', 0x00FF00],
                                     ['up_hold', $this->Translate('Up Hold'), '', 0x00FF00],
                                     ['up_hold_release', $this->Translate('Up Hold Release'), '', 0x00FF00],
                                     ['down_press', $this->Translate('Down Press'), '', 0x00FF00],
+                                    ['down_press_release', $this->Translate('Down Press Release'), '', 0x00FF00],
                                     ['down_hold', $this->Translate('Down Hold'), '', 0x00FF00],
                                     ['down_hold_release', $this->Translate('Down Hold Release'), '', 0x00FF00],
                                     ['off_press', $this->Translate('Off Press'), '', 0x00FF00],
+                                    ['off_press_release', $this->Translate('Off Press Release'), '', 0x00FF00],
                                     ['off_hold', $this->Translate('Off Hold'), '', 0x00FF00],
                                     ['off_hold_release', $this->Translate('Off Hold Release'), '', 0x00FF00]
                                 ]);
