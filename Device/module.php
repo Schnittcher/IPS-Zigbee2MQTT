@@ -1,17 +1,17 @@
 <?php
 
 declare(strict_types=1);
-require_once __DIR__ . '/../libs/ColorHelper.php';
-require_once __DIR__ . '/../libs/MQTTHelper.php';
-require_once __DIR__ . '/../libs/VariableProfileHelper.php';
-require_once __DIR__ . '/../libs/Zigbee2MQTTHelper.php';
+eval('declare(strict_types=1);namespace Zigbee2MQTT {?>' . file_get_contents(__DIR__ . '/../libs/VariableProfileHelper.php') . '}');
+eval('declare(strict_types=1);namespace Zigbee2MQTT {?>' . file_get_contents(__DIR__ . '/../libs/ColorHelper.php') . '}');
+eval('declare(strict_types=1);namespace Zigbee2MQTT {?>' . file_get_contents(__DIR__ . '/../libs/MQTTHelper.php') . '}');
+eval('declare(strict_types=1);namespace Zigbee2MQTT {?>' . file_get_contents(__DIR__ . '/../libs/Zigbee2MQTTHelper.php') . '}');
 
 class Zigbee2MQTTDevice extends IPSModule
 {
-    use ColorHelper;
-    use MQTTHelper;
-    use VariableProfileHelper;
-    use Zigbee2MQTTHelper;
+    use \Zigbee2MQTT\ColorHelper;
+    use \Zigbee2MQTT\MQTTHelper;
+    use \Zigbee2MQTT\VariableProfileHelper;
+    use \Zigbee2MQTT\Zigbee2MQTTHelper;
 
     public function Create()
     {
