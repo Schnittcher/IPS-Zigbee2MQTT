@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 trait ColorHelper
 {
     protected function HexToRGB($value)
