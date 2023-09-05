@@ -2271,6 +2271,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'Z2M.action.be89cdac':
+                        case 'Z2M.action.c1cb007d':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['brightness_move_down', $this->Translate('Brightness move down'), '', 0x00FF00],
@@ -2278,7 +2279,13 @@ trait Zigbee2MQTTHelper
                                     ['brightness_step_down', $this->Translate('Brightness Step Down'), '', 0x00FF00],
                                     ['brightness_step_up', $this->Translate('Brightness Step Up'), '', 0x00FF00],
                                     ['brightness_stop', $this->Translate('Brightness Stop'), '', 0x00FF00],
-                                    ['toggle', $this->Translate('Toggle'), '', 0x00FF00]
+                                    ['toggle', $this->Translate('Toggle'), '', 0x00FF00],
+                                    ['rotate_right', $this->Translate('Rotate Right'), '', 0x00FF00],
+                                    ['rotate_left', $this->Translate('Rotate Left'), '', 0x00FF00],
+                                    ['rotate_stop', $this->Translate('Rotate Stop'), '', 0x00FF00],
+                                    ['skip_backward', $this->Translate('Skip Backward'), '', 0x00FF00],
+                                    ['skip_forward', $this->Translate('Skip Forward'), '', 0x00FF00],
+                                    ['play_pause', $this->Translate('Play Pause'), '', 0x00FF00],
                                 ]);
                             }
                             break;
