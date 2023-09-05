@@ -150,6 +150,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_EcoMode':
                 $Payload['eco_mode'] = strval($this->OnOff($Value));
                 break;
+            case 'Z2M_FanState':
+                $Payload['fan_state'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_MaxTemperature':
                 $Payload['max_temperature'] = number_format($Value, 2, '.', ' ');
                 break;
