@@ -564,7 +564,11 @@
             "Rotate Stop": "Drehen anhalten",
             "Skip Backward": "Rückwärts springen",
             "Skip Forward": "Vorwärts springen",
-            "Play Pause": "Abspielen pausieren"
+            "Play Pause": "Abspielen pausieren",
+            "Up Press Release": "Aufwärts losgelassen",
+            "Down Press Release": "Abwärts losgelassen",
+            "On Press Release": "An losgelassen",
+            "Off Press Release": "Aus losgelassen"
         }
     }
 }
