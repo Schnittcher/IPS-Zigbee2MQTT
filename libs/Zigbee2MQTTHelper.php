@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 trait Zigbee2MQTTHelper
 {
     public function RequestAction($Ident, $Value)
