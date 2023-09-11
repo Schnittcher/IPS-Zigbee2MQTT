@@ -3895,7 +3895,7 @@ trait Zigbee2MQTTHelper
                                     case 'enum':
                                         switch ($feature['property']) {
                                             case 'fan_mode':
-                                                $ProfileName = $this->registerVariableProfile($expose);
+                                                $ProfileName = $this->registerVariableProfile($feature);
                                                 if ($ProfileName != false) {
                                                     $this->RegisterVariableString('Z2M_FanMode', $this->Translate('Fan Mode'), $ProfileName);
                                                 }
