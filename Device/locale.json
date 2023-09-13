@@ -568,7 +568,21 @@
             "Up Press Release": "Aufwärts losgelassen",
             "Down Press Release": "Abwärts losgelassen",
             "On Press Release": "An losgelassen",
-            "Off Press Release": "Aus losgelassen"
+            "Off Press Release": "Aus losgelassen",
+            "Alarm Sound": "Alarm Sirene",
+            "Alarm Light": "Alarm Licht",
+            "Alarm Sound & Light": "Alarm Sirene & Licht",
+            "Alarm State": "Alarm Status",
+            "Alarm Switch": "Alarm aktivieren",
+            "Tamper Alarm Switch": "Manipulationsalarm aktivieren",
+            "Tamper Alarm": "Manipulationsalarm",
+            "Alarm Time": "Alarmdauer",
+            "Melody 1": "Melodie 1",
+            "Melody 2": "Melodie 2",
+            "Melody 3": "Melodie 3",
+            "Alarm Melody": "Alarm Melodie",
+            "Alarm Mode": "Alarm Art",
+            "Charge State": "Ladezustand"
         }
     }
 }
