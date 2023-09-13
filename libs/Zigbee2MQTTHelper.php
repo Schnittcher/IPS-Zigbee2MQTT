@@ -7,6 +7,24 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_AlarmMode':
+                $Payload['alarm_mode'] = $Value;
+                break;
+            case 'Z2M_AlarmMelody':
+                $Payload['alarm_melody'] = $Value;
+                break;
+            case 'Z2M_AlarmTime':
+                $Payload['alarm_time'] = $Value;
+                break;
+            case 'Z2M_TamperAlarmSwitch':
+                $Payload['tamper_alarm_switch'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_AlarmSwitch':
+                $Payload['alarm_switch'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_AlarmState':
+                $Payload['alarm_state'] = $Value;
+                break;
             case 'Z2M_Pi_Heating_Demand':
                 $Payload['pi_heating_demand'] = $Value;
                 break;
@@ -590,6 +608,70 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('alarm_time', $Payload)) {
+                    $this->SetValue('Z2M_AlarmTime', $Payload['alarm_time']);
+                }
+                if (array_key_exists('alarm_mode', $Payload)) {
+                    $this->SetValue('Z2M_AlarmMode', $Payload['alarm_mode']);
+                }
+                if (array_key_exists('charge_state', $Payload)) {
+                    switch ($Payload['charge_state']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_ChargeState', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_ChargeState', false);
+                            break;
+                        default:
+                            $this->SendDebug('Z2M_ChargeState', 'Undefined State: ' . $Payload['charge_state'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('alarm_melody', $Payload)) {
+                    $this->SetValue('Z2M_AlarmMelody', $Payload['alarm_melody']);
+                }
+                if (array_key_exists('tamper_alarm', $Payload)) {
+                    switch ($Payload['tamper_alarm']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_TamperAlarm', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_TamperAlarm', false);
+                            break;
+                        default:
+                            $this->SendDebug('Z2M_TamperAlarm', 'Undefined State: ' . $Payload['tamper_alarm'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('tamper_alarm_switch', $Payload)) {
+                    switch ($Payload['tamper_alarm_switch']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_TamperAlarmSwitch', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_TamperAlarmSwitch', false);
+                            break;
+                        default:
+                            $this->SendDebug('Z2M_TamperAlarmSwitch', 'Undefined State: ' . $Payload['tamper_alarm_switch'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('alarm_switch', $Payload)) {
+                    switch ($Payload['alarm_switch']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_AlarmSwitch', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_AlarmSwitch', false);
+                            break;
+                        default:
+                            $this->SendDebug('Z2M_AlarmSwitch', 'Undefined State: ' . $Payload['alarm_switch'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('alarm_state', $Payload)) {
+                    $this->SetValue('Z2M_AlarmState', $Payload['alarm_state']);
                 }
                 if (array_key_exists('do_not_disturb', $Payload)) {
                     $this->SetValue('Z2M_DoNotDisturb', $Payload['do_not_disturb']);
@@ -1974,6 +2056,12 @@ trait Zigbee2MQTTHelper
                 [true, 'Online',  '', 0x00FF00]
             ]);
         }
+        if (!IPS_VariableProfileExists('Z2M.ChargeState')) {
+            $this->RegisterProfileBooleanEx('Z2M.ChargeState', 'Battery', '', '', [
+                [false, 'Kein laden',  '', 0xFF0000],
+                [true, 'wird geladen',  '', 0x00FF00]
+            ]);
+        }
         if (!IPS_VariableProfileExists('Z2M.AutoLock')) {
             $this->RegisterProfileBooleanEx('Z2M.AutoLock', 'Key', '', '', [
                 [false, $this->Translate('Manual'),  '', 0xFF0000],
@@ -2124,6 +2212,34 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.alarm_mode.b39b85ae':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['alarm_sound', $this->Translate('Alarm Sound'), '', 0xFF0000],
+                                    ['alarm_light', $this->Translate('Alarm Light'), '', 0x00FF00],
+                                    ['alarm_sound_light', $this->Translate('Alarm Sound & Light'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.alarm_melody.65680ce3':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['melody1', $this->Translate('Melody 1'), '', 0x00FF00],
+                                    ['melody2', $this->Translate('Melody 2'), '', 0x00FF00],
+                                    ['melody3', $this->Translate('Melody 3'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.alarm_state.d6cc0174':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['alarm_sound', $this->Translate('Alarm Sound'), '', 0x00FF00],
+                                    ['alarm_light', $this->Translate('Alarm Light'), '', 0x00FF00],
+                                    ['alarm_sound_light', $this->Translate('Alarm Sound & Light'), '', 0x00FF00],
+                                    ['normal', $this->Translate('Normal'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.motor_direction.cf88002f':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Shuffle', '', '', [
@@ -3203,6 +3319,13 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'alarm_time':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' min', $expose['value_min'], $expose['value_max'], $expose['value_step'], 0);
+                        }
+                        break;
                     case 'soil_moisture':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Drops', '', ' ' . $expose['unit'], 0, 0, 0);
@@ -3948,6 +4071,21 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'charge_state':
+                            $this->RegisterVariableBoolean('Z2M_ChargeState', $this->Translate('Charge State'), 'Z2M.ChargeState');
+                            break;
+                        case 'tamper_alarm':
+                            $this->RegisterVariableBoolean('Z2M_TamperAlarm', $this->Translate('Tamper Alarm'), '~Switch');
+                            $this->EnableAction('Z2M_TamperAlarm');
+                            break;
+                        case 'tamper_alarm_switch':
+                            $this->RegisterVariableBoolean('Z2M_TamperAlarmSwitch', $this->Translate('Tamper Alarm Switch'), '~Switch');
+                            $this->EnableAction('Z2M_TamperAlarmSwitch');
+                            break;
+                        case 'alarm_switch':
+                            $this->RegisterVariableBoolean('Z2M_AlarmSwitch', $this->Translate('Alarm Switch'), '~Switch');
+                            $this->EnableAction('Z2M_AlarmSwitch');
+                            break;
                         case 'do_not_disturb':
                             $this->RegisterVariableBoolean('Z2M_DoNotDisturb', $this->Translate('Do Not Disturb'), '~Switch');
                             $this->EnableAction('Z2M_DoNotDisturb');
@@ -4187,6 +4325,26 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'alarm_mode':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_AlarmMode', $this->Translate('Alarm Mode'), $ProfileName);
+                                $this->EnableAction('Z2M_AlarmMode');
+                            }
+                            break;
+                        case 'alarm_melody':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_AlarmMelody', $this->Translate('Alarm Melody'), $ProfileName);
+                                $this->EnableAction('Z2M_AlarmMelody');
+                            }
+                            break;
+                        case 'alarm_state':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_AlarmState', $this->Translate('Alarm State'), $ProfileName);
+                            }
+                            break;
                         case 'air_quality':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -4523,6 +4681,13 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'alarm_time':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_AlarmTime', $this->Translate('Alarm Time'), $ProfileName);
+                                $this->EnableAction('Z2M_AlarmTime');
+                            }
+                            break;
                         case 'remote_temperature':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
