@@ -3211,6 +3211,23 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.mode.c348e40f':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
+                                    ['off', $this->Translate('Off'), '', 0xFF0000],
+                                    ['auto', $this->Translate('Auto'), '', 0x00FF00],
+                                    ['1', $this->Translate('1'), '', 0x00FF00],
+                                    ['2', $this->Translate('2'), '', 0x00FF00],
+                                    ['3', $this->Translate('3'), '', 0x000000],
+                                    ['4', $this->Translate('4'), '', 0x000000],
+                                    ['5', $this->Translate('5'), '', 0x000000],
+                                    ['6', $this->Translate('6'), '', 0x000000],
+                                    ['7', $this->Translate('7'), '', 0x000000],
+                                    ['8', $this->Translate('8'), '', 0x000000],
+                                    ['9', $this->Translate('9'), '', 0x000000]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.week.4e05e759':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Calendar', '', '', [
