@@ -2212,6 +2212,23 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.fan_mode.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Ventilation', '', '', [
+                                    ['off', $this->Translate('Off'), '', 0xFF0000],
+                                    ['auto', $this->Translate('Auto'), '', 0x00FF00],
+                                    ['1', $this->Translate('1'), '', 0x00FF00],
+                                    ['2', $this->Translate('2'), '', 0x00FF00],
+                                    ['3', $this->Translate('3'), '', 0x00FF00],
+                                    ['4', $this->Translate('4'), '', 0x00FF00],
+                                    ['5', $this->Translate('5'), '', 0x00FF00],
+                                    ['6', $this->Translate('6'), '', 0x00FF00],
+                                    ['7', $this->Translate('7'), '', 0x00FF00],
+                                    ['8', $this->Translate('8'), '', 0x00FF00],
+                                    ['9', $this->Translate('9'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.alarm_mode.b39b85ae':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
