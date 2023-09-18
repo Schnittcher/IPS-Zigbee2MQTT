@@ -2225,7 +2225,7 @@ trait Zigbee2MQTTHelper
                                     ['6', $this->Translate('6'), '', 0x00FF00],
                                     ['7', $this->Translate('7'), '', 0x00FF00],
                                     ['8', $this->Translate('8'), '', 0x00FF00],
-                                    ['9', $this->Translate('9'), '', 0x00FF00],
+                                    ['9', $this->Translate('9'), '', 0x00FF00]
                                 ]);
                             }
                             break;
