@@ -2236,7 +2236,7 @@ trait Zigbee2MQTTHelper
                                     ['alarm_sound', $this->Translate('Alarm Sound'), '', 0x00FF00],
                                     ['alarm_light', $this->Translate('Alarm Light'), '', 0x00FF00],
                                     ['alarm_sound_light', $this->Translate('Alarm Sound & Light'), '', 0x00FF00],
-                                    ['normal', $this->Translate('Normal'), '', 0x00FF00]
+                                    ['no_alarm', $this->Translate('No Alarm'), '', 0x00FF00]
                                 ]);
                             }
                             break;
