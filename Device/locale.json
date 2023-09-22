@@ -1,6 +1,15 @@
 {
     "translations": {
         "de": {
+            "1 Single": "1 Einfach",
+            "1 Double": "1 Doppelt",
+            "1 Hold": "1 Halten",
+            "2 Single": "2 Einfach",
+            "2 Double": "2 Doppelt",
+            "2 Hold": "2 Halten", 
+            "3 Single": "3 Einfach",
+            "3 Double": "3 Doppelt",
+            "3 Hold": "3 Halten",
             "1 minute inactivity": "1 Minute inaktiv",
             "Action angle": "Aktionswinkel",
             "Action Code": "Aktions Code",
