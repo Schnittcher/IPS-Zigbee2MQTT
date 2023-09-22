@@ -7,6 +7,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_FanMode':
+                $Payload['fan_mode'] = $Value;
+                break;
             case 'Z2M_AlarmMode':
                 $Payload['alarm_mode'] = $Value;
                 break;
@@ -608,6 +611,9 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('fan_mode', $Payload)) {
+                    $this->SetValue('Z2M_FanMode', $Payload['fan_mode']);
                 }
                 if (array_key_exists('alarm_time', $Payload)) {
                     $this->SetValue('Z2M_AlarmTime', $Payload['alarm_time']);
@@ -3226,7 +3232,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.mode.c348e40f':
+                        case 'Z2M.fan_mode.c348e40f':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
                                     ['off', $this->Translate('Off'), '', 0xFF0000],
@@ -4053,6 +4059,7 @@ trait Zigbee2MQTTHelper
                                                 $ProfileName = $this->registerVariableProfile($feature);
                                                 if ($ProfileName != false) {
                                                     $this->RegisterVariableString('Z2M_FanMode', $this->Translate('Fan Mode'), $ProfileName);
+                                                    $this->EnableAction('Z2M_FanMode');
                                                 }
                                                 break;
                                             default:
