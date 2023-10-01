@@ -3233,6 +3233,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'Z2M.fan_mode.c348e40f':
+                        case 'Z2M.mode.c348e40f':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
                                     ['off', $this->Translate('Off'), '', 0xFF0000],
