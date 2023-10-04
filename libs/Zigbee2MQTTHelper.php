@@ -2394,6 +2394,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'Z2M.action.815b927a':
+                        case 'Z2M.action.b918bcb2':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['1_single', $this->Translate('1 Single'), '', 0x00FF00],
