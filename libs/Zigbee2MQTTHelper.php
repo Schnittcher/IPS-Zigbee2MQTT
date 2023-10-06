@@ -7,7 +7,7 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
-            case 'Z2M_LearIRCode':
+            case 'Z2M_LearnIRCode':
                 $Payload['learn_ir_code'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_FanMode':
