@@ -7,6 +7,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_LearnIRCode':
+                $Payload['learn_ir_code'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_FanMode':
                 $Payload['fan_mode'] = $Value;
                 break;
@@ -611,6 +614,19 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('learn_ir_code', $Payload)) {
+                    switch ($Payload['learn_ir_code']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_LearnIRCode', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_LearnIRCode', false);
+                            break;
+                        default:
+                            $this->SendDebug('Z2M_LearnIRCode', 'Undefined State: ' . $Payload['learn_ir_code'], 0);
+                            break;
+                    }
                 }
                 if (array_key_exists('fan_mode', $Payload)) {
                     $this->SetValue('Z2M_FanMode', $Payload['fan_mode']);
@@ -3736,6 +3752,10 @@ trait Zigbee2MQTTHelper
                             switch ($feature['type']) {
                                 case 'binary':
                                     switch ($feature['property']) {
+                                        case 'learn_ir_code':
+                                            $this->RegisterVariableBoolean('Z2M_LearnIRCode', $this->Translate('Learn IR Code'), '~Switch');
+                                            $this->EnableAction('Z2M_LearnIRCode');
+                                            break;
                                         case 'state':
                                             $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
                                             $this->EnableAction('Z2M_State');
