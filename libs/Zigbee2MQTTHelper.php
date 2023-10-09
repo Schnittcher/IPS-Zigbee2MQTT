@@ -2794,6 +2794,34 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.action.e7f91f00':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['button_1_hold', $this->Translate('Button 1 Hold'), '', 0x00FF00],
+                                    ['button_1_hold_release', $this->Translate('Button 1 Hold Release'), '', 0x00FF00],
+                                    ['button_1_press', $this->Translate('Button 1 Press'), '', 0x00FF00],
+                                    ['button_1_press_release', $this->Translate('Button 1 Press Release'), '', 0x00FF00],
+                                    ['button_2_hold', $this->Translate('Button 2 Hold'), '', 0x00FF00],
+                                    ['button_2_hold_release', $this->Translate('Button 2 Hold Release'), '', 0x00FF00],
+                                    ['button_2_press', $this->Translate('Button 2 Press'), '', 0x00FF00],
+                                    ['button_2_press_release', $this->Translate('Button 2 Press Release'), '', 0x00FF00],
+                                    ['button_3_hold', $this->Translate('Button 3 Hold'), '', 0x00FF00],
+                                    ['button_3_hold_release', $this->Translate('Button 3 Hold Release'), '', 0x00FF00],
+                                    ['button_3_press', $this->Translate('Button 3 Press'), '', 0x00FF00],
+                                    ['button_3_press_release', $this->Translate('Button 3 Press Release'), '', 0x00FF00],
+                                    ['button_4_hold', $this->Translate('Button 4 Hold'), '', 0x00FF00],
+                                    ['button_4_hold_release', $this->Translate('Button 4 Hold Release'), '', 0x00FF00],
+                                    ['button_4_press', $this->Translate('Button 4 Press'), '', 0x00FF00],
+                                    ['button_4_press_release', $this->Translate('Button 4 Press Release'), '', 0x00FF00],
+                                    ['dial_rotate_left_fast', $this->Translate('Dial Rotate Left Fast'), '', 0x00FF00],
+                                    ['dial_rotate_left_slow', $this->Translate('Dial Rotate Left Slow'), '', 0x00FF00],
+                                    ['dial_rotate_left_step', $this->Translate('Dial Rotate Left Step'), '', 0x00FF00],
+                                    ['dial_rotate_right_fast', $this->Translate('Dial Rotate Right Fast'), '', 0x00FF00],
+                                    ['dial_rotate_right_slow', $this->Translate('Dial Rotate Right Slow'), '', 0x00FF00],
+                                    ['dial_rotate_right_step', $this->Translate('Dial Rotate Right Step'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.action.5e7f11cc':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
