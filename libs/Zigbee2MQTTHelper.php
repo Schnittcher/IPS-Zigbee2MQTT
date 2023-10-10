@@ -2477,6 +2477,7 @@ trait Zigbee2MQTTHelper
                                     ['brightness_step_up', $this->Translate('Brightness Step Up'), '', 0x00FF00],
                                     ['on', $this->Translate('On'), '', 0x00FF00],
                                     ['off', $this->Translate('Off'), '', 0x00FF00],
+                                    ['recall_*', $this->Translate('Unknown'), '', 0x00FF00],
                                 ]);
                             }
                             break;
