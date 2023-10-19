@@ -142,6 +142,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_StateRGB':
                 $Payload['state_rgb'] = strval($this->OnOff($Value));
                 break;
+            case 'Z2M_StateCCT':
+                $Payload['state_cct'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_ComfortTemperature':
                 $Payload['comfort_temperature'] = number_format($Value, 2, '.', ' ');
                 break;
@@ -250,6 +253,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_BrightnessRGB':
                 $Payload['brightness_rgb'] = strval($Value);
                 break;
+            case 'Z2M_BrightnessCCT':
+                $Payload['brightness_cct'] = strval($Value);
+                break;
             case 'Z2M_BrightnessWhite':
                 $Payload['brightness_white'] = strval($Value);
                 break;
@@ -261,6 +267,9 @@ trait Zigbee2MQTTHelper
                 break;
             case 'Z2M_ColorTempRGB':
                 $Payload['color_temp_rgb'] = strval($Value);
+                break;
+            case 'Z2M_ColorTempCCT':
+                $Payload['color_temp_cct'] = strval($Value);
                 break;
             case 'Z2M_State':
                 if ($variableType == 3) {
@@ -283,6 +292,9 @@ trait Zigbee2MQTTHelper
                 break;
             case 'Z2M_StateRGB':
                 $Payload['state_rgb'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_StateCCT':
+                $Payload['state_cct'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_StateWhite':
                 $Payload['state_white'] = strval($this->OnOff($Value));
@@ -1113,6 +1125,11 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_BrightnessRGB', $Payload['brightness_rgb']);
                 }
 
+                if (array_key_exists('brightness_cct', $Payload)) {
+                    $this->EnableAction('Z2M_BrightnessCCT');
+                    $this->SetValue('Z2M_BrightnessCCT', $Payload['brightness_CCT']);
+                }
+
                 if (array_key_exists('brightness_white', $Payload)) {
                     $this->SetValue('Z2M_BrightnessWhite', $Payload['brightness_white']);
                 }
@@ -1410,10 +1427,20 @@ trait Zigbee2MQTTHelper
                         $this->SetValue('Z2M_ColorTempRGBKelvin', 1000000 / $Payload['color_temp_rgb']); //Convert to Kelvin
                     }
                 }
-
+                if (array_key_exists('color_temp_cct', $Payload)) {
+                    $this->SetValue('Z2M_ColorTempCCT', $Payload['color_temp_cct']);
+                    if ($Payload['color_temp_cct'] > 0) {
+                        $this->SetValue('Z2M_ColorTempCCTKelvin', 1000000 / $Payload['color_temp_cct']); //Convert to Kelvin
+                    }
+                }
                 if (array_key_exists('color_temp_startup_rgb', $Payload)) {
-                    $this->SetValue('Z2M_ColorTempStartupRGB', $Payload['color_temp_rgb']);
+                    $this->SetValue('Z2M_ColorTempStartupRGB', $Payload['color_temp_startup_rgb']);
                     $this->EnableAction('Z2M_ColorTempStartupRGB');
+                }
+
+                if (array_key_exists('color_temp_startup_cct', $Payload)) {
+                    $this->SetValue('Z2M_ColorTempStartupCCT', $Payload['color_temp_startup_cct']);
+                    $this->EnableAction('Z2M_ColorTempStartupCCT');
                 }
 
                 if (array_key_exists('color_temp_startup', $Payload)) {
@@ -1456,6 +1483,22 @@ trait Zigbee2MQTTHelper
                                 break;
                             default:
                                 $this->SendDebug('State RGB', 'Undefined State: ' . $Payload['state_rgb'], 0);
+                                break;
+                        }
+                }
+
+                if (array_key_exists('state_cct', $Payload)) {
+                    switch ($Payload['state_cct']) {
+                            case 'ON':
+                                $this->EnableAction('Z2M_StateCCT');
+                                $this->SetValue('Z2M_StateCCT', true);
+                                break;
+                            case 'OFF':
+                                $this->EnableAction('Z2M_StateCCT');
+                                $this->SetValue('Z2M_StateCCT', false);
+                                break;
+                            default:
+                                $this->SendDebug('State CCT', 'Undefined State: ' . $Payload['state_CCT'], 0);
                                 break;
                         }
                 }
@@ -3595,6 +3638,7 @@ trait Zigbee2MQTTHelper
                         break;
                     case 'brightness':
                     case 'brightness_rgb':
+                    case 'brightness_cct':
                     case 'brightness_white':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -3604,8 +3648,10 @@ trait Zigbee2MQTTHelper
                         break;
                     case 'color_temp':
                     case 'color_temp_rgb':
+                    case 'color_temp_cct':
                     case 'color_temp_startup':
                     case 'color_temp_startup_rgb':
+                    case 'color_temp_startup_cct':
                     case 'action_color_temperature':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -3922,6 +3968,12 @@ trait Zigbee2MQTTHelper
                                                 $this->EnableAction('Z2M_StateRGB');
                                             }
                                             break;
+                                        case 'state_cct':
+                                            if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
+                                                $this->RegisterVariableBoolean('Z2M_StateCCT', $this->Translate('State CCT'), '~Switch');
+                                                $this->EnableAction('Z2M_StateCCT');
+                                            }
+                                            break;
                                         case 'state_white':
                                             if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
                                                 $this->RegisterVariableBoolean('Z2M_StateWhite', $this->Translate('State White'), '~Switch');
@@ -3948,6 +4000,13 @@ trait Zigbee2MQTTHelper
                                             if ($ProfileName != false) {
                                                 $this->RegisterVariableInteger('Z2M_BrightnessRGB', $this->Translate('Brightness RGB'), $ProfileName);
                                                 $this->EnableAction('Z2M_BrightnessRGB');
+                                            }
+                                            break;
+                                        case 'brightness_cct':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_BrightnessCCT', $this->Translate('Brightness CCT'), $ProfileName);
+                                                $this->EnableAction('Z2M_BrightnessCCT');
                                             }
                                             break;
                                         case 'brightness_white':
@@ -3987,11 +4046,33 @@ trait Zigbee2MQTTHelper
                                             $this->RegisterVariableInteger('Z2M_ColorTempRGBKelvin', $this->Translate('Color Temperature RGB Kelvin'), 'Z2M.ColorTemperatureKelvin');
                                             $this->EnableAction('Z2M_ColorTempRGBKelvin');
                                             break;
+                                        case 'color_temp_cct':
+                                            //Color Temperature Mired
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_ColorTempCCT', $this->Translate('Color Temperature CCT'), $ProfileName);
+                                                $this->EnableAction('Z2M_ColorTempCCT');
+                                            }
+                                            //TODO: Color Temp Presets
+                                            // Color Temperature in Kelvin nicht automatisiert, deswegen nicht über die Funktion registerVariableProfile
+                                            if (!IPS_VariableProfileExists('Z2M.ColorTemperatureKelvin')) {
+                                                $this->RegisterProfileInteger('Z2M.ColorTemperatureKelvin', 'Intensity', '', '', 2000, 6535, 1);
+                                            }
+                                            $this->RegisterVariableInteger('Z2M_ColorTempCCTKelvin', $this->Translate('Color Temperature CCT Kelvin'), 'Z2M.ColorTemperatureKelvin');
+                                            $this->EnableAction('Z2M_ColorTempCCTKelvin');
+                                            break;
                                         case 'color_temp_startup_rgb':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
                                                 $this->RegisterVariableInteger('Z2M_ColorTempStartupRGB', $this->Translate('Color Temperature Startup RGB'), $ProfileName);
                                                 $this->EnableAction('Z2M_ColorTempStartupRGB');
+                                            }
+                                            break;
+                                         case 'color_temp_startup_cct':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_ColorTempStartupCCT', $this->Translate('Color Temperature Startup CCT'), $ProfileName);
+                                                $this->EnableAction('Z2M_ColorTempStartupCCT');
                                             }
                                             break;
                                         case 'color_temp_startup':
