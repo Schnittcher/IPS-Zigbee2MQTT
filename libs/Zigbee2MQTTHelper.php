@@ -10,6 +10,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_LearnIRCode':
                 $Payload['learn_ir_code'] = strval($this->OnOff($Value));
                 break;
+            case'Z2M_IRCodeToSend':
+                $Payload['ir_code_to_send'] = $Value;
+                break;
             case 'Z2M_FanMode':
                 $Payload['fan_mode'] = $Value;
                 break;
@@ -639,6 +642,9 @@ trait Zigbee2MQTTHelper
                             $this->SendDebug('Z2M_LearnIRCode', 'Undefined State: ' . $Payload['learn_ir_code'], 0);
                             break;
                     }
+                }
+                if (array_key_exists('learned_ir_code', $Payload)) {
+                    $this->SetValue('Z2M_LearnedIRCode', $Payload['learned_ir_code']);
                 }
                 if (array_key_exists('fan_mode', $Payload)) {
                     $this->SetValue('Z2M_FanMode', $Payload['fan_mode']);
@@ -3852,6 +3858,20 @@ trait Zigbee2MQTTHelper
 
         foreach ($exposes as $key => $expose) {
             switch ($expose['type']) {
+                case 'text':
+                    switch ($expose['property']) {
+                        case 'learned_ir_code':
+                            $this->RegisterVariableString('Z2M_LearnedIRCode', $this->Translate('Learned IR Code'), '');
+                        break;
+                        case 'ir_code_to_send':
+                            $this->RegisterVariableString('Z2M_IRCodeToSend', $this->Translate('IR Code to send'), '');
+                            $this->EnableAction('Z2M_IRCodeToSend');
+                        break;
+                        default:
+                            $missedVariables[] = $expose;
+                        break;
+                    }
+                    break; //break text
                 case 'switch':
                     if (array_key_exists('features', $expose)) {
                         foreach ($expose['features'] as $key => $feature) {
@@ -4531,7 +4551,7 @@ trait Zigbee2MQTTHelper
                             break;
                         default:
                             $missedVariables[] = $expose;
-                            break;
+                        break;
                     }
                     break; //binary break
                 case 'enum':
