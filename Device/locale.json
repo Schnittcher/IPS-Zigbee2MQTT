@@ -483,8 +483,6 @@
             "Rio": "Rio",
             "Rosy Sparkle": "Rosiger Glanz",
             "Rotate Left": "Links drehen",
-            "Rotate Left": "Links drehen",
-            "Rotate Right": "Rechts drehen",
             "Rotate Right": "Rechts drehen",
             "Rotate Stop": "Drehen anhalten",
             "Ruby Romance": "Rubinromantik",
@@ -625,8 +623,9 @@
             "Window": "Fenster",
             "Windows are closed": "Fenster geschlossen",
             "Winter Beauty": "Winterliche Schönheit",
-            "Winter Mountain": "Winterberg"
-
+            "Winter Mountain": "Winterberg",
+            "Learned IR Code": "Gelernter IR-Code",
+            "IR Code to send": "IR-Code zum Senden"
         }
     }
 }
