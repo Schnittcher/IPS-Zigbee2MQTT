@@ -7,6 +7,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_ScaleProtection':
+                $Payload['scale_protection'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_LearnIRCode':
                 $Payload['learn_ir_code'] = strval($this->OnOff($Value));
                 break;
@@ -629,6 +632,19 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('scale_protection', $Payload)) {
+                    switch ($Payload['scale_protection']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_ScaleProtection', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_ScaleProtection', false);
+                            break;
+                        default:
+                            $this->SendDebug('Z2M_ScaleProtection', 'Undefined State: ' . $Payload['scale_protection'], 0);
+                            break;
+                    }
                 }
                 if (array_key_exists('learn_ir_code', $Payload)) {
                     switch ($Payload['learn_ir_code']) {
@@ -4302,6 +4318,10 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'scale_protection':
+                            $this->RegisterVariableBoolean('Z2M_ScaleProtection', $this->Translate('Scale Protection'), '~Switch');
+                            $this->EnableAction('Z2M_ScaleProtection');
+                            break;
                         case 'charge_state':
                             $this->RegisterVariableBoolean('Z2M_ChargeState', $this->Translate('Charge State'), 'Z2M.ChargeState');
                             break;
