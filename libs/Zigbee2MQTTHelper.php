@@ -643,6 +643,9 @@ trait Zigbee2MQTTHelper
                             break;
                     }
                 }
+                if (array_key_exists('error', $Payload)) {
+                    $this->SetValue('Z2M_TRVError', $Payload['error']);
+                }
                 if (array_key_exists('learned_ir_code', $Payload)) {
                     $this->SetValue('Z2M_LearnedIRCode', $Payload['learned_ir_code']);
                 }
@@ -3493,6 +3496,11 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'error':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Alert', '', ' ', 0, 0, 0);
+                        }
+                        break;
                     case 'alarm_time':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -4912,6 +4920,12 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'error':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_TRVError', $this->Translate('Error'), $ProfileName);
+                            }
+                            break;
                         case 'alarm_time':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
