@@ -7,6 +7,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_DeviceMode':
+                $Payload['device_mode'] = $Value;
+                break;
             case 'Z2M_ScaleProtection':
                 $Payload['scale_protection'] = strval($this->OnOff($Value));
                 break;
@@ -632,6 +635,9 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('device_mode', $Payload)) {
+                    $this->SetValue('Z2M_DeviceMode', $Payload['device_mode']);
                 }
                 if (array_key_exists('scale_protection', $Payload)) {
                     switch ($Payload['scale_protection']) {
@@ -2302,6 +2308,16 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.device_mode':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['single_rocker', $this->Translate('Single Rocker'), '', 0xFF0000],
+                                    ['single_push_button', $this->Translate('Single Push Button'), '', 0x00FF00],
+                                    ['dual_rocker', $this->Translate('Dual Rocker'), '', 0x00FF00],
+                                    ['dual_push_button', $this->Translate('Dual Push Button'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.alarm_mode.b39b85ae':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -4602,6 +4618,13 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'device_mode':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_DeviceMode', $this->Translate('Device Mode'), $ProfileName);
+                                $this->EnableAction('Z2M_DeviceMode');
+                            }
+                            break;
                         case 'alarm_mode':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
