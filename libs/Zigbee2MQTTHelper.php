@@ -3546,6 +3546,11 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'action_transaction':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ', 0, 0, 0);
+                        }
+                        break;
                     case 'error':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Alert', '', ' ', 0, 0, 0);
