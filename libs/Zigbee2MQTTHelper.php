@@ -636,6 +636,9 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('action_zone', $Payload)) {
+                    $this->SetValue('Z2M_ActionZone', $Payload['action_zone']);
+                }
                 if (array_key_exists('device_mode', $Payload)) {
                     $this->SetValue('Z2M_DeviceMode', $Payload['device_mode']);
                 }
@@ -3918,6 +3921,9 @@ trait Zigbee2MQTTHelper
             switch ($expose['type']) {
                 case 'text':
                     switch ($expose['property']) {
+                        case 'action_zone':
+                            $this->RegisterVariableString('Z2M_ActionZone', $this->Translate('Action Zone'), '');
+                        break;
                         case 'learned_ir_code':
                             $this->RegisterVariableString('Z2M_LearnedIRCode', $this->Translate('Learned IR Code'), '');
                         break;
