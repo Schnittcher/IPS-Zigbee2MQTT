@@ -2485,11 +2485,23 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                            case 'Z2M.display_orientation.d6fc8316':
+                        case 'Z2M.display_orientation.d6fc8316':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['normal', $this->Translate('Normal'), '', 0x00FF00],
                                     ['flipped', $this->Translate('Flipped'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.action.2593a6d2':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['arm_all_zones', $this->Translate('Arm All Zones'), '', 0x00FF00],
+                                    ['arm_day_zones', $this->Translate('Arm Day Zones'), '', 0x00FF00],
+                                    ['arm_night_zones', $this->Translate('Arm Night Zones'), '', 0x00FF00],
+                                    ['disarm', $this->Translate('Disarm'), '', 0x00FF00],
+                                    ['emergency', $this->Translate('Emergency'), '', 0x00FF00],
+                                    ['exit_delay', $this->Translate('Exit Delay'), '', 0x00FF00]
                                 ]);
                             }
                             break;
