@@ -3923,6 +3923,11 @@ trait Zigbee2MQTTHelper
     private function mapExposesToVariables(array $exposes)
     {
         $missedVariables = [];
+        $missedVariables['composite'] = [];
+        $missedVariables['enum'] = [];
+        $missedVariables['numeric'] = [];
+        $missedVariables['binary'] = [];
+        $missedVariables['text'] = [];
         $missedVariables['light'] = [];
         $missedVariables['switch'] = [];
         $missedVariables['climate'] = [];
@@ -3943,7 +3948,7 @@ trait Zigbee2MQTTHelper
                             $this->EnableAction('Z2M_IRCodeToSend');
                         break;
                         default:
-                            $missedVariables[] = $expose;
+                            $missedVariables['text'][] = $expose;
                         break;
                     }
                     break; //break text
@@ -4629,7 +4634,7 @@ trait Zigbee2MQTTHelper
                             $this->EnableAction('Z2M_TriggerIndicator');
                             break;
                         default:
-                            $missedVariables[] = $expose;
+                            $missedVariables['binary'][] = $expose;
                         break;
                     }
                     break; //binary break
@@ -4992,7 +4997,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         default:
-                            $missedVariables[] = $expose;
+                            $missedVariables['enum'][] = $expose;
                             break;
                     }
                     break; //enum break
@@ -5580,7 +5585,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         default:
-                            $missedVariables[] = $expose;
+                            $missedVariables['numeric'][] = $expose;
                             break;
                     }
                     break; //numeric break
