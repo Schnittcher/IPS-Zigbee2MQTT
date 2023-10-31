@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Zigbee2MQTT;
+
 if (!function_exists('fnmatch')) {
     function fnmatch($pattern, $string)
     {

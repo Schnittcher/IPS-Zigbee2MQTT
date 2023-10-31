@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Zigbee2MQTT;
+
 trait ColorHelper
 {
     protected function HexToRGB($value)

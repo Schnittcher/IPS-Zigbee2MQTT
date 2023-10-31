@@ -8,10 +8,10 @@ require_once __DIR__ . '/../libs/Zigbee2MQTTHelper.php';
 
 class Zigbee2MQTTGroup extends IPSModule
 {
-    use ColorHelper;
-    use MQTTHelper;
-    use VariableProfileHelper;
-    use Zigbee2MQTTHelper;
+    use \Zigbee2MQTT\ColorHelper;
+    use \Zigbee2MQTT\MQTTHelper;
+    use \Zigbee2MQTT\VariableProfileHelper;
+    use \Zigbee2MQTT\Zigbee2MQTTHelper;
 
     public function Create()
     {

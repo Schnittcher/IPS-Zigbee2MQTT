@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Zigbee2MQTT;
+
 trait Zigbee2MQTTHelper
 {
     public function RequestAction($Ident, $Value)

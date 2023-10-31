@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Zigbee2MQTT;
+
 trait Zigbee2MQTTBridgeHelper
 {
     public function AddGroup(string $group_name, string $friendly_name)
