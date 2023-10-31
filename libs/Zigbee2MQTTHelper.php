@@ -3949,17 +3949,20 @@ trait Zigbee2MQTTHelper
                     switch ($expose['property']) {
                         case 'action_zone':
                             $this->RegisterVariableString('Z2M_ActionZone', $this->Translate('Action Zone'), '');
-                        break;
+                            break;
+                        case 'action_code':
+                            $this->RegisterVariableString('Z2M_ActionCode', $this->Translate('Action Code'), '');
+                            break;
                         case 'learned_ir_code':
                             $this->RegisterVariableString('Z2M_LearnedIRCode', $this->Translate('Learned IR Code'), '');
-                        break;
+                            break;
                         case 'ir_code_to_send':
                             $this->RegisterVariableString('Z2M_IRCodeToSend', $this->Translate('IR Code to send'), '');
                             $this->EnableAction('Z2M_IRCodeToSend');
-                        break;
+                            break;
                         default:
                             $missedVariables['text'][] = $expose;
-                        break;
+                            break;
                     }
                     break; //break text
                 case 'switch':
