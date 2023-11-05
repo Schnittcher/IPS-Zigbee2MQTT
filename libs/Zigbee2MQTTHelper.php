@@ -11,6 +11,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_DetectionDistanceMax':
+                $Payload['detection_distance_max'] = $Value;
+                break;
             case 'Z2M_DeviceMode':
                 $Payload['device_mode'] = $Value;
                 break;
@@ -639,6 +642,9 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                 if (array_key_exists('detection_distance_max', $Payload)) {
+                    $this->SetValue('Z2M_DetectionDistanceMax', $Payload['detection_distance_max']);
                 }
                 if (array_key_exists('action_zone', $Payload)) {
                     $this->SetValue('Z2M_ActionZone', $Payload['action_zone']);
@@ -3576,6 +3582,13 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'detection_distance_max':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Distance', '', ' m', $expose['value_min'], $expose['value_max'], $expose['value_step'], 0);
+                        }
+                        break;
                     case 'action_transaction':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ', 0, 0, 0);
@@ -5027,6 +5040,13 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'detection_distance_max':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_DetectionDistanceMax', $this->Translate('Detection Distance Max'), $ProfileName);
+                                $this->EnableAction('Z2M_DetectionDistanceMax');
+                            }
+                            break;
                         case 'error':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
