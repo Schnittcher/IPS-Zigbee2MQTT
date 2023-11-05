@@ -206,6 +206,7 @@
             "Deadzone Temperature": "Totzonentemperatur",
             "Default": "Default",
             "Detection Delay": "Erkennungsverzögerung",
+            "Detection Distance Min": "Erkennungsbereich Min",
             "Detection Interval": "Erkennungsintervall",
             "Device Temperature": "Geräte Temperatur",
             "Dial Rotate Left Fast": "Rad schnell links gedreht",
