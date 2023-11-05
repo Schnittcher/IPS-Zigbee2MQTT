@@ -643,7 +643,7 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
-                 if (array_key_exists('detection_distance_max', $Payload)) {
+                if (array_key_exists('detection_distance_max', $Payload)) {
                     $this->SetValue('Z2M_DetectionDistanceMax', $Payload['detection_distance_max']);
                 }
                 if (array_key_exists('action_zone', $Payload)) {
