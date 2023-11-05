@@ -2574,6 +2574,7 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'Z2M.action.be89cdac':
                         case 'Z2M.action.c1cb007d':
+                        case 'Z2M.action.be89cdac':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['brightness_move_down', $this->Translate('Brightness move down'), '', 0x00FF00],
