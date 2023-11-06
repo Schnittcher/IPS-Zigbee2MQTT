@@ -2503,9 +2503,9 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.action.7985b4e3':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
-                                    ['brightness_move_down', $this->Translate('Brightness Move Down'), '', 0x00FF00],
+                                    ['brightness_move_down', $this->Translate('Brightness move down'), '', 0x00FF00],
                                     ['brightness_move_to_level', $this->Translate('Brightness Move To Level'), '', 0x00FF00],
-                                    ['brightness_move_up', $this->Translate('Brightness Move Up'), '', 0x00FF00],
+                                    ['brightness_move_up', $this->Translate('Brightness move up'), '', 0x00FF00],
                                     ['brightness_stop', $this->Translate('Brightness Stop'), '', 0x00FF00],
                                     ['color_temperature_move', $this->Translate('Color Temperature Move'), '', 0x00FF00],
                                     ['hue_move', $this->Translate('Hue Move'), '', 0x00FF00],
