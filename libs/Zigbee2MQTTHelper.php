@@ -646,6 +646,9 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('detection_distance_max', $Payload)) {
                     $this->SetValue('Z2M_DetectionDistanceMax', $Payload['detection_distance_max']);
                 }
+                if (array_key_exists('presence_state', $Payload)) {
+                    $this->SetValue('Z2M_PresenceState', $Payload['presence_state']);
+                }
                 if (array_key_exists('action_zone', $Payload)) {
                     $this->SetValue('Z2M_ActionZone', $Payload['action_zone']);
                 }
@@ -2321,7 +2324,17 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M.device_mode':
+                        case 'Z2M.presence_state.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['none', $this->Translate('None'), '', 0xFF0000],
+                                    ['present', $this->Translate('Present'), '', 0x00FF00],
+                                    ['moving', $this->Translate('Moving'), '', 0x00FF00],
+                                    ['presence', $this->Translate('Presence'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.device_mode.':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['single_rocker', $this->Translate('Single Rocker'), '', 0xFF0000],
@@ -2503,6 +2516,19 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['normal', $this->Translate('Normal'), '', 0x00FF00],
                                     ['flipped', $this->Translate('Flipped'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.action.177702c6':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['hold', $this->Translate('Hold'), '', 0x00FF00],
+                                    ['on', $this->Translate('On'), '', 0x00FF00],
+                                    ['off', $this->Translate('Off'), '', 0x00FF00],
+                                    ['press', $this->Translate('Press'), '', 0x00FF00],
+                                    ['release', $this->Translate('Release'), '', 0x00FF00],
+                                    ['skip_backward', $this->Translate('Skip Backward'), '', 0x00FF00],
+                                    ['skip_forward', $this->Translate('Skip Forward'), '', 0x00FF00]
                                 ]);
                             }
                             break;
@@ -3587,6 +3613,13 @@ trait Zigbee2MQTTHelper
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Distance', '', ' m', $expose['value_min'], $expose['value_max'], $expose['value_step'], 0);
+                        }
+                      break;
+                    case 'motion_sensitivity':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' min', $expose['value_min'], $expose['value_max'], $expose['value_step'], 0);
                         }
                         break;
                     case 'action_transaction':
@@ -4677,6 +4710,12 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'presence_state':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_PresenceState', $this->Translate('Presence State'), $ProfileName);
+                            }
+                            break;
                         case 'device_mode':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -5051,6 +5090,13 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_TRVError', $this->Translate('Error'), $ProfileName);
+                            }
+                            break;
+                        case 'motion_sensitivity':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_MotionSensitivity', $this->Translate('Motion Sensitivity'), $ProfileName);
+                                $this->EnableAction('Z2M_MotionSensitivity');
                             }
                             break;
                         case 'alarm_time':
