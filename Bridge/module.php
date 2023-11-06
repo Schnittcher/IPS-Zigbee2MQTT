@@ -60,17 +60,17 @@ class Zigbee2MQTTBridge extends IPSModule
                         $this->RegisterVariableString('Z2M_Permit_Join', $this->Translate('Permit Join'), '');
                         SetValue($this->GetIDForIdent('Z2M_Permit_Join'), $Payload->permit_join);
                     }
-                 }
-                 if (fnmatch('*event*', $Buffer->Topic)) {
-                     if (property_exists($Payload, 'type')) {
-                         switch ($Payload->type) {
+                }
+                if (fnmatch('*event*', $Buffer->Topic)) {
+                    if (property_exists($Payload, 'type')) {
+                        switch ($Payload->type) {
                              case 'device_announce':
                                  $this->RegisterVariableString('Z2M_Device_Announce', $this->Translate('Announce'), '');
                                  SetValue($this->GetIDForIdent('Z2M_Device_Announce'), $Buffer->Payload);
                                  break;
                          }
                     }
-                }               
+                }
                 if (fnmatch('*log*', $Buffer->Topic)) {
                     if (property_exists($Payload, 'type')) {
                         switch ($Payload->type) {
