@@ -2500,6 +2500,19 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.action.177702c6':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['hold', $this->Translate('Hold'), '', 0x00FF00],
+                                    ['on', $this->Translate('On'), '', 0x00FF00],
+                                    ['off', $this->Translate('Off'), '', 0x00FF00],
+                                    ['press', $this->Translate('Press'), '', 0x00FF00],
+                                    ['release', $this->Translate('Release'), '', 0x00FF00],
+                                    ['skip_backward', $this->Translate('Skip Backward'), '', 0x00FF00],
+                                    ['skip_forward', $this->Translate('Skip Forward'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.action.2593a6d2':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
