@@ -2336,7 +2336,7 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M.presence_state.':
+                        case 'Z2M.presence_state.ffd9a501':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['none', $this->Translate('None'), '', 0xFF0000],
