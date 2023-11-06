@@ -640,6 +640,9 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('presence_state', $Payload)) {
+                    $this->SetValue('Z2M_PresenceState', $Payload['presence_state']);
+                }
                 if (array_key_exists('action_zone', $Payload)) {
                     $this->SetValue('Z2M_ActionZone', $Payload['action_zone']);
                 }
@@ -2315,7 +2318,17 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M.device_mode':
+                        case 'Z2M.presence_state.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['none', $this->Translate('None'), '', 0xFF0000],
+                                    ['present', $this->Translate('Present'), '', 0x00FF00],
+                                    ['moving', $this->Translate('Moving'), '', 0x00FF00],
+                                    ['presence', $this->Translate('Presence'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.device_mode.':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['single_rocker', $this->Translate('Single Rocker'), '', 0xFF0000],
@@ -4677,6 +4690,12 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'presence_state':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_PresenceState', $this->Translate('Presence State'), $ProfileName);
+                            }
+                            break;
                         case 'device_mode':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
