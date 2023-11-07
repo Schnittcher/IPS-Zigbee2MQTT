@@ -3710,6 +3710,13 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' min', $expose['value_min'], $expose['value_max'], $expose['value_step'], 0);
                         }
                       break;
+                    case 'sensitivity':
+                    $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                    $ProfileName = str_replace(',', '.', $ProfileName);
+                    if (!IPS_VariableProfileExists($ProfileName)) {
+                        $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' min', $expose['value_min'], $expose['value_max'], 1, 0);
+                    }
+                    break;
                     case 'detection_distance_min':
                     case 'detection_distance_max':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
@@ -5223,6 +5230,13 @@ trait Zigbee2MQTTHelper
                                 $this->EnableAction('Z2M_PresenceSensitivity');
                             }
                           break;
+                        case 'sensitivity':
+                        $ProfileName = $this->registerVariableProfile($expose);
+                        if ($ProfileName != false) {
+                            $this->RegisterVariableFloat('Z2M_Sensitivity', $this->Translate('Sensitivity'), $ProfileName);
+                            $this->EnableAction('Z2M_Sensitivity');
+                        }
+                        break;
                         case 'detection_distance_min':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
