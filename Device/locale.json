@@ -260,6 +260,13 @@
             "Energy": "Energie",
             "Enrolled": "Enrolled",
             "Error": "Fehler",
+            "Enter": "Enter",
+            "Leave": "Verlassen",
+            "Left Enter": "Links Enter",
+            "Right Leave": "Rechts Verlassen",
+            "Right Enter": "Rechts Enter",
+            "Left Leave": "Links Verlassen",
+            "Approach": "Näherung",
             "Excellent": "Exzellent",
             "Exit Delay": "Ausschaltverzögerung",
             "External Measured Room Sensor": "Extern gemessener Raumfühler",
@@ -446,6 +453,8 @@
             "OU": "OU",
             "Out of range": "Außer Reichweite",
             "Overload Protection": "Überspannungschutz",
+            "Undirected": "Ungerichtet",
+            "Left/Right": "Links/Rechts",
             "Painted Sky": "Gemalter Himmel",
             "Palm Beach": "Palmenstrand",
             "Parlour": "Salon",
@@ -469,6 +478,7 @@
             "Preheat Status": "Vorheizstatus",
             "Presence": "Anwesendheit",
             "Presence State": "Präsenz Status",
+            "Presence Event": "Präsenz Ereignis",
             "Presence Sensitivity": "Erkennungsempfindlichkeit",
             "Present": "Anwesend",
             "Preset": "Default",
@@ -490,6 +500,7 @@
             "Radar Scene": "Radar Szene",
             "Radar Sensitivity": "Radar Empfindlichkeit",
             "Radiator Covered": "Heizkörper verkleidet",
+            "Region id": "Region id",
             "Regulation Setpoint Offset": "Regelsollwert-Offset",
             "Release 1 and 3": "Freigabe 1 und 3",
             "Release 1": "Freigabe 1",
@@ -656,7 +667,12 @@
             "Winter Mountain": "Winterberg",
             "Learned IR Code": "Gelernter IR-Code",
             "IR Code to send": "IR-Code zum Senden",
-            "Quadruple": "Vierfaches"
+            "Quadruple": "Vierfaches",
+            "Approach Distance": "Annäherungsabstand",
+            "Reset Nopresence Status": "Nopräsenz-Status zurücksetzen",
+            "Reset": "Reset",
+            "Far": "Weit",
+            "Near": "Reset"
         }
     }
 }
