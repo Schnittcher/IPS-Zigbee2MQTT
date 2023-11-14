@@ -35,11 +35,17 @@ trait Zigbee2MQTTHelper
             case 'Z2M_ScaleProtection':
                 $Payload['scale_protection'] = strval($this->OnOff($Value));
                 break;
+            case 'Z2M_LedIndication':
+                $Payload['led_indication'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_LearnIRCode':
                 $Payload['learn_ir_code'] = strval($this->OnOff($Value));
                 break;
             case'Z2M_IRCodeToSend':
                 $Payload['ir_code_to_send'] = $Value;
+                break;
+            case'Z2M_ProgrammingMode':
+                $Payload['programming_mode'] = $Value;
                 break;
             case 'Z2M_FanMode':
                 $Payload['fan_mode'] = $Value;
@@ -701,6 +707,19 @@ trait Zigbee2MQTTHelper
                             break;
                         default:
                             $this->SendDebug('Z2M_ScaleProtection', 'Undefined State: ' . $Payload['scale_protection'], 0);
+                            break;
+                    }
+                }
+                if (array_key_exists('led_indication', $Payload)) {
+                    switch ($Payload['led_indication']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_LedIndication', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_LedIndication', false);
+                            break;
+                        default:
+                            $this->SendDebug('Z2M_LedIndication', 'Undefined State: ' . $Payload['led_indication'], 0);
                             break;
                     }
                 }
@@ -2412,7 +2431,8 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.device_mode.e8eb408':
+                            case 'Z2M.device_mode.e8eb408':
+                            case 'Z2M.device_mode.887c8dff':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['single_rocker', $this->Translate('Single Rocker'), '', 0xFF0000],
@@ -2901,6 +2921,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'Z2M.action.e87c79ad':
+                        case 'Z2M.action.64797105':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['left_hold', $this->Translate('Left Hold'), '', 0x00FF00],
@@ -3606,6 +3627,7 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'Z2M.level.ae420ac':
                         case 'Z2M.strobe_level.ae420ac':
+                        case 'Z2M.motion_sensitivity.f607dc1f':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Gear', '', '', [
                                     ['low', $this->Translate('Low'), '', 0x00FF00],
@@ -4134,6 +4156,10 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableString('Z2M_IRCodeToSend', $this->Translate('IR Code to send'), '');
                             $this->EnableAction('Z2M_IRCodeToSend');
                             break;
+                        case 'programming_mode':
+                            $this->RegisterVariableString('Z2M_ProgrammingMode', $this->Translate('Programming Mode'), '');
+                            $this->EnableAction('Z2M_ProgrammingMode');
+                            break;
                         default:
                             $missedVariables['text'][] = $expose;
                             break;
@@ -4569,6 +4595,10 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'scale_protection':
+                            $this->RegisterVariableBoolean('Z2M_LedIndication', $this->Translate('Led Indication'), '~Switch');
+                            $this->EnableAction('Z2M_LedIndication');
+                            break;
                         case 'scale_protection':
                             $this->RegisterVariableBoolean('Z2M_ScaleProtection', $this->Translate('Scale Protection'), '~Switch');
                             $this->EnableAction('Z2M_ScaleProtection');
