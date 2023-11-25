@@ -515,13 +515,13 @@ trait Zigbee2MQTTHelper
                 $this->setColor($Value, 'cie', 'color_rgb');
                 return;
             case 'Z2M_Position':
-                $Payload['position'] = strval($Value);
+                $Payload['position'] = $Value;
                 break;
             case 'Z2M_PositionLeft':
-                $Payload['position_left'] = strval($Value);
+                $Payload['position_left'] = $Value;
                 break;
             case 'Z2M_PositionRight':
-                $Payload['position_right'] = strval($Value);
+                $Payload['position_right'] = $Value;
                 break;
             case 'Z2M_MotorSpeed':
                 $Payload['motor_speed'] = strval($Value);
