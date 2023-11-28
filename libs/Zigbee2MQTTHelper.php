@@ -3425,6 +3425,7 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.effect.fe70ca86':
                         case 'Z2M.effect.efbfc77e':
                         case 'Z2M.effect.dd503500':
+                        case 'Z2M.effect.5b9efbea':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
                                     ['blink', $this->Translate('Blink'), '', 0x0000FF],
