@@ -474,13 +474,13 @@ trait Zigbee2MQTTHelper
                 $Payload['motor_reversal_right'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_CurrentHeatingSetpoint':
-                $Payload['current_heating_setpoint'] = number_format($Value, 2, '.', ' ');
+                $Payload['current_heating_setpoint'] = $Value;
                 break;
             case 'Z2M_CurrentHeatingSetpointAuto':
-                $Payload['current_heating_setpoint_auto'] = number_format($Value, 2, '.', ' ');
+                $Payload['current_heating_setpoint_auto'] = $Value;
                 break;
             case 'Z2M_OccupiedHeatingSetpoint':
-                $Payload['occupied_heating_setpoint'] = number_format($Value, 2, '.', ' ');
+                $Payload['occupied_heating_setpoint'] = $Value;
                 break;
             case 'Z2M_LocalTemperatureCalibration':
                 $Payload['local_temperature_calibration'] = number_format($Value, 2, '.', ' ');
