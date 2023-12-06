@@ -2411,7 +2411,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case ' Z2M.self_test_result.c088393d':
+                        case 'Z2M.self_test_result.c088393d':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['checking', $this->Translate('Checking'), '', 0xFF0000],
