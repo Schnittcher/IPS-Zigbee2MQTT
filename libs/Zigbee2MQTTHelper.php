@@ -2411,7 +2411,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.SelfTestResult.d8a26c9b':
+                        case ' Z2M.self_test_result.c088393d':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['checking', $this->Translate('Checking'), '', 0xFF0000],
@@ -4641,7 +4641,7 @@ trait Zigbee2MQTTHelper
                             $this->EnableAction('Z2M_LedIndication');
                             break;
                         case 'silence':
-                            $this->RegisterVariableBoolean('Z2M_Silence', $this->Translate('Led Indication'), '~Switch');
+                            $this->RegisterVariableBoolean('Z2M_Silence', $this->Translate('Silence'), '~Switch');
                             $this->EnableAction('Z2M_Silence');
                             break;
                         case 'scale_protection':
@@ -4811,7 +4811,7 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableBoolean('Z2M_Smoke', $this->Translate('Smoke'), '~Alert');
                             break;
                         case 'carbon_monoxide':
-                            $this->RegisterVariableBoolean('Z2M_CarbonMonoxide', $this->Translate('Carbon Monoxide'), '~Alert');
+                            $this->RegisterVariableBoolean('Z2M_CarbonMonoxide', $this->Translate('Alarm'), '~Alert');
                             break;
                         case 'heating':
                             $this->RegisterVariableBoolean('Z2M_Heating', $this->Translate('Heating'), '~Switch');
@@ -5367,7 +5367,6 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_CO', $this->Translate('Carbon Monoxide'), $ProfileName);
-                                $this->EnableAction('Z2M_CO');
                             }
                             break;
                         case 'filter_age':
