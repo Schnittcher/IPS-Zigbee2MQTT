@@ -71,7 +71,7 @@ trait Zigbee2MQTTHelper
             case 'Z2M_AlarmState':
                 $Payload['alarm_state'] = $Value;
                 break;
-            case 'Z2M_Pi_Heating_Demand':
+            case 'Z2M_PiHeatingDemand':
                 $Payload['pi_heating_demand'] = $Value;
                 break;
             case 'Z2M_DoNotDisturb':
@@ -1177,7 +1177,7 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_OccupiedHeatingSetpoint', $Payload['occupied_heating_setpoint']);
                 }
                 if (array_key_exists('pi_heating_demand', $Payload)) {
-                    $this->SetValue('Z2M_Pi_Heating_Demand', $Payload['pi_heating_demand']);
+                    $this->SetValue('Z2M_PiHeatingDemand', $Payload['pi_heating_demand']);
                 }
                 if (array_key_exists('system_mode', $Payload)) {
                     $this->SetValue('Z2M_SystemMode', $Payload['system_mode']);
@@ -4479,8 +4479,8 @@ trait Zigbee2MQTTHelper
                                             }
                                             break;
                                         case 'pi_heating_demand':
-                                            $this->RegisterVariableInteger('Z2M_Pi_Heating_Demand', $this->Translate('Valve Position (Heating Demand)'), '~Intensity.100');
-                                            $this->EnableAction('Z2M_Pi_Heating_Demand');
+                                            $this->RegisterVariableInteger('Z2M_PiHeatingDemand', $this->Translate('Valve Position (Heating Demand)'), '~Intensity.100');
+                                            $this->EnableAction('Z2M_PiHeatingDemand');
                                             break;
                                         default:
                                             // Default Climate binary
