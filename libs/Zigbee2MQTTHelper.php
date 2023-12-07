@@ -5366,7 +5366,7 @@ trait Zigbee2MQTTHelper
                         case 'co':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableFloat('Z2M_CO', $this->Translate('Carbon Monoxide'), $ProfileName);
+                                $this->RegisterVariableInteger('Z2M_CO', $this->Translate('Carbon Monoxide'), $ProfileName);
                             }
                             break;
                         case 'filter_age':
