@@ -2407,7 +2407,7 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M.detection_distance.':
+                        case 'Z2M.detection_distance.cae0fad1':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['10 cm', $this->Translate('None'), '', 0xFF0000],
