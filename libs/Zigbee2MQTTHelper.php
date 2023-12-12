@@ -2407,16 +2407,15 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        switch ($ProfileName) {
-                            case 'Z2M.detection_distance.':
-                                if (!IPS_VariableProfileExists($ProfileName)) {
-                                    $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
-                                        ['10 cm', $this->Translate('None'), '', 0xFF0000],
-                                        ['20 cm', $this->Translate('Present'), '', 0x00FF00],
-                                        ['30 cm', $this->Translate('Moving'), '', 0x00FF00]
-                                    ]);
-                                }
-                                break;
+                        case 'Z2M.detection_distance.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['10 cm', $this->Translate('None'), '', 0xFF0000],
+                                    ['20 cm', $this->Translate('Present'), '', 0x00FF00],
+                                    ['30 cm', $this->Translate('Moving'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.presence_state.ffd9a501':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
