@@ -11,6 +11,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_DetectionDistance':
+                $Payload['detection_distance'] = strval($Value);
+                break;
             case 'Z2M_TransmitPower':
                 $Payload['transmit_power'] = $Value;
                 break;
@@ -672,6 +675,9 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('detection_distance', $Payload)) {
+                    $this->SetValue('Z2M_DetectionDistance', $Payload['detection_distance']);
                 }
                 if (array_key_exists('transmit_power', $Payload)) {
                     $this->SetValue('Z2M_TransmitPower', $Payload['transmit_power']);
@@ -2401,6 +2407,15 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.detection_distance.cae0fad1':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['10 cm', $this->Translate('10 cm'), '', 0x00FF00],
+                                    ['20 cm', $this->Translate('20 cm'), '', 0x00FF00],
+                                    ['30 cm', $this->Translate('30 cm'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.presence_state.ffd9a501':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -4902,6 +4917,13 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'detection_distance':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_DetectionDistance', $this->Translate('Detection Distance'), $ProfileName);
+                                $this->EnableAction('Z2M_DetectionDistance');
+                            }
+                            break;
                         case 'presence_state':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
