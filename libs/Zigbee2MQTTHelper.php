@@ -1516,14 +1516,16 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_PercentState', $Payload['percent_state']);
                 }
                 if (array_key_exists('color', $Payload)) {
-                    $this->SendDebug(__FUNCTION__ . ' Color', $Payload['color']['x'], 0);
-                    if (array_key_exists('brightness', $Payload)) {
-                        $RGBColor = ltrim($this->CIEToRGB($Payload['color']['x'], $Payload['color']['y'], $Payload['brightness']), '#');
-                    } else {
-                        $RGBColor = ltrim($this->CIEToRGB($Payload['color']['x'], $Payload['color']['y']), '#');
+                    if (array_key_exists('x', $Payload['color'])) {
+                        $this->SendDebug(__FUNCTION__ . ' Color', $Payload['color']['x'], 0);
+                        if (array_key_exists('brightness', $Payload)) {
+                            $RGBColor = ltrim($this->CIEToRGB($Payload['color']['x'], $Payload['color']['y'], $Payload['brightness']), '#');
+                        } else {
+                            $RGBColor = ltrim($this->CIEToRGB($Payload['color']['x'], $Payload['color']['y']), '#');
+                        }
+                        $this->SendDebug(__FUNCTION__ . ' Color RGB HEX', $RGBColor, 0);
+                        $this->SetValue('Z2M_Color', hexdec(($RGBColor)));
                     }
-                    $this->SendDebug(__FUNCTION__ . ' Color RGB HEX', $RGBColor, 0);
-                    $this->SetValue('Z2M_Color', hexdec(($RGBColor)));
                 }
 
                 if (array_key_exists('color_rgb', $Payload)) {
