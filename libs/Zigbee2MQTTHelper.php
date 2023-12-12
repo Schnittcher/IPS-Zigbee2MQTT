@@ -44,6 +44,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_LedIndication':
                 $Payload['led_indication'] = strval($this->OnOff($Value));
                 break;
+            case 'Z2M_Silence':
+                $Payload['silence'] = $Value;
+                break;
             case 'Z2M_LearnIRCode':
                 $Payload['learn_ir_code'] = strval($this->OnOff($Value));
                 break;
@@ -74,7 +77,7 @@ trait Zigbee2MQTTHelper
             case 'Z2M_AlarmState':
                 $Payload['alarm_state'] = $Value;
                 break;
-            case 'Z2M_Pi_Heating_Demand':
+            case 'Z2M_PiHeatingDemand':
                 $Payload['pi_heating_demand'] = $Value;
                 break;
             case 'Z2M_DoNotDisturb':
@@ -477,13 +480,13 @@ trait Zigbee2MQTTHelper
                 $Payload['motor_reversal_right'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_CurrentHeatingSetpoint':
-                $Payload['current_heating_setpoint'] = number_format($Value, 2, '.', ' ');
+                $Payload['current_heating_setpoint'] = $Value;
                 break;
             case 'Z2M_CurrentHeatingSetpointAuto':
-                $Payload['current_heating_setpoint_auto'] = number_format($Value, 2, '.', ' ');
+                $Payload['current_heating_setpoint_auto'] = $Value;
                 break;
             case 'Z2M_OccupiedHeatingSetpoint':
-                $Payload['occupied_heating_setpoint'] = number_format($Value, 2, '.', ' ');
+                $Payload['occupied_heating_setpoint'] = $Value;
                 break;
             case 'Z2M_LocalTemperatureCalibration':
                 $Payload['local_temperature_calibration'] = number_format($Value, 2, '.', ' ');
@@ -691,6 +694,9 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('presence_state', $Payload)) {
                     $this->SetValue('Z2M_PresenceState', $Payload['presence_state']);
                 }
+                if (array_key_exists('self_test_result', $Payload)) {
+                    $this->SetValue('Z2M_SelfTestResult', $Payload['self_test_result']);
+                }
                 if (array_key_exists('presence_event', $Payload)) {
                     $this->SetValue('Z2M_PresenceEvent', $Payload['presence_event']);
                 }
@@ -734,6 +740,9 @@ trait Zigbee2MQTTHelper
                             $this->SendDebug('Z2M_LedIndication', 'Undefined State: ' . $Payload['led_indication'], 0);
                             break;
                     }
+                }
+                if (array_key_exists('silence', $Payload)) {
+                    $this->SetValue('Z2M_Silence', $Payload['silence']);
                 }
                 if (array_key_exists('learn_ir_code', $Payload)) {
                     switch ($Payload['learn_ir_code']) {
@@ -832,6 +841,9 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('remote_temperature', $Payload)) {
                     $this->SetValue('Z2M_RemoteTemperature', $Payload['remote_temperature']);
+                }
+                if (array_key_exists('co', $Payload)) {
+                    $this->SetValue('Z2M_CO', $Payload['co']);
                 }
                 if (array_key_exists('battery_state', $Payload)) {
                     $this->SetValue('Z2M_BatteryState', $Payload['battery_state']);
@@ -1183,7 +1195,7 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_OccupiedHeatingSetpoint', $Payload['occupied_heating_setpoint']);
                 }
                 if (array_key_exists('pi_heating_demand', $Payload)) {
-                    $this->SetValue('Z2M_Pi_Heating_Demand', $Payload['pi_heating_demand']);
+                    $this->SetValue('Z2M_PiHeatingDemand', $Payload['pi_heating_demand']);
                 }
                 if (array_key_exists('system_mode', $Payload)) {
                     $this->SetValue('Z2M_SystemMode', $Payload['system_mode']);
@@ -2412,6 +2424,16 @@ trait Zigbee2MQTTHelper
                                     ['present', $this->Translate('Present'), '', 0x00FF00],
                                     ['moving', $this->Translate('Moving'), '', 0x00FF00],
                                     ['presence', $this->Translate('Presence'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.self_test_result.c088393d':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['checking', $this->Translate('Checking'), '', 0xFF0000],
+                                    ['success', $this->Translate('Success'), '', 0x00FF00],
+                                    ['failure', $this->Translate('failure'), '', 0xFF0000],
+                                    ['others', $this->Translate('others'), '', 0xFF8800]
                                 ]);
                             }
                             break;
@@ -3806,6 +3828,11 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileInteger($ProfileName, 'Drops', '', ' ' . $expose['unit'], 0, 0, 0);
                         }
                         break;
+                    case 'co':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Gas', '', ' ' . $expose['unit'], 0, 0, 0);
+                        }
+                        break;
                     case 'regulation_setpoint_offset':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Temperature', '', ' °C', $expose['value_min'], $expose['value_max'], 1);
@@ -4495,8 +4522,8 @@ trait Zigbee2MQTTHelper
                                             }
                                             break;
                                         case 'pi_heating_demand':
-                                            $this->RegisterVariableInteger('Z2M_Pi_Heating_Demand', $this->Translate('Valve Position (Heating Demand)'), '~Intensity.100');
-                                            $this->EnableAction('Z2M_Pi_Heating_Demand');
+                                            $this->RegisterVariableInteger('Z2M_PiHeatingDemand', $this->Translate('Valve Position (Heating Demand)'), '~Intensity.100');
+                                            $this->EnableAction('Z2M_PiHeatingDemand');
                                             break;
                                         default:
                                             // Default Climate binary
@@ -4628,6 +4655,10 @@ trait Zigbee2MQTTHelper
                         case 'scale_protection':
                             $this->RegisterVariableBoolean('Z2M_LedIndication', $this->Translate('Led Indication'), '~Switch');
                             $this->EnableAction('Z2M_LedIndication');
+                            break;
+                        case 'silence':
+                            $this->RegisterVariableBoolean('Z2M_Silence', $this->Translate('Silence'), '~Switch');
+                            $this->EnableAction('Z2M_Silence');
                             break;
                         case 'scale_protection':
                             $this->RegisterVariableBoolean('Z2M_ScaleProtection', $this->Translate('Scale Protection'), '~Switch');
@@ -4796,7 +4827,7 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableBoolean('Z2M_Smoke', $this->Translate('Smoke'), '~Alert');
                             break;
                         case 'carbon_monoxide':
-                            $this->RegisterVariableBoolean('Z2M_CarbonMonoxide', $this->Translate('Carbon Monoxide'), '~Alert');
+                            $this->RegisterVariableBoolean('Z2M_CarbonMonoxide', $this->Translate('Alarm'), '~Alert');
                             break;
                         case 'heating':
                             $this->RegisterVariableBoolean('Z2M_Heating', $this->Translate('Heating'), '~Switch');
@@ -4898,6 +4929,12 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_PresenceState', $this->Translate('Presence State'), $ProfileName);
+                            }
+                            break;
+                        case 'self_test_result':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_SelfTestResult', $this->Translate('Self Test Result'), $ProfileName);
                             }
                             break;
                         case 'presence_event':
@@ -5347,6 +5384,12 @@ trait Zigbee2MQTTHelper
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_RemoteTemperature', $this->Translate('Remote Temperature'), $ProfileName);
                                 $this->EnableAction('Z2M_RemoteTemperature');
+                            }
+                            break;
+                        case 'co':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_CO', $this->Translate('Carbon Monoxide'), $ProfileName);
                             }
                             break;
                         case 'filter_age':
