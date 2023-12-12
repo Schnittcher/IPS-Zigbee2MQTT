@@ -2410,7 +2410,7 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.detection_distance.cae0fad1':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
-                                    ['10 cm', $this->Translate('10 cm'), '', 0xFF0000],
+                                    ['10 cm', $this->Translate('10 cm'), '', 0x00FF00],
                                     ['20 cm', $this->Translate('20 cm'), '', 0x00FF00],
                                     ['30 cm', $this->Translate('30 cm'), '', 0x00FF00]
                                 ]);
