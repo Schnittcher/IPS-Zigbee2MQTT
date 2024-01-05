@@ -39,8 +39,8 @@ async onMQTTMessage(data) {
 
                 let definition = this.zigbeeHerdsmanConverters.findByDevice(device.zh);
                 payload.model = definition ? definition.model : device.zh.modelID;
-                payload.vendor = definition ? definition.vendor : '-';
-                payload.description = definition ? definition.description : '-';
+                payload.vendor = device.definition.vendor
+                payload.description = cevice.definition.description;
                 //payload.exposes =  definition ? definition.exposes : '-';
                 payload.friendly_name = device.name;
                 //payload.manufacturerID = device.zh.manufacturerID;
