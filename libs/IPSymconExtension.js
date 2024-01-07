@@ -91,7 +91,7 @@ async onMQTTMessage(data) {
                     groupDevices.forEach(function(device) {
                        const deviceAddress = device.substring(0, device.indexOf('/')); 
                        const tmpDevice = this.zigbee.resolveEntity(deviceAddress);
-                       const exposes = tmpDevice._definition.exposes;
+                       const exposes = tmpDevice.definition.exposes;
 
                         exposes.forEach(function(expose) {    
                             switch (expose.type) {
