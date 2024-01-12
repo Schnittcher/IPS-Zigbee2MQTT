@@ -697,7 +697,7 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
-                                if (array_key_exists('indicator', $Payload)) {
+                if (array_key_exists('indicator', $Payload)) {
                     $this->SetValue('Z2M_Indicator', $Payload['indicator']);
                 }
                 if (array_key_exists('small_detection_sensitivity', $Payload)) {
