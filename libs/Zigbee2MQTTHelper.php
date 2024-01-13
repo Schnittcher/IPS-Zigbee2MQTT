@@ -4653,7 +4653,7 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
-                        case 'scale_protection':
+                        case 'led_indication':
                             $this->RegisterVariableBoolean('Z2M_LedIndication', $this->Translate('Led Indication'), '~Switch');
                             $this->EnableAction('Z2M_LedIndication');
                             break;
