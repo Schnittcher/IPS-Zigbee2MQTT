@@ -4748,7 +4748,7 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableBoolean('Z2M_Indicator', $this->Translate('Indicator'), '~Switch');
                             $this->EnableAction('Z2M_Indicator');
                             break;
-                        case 'scale_protection':
+                        case 'led_indication':
                             $this->RegisterVariableBoolean('Z2M_LedIndication', $this->Translate('Led Indication'), '~Switch');
                             $this->EnableAction('Z2M_LedIndication');
                             break;
