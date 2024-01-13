@@ -39,8 +39,8 @@ async onMQTTMessage(data) {
 
                 let definition = this.zigbeeHerdsmanConverters.findByDevice(device.zh);
                 payload.model = definition ? definition.model : device.zh.modelID;
-                payload.vendor = definition ? definition.vendor : '-';
-                payload.description = definition ? definition.description : '-';
+		payload.vendor = device.definition && device.definition.vendor ? device.definition.vendor : 'Unknown Vendor';
+                payload.description = device.definition && device.definition.description ? device.definition.description : 'No description';
                 //payload.exposes =  definition ? definition.exposes : '-';
                 payload.friendly_name = device.name;
                 //payload.manufacturerID = device.zh.manufacturerID;
@@ -91,7 +91,7 @@ async onMQTTMessage(data) {
                     groupDevices.forEach(function(device) {
                        const deviceAddress = device.substring(0, device.indexOf('/')); 
                        const tmpDevice = this.zigbee.resolveEntity(deviceAddress);
-                       const exposes = tmpDevice._definition.exposes;
+                       const exposes = tmpDevice.definition.exposes;
 
                         exposes.forEach(function(expose) {    
                             switch (expose.type) {
