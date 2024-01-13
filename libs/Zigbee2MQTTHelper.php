@@ -11,6 +11,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_ValveAdaptProcess':
+                $Payload['valve_adapt_process'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_Indicator':
                 $Payload['indicator'] = strval($this->OnOff($Value));
                 break;
@@ -696,6 +699,12 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('valve_adapt_process', $Payload)) {
+                    $this->SetValue('Z2M_ValveAdaptProcess', $Payload['valve_adapt_process']);
+                }
+                if (array_key_exists('valve_adapt_status', $Payload)) {
+                    $this->SetValue('Z2M_ValveAdaptStatus', $Payload['valve_adapt_status']);
                 }
                 if (array_key_exists('indicator', $Payload)) {
                     $this->SetValue('Z2M_Indicator', $Payload['indicator']);
@@ -2448,6 +2457,17 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.valve_adapt_status.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['none', $this->Translate('None'), '', 0x00FF00],
+                                    ['ready_to_calibrate', $this->Translate('Ready To Calibrate'), '', 0x00FF00],
+                                    ['calibration_in_progress', $this->Translate('Calibration in Progress'), '', 0x00FF00],
+                                    ['error', $this->Translate('Large'), 'Error', 0x00FF00],
+                                    ['success', $this->Translate('Large'), 'Success', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.motion_state.0f5b1d2d':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -4744,6 +4764,10 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'valve_adapt_process':
+                            $this->RegisterVariableBoolean('Z2M_ValveAdaptProcess', $this->Translate('Valve Adapt Process'), '~Switch');
+                            $this->EnableAction('Z2M_ValveAdaptProcess');
+                            break;
                         case 'indicator':
                             $this->RegisterVariableBoolean('Z2M_Indicator', $this->Translate('Indicator'), '~Switch');
                             $this->EnableAction('Z2M_Indicator');
@@ -5014,6 +5038,11 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'valve_adapt_status':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_ValveAdaptStatus', $this->Translate('Valve Adapt Status'), $ProfileName);
+                            break;
                         case 'motion_state':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
