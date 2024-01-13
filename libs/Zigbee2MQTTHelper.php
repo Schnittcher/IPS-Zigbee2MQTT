@@ -5042,6 +5042,7 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_ValveAdaptStatus', $this->Translate('Valve Adapt Status'), $ProfileName);
+                            }
                             break;
                         case 'motion_state':
                             $ProfileName = $this->registerVariableProfile($expose);
