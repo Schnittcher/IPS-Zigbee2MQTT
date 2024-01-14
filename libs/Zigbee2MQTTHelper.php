@@ -676,6 +676,15 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('illuminance_above_threshold', $Payload)) {
+                    $this->SetValue('Z2M_IlluminanceAboveThreshold', $Payload['illuminance_above_threshold']);
+                }
+                if (array_key_exists('requested_brightness_percent', $Payload)) {
+                    $this->SetValue('Z2M_RequestedBrightnessPercent', $Payload['requested_brightness_percent']);
+                }
+                if (array_key_exists('requested_brightness_level', $Payload)) {
+                    $this->SetValue('Z2M_RequestedBrightnessLevel', $Payload['requested_brightness_level']);
+                }
                 if (array_key_exists('detection_distance', $Payload)) {
                     $this->SetValue('Z2M_DetectionDistance', $Payload['detection_distance']);
                 }
@@ -3771,6 +3780,20 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'requested_brightness_percent':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' %', $expose['value_min'], $expose['value_max'], 0, 0);
+                        }
+                      break;
+                    case 'requested_brightness_level':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 0, 0);
+                        }
+                      break;
                     case 'presence_sensitivity':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -4653,6 +4676,9 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'illuminance_above_threshold':
+                            $this->RegisterVariableBoolean('Z2M_IlluminanceAboveThreshold', $this->Translate('Illuminance Above Threshold'), '~Switch');
+                            break;
                         case 'scale_protection':
                             $this->RegisterVariableBoolean('Z2M_LedIndication', $this->Translate('Led Indication'), '~Switch');
                             $this->EnableAction('Z2M_LedIndication');
@@ -5328,6 +5354,18 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'requested_brightness_level':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_RequestedBrightnessLevel', $this->Translate('Requested Brightness Level'), $ProfileName);
+                            }
+                            break;
+                        case 'requested_brightness_percent':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_RequestedBrightnessPercent', $this->Translate('Requested Brightness Percent'), $ProfileName);
+                            }
+                          break;
                         case 'presence_sensitivity':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
