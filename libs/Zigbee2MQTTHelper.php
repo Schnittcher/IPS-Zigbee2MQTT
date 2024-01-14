@@ -676,6 +676,9 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('power_reactive', $Payload)) {
+                    $this->SetValue('Z2M_PowerReactive', $Payload['power_reactive']);
+                }
                 if (array_key_exists('detection_distance', $Payload)) {
                     $this->SetValue('Z2M_DetectionDistance', $Payload['detection_distance']);
                 }
@@ -3771,6 +3774,11 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'power_reactive':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Electricity', '', ' ' . $expose['unit'], 0, 0, 2);
+                        }
+                        break;
                     case 'presence_sensitivity':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -5328,6 +5336,12 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'power_reactive':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_PowerReactive', $this->Translate('Power Reactive'), $ProfileName);
+                            }
+                        break;
                         case 'presence_sensitivity':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
