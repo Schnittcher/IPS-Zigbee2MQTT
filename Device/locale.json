@@ -476,6 +476,7 @@
             "Power on behavior": "Einschaltverhalten nach Stromausfall",
             "Power Outage Count": "Anzahl der Stromausfälle",
             "Power Outage Memory": "Status nach Stromausfall",
+            "Power Reactive": "Blindleistung",
             "Power Type": "Stromquelle",
             "Power": "Leistung",
             "Precious": "Kostbar",
