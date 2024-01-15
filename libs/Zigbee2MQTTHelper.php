@@ -700,6 +700,15 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('x_axis', $Payload)) {
+                    $this->SetValue('Z2M_XAxis', $Payload['x_axis']);
+                }
+                if (array_key_exists('y_axis', $Payload)) {
+                    $this->SetValue('Z2M_YAxis', $Payload['y_axis']);
+                }
+                if (array_key_exists('z_axis', $Payload)) {
+                    $this->SetValue('Z2M_ZAxis', $Payload['z_axis']);
+                }
                 if (array_key_exists('power_factor', $Payload)) {
                     $this->SetValue('Z2M_PowerFactor', $Payload['power_factor']);
                 }
@@ -3847,6 +3856,21 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'z_axis':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Shuffle', '', ' ', 0, 0, 0, 2);
+                        }
+                        break;
+                    case 'y_axis':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Shuffle', '', ' ', 0, 0, 0, 2);
+                        }
+                        break;
+                    case 'x_axis':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Shuffle', '', ' ', 0, 0, 0, 2);
+                        }
+                    break;
                     case 'ac_frequency':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
@@ -5471,6 +5495,24 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'z_axis':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_ZAxis', $this->Translate('Z Axis'), $ProfileName);
+                            }
+                        break;
+                        case 'y_axis':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_YAxis', $this->Translate('Y Axis'), $ProfileName);
+                            }
+                        break;
+                        case 'x_axis':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_XAxis', $this->Translate('X Axis'), $ProfileName);
+                            }
+                        break;
                         case 'power_factor':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {

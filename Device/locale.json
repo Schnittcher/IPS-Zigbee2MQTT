@@ -694,7 +694,10 @@
             "Reset Nopresence Status": "Nopräsenz-Status zurücksetzen",
             "Reset": "Reset",
             "Far": "Weit",
-            "Near": "Reset"
+            "Near": "Reset",
+            "X Axis": "X Achse",
+            "Y Axis": "Y Achse",
+            "Z Axis": "Z Achse"
         }
     }
 }
