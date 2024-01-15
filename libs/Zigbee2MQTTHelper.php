@@ -700,6 +700,12 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('power_factor', $Payload)) {
+                    $this->SetValue('Z2M_PowerFactor', $Payload['power_factor']);
+                }
+                if (array_key_exists('ac_frequency', $Payload)) {
+                    $this->SetValue('Z2M_AcFrequency', $Payload['ac_frequency']);
+                }
                 if (array_key_exists('valve_adapt_process', $Payload)) {
                     $this->SetValue('Z2M_ValveAdaptProcess', $Payload['valve_adapt_process']);
                 }
@@ -3841,6 +3847,11 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'ac_frequency':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
+                        }
+                        break;
                     case 'small_detection_sensitivity':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -5460,6 +5471,18 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'power_factor':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_PowerFactor', $this->Translate('Power Factor'), $ProfileName);
+                            }
+                            break;
+                        case 'ac_frequency':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_AcFrequency', $this->Translate('AC Frequency'), $ProfileName);
+                            }
+                            break;
                         case 'small_detection_distance':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
