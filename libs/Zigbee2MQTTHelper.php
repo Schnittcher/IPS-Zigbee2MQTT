@@ -2468,6 +2468,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.detection_distance.cae0fad1':
                         case 'Z2M.motion_state.0f5b1d2d':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
