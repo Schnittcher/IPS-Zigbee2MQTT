@@ -11,6 +11,30 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_ValveAdaptProcess':
+                $Payload['valve_adapt_process'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_Indicator':
+                $Payload['indicator'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_SmallDetectionSensitivity':
+                $Payload['small_detection_sensitivity'] = $Value;
+                break;
+            case 'Z2M_SmallDetectionDistance':
+                $Payload['small_detection_distance'] = $Value;
+                break;
+            case 'Z2M_MediumMotionDetectionDistance':
+                $Payload['medium_motion_detection_distance'] = $Value;
+                break;
+            case 'Z2M_MediumMotionDetectionSensitivity':
+                $Payload['medium_motion_detection_sensitivity'] = $Value;
+                break;
+            case 'Z2M_LargeMotionDetectionDistance':
+                $Payload['large_motion_detection_distance'] = $Value;
+                break;
+            case 'Z2M_LargeMotionDetectionSensitivity':
+                $Payload['large_motion_detection_sensitivity'] = $Value;
+                break;
             case 'Z2M_DetectionDistance':
                 $Payload['detection_distance'] = strval($Value);
                 break;
@@ -685,6 +709,51 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('requested_brightness_level', $Payload)) {
                     $this->SetValue('Z2M_RequestedBrightnessLevel', $Payload['requested_brightness_level']);
                 }
+                if (array_key_exists('x_axis', $Payload)) {
+                    $this->SetValue('Z2M_XAxis', $Payload['x_axis']);
+                }
+                if (array_key_exists('y_axis', $Payload)) {
+                    $this->SetValue('Z2M_YAxis', $Payload['y_axis']);
+                }
+                if (array_key_exists('z_axis', $Payload)) {
+                    $this->SetValue('Z2M_ZAxis', $Payload['z_axis']);
+                }
+                if (array_key_exists('power_factor', $Payload)) {
+                    $this->SetValue('Z2M_PowerFactor', $Payload['power_factor']);
+                }
+                if (array_key_exists('ac_frequency', $Payload)) {
+                    $this->SetValue('Z2M_AcFrequency', $Payload['ac_frequency']);
+                }
+                if (array_key_exists('valve_adapt_process', $Payload)) {
+                    $this->SetValue('Z2M_ValveAdaptProcess', $Payload['valve_adapt_process']);
+                }
+                if (array_key_exists('valve_adapt_status', $Payload)) {
+                    $this->SetValue('Z2M_ValveAdaptStatus', $Payload['valve_adapt_status']);
+                }
+                if (array_key_exists('indicator', $Payload)) {
+                    $this->SetValue('Z2M_Indicator', $Payload['indicator']);
+                }
+                if (array_key_exists('small_detection_sensitivity', $Payload)) {
+                    $this->SetValue('Z2M_SmallDetectionSensitivity', $Payload['small_detection_sensitivity']);
+                }
+                if (array_key_exists('small_detection_distance', $Payload)) {
+                    $this->SetValue('Z2M_SmallDetectionDistance', $Payload['small_detection_distance']);
+                }
+                if (array_key_exists('medium_motion_detection_distance', $Payload)) {
+                    $this->SetValue('Z2M_MediumMotionDetectionDistance', $Payload['medium_motion_detection_distance']);
+                }
+                if (array_key_exists('medium_motion_detection_sensitivity', $Payload)) {
+                    $this->SetValue('Z2M_MediumMotionDetectionSensitivity', $Payload['medium_motion_detection_sensitivity']);
+                }
+                if (array_key_exists('large_motion_detection_distance', $Payload)) {
+                    $this->SetValue('Z2M_LargeMotionDetectionDistance', $Payload['large_motion_detection_distance']);
+                }
+                if (array_key_exists('large_motion_detection_sensitivity', $Payload)) {
+                    $this->SetValue('Z2M_LargeMotionDetectionSensitivity', $Payload['large_motion_detection_sensitivity']);
+                }
+                if (array_key_exists('motion_state', $Payload)) {
+                    $this->SetValue('Z2M_MotionState', $Payload['motion_state']);
+                }
                 if (array_key_exists('detection_distance', $Payload)) {
                     $this->SetValue('Z2M_DetectionDistance', $Payload['detection_distance']);
                 }
@@ -1307,12 +1376,6 @@ trait Zigbee2MQTTHelper
 
                 if (array_key_exists('motion', $Payload)) {
                     $this->SetValue('Z2M_Motion', $Payload['motion']);
-                }
-
-                if (array_key_exists('motion_state', $Payload)) {
-                    $this->LogMessage('Please contact module developer. Undefined variable: motion_state', KL_WARNING);
-                    //$this->RegisterVariableBoolean('Z2M_Motion_State', $this->Translate('Motion State'), '~Motion');
-                    //$this->SetValue('Z2M_Motion_State', $Payload['motion_state']);
                 }
 
                 if (array_key_exists('motion_direction', $Payload)) {
@@ -2418,12 +2481,34 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.valve_adapt_status.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['none', $this->Translate('None'), '', 0x00FF00],
+                                    ['ready_to_calibrate', $this->Translate('Ready To Calibrate'), '', 0x00FF00],
+                                    ['calibration_in_progress', $this->Translate('Calibration in Progress'), '', 0x00FF00],
+                                    ['error', $this->Translate('Large'), 'Error', 0x00FF00],
+                                    ['success', $this->Translate('Large'), 'Success', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.detection_distance.cae0fad1':
+                        case 'Z2M.motion_state.0f5b1d2d':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['10 cm', $this->Translate('10 cm'), '', 0x00FF00],
                                     ['20 cm', $this->Translate('20 cm'), '', 0x00FF00],
                                     ['30 cm', $this->Translate('30 cm'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.detection_distance.cae0fad1':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['none', $this->Translate('None'), '', 0x00FF00],
+                                    ['small', $this->Translate('Small'), '', 0x00FF00],
+                                    ['medium', $this->Translate('Medium'), '', 0x00FF00],
+                                    ['large', $this->Translate('Large'), '', 0x00FF00]
                                 ]);
                             }
                             break;
@@ -3794,6 +3879,68 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 0, 0);
                         }
                       break;
+                    case 'z_axis':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Shuffle', '', ' ', 0, 0, 0, 2);
+                        }
+                        break;
+                    case 'y_axis':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Shuffle', '', ' ', 0, 0, 0, 2);
+                        }
+                        break;
+                    case 'x_axis':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Shuffle', '', ' ', 0, 0, 0, 2);
+                        }
+                    break;
+                    case 'ac_frequency':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
+                        }
+                        break;
+                    case 'small_detection_sensitivity':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
+                        }
+                        break;
+                    case 'small_detection_distance':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
+                        }
+                        break;
+                    case 'medium_motion_detection_distance':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
+                        }
+                        break;
+                    case 'medium_motion_detection_sensitivity':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
+                        }
+                        break;
+                    case 'large_motion_detection_distance':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
+                        }
+                        break;
+                    case 'large_motion_detection_sensitivity':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
+                        }
+                        break;
                     case 'presence_sensitivity':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -4679,6 +4826,14 @@ trait Zigbee2MQTTHelper
                         case 'illuminance_above_threshold':
                             $this->RegisterVariableBoolean('Z2M_IlluminanceAboveThreshold', $this->Translate('Illuminance Above Threshold'), '~Switch');
                             break;
+                        case 'valve_adapt_process':
+                            $this->RegisterVariableBoolean('Z2M_ValveAdaptProcess', $this->Translate('Valve Adapt Process'), '~Switch');
+                            $this->EnableAction('Z2M_ValveAdaptProcess');
+                            break;
+                        case 'indicator':
+                            $this->RegisterVariableBoolean('Z2M_Indicator', $this->Translate('Indicator'), '~Switch');
+                            $this->EnableAction('Z2M_Indicator');
+                            break;
                         case 'scale_protection':
                             $this->RegisterVariableBoolean('Z2M_LedIndication', $this->Translate('Led Indication'), '~Switch');
                             $this->EnableAction('Z2M_LedIndication');
@@ -4945,6 +5100,18 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'valve_adapt_status':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_ValveAdaptStatus', $this->Translate('Valve Adapt Status'), $ProfileName);
+                            }
+                            break;
+                        case 'motion_state':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_MotionState', $this->Translate('Motion State'), $ProfileName);
+                            }
+                            break;
                         case 'detection_distance':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -5364,6 +5531,78 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_RequestedBrightnessPercent', $this->Translate('Requested Brightness Percent'), $ProfileName);
+                            }
+                            break;
+                        case 'z_axis':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_ZAxis', $this->Translate('Z Axis'), $ProfileName);
+                            }
+                            break;
+                        case 'y_axis':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_YAxis', $this->Translate('Y Axis'), $ProfileName);
+                            }
+                            break;
+                        case 'x_axis':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_XAxis', $this->Translate('X Axis'), $ProfileName);
+                            }
+                            break;
+                        case 'power_factor':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_PowerFactor', $this->Translate('Power Factor'), $ProfileName);
+                            }
+                            break;
+                        case 'ac_frequency':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_AcFrequency', $this->Translate('AC Frequency'), $ProfileName);
+                            }
+                            break;
+                        case 'small_detection_distance':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_SmallDetectionDistance', $this->Translate('Small Detection Distance'), $ProfileName);
+                                $this->EnableAction('Z2M_SmallDetectionDistance');
+                            }
+                          break;
+                        case 'small_detection_sensitivity':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_SmallDetectionSensitivity', $this->Translate('Small Detection Sensitivity'), $ProfileName);
+                                $this->EnableAction('Z2M_SmallDetectionSensitivity');
+                            }
+                          break;
+                        case 'medium_motion_detection_sensitivity':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_MediumMotionDetectionSensitivity', $this->Translate('Medium Motion Detection Sensitivity'), $ProfileName);
+                                $this->EnableAction('Z2M_MediumMotionDetectionSensitivity');
+                            }
+                          break;
+                        case 'medium_motion_detection_distance':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_MediumMotionDetectionDistance', $this->Translate('Medium Motion Detection Distance'), $ProfileName);
+                                $this->EnableAction('Z2M_MediumMotionDetectionDistance');
+                            }
+                          break;
+                        case 'large_motion_detection_distance':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_LargeMotionDetectionDistance', $this->Translate('Large Motion Detection Distance'), $ProfileName);
+                                $this->EnableAction('Z2M_LargeMotionDetectionDistance');
+                            }
+                          break;
+                        case 'large_motion_detection_sensitivity':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_LargeMotionDetectionSensitivity', $this->Translate('Large Motion Detection Sensitivity'), $ProfileName);
+                                $this->EnableAction('Z2M_LargeMotionDetectionSensitivity');
                             }
                           break;
                         case 'presence_sensitivity':
