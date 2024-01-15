@@ -700,6 +700,15 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('illuminance_above_threshold', $Payload)) {
+                    $this->SetValue('Z2M_IlluminanceAboveThreshold', $Payload['illuminance_above_threshold']);
+                }
+                if (array_key_exists('requested_brightness_percent', $Payload)) {
+                    $this->SetValue('Z2M_RequestedBrightnessPercent', $Payload['requested_brightness_percent']);
+                }
+                if (array_key_exists('requested_brightness_level', $Payload)) {
+                    $this->SetValue('Z2M_RequestedBrightnessLevel', $Payload['requested_brightness_level']);
+                }
                 if (array_key_exists('x_axis', $Payload)) {
                     $this->SetValue('Z2M_XAxis', $Payload['x_axis']);
                 }
@@ -3856,6 +3865,20 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'requested_brightness_percent':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' %', $expose['value_min'], $expose['value_max'], 0, 0);
+                        }
+                      break;
+                    case 'requested_brightness_level':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 0, 0);
+                        }
+                      break;
                     case 'z_axis':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Shuffle', '', ' ', 0, 0, 0, 2);
@@ -4800,6 +4823,9 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'illuminance_above_threshold':
+                            $this->RegisterVariableBoolean('Z2M_IlluminanceAboveThreshold', $this->Translate('Illuminance Above Threshold'), '~Switch');
+                            break;
                         case 'valve_adapt_process':
                             $this->RegisterVariableBoolean('Z2M_ValveAdaptProcess', $this->Translate('Valve Adapt Process'), '~Switch');
                             $this->EnableAction('Z2M_ValveAdaptProcess');
@@ -5495,24 +5521,36 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'requested_brightness_level':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_RequestedBrightnessLevel', $this->Translate('Requested Brightness Level'), $ProfileName);
+                            }
+                            break;
+                        case 'requested_brightness_percent':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_RequestedBrightnessPercent', $this->Translate('Requested Brightness Percent'), $ProfileName);
+                            }
+                            break;
                         case 'z_axis':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_ZAxis', $this->Translate('Z Axis'), $ProfileName);
                             }
-                        break;
+                            break;
                         case 'y_axis':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_YAxis', $this->Translate('Y Axis'), $ProfileName);
                             }
-                        break;
+                            break;
                         case 'x_axis':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_XAxis', $this->Translate('X Axis'), $ProfileName);
                             }
-                        break;
+                            break;
                         case 'power_factor':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
