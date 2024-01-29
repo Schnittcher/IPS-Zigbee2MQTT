@@ -1,5 +1,6 @@
-class IPSymconExtension {
+const ZigbeeHerdsmanConverters = require('zigbee-herdsman-converters');
 
+class IPSymconExtension {
     constructor(zigbee, mqtt, state, publishEntityState, eventBus, settings, logger) {
         this.zigbee = zigbee;
         this.mqtt = mqtt;
@@ -8,193 +9,144 @@ class IPSymconExtension {
         this.eventBus = eventBus;
         this.settings = settings;
         this.logger = logger;
+        this.zigbeeHerdsmanConverters = ZigbeeHerdsmanConverters;
 
-        this.zigbeeHerdsmanConverters = require('zigbee-herdsman-converters');        
-        
-        this.baseTopic = `${settings.get().mqtt.base_topic}`;
+        this.baseTopic = settings.get().mqtt.base_topic;
         this.symconTopic = 'symcon';
-        
+
         this.eventBus.on('mqttMessage', this.onMQTTMessage.bind(this), this);
         logger.info('Loaded IP-Symcon Extension');
-
     }
 
-    /**
-     * This method is called by the controller once Zigbee2MQTT has been started.
-     */
     async start() {
         this.mqtt.subscribe(`${this.symconTopic}/${this.baseTopic}/#`);
     }
-    
-async onMQTTMessage(data) {
-    switch (data.topic) {
-        case this.symconTopic + '/' + this.baseTopic + '/getDevices':
-            // let coordinator = await this.zigbee.getCoordinatorVersion();
-            let devices = this.zigbee.devices(false).map((device) => {
-                const payload = {
-                    ieeeAddr: device.ieeeAddr,
-                    type: device.zh.type,
-                    networkAddress: device.zh.networkAddress,
-                };
 
-                let definition = this.zigbeeHerdsmanConverters.findByDevice(device.zh);
-                payload.model = definition ? definition.model : device.zh.modelID;
-		payload.vendor = device.definition && device.definition.vendor ? device.definition.vendor : 'Unknown Vendor';
-                payload.description = device.definition && device.definition.description ? device.definition.description : 'No description';
-                //payload.exposes =  definition ? definition.exposes : '-';
-                payload.friendly_name = device.name;
-                //payload.manufacturerID = device.zh.manufacturerID;
-                payload.manufacturerName = device.zh.manufacturerName;
-                payload.powerSource = device.zh.powerSource;
-                payload.modelID = device.zh.modelID;
-                //payload.hardwareVersion = device.zh.hardwareVersion;
-                //payload.softwareBuildID = device.zh.softwareBuildID;
-                //payload.dateCode = device.zh.dateCode;
-                //payload.lastSeen = device.zh.lastSeen;
-
-                return payload;
-            });
-            this.logger.info('Symcon: publish devices list');
-            await this.mqtt.publish('devices', JSON.stringify(devices), {retain: false, qos: 0}, this.symconTopic + '/' + this.baseTopic, false, false);
-            break;
-        case this.symconTopic + '/' + this.baseTopic + '/getDevice':
-            let device = this.zigbee.resolveEntity(data.message);
-			if (data.message) {
-				//this.logger.info('Symcon: publish device information for' + data.message);
-				//let device = this.zigbee.deviceByNetworkAddress(parseInt(data.message))
-				await this.mqtt.publish(device.name + '/deviceInfo', JSON.stringify(device), {retain: false, qos: 0}, this.symconTopic + '/' + this.baseTopic, false, false);
-			}
-            break;
-        case (this.symconTopic + '/' + this.baseTopic + '/getGroups'):
-            var groups = this.settings.getGroups();
-            await this.mqtt.publish('groups', JSON.stringify(groups), {retain: false, qos: 0}, this.symconTopic + '/' + this.baseTopic, false, false);
-            break;
-        case (this.symconTopic + '/' + this.baseTopic + '/getGroup'):
-            const groupSupportedTypes = ['light', 'switch', 'lock', 'cover'];
-            var groups = this.settings.getGroups();
-            const groupExposes = {};
-            let groupName = data.message;
-            
-            groupSupportedTypes.forEach(element => {
-                groupExposes[element] = {
-                    type: element,
-                    features: []
+    async onMQTTMessage(data) {
+        const topicPrefix = `${this.symconTopic}/${this.baseTopic}`;
+        switch (data.topic) {
+            case `${topicPrefix}/getDevices`:
+                const devices = this.zigbee.devices(false).map(device => this.#createDevicePayload(device, false));
+                this.logger.info('Symcon: publish devices list');
+                await this.#publishToMqtt('devices', devices);
+                break;
+            case `${topicPrefix}/getDevice`:
+                if (data.message) {
+                    const device = this.zigbee.resolveEntity(data.message);
+                    const devices = this.#createDevicePayload(device, true);
+                    this.logger.info('Symcon: getDevice');
+                    await this.#publishToMqtt(`${device.name}/deviceInfo`, devices);
                 }
-            });
-
-            groups.forEach(function(group) {
-                if (group.friendly_name === groupName) {
-                    this.logger.debug(JSON.stringify(group));
-
-                    const groupDevices = group.devices;
-                    
-                    groupDevices.forEach(function(device) {
-                       const deviceAddress = device.substring(0, device.indexOf('/')); 
-                       const tmpDevice = this.zigbee.resolveEntity(deviceAddress);
-                       const exposes = tmpDevice.definition.exposes;
-
-                        exposes.forEach(function(expose) {    
-                            switch (expose.type) {
-                                case 'light':
-                                    // groupExposes.light.type = 'light';
-                                    expose.features.forEach(function(feature) {    
-                                        switch (feature.property) {
-                                            case 'state':
-                                                this.logger.debug('Symcon Extension :: Group Light State Exposes');
-                                                var index = groupExposes.light.features.findIndex(f => f.property == 'state');
-                                                if (index == -1) {
-                                                    groupExposes.light.features.push(feature);   
-                                                }
-                                                        
-                                                break;
-                                            case 'brightness':
-                                                this.logger.debug('Symcon Extension :: Group Light Brightness Exposes');
-                                                var index = groupExposes.light.features.findIndex(f => f.property == 'brightness');
-                                                
-                                                if (index == -1) {
-                                                    groupExposes.light.features.push(feature);
-                                                }
-                                                if (index >= 0) {
-                                                    if (feature.value_max > groupExposes.light.features[index].value_max) {
-                                                        this.logger.debug('set new max brightness');
-                                                        groupExposes.light.features[index].value_max = feature.value_max;
-                                                    }
-                                                    if (feature.value_min > groupExposes.light.features[index].value_min) {
-                                                        this.logger.debug('set new min brightness');
-                                                        groupExposes.light.features[index].value_min = feature.value_min;
-                                                    }
-                                                }
-                                                break;
-                                            case 'color_temp':
-                                                this.logger.debug('Symcon Extension :: Group Light Color_Temp Exposes');
-                                                
-                                                var index = groupExposes.light.features.findIndex(f => f.property == 'color_temp');
-                                                
-                                                if (index == -1) {
-                                                    groupExposes.light.features.push(feature);
-                                                }
-                                                if (index >= 0) {
-                                                    if (feature.value_max > groupExposes.light.features[index].value_max) {
-                                                        this.logger.debug('set new max brightness');
-                                                        groupExposes.light.features[index].value_max = feature.value_max;
-                                                    }
-                                                    if (feature.value_min > groupExposes.light.features[index].value_min) {
-                                                        this.logger.debug('set new min brightness');
-                                                        groupExposes.light.features[index].value_min = feature.value_min;
-                                                    }
-                                                }
-                                                break
-                                            case 'color':
-                                                this.logger.debug('Symcon Extension :: Group Light Color Exposes');
-                                                var index = groupExposes.light.features.findIndex(f => f.name == 'color_xy');
-                                                if (index == -1) {
-                                                    groupExposes.light.features.push(feature);
-                                                }
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                    }.bind(this));
-                                case 'switch':
-                                    expose.features.forEach(function(feature, index) {    
-                                        switch (feature.property) {
-                                            case 'state':
-                                                this.logger.debug('Symcon Extension :: Group Switch State Exposes');
-                                                var index = groupExposes.switch.features.findIndex(f => f.property == 'state');
-                                                if (index == -1) {
-                                                    groupExposes.switch.features.push(feature);   
-                                                }
-                                                break;
-                                        }
-                                    }.bind(this));
-                                    break;
-                                case 'lock':
-                                    break;
-                                case 'cover':
-                                    break;
-                                case 'default':
-                                    break;
-                            }
-
-                        }.bind(this));
-                       
-                    }.bind(this));
+                break;
+            case `${topicPrefix}/getGroups`:
+                const groups = this.settings.getGroups();
+                await this.#publishToMqtt('groups', groups);
+                break;
+            case `${topicPrefix}/getGroup`:
+                if (data.message) {
+                    const groupExposes = this.#createGroupExposes(data.message);
+                    await this.#publishToMqtt(`${data.message}/groupInfo`, groupExposes);
                 }
-            }.bind(this));
-            this.logger.debug('Symcon Extension :: groupExposes');          
-            this.logger.debug(JSON.stringify(groupExposes));
-            this.mqtt.publish(groupName + '/groupInfo', JSON.stringify(groupExposes), {retain: false, qos: 0}, this.symconTopic + '/' + this.baseTopic, false, false);
-            this.logger.info('Symcon Extension :: groupExposes published');
-            break;
-        default:
-         console.log('default');
+                break;
+            default:
+                console.log('Unhandled MQTT topic');
         }
     }
-    /**
-     * Is called once the extension has to stop
-     */
+
     async stop() {
         this.eventBus.removeListeners(this);
+    }
+
+    #createDevicePayload(device, boolExposes) {
+        const definition = this.zigbeeHerdsmanConverters.findByDevice(device.zh);
+        let exposes;
+
+            // Überprüfen, ob 'exposes' als Funktion definiert ist und sie ausführen
+    //        if (typeof definition.exposes === 'function') {
+    //            exposes = definition.exposes(device, this.settings).map(e => e.toJSON());
+    //        }
+            // Sonst, übernehmen der 'exposes', falls sie direkt als Array definiert sind
+    //        else if (definition.exposes) {
+    //            exposes = definition.exposes;
+    //        }
+            // Fallback, falls keine 'exposes' definiert sind
+    //        else {
+    //            exposes = 'No Exposes';
+    //        }
+            
+            if (boolExposes) {
+                exposes =  device.exposes();
+            }
+
+        return {
+            ieeeAddr: device.ieeeAddr,
+            type: device.zh.type,
+            networkAddress: device.zh.networkAddress,
+            model: definition?.model ?? 'Unknown Model',
+            vendor: definition?.vendor ?? 'Unknown Vendor',
+            description: definition?.description ?? 'No description',
+            friendly_name: device.name,
+            manufacturerName: device.zh.manufacturerName,
+            powerSource: device.zh.powerSource,
+            modelID: device.zh.modelID,
+            exposes: exposes,
+        };
+    }
+
+    async #publishToMqtt(topicSuffix, payload) {
+        await this.mqtt.publish(`${topicSuffix}`, JSON.stringify(payload), { retain: false, qos: 0 }, `${this.symconTopic}/${this.baseTopic}`, false, false);
+    }
+
+    #createGroupExposes(groupName) {
+        const groupSupportedTypes = ['light', 'switch', 'lock', 'cover'];
+        const groups = this.settings.getGroups();
+        const groupExposes = {};
+
+        groupSupportedTypes.forEach(type => groupExposes[type] = { type, features: [] });
+
+        groups.forEach(group => {
+            if (group.friendly_name === groupName) {
+                this.#processGroupDevices(group, groupExposes);
+            }
+        });
+
+        return groupExposes;
+    }
+
+    #processGroupDevices(group, groupExposes) {
+        group.devices.forEach(deviceAddress => {
+            const device = this.zigbee.resolveEntity(deviceAddress.substring(0, deviceAddress.indexOf('/')));
+            this.#addDeviceExposesToGroup(device, groupExposes);
+        });
+    }
+
+    #addDeviceExposesToGroup(device, groupExposes) {
+        let exposes = [];
+
+        // Überprüfen, ob 'definition' vorhanden ist und Exposes hinzufügen
+        if (device.definition && device.definition.exposes) {
+            exposes = exposes.concat(device.definition.exposes);
+        }
+
+        // Überprüfen, ob '_definition' vorhanden ist und Exposes hinzufügen
+        if (device._definition && device._definition.exposes) {
+            exposes = exposes.concat(device._definition.exposes);
+        }
+
+        // Verarbeite alle gesammelten Exposes
+        exposes.forEach(expose => {
+            const type = expose.type;
+            if (groupExposes[type]) {
+                this.#processExposeFeatures(expose, groupExposes[type]);
+            }
+        });
+    }
+    #processExposeFeatures(expose, groupExposeType) {
+        expose.features.forEach(feature => {
+            if (!groupExposeType.features.some(f => f.property === feature.property)) {
+                groupExposeType.features.push(feature);
+            }
+        });
     }
 }
 
