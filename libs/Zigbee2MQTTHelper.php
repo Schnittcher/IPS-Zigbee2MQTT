@@ -681,12 +681,10 @@ trait Zigbee2MQTTHelper
 
             $Payload = json_decode($Buffer['Payload'], true);
             if (fnmatch('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/deviceInfo', $Buffer['Topic'])) {
-                if (is_array($Payload['definition'])) {
-                    if (is_array($Payload['definition']['exposes'])) {
-                        $this->mapExposesToVariables($Payload['definition']['exposes']);
+                if (is_array($Payload['exposes'])) {
+                        $this->mapExposesToVariables($Payload['exposes']);
                     }
                 }
-            }
             if (fnmatch('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/groupInfo', $Buffer['Topic'])) {
                 if (is_array($Payload)) {
                     $this->mapExposesToVariables($Payload);
