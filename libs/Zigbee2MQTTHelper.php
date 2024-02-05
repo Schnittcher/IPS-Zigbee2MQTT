@@ -2638,6 +2638,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'Z2M.air_quality.ea904784':
+                        case 'Z2M.air_quality.64f2d4b3':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['excellent', $this->Translate('Excellent'), '', 0x00FF00],
