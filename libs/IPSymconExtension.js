@@ -60,20 +60,6 @@ class IPSymconExtension {
     #createDevicePayload(device, boolExposes) {
         const definition = this.zigbeeHerdsmanConverters.findByDevice(device.zh);
         let exposes;
-
-            // Überprüfen, ob 'exposes' als Funktion definiert ist und sie ausführen
-    //        if (typeof definition.exposes === 'function') {
-    //            exposes = definition.exposes(device, this.settings).map(e => e.toJSON());
-    //        }
-            // Sonst, übernehmen der 'exposes', falls sie direkt als Array definiert sind
-    //        else if (definition.exposes) {
-    //            exposes = definition.exposes;
-    //        }
-            // Fallback, falls keine 'exposes' definiert sind
-    //        else {
-    //            exposes = 'No Exposes';
-    //        }
-            
             if (boolExposes) {
                 exposes =  device.exposes();
             }
@@ -82,9 +68,9 @@ class IPSymconExtension {
             ieeeAddr: device.ieeeAddr,
             type: device.zh.type,
             networkAddress: device.zh.networkAddress,
-            model: definition?.model ?? 'Unknown Model',
-            vendor: definition?.vendor ?? 'Unknown Vendor',
-            description: definition?.description ?? 'No description',
+            model: device.definition?.model ?? 'Unknown Model',
+            vendor: device.definition?.vendor ?? 'Unknown Vendor',
+            description: device.definition?.description ?? 'No description',
             friendly_name: device.name,
             manufacturerName: device.zh.manufacturerName,
             powerSource: device.zh.powerSource,
