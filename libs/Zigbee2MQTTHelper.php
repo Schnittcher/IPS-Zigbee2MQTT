@@ -2482,7 +2482,7 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M.valve_adapt_status.':
+                        case 'Z2M.valve_adapt_status.81ca7d32':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['none', $this->Translate('None'), '', 0x00FF00],
@@ -2500,6 +2500,16 @@ trait Zigbee2MQTTHelper
                                     ['10 cm', $this->Translate('10 cm'), '', 0x00FF00],
                                     ['20 cm', $this->Translate('20 cm'), '', 0x00FF00],
                                     ['30 cm', $this->Translate('30 cm'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.motion_state.5874d5f5':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['large', $this->Translate('Large'), '', 0x00FF00],
+                                    ['medium', $this->Translate('Medium'), '', 0x00FF00],
+                                    ['none', $this->Translate('None'), '', 0x00FF00],
+                                    ['small', $this->Translate('Small'), '', 0x00FF00]
                                 ]);
                             }
                             break;
@@ -2715,6 +2725,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'Z2M.setpoint_change_source.2b697f02':
+                        case 'Z2M.setpoint_change_source.bc4ed50':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['manual', $this->Translate('manual'), '', 0x00FF00],
@@ -4840,7 +4851,7 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableBoolean('Z2M_Indicator', $this->Translate('Indicator'), '~Switch');
                             $this->EnableAction('Z2M_Indicator');
                             break;
-                        case 'scale_protection':
+                        case 'led_indication':
                             $this->RegisterVariableBoolean('Z2M_LedIndication', $this->Translate('Led Indication'), '~Switch');
                             $this->EnableAction('Z2M_LedIndication');
                             break;
