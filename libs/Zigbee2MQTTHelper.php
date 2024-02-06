@@ -2638,6 +2638,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'Z2M.air_quality.ea904784':
+                        case 'Z2M.air_quality.64f2d4b3':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['excellent', $this->Translate('Excellent'), '', 0x00FF00],
@@ -3241,8 +3242,11 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'Z2M.action.e7f91f00':
+                        case 'Z2M.action.94c054ec':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['brightness_step_down', $this->Translate('Brightness Step Down'), '', 0x00FF00],
+                                    ['brightness_step_up', $this->Translate('Brightness Step Up'), '', 0x00FF00],
                                     ['button_1_hold', $this->Translate('Button 1 Hold'), '', 0x00FF00],
                                     ['button_1_hold_release', $this->Translate('Button 1 Hold Release'), '', 0x00FF00],
                                     ['button_1_press', $this->Translate('Button 1 Press'), '', 0x00FF00],
