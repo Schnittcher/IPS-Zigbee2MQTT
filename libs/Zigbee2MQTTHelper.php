@@ -691,9 +691,9 @@ trait Zigbee2MQTTHelper
             $Payload = json_decode($Buffer['Payload'], true);
             if (fnmatch('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/deviceInfo', $Buffer['Topic'])) {
                 if (is_array($Payload['exposes'])) {
-                        $this->mapExposesToVariables($Payload['exposes']);
-                    }
+                    $this->mapExposesToVariables($Payload['exposes']);
                 }
+            }
             if (fnmatch('symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/groupInfo', $Buffer['Topic'])) {
                 if (is_array($Payload)) {
                     $this->mapExposesToVariables($Payload);
@@ -6483,7 +6483,7 @@ trait Zigbee2MQTTHelper
                                             if ($ProfileName != false) {
                                                 $this->RegisterVariableString('Z2M_State', $this->Translate('State'), $ProfileName);
                                             }
-                                            if ($ProfileName != "Z2M.State.12345678") {
+                                            if ($ProfileName != 'Z2M.State.12345678') {
                                                 $this->EnableAction('Z2M_State');
                                             }
                                             break;
