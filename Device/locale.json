@@ -707,7 +707,8 @@
             "Near": "Reset",
             "X Axis": "X Achse",
             "Y Axis": "Y Achse",
-            "Z Axis": "Z Achse"
+            "Z Axis": "Z Achse",
+            "Inverted": "Invertiert"
         }
     }
 }
