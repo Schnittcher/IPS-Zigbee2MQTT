@@ -3534,6 +3534,7 @@ trait Zigbee2MQTTHelper
                                     ['HIGH', $this->Translate('High'), '', 0x000000]
                                 ]);
                             }
+                            // No break. Add additional comment above this line if intentional
                         case 'Z2M.backlight_mode.b964fcdc':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Light', '', '', [
