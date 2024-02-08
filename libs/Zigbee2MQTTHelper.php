@@ -11,6 +11,12 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_CountdownL1':
+                $Payload['countdown_l1'] = $Value;
+                break;
+            case 'Z2M_CountdownL2':
+                $Payload['countdown_l2'] = $Value;
+                break;
             case 'Z2M_Presence_Timeout':
                 $Payload['presence_timeout'] = $Value;
                 break;
@@ -328,6 +334,24 @@ trait Zigbee2MQTTHelper
                 break;
             case 'Z2M_Brightness':
                 $Payload['brightness'] = strval($Value);
+                break;
+            case 'Z2M_BrightnessL1':
+                $Payload['brightness_l1'] = ($Value);
+                break;
+            case 'Z2M_BrightnessL2':
+                $Payload['brightness_l2'] = ($Value);
+                break;
+            case 'Z2M_MaxBrightnessL1':
+                $Payload['max_brightness_l1'] = ($Value);
+                break;
+            case 'Z2M_MinBrightnessL1':
+                $Payload['min_brightness_l1'] = ($Value);
+                break;
+            case 'Z2M_MaxBrightnessL2':
+                $Payload['max_brightness_l2'] = ($Value);
+                break;
+            case 'Z2M_MinBrightnessL2':
+                $Payload['min_brightness_l2'] = ($Value);
                 break;
             case 'Z2M_BrightnessRGB':
                 $Payload['brightness_rgb'] = strval($Value);
@@ -706,6 +730,12 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('countdown_l1', $Payload)) {
+                    $this->SetValue('Z2M_CountdownL1', $Payload['countdown_l1']);
+                }
+                if (array_key_exists('countdown_l2', $Payload)) {
+                    $this->SetValue('Z2M_CountdownL2', $Payload['countdown_l2']);
                 }
                 if (array_key_exists('presence_timeout', $Payload)) {
                     $this->SetValue('Z2M_Presence_Timeout', $Payload['presence_timeout']);
@@ -1342,8 +1372,32 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_Action', $Payload['action']);
                 }
 
+                if (array_key_exists('min_brightness_l1', $Payload)) {
+                    $this->SetValue('Z2M_MinBrightnessL1', $Payload['min_brightness_l1']);
+                }
+
+                if (array_key_exists('Maxbrightness_l1', $Payload)) {
+                    $this->SetValue('Z2M_MaxBrightnessL1', $Payload['max_brightness_l1']);
+                }
+
+                if (array_key_exists('min_brightness_l2', $Payload)) {
+                    $this->SetValue('Z2M_MinBrightnessL2', $Payload['min_brightness_l2']);
+                }
+
+                if (array_key_exists('Maxbrightness_l2', $Payload)) {
+                    $this->SetValue('Z2M_MaxBrightnessL2', $Payload['max_brightness_l2']);
+                }
+
                 if (array_key_exists('brightness', $Payload)) {
                     $this->SetValue('Z2M_Brightness', $Payload['brightness']);
+                }
+
+                if (array_key_exists('brightness_l1', $Payload)) {
+                    $this->SetValue('Z2M_BrightnessL1', $Payload['brightness_l1']);
+                }
+
+                if (array_key_exists('brightness_l2', $Payload)) {
+                    $this->SetValue('Z2M_BrightnessL2', $Payload['brightness_l2']);
                 }
 
                 if (array_key_exists('brightness_rgb', $Payload)) {
@@ -3480,6 +3534,7 @@ trait Zigbee2MQTTHelper
                                     ['HIGH', $this->Translate('High'), '', 0x000000]
                                 ]);
                             }
+                            // No break. Add additional comment above this line if intentional
                         case 'Z2M.backlight_mode.b964fcdc':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Light', '', '', [
@@ -3928,6 +3983,20 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'countdown_l2':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
+                        }
+                        break;
+                    case 'countdown_l1':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
+                        }
+                        break;
                     case 'presence_timeout':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -4236,6 +4305,12 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'brightness':
+                    case 'brightness_l1':
+                    case 'brightness_l2':
+                    case 'min_brightness_l1':
+                    case 'max_brightness_l1':
+                    case 'min_brightness_l2':
+                    case 'max_brightness_l2':
                     case 'brightness_rgb':
                     case 'brightness_cct':
                     case 'brightness_white':
@@ -4590,6 +4665,14 @@ trait Zigbee2MQTTHelper
                             switch ($feature['type']) {
                                 case 'binary':
                                     switch ($feature['property']) {
+                                        case 'state_l1':
+                                            $this->RegisterVariableBoolean('Z2M_StateL1', $this->Translate('State 1'), '~Switch');
+                                            $this->EnableAction('Z2M_StateL1');
+                                            break;
+                                        case 'state_l2':
+                                            $this->RegisterVariableBoolean('Z2M_StateL2', $this->Translate('State 2'), '~Switch');
+                                            $this->EnableAction('Z2M_StateL2');
+                                            break;
                                         case 'state':
                                             //Variable with Profile ~Switch
                                             if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
@@ -4623,6 +4706,48 @@ trait Zigbee2MQTTHelper
                                     break; //Light binary break
                                 case 'numeric':
                                     switch ($feature['property']) {
+                                        case 'max_brightness_l1':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_MaxBrightnessL1', $this->Translate('Max Brightness L1'), $ProfileName);
+                                                $this->EnableAction('Z2M_MaxBrightnessL1');
+                                            }
+                                            break;
+                                        case 'min_brightness_l1':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_MinBrightnessL1', $this->Translate('Min Brightness L1'), $ProfileName);
+                                                $this->EnableAction('Z2M_MinBrightnessL1');
+                                            }
+                                            break;
+                                        case 'max_brightness_l2':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_MaxBrightnessL2', $this->Translate('Max Brightness L2'), $ProfileName);
+                                                $this->EnableAction('Z2M_MaxBrightnessL2');
+                                            }
+                                            break;
+                                        case 'min_brightness_l2':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_MinBrightnessL2', $this->Translate('Min Brightness L2'), $ProfileName);
+                                                $this->EnableAction('Z2M_MinBrightnessL2');
+                                            }
+                                            break;
+                                        case 'brightness_l1':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_BrightnessL1', $this->Translate('Brightness L1'), $ProfileName);
+                                                $this->EnableAction('Z2M_BrightnessL1');
+                                            }
+                                            break;
+                                        case 'brightness_l2':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableInteger('Z2M_BrightnessL2', $this->Translate('Brightness L1'), $ProfileName);
+                                                $this->EnableAction('Z2M_BrightnessL2');
+                                            }
+                                            break;
                                         case 'brightness':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
@@ -5615,6 +5740,20 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'countdown_l1':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_CountdownL1', $this->Translate('Countdown L1'), $ProfileName);
+                                $this->EnableAction('Z2M_CountdownL1');
+                            }
+                            break;
+                        case 'countdown_l2':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_CountdownL2', $this->Translate('Countdown L1'), $ProfileName);
+                                $this->EnableAction('Z2M_CountdownL2');
+                            }
+                            break;
                         case 'presence_timeout':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
