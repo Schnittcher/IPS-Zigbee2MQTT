@@ -4666,12 +4666,12 @@ trait Zigbee2MQTTHelper
                                 case 'binary':
                                     switch ($feature['property']) {
                                         case 'state_l1':
-                                            $this->RegisterVariableBoolean('Z2M_StateL1', $this->Translate('State 1'), '~Switch');
-                                            $this->EnableAction('Z2M_StateL1');
+                                            $this->RegisterVariableBoolean('Z2M_Statel1', $this->Translate('State 1'), '~Switch');
+                                            $this->EnableAction('Z2M_Statel1');
                                             break;
                                         case 'state_l2':
-                                            $this->RegisterVariableBoolean('Z2M_StateL2', $this->Translate('State 2'), '~Switch');
-                                            $this->EnableAction('Z2M_StateL2');
+                                            $this->RegisterVariableBoolean('Z2M_Statel2', $this->Translate('State 2'), '~Switch');
+                                            $this->EnableAction('Z2M_Statel2');
                                             break;
                                         case 'state':
                                             //Variable with Profile ~Switch
