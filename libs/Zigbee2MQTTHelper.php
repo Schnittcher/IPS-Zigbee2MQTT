@@ -1739,6 +1739,9 @@ trait Zigbee2MQTTHelper
                             case 'OPEN':
                             case 'CLOSE':
                             case 'STOP':
+                            case 'move':
+                            case 'presence':
+                            case 'none':
                                 $this->SetValue('Z2M_State', $Payload['state']);
                                 break;
                             default:
@@ -5319,6 +5322,12 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'state':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_State', $this->Translate('State'), $ProfileName);
+                            }
+                            break;
                         case 'valve_adapt_status':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
