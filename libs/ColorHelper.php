@@ -70,7 +70,8 @@ trait ColorHelper
         return $color;
     }
     
-        protected function HSToRGB($hue, $saturation, $brightness = 255) {
+    protected function HSToRGB($hue, $saturation, $brightness = 255)
+    {
         // Normalisierung der Eingabewerte
         $hue /= 360;
         $saturation /= 100;
