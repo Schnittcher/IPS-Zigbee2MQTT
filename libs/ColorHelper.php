@@ -72,11 +72,8 @@ trait ColorHelper
     
     protected function HSToRGB($hue, $saturation, $brightness = 255)
     {
-        // Normalisierung der Eingabewerte
         $hue /= 360;
         $saturation /= 100;
-
-        // Berechnung der RGB-Werte
         if ($saturation == 0) {
             $r = $g = $b = $brightness;
         } else {
@@ -86,7 +83,6 @@ trait ColorHelper
             $p = $brightness * (1 - $saturation);
             $q = $brightness * (1 - $saturation * $f);
             $t = $brightness * (1 - $saturation * (1 - $f));
-
             switch ($i) {
                 case 0: $r = $brightness; $g = $t; $b = $p; break;
                 case 1: $r = $q; $g = $brightness; $b = $p; break;
@@ -96,12 +92,10 @@ trait ColorHelper
                 default: $r = $brightness; $g = $p; $b = $q; break;
             }
         }
-        // Umwandlung der RGB-Werte in den Bereich von 0 bis 255 und Formatierung als HEX-Farbwert
         $r = round($r * 255);
         $g = round($g * 255);
         $b = round($b * 255);
         $colorHS = sprintf('#%02x%02x%02x', $r, $g, $b);
-
         return $colorHS;
     }
 
