@@ -576,6 +576,10 @@ trait Zigbee2MQTTHelper
                 $this->SendDebug(__FUNCTION__ . ' Color', $Value, 0);
                 $this->setColor($Value, 'cie');
                 return;
+            case 'Z2M_ColorHS':
+                $this->SendDebug(__FUNCTION__ . ' Color HS', $Value, 0);
+                $this->setColor($Value, 'hs');
+                return;
             case 'Z2M_ColorRGB':
                 $this->SendDebug(__FUNCTION__ . ' :: Color RGB', $Value, 0);
                 $this->setColor($Value, 'cie', 'color_rgb');
@@ -1673,7 +1677,14 @@ trait Zigbee2MQTTHelper
                         }
                         $this->SendDebug(__FUNCTION__ . ' Color RGB HEX', $RGBColor, 0);
                         $this->SetValue('Z2M_Color', hexdec(($RGBColor)));
+                } elseif (array_key_exists('hue', $Payload['color']) && array_key_exists('saturation', $Payload['color'])) {
+                    if (array_key_exists('brightness', $Payload)) {
+                        $brightnessValue = $Payload['brightness'];
+                        $RGBColor = ltrim($this->HSToRGB($Payload['color']['hue'], $Payload['color']['saturation'], $brightnessValue), '#');
+                    } else {
+                        $RGBColor = ltrim($this->HSToRGB($Payload['color']['hue'], $Payload['color']['saturation'], 255), '#');
                     }
+                    $this->SetValue('Z2M_ColorHS', hexdec($RGBColor));
                 }
 
                 if (array_key_exists('color_rgb', $Payload)) {
@@ -2453,7 +2464,28 @@ trait Zigbee2MQTTHelper
                 } else {
                     return;
                 }
-
+                // No break. Add additional comment above this line if intentional
+            case 'hs':
+                $this->SendDebug('setColor - Input Color', json_encode($color), 0);
+                if (!is_array($color)) {
+                    $RGB = $this->HexToRGB($color);
+                    $HSB = $this->RGBToHSB($RGB[0], $RGB[1], $RGB[2]);
+                } else {
+                    $RGB = $color;
+                    $HSB = $this->RGBToHSB($RGB[0], $RGB[1], $RGB[2]);
+                }
+                $this->SendDebug('setColor - RGB Values for HSB Conversion', 'R: ' . $RGB['R'] . ', G: ' . $RGB['G'] . ', B: ' . $RGB['B'], 0);
+                $HSB = $this->RGBToHSB($RGB[0], $RGB[1], $RGB[2]);
+                if ($Z2MMode == 'color') {
+                    $Payload = [
+                        'color' => [
+                            'hue'        => $HSB['hue'],
+                            'saturation' => $HSB['saturation'],
+                        ]
+                    ];
+                } else {
+                    return;
+                }
                 $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
                 $this->Z2MSet($PayloadJSON);
                 break;
@@ -4851,8 +4883,13 @@ trait Zigbee2MQTTHelper
                                     switch ($feature['property']) {
                                         case 'color':
                                             if ($feature['name'] == 'color_xy') {
+                                                $this->SendDebug(__FUNCTION__, 'Erkannter Modus: color_xy', 0);
                                                 $this->RegisterVariableInteger('Z2M_Color', $this->Translate('Color'), 'HexColor');
                                                 $this->EnableAction('Z2M_Color');
+                                            } elseif ($feature['name'] == 'color_hs') {
+                                                $this->SendDebug(__FUNCTION__, 'Erkannter Modus: color_hs', 0); // Hier fügen wir den SendDebug ein
+                                                $this->RegisterVariableInteger('Z2M_ColorHS', $this->Translate('Color HS'), 'HexColor');
+                                                $this->EnableAction('Z2M_ColorHS');
                                             }
                                             break;
                                         case 'color_rgb':
