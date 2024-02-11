@@ -100,12 +100,13 @@ trait ColorHelper
         $r = round($r * 255);
         $g = round($g * 255);
         $b = round($b * 255);
-        $colorHS = sprintf("#%02x%02x%02x", $r, $g, $b);
+        $colorHS = sprintf('#%02x%02x%02x', $r, $g, $b);
 
         return $colorHS;
     }
 
-    protected function RGBToHSB($R, $G, $B) {
+    protected function RGBToHSB($R, $G, $B)
+    {
         $R /= 255.0;
         $G /= 255.0;
         $B /= 255.0;
