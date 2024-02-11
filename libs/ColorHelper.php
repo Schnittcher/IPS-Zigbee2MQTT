@@ -69,7 +69,7 @@ trait ColorHelper
 
         return $color;
     }
-    
+
     protected function HSToRGB($hue, $saturation, $brightness = 255)
     {
         $hue /= 360;
