@@ -5054,6 +5054,10 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'window_detection':
+                            $this->RegisterVariableBoolean('Z2M_WindowDetection', $this->Translate('Window Detection'), '~Switch');
+                            $this->EnableAction('Z2M_WindowDetection');
+                            break;
                         case 'illuminance_above_threshold':
                             $this->RegisterVariableBoolean('Z2M_IlluminanceAboveThreshold', $this->Translate('Illuminance Above Threshold'), '~Switch');
                             break;
