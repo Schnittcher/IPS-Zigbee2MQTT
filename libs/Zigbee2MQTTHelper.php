@@ -2475,7 +2475,7 @@ trait Zigbee2MQTTHelper
                     $RGB = $color;
                     $HSB = $this->RGBToHSB($RGB[0], $RGB[1], $RGB[2]);
                 }
-                $this->SendDebug('setColor - RGB Values for HSB Conversion', 'R: ' . $RGB['R'] . ', G: ' . $RGB['G'] . ', B: ' . $RGB['B'], 0);
+                $this->SendDebug('setColor - RGB Values for HSB Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
                 $HSB = $this->RGBToHSB($RGB[0], $RGB[1], $RGB[2]);
                 if ($Z2MMode == 'color') {
                     $Payload = [
