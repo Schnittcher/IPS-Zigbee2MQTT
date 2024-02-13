@@ -1739,6 +1739,9 @@ trait Zigbee2MQTTHelper
                             case 'OPEN':
                             case 'CLOSE':
                             case 'STOP':
+                            case 'move':
+                            case 'presence':
+                            case 'none':
                                 $this->SetValue('Z2M_State', $Payload['state']);
                                 break;
                             default:
@@ -3280,6 +3283,15 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.action.d779c595':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['single_both', $this->Translate('Single Both'), '', 0x00FF00],
+                                    ['single_left', $this->Translate('Single Left'), '', 0xFF0000],
+                                    ['single_right', $this->Translate('Single Right'), '', 0xFF8800]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.action.c1844f92':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -4666,12 +4678,12 @@ trait Zigbee2MQTTHelper
                                 case 'binary':
                                     switch ($feature['property']) {
                                         case 'state_l1':
-                                            $this->RegisterVariableBoolean('Z2M_StateL1', $this->Translate('State 1'), '~Switch');
-                                            $this->EnableAction('Z2M_StateL1');
+                                            $this->RegisterVariableBoolean('Z2M_Statel1', $this->Translate('State 1'), '~Switch');
+                                            $this->EnableAction('Z2M_Statel1');
                                             break;
                                         case 'state_l2':
-                                            $this->RegisterVariableBoolean('Z2M_StateL2', $this->Translate('State 2'), '~Switch');
-                                            $this->EnableAction('Z2M_StateL2');
+                                            $this->RegisterVariableBoolean('Z2M_Statel2', $this->Translate('State 2'), '~Switch');
+                                            $this->EnableAction('Z2M_Statel2');
                                             break;
                                         case 'state':
                                             //Variable with Profile ~Switch
@@ -5042,6 +5054,10 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'window_detection':
+                            $this->RegisterVariableBoolean('Z2M_WindowDetection', $this->Translate('Window Detection'), '~Switch');
+                            $this->EnableAction('Z2M_WindowDetection');
+                            break;
                         case 'illuminance_above_threshold':
                             $this->RegisterVariableBoolean('Z2M_IlluminanceAboveThreshold', $this->Translate('Illuminance Above Threshold'), '~Switch');
                             break;
@@ -5319,6 +5335,12 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'state':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_State', $this->Translate('State'), $ProfileName);
+                            }
+                            break;
                         case 'valve_adapt_status':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
