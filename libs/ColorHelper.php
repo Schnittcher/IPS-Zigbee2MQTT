@@ -133,7 +133,7 @@ trait ColorHelper
             if ($hue < 0) {
                 $hue += 360;
             }
-        } // Diese schließende Klammer schließt den if ($delta != 0) Block
+        }
         $this->SendDebug(__FUNCTION__ . ' Output HSB', "Hue: $hue, Saturation: $saturation, Brightness: $brightness", 0);
         return ['hue' => $hue, 'saturation' => $saturation, 'brightness' => $brightness];
     }
