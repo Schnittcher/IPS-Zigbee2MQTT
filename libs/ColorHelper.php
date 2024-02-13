@@ -111,17 +111,6 @@ trait ColorHelper
         $brightness = $max * 100;
         $saturation = ($max == 0) ? 0 : ($delta / $max) * 100;
         $hue = 0;
-        protected function RGBToHSB($R, $G, $B)
-    {
-        $R /= 255.0;
-        $G /= 255.0;
-        $B /= 255.0;
-        $max = max($R, $G, $B);
-        $min = min($R, $G, $B);
-        $delta = $max - $min;
-        $brightness = $max * 100;
-        $saturation = ($max == 0) ? 0 : ($delta / $max) * 100;
-        $hue = 0;
         if ($delta != 0) {
             if ($max == $R) {
                 $hue = 60 * (($G - $B) / $delta);
