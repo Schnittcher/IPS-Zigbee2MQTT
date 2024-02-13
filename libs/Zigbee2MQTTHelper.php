@@ -1681,8 +1681,8 @@ trait Zigbee2MQTTHelper
                         $RGBColor = ltrim($this->HSToRGB($Payload['color']['hue'], $Payload['color']['saturation'], 255), '#');
                         $this->SendDebug(__FUNCTION__ . ' Color RGB HEX', $RGBColor, 0);
                         $this->SetValue('Z2M_ColorHS', hexdec($RGBColor));
-                        }
                     }
+                }
 
                 if (array_key_exists('color_rgb', $Payload)) {
                     $this->SendDebug(__FUNCTION__ . ':: Color X', $Payload['color_rgb']['x'], 0);
