@@ -1678,10 +1678,6 @@ trait Zigbee2MQTTHelper
                         $this->SendDebug(__FUNCTION__ . ' Color RGB HEX', $RGBColor, 0);
                         $this->SetValue('Z2M_Color', hexdec(($RGBColor)));
                     } elseif (array_key_exists('hue', $Payload['color']) && array_key_exists('saturation', $Payload['color'])) {
-                        if (array_key_exists('brightness', $Payload)) {
-                            $brightnessValue = $Payload['brightness'];
-                            $RGBColor = ltrim($this->HSToRGB($Payload['color']['hue'], $Payload['color']['saturation'], $brightnessValue), '#');
-                        } else {
                             $RGBColor = ltrim($this->HSToRGB($Payload['color']['hue'], $Payload['color']['saturation'], 255), '#');
                         }
                         $this->SetValue('Z2M_ColorHS', hexdec($RGBColor));
