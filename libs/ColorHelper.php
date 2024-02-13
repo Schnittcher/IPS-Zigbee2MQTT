@@ -112,13 +112,14 @@ trait ColorHelper
         $saturation = ($max == 0) ? 0 : ($delta / $max) * 100;
         $hue = 0;
         if ($delta != 0) {
-            if ($max == $R) {
-                $hue = 60 * (($G - $B) / $delta % 6);
-            } elseif ($max == $G) {
-                $hue = 60 * (($B - $R) / $delta + 2);
-            } elseif ($max == $B) {
-                $hue = 60 * (($R - $G) / $delta + 4);
-            }
+            $hue = 60 * (($G - $B) / $delta);
+        } elseif ($max == $G) {
+            $hue = 60 * (($B - $R) / $delta) + 120;
+        } elseif ($max == $B) {
+            $hue = 60 * (($R - $G) / $delta) + 240;
+        }
+        if ($hue < 0) {
+            $hue += 360;
         }
         if ($hue < 0) {
             $hue += 360;
