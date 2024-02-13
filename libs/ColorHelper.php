@@ -70,10 +70,11 @@ trait ColorHelper
         return $color;
     }
 
-    protected function HSToRGB($hue, $saturation, $brightness = 255)
+    protected function HSToRGB($hue, $saturation)
     {
         $hue /= 360;
         $saturation /= 100;
+        $brightness = 1;
         if ($saturation == 0) {
             $r = $g = $b = $brightness;
         } else {
