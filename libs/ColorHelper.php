@@ -69,4 +69,61 @@ trait ColorHelper
 
         return $color;
     }
+
+    protected function HSToRGB($hue, $saturation)
+    {
+        $hue /= 360;
+        $saturation /= 100;
+        $brightness = 1;
+        if ($saturation == 0) {
+            $r = $g = $b = $brightness;
+        } else {
+            $hue *= 6;
+            $i = floor($hue);
+            $f = $hue - $i;
+            $p = $brightness * (1 - $saturation);
+            $q = $brightness * (1 - $saturation * $f);
+            $t = $brightness * (1 - $saturation * (1 - $f));
+            switch ($i) {
+                case 0: $r = $brightness; $g = $t; $b = $p; break;
+                case 1: $r = $q; $g = $brightness; $b = $p; break;
+                case 2: $r = $p; $g = $brightness; $b = $t; break;
+                case 3: $r = $p; $g = $q; $b = $brightness; break;
+                case 4: $r = $t; $g = $p; $b = $brightness; break;
+                default: $r = $brightness; $g = $p; $b = $q; break;
+            }
+        }
+        $r = round($r * 255);
+        $g = round($g * 255);
+        $b = round($b * 255);
+        $colorHS = sprintf('#%02x%02x%02x', $r, $g, $b);
+        return $colorHS;
+    }
+
+    protected function RGBToHSB($R, $G, $B)
+    {
+        $R /= 255.0;
+        $G /= 255.0;
+        $B /= 255.0;
+        $max = max($R, $G, $B);
+        $min = min($R, $G, $B);
+        $delta = $max - $min;
+        $brightness = $max * 100;
+        $saturation = ($max == 0) ? 0 : ($delta / $max) * 100;
+        $hue = 0;
+        if ($delta != 0) {
+            if ($max == $R) {
+                $hue = 60 * (($G - $B) / $delta % 6);
+            } elseif ($max == $G) {
+                $hue = 60 * (($B - $R) / $delta + 2);
+            } elseif ($max == $B) {
+                $hue = 60 * (($R - $G) / $delta + 4);
+            }
+        }
+        if ($hue < 0) {
+            $hue += 360;
+        }
+        $this->SendDebug(__FUNCTION__ . ' Output HSB', "Hue: $hue, Saturation: $saturation, Brightness: $brightness", 0);
+        return ['hue' => $hue, 'saturation' => $saturation, 'brightness' => $brightness];
+    }
 }
