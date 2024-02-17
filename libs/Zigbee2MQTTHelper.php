@@ -4085,6 +4085,7 @@ trait Zigbee2MQTTHelper
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Graph', '', ' ', ' ', $expose['value_min'], $expose['value_max'], 2);
                         }
+                        break;
                     case 'irrigation_start_time':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ', ' ', 0, 0, 2);
