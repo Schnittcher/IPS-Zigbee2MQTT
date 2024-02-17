@@ -13,10 +13,13 @@ trait Zigbee2MQTTHelper
         switch ($Ident) {
             case 'Z2M_CycleIrrigationNumTimes':
                 $Payload['cycle_irrigation_num_times'] = $Value;
+                break;
             case 'Z2M_IrrigationTarget':
                 $Payload['irrigation_target'] = $Value;
+                break;
             case 'Z2MCycleIrrigationInterval':
                 $Payload['cycle_irrigation_interval'] = $Value;
+                break;
             case 'Z2M_CountdownL1':
                 $Payload['countdown_l1'] = $Value;
                 break;
