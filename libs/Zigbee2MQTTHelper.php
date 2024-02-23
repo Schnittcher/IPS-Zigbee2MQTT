@@ -11,7 +11,7 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
-            case 'wek_day':
+            case 'Z2M_WeekDay':
                 $Payload['wek_day'] = $Value;
                 break;
             case 'Z2M_CycleIrrigationNumTimes':
