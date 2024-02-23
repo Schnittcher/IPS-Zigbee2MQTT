@@ -11,6 +11,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_WorkingDay':
+                $Payload['working_day'] = $Value;
+                break;
             case 'Z2M_WeekDay':
                 $Payload['wek_day'] = $Value;
                 break;
@@ -746,6 +749,9 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('working_day', $Payload)) {
+                    $this->SetValue('Z2M_WorkingDay', $Payload['working_day']);
                 }
                 if (array_key_exists('week_day', $Payload)) {
                     $this->SetValue('Z2M_WeekDay', $Payload['week_day']);
@@ -2625,6 +2631,15 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.working_day.1d251e55':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['mon_sun', $this->Translate('Mon - Sun'), '', 0x00FF00],
+                                    ['mon_fri+sat+sun', $this->Translate('Mon - Fri & Sat & Sun'), '', 0x00FF00],
+                                    ['separate', $this->Translate('Seperate'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.week_day.1d251e55':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -5458,10 +5473,18 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'working_day':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_WorkingDay', $this->Translate('Working Day'), $ProfileName);
+                                $this->EnableAction('Z2M_WorkingDay');
+                            }
+                            break;
                         case 'week_day':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableString('Z2M_WeekDay', $this->Translate('Week Day'), $ProfileName);
+                                $this->EnableAction('Z2M_WeekDay');
                             }
                             break;
                         case 'state':
