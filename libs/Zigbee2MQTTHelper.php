@@ -2625,7 +2625,7 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M.week_day.81ca7d32':
+                        case 'Z2M.week_day.1d251e55':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['monday', $this->Translate('Monday'), '', 0x00FF00],
