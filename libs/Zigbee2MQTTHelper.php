@@ -6749,6 +6749,13 @@ trait Zigbee2MQTTHelper
                                     break; //Composite numeric break;
                                 case 'enum':
                                     switch ($feature['property']) {
+                                        case 'week_day':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableString('Z2M_WeekDay', $this->Translate('Week Day'), $ProfileName);
+                                            }
+                                            $this->EnableAction('Z2M_WeekDay');
+                                            break;
                                         case 'mode':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
