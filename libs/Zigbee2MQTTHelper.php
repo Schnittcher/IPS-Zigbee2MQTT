@@ -11,6 +11,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_Online':
+                $Payload['online'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_WorkingDay':
                 $Payload['working_day'] = $Value;
                 break;
@@ -749,6 +752,9 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('online', $Payload)) {
+                    $this->SetValue('Z2M_Online', $Payload['online']);
                 }
                 if (array_key_exists('error_status', $Payload)) {
                     $this->SetValue('Z2M_ErrorStatus', $Payload['error_status']);
@@ -5200,6 +5206,10 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'online':
+                            $this->RegisterVariableBoolean('Z2M_Online', $this->Translate('Online'), '~Switch');
+                            $this->EnableAction('Z2M_Online');
+                            break;
                         case 'window_detection':
                             $this->RegisterVariableBoolean('Z2M_WindowDetection', $this->Translate('Window Detection'), '~Switch');
                             $this->EnableAction('Z2M_WindowDetection');
