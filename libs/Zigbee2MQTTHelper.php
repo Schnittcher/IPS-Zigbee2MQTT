@@ -750,6 +750,9 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('error_status', $Payload)) {
+                    $this->SetValue('Z2M_ErrorStatus', $Payload['error_status']);
+                }
                 if (array_key_exists('working_day', $Payload)) {
                     $this->SetValue('Z2M_WorkingDay', $Payload['working_day']);
                 }
@@ -4088,6 +4091,11 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'error_status':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Alert', '', '', 0, 100, 1, 0);
+                        }
+                        break;
                     case 'cycle_irrigation_num_times':
                         $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -5914,6 +5922,12 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'error_status':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_ErrorStatus', $this->Translate('Error Status'), $ProfileName);
+                            }
+                            break;
                         case 'cycle_irrigation_num_times':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
