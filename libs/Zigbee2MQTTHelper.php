@@ -6105,6 +6105,7 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableInteger('Z2M_MinTemperatureAlarm', $this->Translate('Min Temperature Alarm'), $ProfileName);
                                 $this->EnableAction('Z2M_MinTemperatureAlarm');
                             }
+                            break;
                         case 'max_humidity_alarm':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
