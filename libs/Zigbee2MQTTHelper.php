@@ -6098,7 +6098,7 @@ trait Zigbee2MQTTHelper
                         case 'identify':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableBoolean('Z2M_Identify', $this->Translate('Identify'), $ProfileName);
+                                $this->RegisterVariableInteger('Z2M_Identify', $this->Translate('Identify'), $ProfileName);
                                 $this->EnableAction('Z2M_Identify');
                             }
                             break;
