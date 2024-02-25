@@ -4010,6 +4010,14 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.mode.a774535':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Mode', '', '', [
+                                    ['duration', $this->Translate('Duration'), '', 0x00FF00],
+                                    ['capacity', $this->Translate('Capacity'), '', 0xFF8800]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.mode.fecb2e2f':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
@@ -6136,13 +6144,13 @@ trait Zigbee2MQTTHelper
                         case 'irrigation_start_time':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('Z2M_IrrigationStartTime', $this->Translate('Irrigation Start Time'), $ProfileName);
+                                $this->RegisterVariableFloat('Z2M_IrrigationStartTime', $this->Translate('Irrigation Start Time'), $ProfileName);
                             }
                             break;
                         case 'irrigation_end_time':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('Z2M_IrrigationEndTime', $this->Translate('Irrigation End Time'), $ProfileName);
+                                $this->RegisterVariableFloat('Z2M_IrrigationEndTime', $this->Translate('Irrigation End Time'), $ProfileName);
                             }
                             break;
                         case 'last_irrigation_duration':
