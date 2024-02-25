@@ -11,6 +11,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_Identify':
+                $Payload['identify'] = $Value;
+                break;
             case 'Z2M_TemperaturePeriodicReport':
                 $Payload['temperature_periodic_report'] = $Value;
                 break;
@@ -4179,6 +4182,12 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'identify':
+                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' seconds', $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
+                        break;
                     case 'temperature_periodic_report':
                         $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -6086,6 +6095,13 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'identify':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableBoolean('Z2M_Identify', $this->Translate('Identify'), $ProfileName);
+                                $this->EnableAction('Z2M_Identify');
+                            }
+                            break;
                         case 'humidity_sensitivity':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
