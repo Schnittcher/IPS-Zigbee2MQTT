@@ -356,9 +356,13 @@ trait Zigbee2MQTTHelper
             case 'Z2M_TemperatureMin':
                 $Payload['temperature_min'] = number_format($Value, 2, '.', ' ');
                 break;
-            case 'Z2M_BacklightMode':
-                $Payload['backlight_mode'] = strval($Value);
-                break;
+                case 'Z2M_BacklightMode':
+                    if ($variableType == 3) {
+                        $Payload['backlight_mode'] = strval($Value);
+                        break;
+                    }
+                    $Payload['backlight_mode'] = strval($this->OnOff($Value));
+                    break;
             case 'Z2M_LedState':
                 $Payload['led_state'] = strval($Value);
                 break;
