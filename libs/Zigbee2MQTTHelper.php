@@ -361,7 +361,7 @@ trait Zigbee2MQTTHelper
                 break;
                 case 'Z2M_BacklightMode':
                     if ($variableType == 3) {
-                        $Payload['backlight_mode'] = strval($Value);
+                        $Payload['backlight_mode'] = ($Value);
                         break;
                     }
                     $Payload['backlight_mode'] = strval($this->OnOff($Value));
