@@ -1328,7 +1328,21 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_TemperatureMin', $Payload['temperature_min']);
                 }
                 if (array_key_exists('backlight_mode', $Payload)) {
-                    $this->SetValue('Z2M_BacklightMode', $Payload['backlight_mode']);
+                    switch ($Payload['backlight_mode']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_BacklightMode', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_BacklightMode', false);
+                            break;
+                        case 'low':
+                        case 'high':
+                            $this->SetValue('Z2M_BacklightMode', $Payload['backlight_mode']);
+                            break;
+                        default:
+                            $this->SendDebug('backlight mode', 'Undefined State: ' . $Payload['backlight_mode'], 0);
+                            break;
+                    }
                 }
                 if (array_key_exists('led_state', $Payload)) {
                     $this->SetValue('Z2M_LedState', $Payload['led_state']);
