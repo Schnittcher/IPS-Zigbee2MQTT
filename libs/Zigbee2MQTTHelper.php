@@ -4866,10 +4866,6 @@ trait Zigbee2MQTTHelper
                             switch ($feature['type']) {
                                 case 'binary':
                                     switch ($feature['property']) {
-                                        case 'backlight_mode':
-                                            $this->RegisterVariableBoolean('Z2M_BacklightMode', $this->Translate('Backlight Mode'), '~Switch');
-                                            $this->EnableAction('Z2M_BacklightMode');
-                                            break;
                                         case 'learn_ir_code':
                                             $this->RegisterVariableBoolean('Z2M_LearnIRCode', $this->Translate('Learn IR Code'), '~Switch');
                                             $this->EnableAction('Z2M_LearnIRCode');
@@ -5350,10 +5346,8 @@ trait Zigbee2MQTTHelper
                 case 'binary':
                     switch ($expose['property']) {
                         case 'backlight_mode':
-                            if ($ProfileName != false) {
-                                $this->RegisterVariableBoolean('Z2M_BacklightMode', $this->Translate('Backlight Mode'), $ProfileName);
-                                $this->EnableAction('Z2M_BacklightMode');
-                            }
+                            $this->RegisterVariableBoolean('Z2M_BacklightMode', $this->Translate('Backlight Mode'), '~Switch');
+                            $this->EnableAction('Z2M_BacklightMode');
                             break;
                         case 'online':
                             $this->RegisterVariableBoolean('Z2M_Online', $this->Translate('Online'), '~Switch');
