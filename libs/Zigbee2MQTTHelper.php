@@ -1722,9 +1722,9 @@ trait Zigbee2MQTTHelper
                     if (array_key_exists('x', $Payload['color'])) {
                         $this->SendDebug(__FUNCTION__ . ' Color', $Payload['color']['x'], 0);
                         if (array_key_exists('brightness', $Payload)) {
-                            $RGBColor = ltrim($this->CIEToRGB($Payload['color']['x'], $Payload['color']['y'], $Payload['brightness']), '#');
+                            $RGBColor = ltrim($this->xyToRGB($Payload['color']['x'], $Payload['color']['y'], $Payload['brightness']), '#');
                         } else {
-                            $RGBColor = ltrim($this->CIEToRGB($Payload['color']['x'], $Payload['color']['y']), '#');
+                            $RGBColor = ltrim($this->xyToRGB($Payload['color']['x'], $Payload['color']['y'],255), '#');
                         }
                         $this->SendDebug(__FUNCTION__ . ' Color RGB HEX', $RGBColor, 0);
                         $this->SetValue('Z2M_Color', hexdec(($RGBColor)));
@@ -2507,15 +2507,19 @@ trait Zigbee2MQTTHelper
         switch ($mode) {
             case 'cie':
                 $RGB = $this->HexToRGB($color);
-                $cie = $this->RGBToCIE($RGB[0], $RGB[1], $RGB[2]);
+                //$cie = $this->RGBToCIE($RGB[0], $RGB[1], $RGB[2]);
+                $cie = $this->RGBToXy($RGB);
                 if ($Z2MMode = 'color') {
                     $Payload['color'] = $cie;
+                    $Payload['brightness'] = $cie['bri'];
                 } elseif ($Z2MMode == 'color_rgb') {
                     $Payload['color_rgb'] = $cie;
                 } else {
                     return;
                 }
-                // No break. Add additional comment above this line if intentional
+                $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+                $this->Z2MSet($PayloadJSON);
+                break;
             case 'hs':
                 $this->SendDebug('setColor - Input Color', json_encode($color), 0);
                 if (!is_array($color)) {
