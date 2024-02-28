@@ -11,6 +11,39 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_Identify':
+                $Payload['identify'] = $Value;
+                break;
+            case 'Z2M_TemperaturePeriodicReport':
+                $Payload['temperature_periodic_report'] = $Value;
+                break;
+            case 'Z2M_HumidityPeriodicReport':
+                $Payload['humidity_periodic_report'] = $Value;
+                break;
+            case 'Z2M_TemperatureSensitivity':
+                $Payload['temperature_sensitivity'] = $Value;
+                break;
+            case 'Z2M_HumiditySensitivity':
+                $Payload['humidity_sensitivity'] = $Value;
+                break;
+            case 'Z2M_TemperatureAlarm':
+                $Payload['temperature_alarm'] = $Value;
+                break;
+            case 'Z2M_HumidityAlarm':
+                $Payload['humidity_alarm'] = $Value;
+                break;
+            case'Z2M_MinHumidityAlarm':
+                $Payload['min_humidity_alarm'] = $Value;
+                break;
+            case 'Z2M_MaxHumidityAlarm':
+                $Payload['max_humidity_alarm'] = $Value;
+                break;
+            case 'Z2M_MaxTemperatureAlarm':
+                $Payload['max_temperature_alarm'] = $Value;
+                break;
+            case 'Z2M_MinTemperatureAlarm':
+                $Payload['min_temperature_alarm'] = $Value;
+                break;
             case 'Z2M_Online':
                 $Payload['online'] = strval($this->OnOff($Value));
                 break;
@@ -326,9 +359,13 @@ trait Zigbee2MQTTHelper
             case 'Z2M_TemperatureMin':
                 $Payload['temperature_min'] = number_format($Value, 2, '.', ' ');
                 break;
-            case 'Z2M_BacklightMode':
-                $Payload['backlight_mode'] = strval($Value);
-                break;
+                case 'Z2M_BacklightMode':
+                    if ($variableType == 3) {
+                        $Payload['backlight_mode'] = ($Value);
+                        break;
+                    }
+                    $Payload['backlight_mode'] = strval($this->OnOff($Value));
+                    break;
             case 'Z2M_LedState':
                 $Payload['led_state'] = strval($Value);
                 break;
@@ -752,6 +789,36 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('temperature_periodic_report', $Payload)) {
+                    $this->SetValue('Z2M_TemperaturePeriodicReport', $Payload['temperature_periodic_report']);
+                }
+                if (array_key_exists('humidity_periodic_report', $Payload)) {
+                    $this->SetValue('Z2M_HumidityPeriodicReport', $Payload['humidity_periodic_report']);
+                }
+                if (array_key_exists('temperature_sensitivity', $Payload)) {
+                    $this->SetValue('Z2M_TemperatureSensitivity', $Payload['temperature_sensitivity']);
+                }
+                if (array_key_exists('humidity_sensitivity', $Payload)) {
+                    $this->SetValue('Z2M_HumiditySensitivity', $Payload['humidity_sensitivity']);
+                }
+                if (array_key_exists('temperature_alarm', $Payload)) {
+                    $this->SetValue('Z2M_TemperatureAlarm', $Payload['temperature_alarm']);
+                }
+                if (array_key_exists('humidity_alarm', $Payload)) {
+                    $this->SetValue('Z2M_HumidityAlarm', $Payload['humidity_alarm']);
+                }
+                if (array_key_exists('max_temperature_alarm', $Payload)) {
+                    $this->SetValue('Z2M_MaxTemperatureAlarm', $Payload['max_temperature_alarm']);
+                }
+                if (array_key_exists('min_temperature_alarm', $Payload)) {
+                    $this->SetValue('Z2M_MinTemperatureAlarm', $Payload['min_temperature_alarm']);
+                }
+                if (array_key_exists('max_humidity_alarm', $Payload)) {
+                    $this->SetValue('Z2M_MaxHumidityAlarm', $Payload['max_humidity_alarm']);
+                }
+                if (array_key_exists('min_humidity_alarm', $Payload)) {
+                    $this->SetValue('Z2M_MinHumidityAlarm', $Payload['min_humidity_alarm']);
                 }
                 if (array_key_exists('online', $Payload)) {
                     $this->SetValue('Z2M_Online', $Payload['online']);
@@ -1261,7 +1328,21 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_TemperatureMin', $Payload['temperature_min']);
                 }
                 if (array_key_exists('backlight_mode', $Payload)) {
-                    $this->SetValue('Z2M_BacklightMode', $Payload['backlight_mode']);
+                    switch ($Payload['backlight_mode']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_BacklightMode', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_BacklightMode', false);
+                            break;
+                        case 'low':
+                        case 'high':
+                            $this->SetValue('Z2M_BacklightMode', $Payload['backlight_mode']);
+                            break;
+                        default:
+                            $this->SendDebug('backlight mode', 'Undefined State: ' . $Payload['backlight_mode'], 0);
+                            break;
+                    }
                 }
                 if (array_key_exists('led_state', $Payload)) {
                     $this->SetValue('Z2M_LedState', $Payload['led_state']);
@@ -2644,6 +2725,16 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M_temperature_alarm.15475477':
+                        case 'Z2M_humidity_alarm.15475477':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Alarm', '', '', [
+                                    ['lower_alarm', $this->Translate('Lower Alarm'), '', 0x00FF00],
+                                    ['upper_alarm', $this->Translate('Upper Alarm'), '', 0x00FF00],
+                                    ['cancel', $this->Translate('Cancel'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.working_day.19c5c139':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -3944,6 +4035,14 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.mode.a774535':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Mode', '', '', [
+                                    ['duration', $this->Translate('Duration'), '', 0x00FF00],
+                                    ['capacity', $this->Translate('Capacity'), '', 0xFF8800]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.mode.fecb2e2f':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
@@ -4101,6 +4200,60 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'identify':
+                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' seconds', $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
+                        break;
+                    case 'temperature_periodic_report':
+                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Report', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
+                        break;
+                    case 'humidity_periodic_report':
+                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Report', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
+                        break;
+                    case 'temperature_sensitivity':
+                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Report', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
+                        break;
+                    case 'humidity_sensitivity':
+                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Report', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
+                        break;
+                    case 'min_temperature_alarm':
+                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Alert', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
+                        break;
+                    case 'max_humidity_alarm':
+                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Alert', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
+                        break;
+                    case 'min_humidity_alarm':
+                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Alert', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
+                        break;
+                    case 'max_temperature_alarm':
+                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Alert', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
+                        break;
                     case 'error_status':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Alert', '', '', 0, 100, 1, 0);
@@ -5210,6 +5363,10 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'backlight_mode':
+                            $this->RegisterVariableBoolean('Z2M_BacklightMode', $this->Translate('Backlight Mode'), '~Switch');
+                            $this->EnableAction('Z2M_BacklightMode');
+                            break;
                         case 'online':
                             $this->RegisterVariableBoolean('Z2M_Online', $this->Translate('Online'), '~Switch');
                             $this->EnableAction('Z2M_Online');
@@ -5495,6 +5652,20 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'humidity_alarm':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_HumidityAlarm', $this->Translate('Humidity Alarm'), $ProfileName);
+                                $this->EnableAction('Z2M_HumidityAlarm');
+                            }
+                            break;
+                        case 'temperature_alarm':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_TemperatureAlarm', $this->Translate('Temperature Alarm'), $ProfileName);
+                                $this->EnableAction('Z2M_TemperatureAlarm');
+                            }
+                            break;
                         case 'working_day':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -5936,6 +6107,69 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'identify':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_Identify', $this->Translate('Identify'), $ProfileName);
+                                $this->EnableAction('Z2M_Identify');
+                            }
+                            break;
+                        case 'humidity_sensitivity':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_HumiditySensitivity', $this->Translate('Humidity Sensitivity'), $ProfileName);
+                                $this->EnableAction('Z2M_HumiditySensitivity');
+                            }
+                            break;
+                        case 'temperature_sensitivity':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_TemperatureSensitivity', $this->Translate('Temperature Sensitivity'), $ProfileName);
+                                $this->EnableAction('Z2M_TemperatureSensitivity');
+                            }
+                            break;
+                        case 'humidity_periodic_report':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_HumidityPeriodicReport', $this->Translate('Humidity Periodic Report'), $ProfileName);
+                                $this->EnableAction('Z2M_HumidityPeriodicReport');
+                            }
+                            break;
+                        case 'temperature_periodic_report':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_TemperaturePeriodicReport', $this->Translate('Temperature Periodic Report'), $ProfileName);
+                                $this->EnableAction('Z2M_TemperaturePeriodicReport');
+                            }
+                            break;
+                        case 'max_temperature_alarm':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_MaxTemperatureAlarm', $this->Translate('Max Temperature Alarm'), $ProfileName);
+                                $this->EnableAction('Z2M_MaxTemperatureAlarm');
+                            }
+                            break;
+                        case 'min_temperature_alarm':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_MinTemperatureAlarm', $this->Translate('Min Temperature Alarm'), $ProfileName);
+                                $this->EnableAction('Z2M_MinTemperatureAlarm');
+                            }
+                            break;
+                        case 'max_humidity_alarm':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_MaxHumidityAlarm', $this->Translate('Max Humidity Alarm'), $ProfileName);
+                                $this->EnableAction('Z2M_MaxHumidityAlarm');
+                            }
+                            break;
+                        case 'min_humidity_alarm':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_MinHumidityAlarm', $this->Translate('Min Humidity Alarm'), $ProfileName);
+                                $this->EnableAction('Z2M_MinHumidityAlarm');
+                            }
+                            break;
                         case 'error_status':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -5952,13 +6186,13 @@ trait Zigbee2MQTTHelper
                         case 'irrigation_start_time':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('Z2M_IrrigationStartTime', $this->Translate('Irrigation Start Time'), $ProfileName);
+                                $this->RegisterVariableFloat('Z2M_IrrigationStartTime', $this->Translate('Irrigation Start Time'), $ProfileName);
                             }
                             break;
                         case 'irrigation_end_time':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('Z2M_IrrigationEndTime', $this->Translate('Irrigation End Time'), $ProfileName);
+                                $this->RegisterVariableFloat('Z2M_IrrigationEndTime', $this->Translate('Irrigation End Time'), $ProfileName);
                             }
                             break;
                         case 'last_irrigation_duration':
