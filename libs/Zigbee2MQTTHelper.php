@@ -1803,9 +1803,9 @@ trait Zigbee2MQTTHelper
                     if (array_key_exists('x', $Payload['color'])) {
                         $this->SendDebug(__FUNCTION__ . ' Color', $Payload['color']['x'], 0);
                         if (array_key_exists('brightness', $Payload)) {
-                            $RGBColor = ltrim($this->xyToRGB($Payload['color']['x'], $Payload['color']['y'], $Payload['brightness']), '#');
+                            $RGBColor = ltrim($this->xyToHEX($Payload['color']['x'], $Payload['color']['y'], $Payload['brightness']), '#');
                         } else {
-                            $RGBColor = ltrim($this->xyToRGB($Payload['color']['x'], $Payload['color']['y'],255), '#');
+                            $RGBColor = ltrim($this->xyToHEX($Payload['color']['x'], $Payload['color']['y'], 255), '#');
                         }
                         $this->SendDebug(__FUNCTION__ . ' Color RGB HEX', $RGBColor, 0);
                         $this->SetValue('Z2M_Color', hexdec(($RGBColor)));
@@ -1820,9 +1820,9 @@ trait Zigbee2MQTTHelper
                     $this->SendDebug(__FUNCTION__ . ':: Color X', $Payload['color_rgb']['x'], 0);
                     $this->SendDebug(__FUNCTION__ . ':: Color Y', $Payload['color_rgb']['y'], 0);
                     if (array_key_exists('brightness_rgb', $Payload)) {
-                        $RGBColor = ltrim($this->CIEToRGB($Payload['color_rgb']['x'], $Payload['color_rgb']['y'], $Payload['brightness_rgb']), '#');
+                        $RGBColor = ltrim($this->xyToHEX($Payload['color_rgb']['x'], $Payload['color_rgb']['y'], $Payload['brightness_rgb']), '#');
                     } else {
-                        $RGBColor = ltrim($this->CIEToRGB($Payload['color_rgb']['x'], $Payload['color_rgb']['y']), '#');
+                        $RGBColor = ltrim($this->xyToHEX($Payload['color_rgb']['x'], $Payload['color_rgb']['y']), '#');
                     }
                     $this->SendDebug(__FUNCTION__ . ' Color :: RGB HEX', $RGBColor, 0);
                     $this->SetValue('Z2M_ColorRGB', hexdec(($RGBColor)));
@@ -2410,9 +2410,10 @@ trait Zigbee2MQTTHelper
                     $color = hexdec($color);
                 }
                 $RGB = $this->HexToRGB($color);
-                $cie = $this->RGBToCIE($RGB[0], $RGB[1], $RGB[2]);
+                $cie = $this->RGBToXy($RGB);
                 if ($Z2MMode = 'color') {
                     $Payload['color'] = $cie;
+                    $Payload['brightness'] = $cie['bri'];
                 } elseif ($Z2MMode == 'color_rgb') {
                     $Payload['color_rgb'] = $cie;
                 } else {
@@ -2588,7 +2589,6 @@ trait Zigbee2MQTTHelper
         switch ($mode) {
             case 'cie':
                 $RGB = $this->HexToRGB($color);
-                //$cie = $this->RGBToCIE($RGB[0], $RGB[1], $RGB[2]);
                 $cie = $this->RGBToXy($RGB);
                 if ($Z2MMode = 'color') {
                     $Payload['color'] = $cie;
