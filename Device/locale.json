@@ -742,7 +742,17 @@
             "Working Day": "Arbeitstag",
             "X Axis": "X Achse",
             "Y Axis": "Y Achse",
-            "Z Axis": "Z Achse"
+            "Z Axis": "Z Achse",
+            "Set": "Setzen",
+            "Opening Mode": "Öffnungsmodus",
+            "Set Upper Limit": "Obergrenze festlegen",
+            "Set Bottom Limit": "Untergrenze festlegen",
+            "Factory Reset": "Werksreset",
+            "Lift": "Lift",
+            "Alarm Ringtone": "Alarm Klingelton",
+            "Gas": "Gas",
+            "Gas Value": "Gas Wert",
+            "Preheat": "Vorheizen"
         }
     }
 }
