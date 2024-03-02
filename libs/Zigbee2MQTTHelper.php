@@ -5521,10 +5521,8 @@ trait Zigbee2MQTTHelper
                             $this->EnableAction('Z2M_Alarm');
                             break;
                         case 'state':
-                            //Variable with Profile ~Switch
-                            if (($feature['value_on'] == 'ON') && ($feature['value_off'] = 'OFF')) {
-                                $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
-                            }
+                              $this->RegisterVariableBoolean('Z2M_State', $this->Translate('State'), '~Switch');
+                              $this->EnableAction('Z2M_State');
                             break;
                         case 'led_state':
                             $this->RegisterVariableBoolean('Z2M_LedState', $this->Translate('LED State'), '~Switch');
@@ -6198,7 +6196,7 @@ trait Zigbee2MQTTHelper
                         case 'last_irrigation_duration':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('Z2M_LastIrrigationDuration', $this->Translate('Last Irrigation Duration'), $ProfileName);
+                                $this->RegisterVariableFloat('Z2M_LastIrrigationDuration', $this->Translate('Last Irrigation Duration'), $ProfileName);
                             }
                             break;
                         case 'water_consumed':
@@ -6210,7 +6208,7 @@ trait Zigbee2MQTTHelper
                         case 'irrigation_target':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('Z2M_IrrigationTarget', $this->Translate('Irrigation Target'), $ProfileName);
+                                $this->RegisterVariableFloat('Z2M_IrrigationTarget', $this->Translate('Irrigation Target'), $ProfileName);
                                 $this->EnableAction('Z2M_IrrigationTarget');
                             }
                             break;
