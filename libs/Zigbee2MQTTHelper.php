@@ -4274,10 +4274,16 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'gas_value':
-                    if (!IPS_VariableProfileExists($ProfileName)) {
-                        $this->RegisterProfileInteger($ProfileName, 'Gas', '', ' LEL', 0, 0, 1, 0);
-                    }
-                    break;
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Gas', '', ' LEL', 0, 0, 1, 0);
+                        }
+                        break;
+                    case 'motor_speed':
+                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Speedo', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
+                        break;
                     case 'temperature_periodic_report':
                         $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -5439,11 +5445,14 @@ trait Zigbee2MQTTHelper
                             $this->EnableAction('Z2M_BacklightMode');
                             break;
                         case 'gas':
-                            $this->RegisterVariableBoolean('Z2M_Gas', $this->Translate('Gas'), '~Alarm');
+                            $this->RegisterVariableBoolean('Z2M_Gas', $this->Translate('Gas'), '~Alert');
                             break;
                         case 'self_test':
                             $this->RegisterVariableBoolean('Z2M_SelfTest', $this->Translate('Self Test'), '~Switch');
                             $this->EnableAction('Z2M_SelfTest');
+                            break;
+                        case 'preheat':
+                            $this->RegisterVariableBoolean('Z2M_Preheat', $this->Translate('Preheat'), '~Switch');
                             break;
                         case 'online':
                             $this->RegisterVariableBoolean('Z2M_Online', $this->Translate('Online'), '~Switch');
