@@ -752,7 +752,18 @@
             "Alarm Ringtone": "Alarm Klingelton",
             "Gas": "Gas",
             "Gas Value": "Gas Wert",
-            "Preheat": "Vorheizen"
+            "Preheat": "Vorheizen",
+            "Press 1 and 2": "Drücke 1 und 2",
+            "Press 1 and 2 and 3": "Drücke 1 und 2 und 3",
+            "Press 1 and 3": "Drücke 1 und 3",
+            "Press 1 and 3 and 4": "Drücke 1 und 3 und 4",
+            "Press 1 and 4": "Drücke 1 und 4",
+            "Press 2 and 3 and 4": "Drücke 2 und 3 und 4",
+            "Press 2 and 4": "Drücke 2 und 4",
+            "Press 3 and 4": "Drücke 3 und 4",
+            "Press all": "Drücke alle",
+            "Press energy bar": "Drücke Energieleiste",
+            "Short press 2 of 2": "Kurz drücken 2 von 2"
         }
     }
 }

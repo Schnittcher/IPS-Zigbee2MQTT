@@ -377,7 +377,7 @@ trait Zigbee2MQTTHelper
                         break;
                     }
                     $Payload['backlight_mode'] = strval($this->OnOff($Value));
-                    break;           
+                    break;
             case 'Z2M_LedState':
                 $Payload['led_state'] = strval($Value);
                 break;
@@ -3108,6 +3108,29 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['normal', $this->Translate('Normal'), '', 0x00FF00],
                                     ['flipped', $this->Translate('Flipped'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.action.2b653bba':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['press_1', $this->Translate('Press 1'), '', 0x00FF00],
+                                    ['press_1_and_2', $this->Translate('Press 1 and 2'), '', 0x00FF00],
+                                    ['press_1_and_2_and_3', $this->Translate('Press 1 and 2 and 3'), '', 0x00FF00],
+                                    ['press_1_and_2_and_4', $this->Translate('Press 1 and 2 and 4'), '', 0x00FF00],
+                                    ['press_1_and_3', $this->Translate('Press 1 and 3'), '', 0x00FF00],
+                                    ['press_1_and_3_and_4', $this->Translate('Press 1 and 3 and 4'), '', 0x00FF00],
+                                    ['press_1_and_4', $this->Translate('Press 1 and 4'), '', 0x00FF00],
+                                    ['press_2', $this->Translate('Press 2'), '', 0x00FF00],
+                                    ['press_2_and_3_and_4', $this->Translate('Press 2 and 3 and 4'), '', 0x00FF00],
+                                    ['press_2_and_4', $this->Translate('Press 2 and 4'), '', 0x00FF00],
+                                    ['press_3', $this->Translate('Press 3'), '', 0x00FF00],
+                                    ['press_3_and_4', $this->Translate('Press 3 and 4'), '', 0x00FF00],
+                                    ['press_4', $this->Translate('Press 4'), '', 0x00FF00],
+                                    ['press_all', $this->Translate('Press all'), '', 0x00FF00],
+                                    ['press_energy_bar', $this->Translate('Press energy bar'), '', 0x00FF00],
+                                    ['release', $this->Translate('Release'), '', 0x00FF00],
+                                    ['short_press_2_of_2', $this->Translate('Short press 2 of 2'), '', 0x00FF00]
                                 ]);
                             }
                             break;
