@@ -26,11 +26,13 @@ class IPSymconExtension {
         const topicPrefix = `${this.symconTopic}/${this.baseTopic}`;
         switch (data.topic) {
             case `${topicPrefix}/getDevices`:
+            case `${this.baseTopic}/bridge/symcon/getDevices`:
                 const devices = this.zigbee.devices(false).map(device => this.#createDevicePayload(device, false));
                 this.logger.info('Symcon: publish devices list');
                 await this.#publishToMqtt('devices', devices);
                 break;
             case `${topicPrefix}/getDevice`:
+            case `${this.baseTopic}/bridge/symcon/getDevice`:
                 if (data.message) {
                     const device = this.zigbee.resolveEntity(data.message);
                     const devices = this.#createDevicePayload(device, true);
@@ -39,10 +41,12 @@ class IPSymconExtension {
                 }
                 break;
             case `${topicPrefix}/getGroups`:
+            case `${this.baseTopic}/bridge/symcon/getGroups`:
                 const groups = this.settings.getGroups();
                 await this.#publishToMqtt('groups', groups);
                 break;
             case `${topicPrefix}/getGroup`:
+            case `${this.baseTopic}/bridge/symcon/getGroup`:
                 if (data.message) {
                     const groupExposes = this.#createGroupExposes(data.message);
                     await this.#publishToMqtt(`${data.message}/groupInfo`, groupExposes);
