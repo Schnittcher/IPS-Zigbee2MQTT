@@ -2179,7 +2179,17 @@ trait Zigbee2MQTTHelper
                         }
                 }
                 if (array_key_exists('button_lock', $Payload)) {
-                    $this->SetValue('Z2M_ButtonLock', $Payload['button_lock']);
+                    switch ($Payload['button_lock']) {
+                        case 'ON':
+                            $this->SetValue('Z2M_ButtonLock', true);
+                            break;
+                        case 'OFF':
+                            $this->SetValue('Z2M_ButtonLock', false);
+                            break;
+                        default:
+                            $this->SendDebug('Button Lock', 'Undefined State: ' . $Payload['button_lock'], 0);
+                            break;
+                    }
                 }
                 if (array_key_exists('open_window_temperature', $Payload)) {
                     $this->SetValue('Z2M_OpenWindowTemperature', $Payload['open_window_temperature']);
