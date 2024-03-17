@@ -1733,7 +1733,7 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('state', $Payload)) {
                     if (in_array($Payload['state'], ['ON', 'OFF'])) {
                         // Verwende handleStateChange für ON/OFF Zustände
-                        $this->handleStateChange('state', 'Z2M_State', 'State', $Payload,);
+                        $this->handleStateChange('state', 'Z2M_State', 'State', $Payload, );
                     } elseif (in_array($Payload['state'], ['OPEN', 'CLOSE', 'STOP', 'move', 'presence', 'none'])) {
                         $this->SetValue('Z2M_State', $Payload['state']);
                     } else {
@@ -1820,7 +1820,7 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('state_left', $Payload)) {
                     if (in_array($Payload['state_left'], ['ON', 'OFF'])) {
-                        $this->handleStateChange('state_left', 'Z2M_state_left', 'State left', $Payload,);
+                        $this->handleStateChange('state_left', 'Z2M_state_left', 'State left', $Payload, );
                     } elseif (in_array($Payload['state_left'], ['OPEN', 'CLOSE', 'STOP'])) {
                         $this->SetValue('Z2M_state_left', $Payload['state_left']);
                     } else {
@@ -1829,7 +1829,7 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('state_right', $Payload)) {
                     if (in_array($Payload['state_right'], ['ON', 'OFF'])) {
-                        $this->handleStateChange('state_right', 'Z2M_state_right', 'State Right', $Payload,);
+                        $this->handleStateChange('state_right', 'Z2M_state_right', 'State Right', $Payload, );
                     } elseif (in_array($Payload['state_right'], ['OPEN', 'CLOSE', 'STOP'])) {
                         $this->SetValue('Z2M_state_right', $Payload['state_right']);
                     } else {
@@ -1979,19 +1979,6 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('vibration', $Payload)) {
                     $this->SetValue('Z2M_Vibration', $Payload['vibration']);
                 }
-            }
-        }
-    }
-    private function handleStateChange($payloadKey, $valueId, $debugTitle, $payload, $stateMapping = null) {
-        if (array_key_exists($payloadKey, $payload)) {
-            $state = $payload[$payloadKey];
-            if ($stateMapping === null) {
-                $stateMapping = ['ON' => true, 'OFF' => false];
-            }
-            if (array_key_exists($state, $stateMapping)) {
-                $this->SetValue($valueId, $stateMapping[$state]);
-            } else {
-                $this->SendDebug($debugTitle, 'Undefined State: ' . $state, 0);
             }
         }
     }
@@ -2180,6 +2167,20 @@ trait Zigbee2MQTTHelper
             parent::SetValue($Ident, $Value);
         } else {
             $this->SendDebug('Error :: No Expose for Value', 'Ident: ' . $Ident, 0);
+        }
+    }
+    private function handleStateChange($payloadKey, $valueId, $debugTitle, $payload, $stateMapping = null)
+    {
+        if (array_key_exists($payloadKey, $payload)) {
+            $state = $payload[$payloadKey];
+            if ($stateMapping === null) {
+                $stateMapping = ['ON' => true, 'OFF' => false];
+            }
+            if (array_key_exists($state, $stateMapping)) {
+                $this->SetValue($valueId, $stateMapping[$state]);
+            } else {
+                $this->SendDebug($debugTitle, 'Undefined State: ' . $state, 0);
+            }
         }
     }
 
