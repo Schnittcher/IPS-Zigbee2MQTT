@@ -805,6 +805,36 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('voltage_X', $Payload)) {
+                    $this->SetValue('Z2M_VoltageX', $Payload['voltage_X']);
+                }
+                if (array_key_exists('voltage_Y', $Payload)) {
+                    $this->SetValue('Z2M_VoltageY', $Payload['voltage_Y']);
+                }
+                if (array_key_exists('voltage_Z', $Payload)) {
+                    $this->SetValue('Z2M_VoltageZ', $Payload['voltage_Z']);
+                }
+                if (array_key_exists('power_X', $Payload)) {
+                    $this->SetValue('Z2M_PowerX', $Payload['power_X']);
+                }
+                if (array_key_exists('power_Y', $Payload)) {
+                    $this->SetValue('Z2M_PowerY', $Payload['power_Y']);
+                }
+                if (array_key_exists('power_Z', $Payload)) {
+                    $this->SetValue('Z2M_PowerZ', $Payload['power_Z']);
+                }
+                if (array_key_exists('current_X', $Payload)) {
+                    $this->SetValue('Z2M_CurrentX', $Payload['current_X']);
+                }
+                if (array_key_exists('current_Y', $Payload)) {
+                    $this->SetValue('Z2M_CurrentY', $Payload['current_Y']);
+                }
+                if (array_key_exists('current_Z', $Payload)) {
+                    $this->SetValue('Z2M_CurrentZ', $Payload['current_Z']);
+                }
+                if (array_key_exists('produced_energy', $Payload)) {
+                    $this->SetValue('Z2M_ProducedEnergy', $Payload['produced_energy']);
+                }
                 if (array_key_exists('temperature_periodic_report', $Payload)) {
                     $this->SetValue('Z2M_TemperaturePeriodicReport', $Payload['temperature_periodic_report']);
                 }
@@ -4300,6 +4330,21 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'voltage_X':
+                    case 'current_X':
+                    case 'power_X':
+                    case 'voltage_Y':
+                    case 'current_Y':
+                    case 'power_Y':
+                    case 'voltage_Z':
+                    case 'current_Z':
+                    case 'power_Z':
+                    case 'produced_energy':
+                    case 'power_reactive':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Electricity', '', ' ' . $Expose['unit'], 0, 0, 2);
+                        }
+                        break;
                     case 'identify':
                         $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -4318,23 +4363,8 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'temperature_periodic_report':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Report', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
-                        }
-                        break;
                     case 'humidity_periodic_report':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Report', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
-                        }
-                        break;
                     case 'temperature_sensitivity':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Report', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
-                        }
-                        break;
                     case 'humidity_sensitivity':
                         $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -4342,23 +4372,8 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'min_temperature_alarm':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Alert', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
-                        }
-                        break;
                     case 'max_humidity_alarm':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Alert', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
-                        }
-                        break;
                     case 'min_humidity_alarm':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Alert', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
-                        }
-                        break;
                     case 'max_temperature_alarm':
                         $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -4377,27 +4392,18 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'irrigation_end_time':
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ', ' ', 0, 0, 2);
-                        }
-                        break;
                     case 'last_irrigation_duration':
+                    case 'irrigation_start_time':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ', ' ', 0, 0, 2);
                         }
-                        break;
+                      break;
                     case 'water_consumed':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Drops', '', ' L', ' ', 0, 0, 2);
                         }
                         break;
                     case 'irrigation_target':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Graph', '', ' ', ' ', $expose['value_min'], $expose['value_max'], 2);
-                        }
-                        break;
                     case 'cycle_irrigation_interval':
                         $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -4405,18 +4411,7 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileFloat($ProfileName, 'Graph', '', ' ', ' ', $expose['value_min'], $expose['value_max'], 2);
                         }
                         break;
-                    case 'irrigation_start_time':
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ', ' ', 0, 0, 2);
-                        }
-                      break;
                     case 'countdown_l2':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
-                        }
-                        break;
                     case 'countdown_l1':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -4425,20 +4420,14 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'presence_timeout':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
-                        }
-                        break;
                     case 'radar_range':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
-                        }
-                        break;
                     case 'move_sensitivity':
+                    case 'small_detection_sensitivity':
+                    case 'small_detection_distance':
+                    case 'medium_motion_detection_distance':
+                    case 'medium_motion_detection_sensitivity':
+                    case 'large_motion_detection_distance':
+                    case 'large_motion_detection_sensitivity':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -4448,11 +4437,6 @@ trait Zigbee2MQTTHelper
                     case 'distance':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Move', '', ' ', ' ', 0, 0, 2);
-                        }
-                      break;
-                    case 'power_reactive':
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Electricity', '', ' ' . $expose['unit'], 0, 0, 2);
                         }
                       break;
                     case 'requested_brightness_percent':
@@ -4470,15 +4454,7 @@ trait Zigbee2MQTTHelper
                         }
                       break;
                     case 'z_axis':
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Shuffle', '', ' ', 0, 0, 0, 2);
-                        }
-                        break;
                     case 'y_axis':
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Shuffle', '', ' ', 0, 0, 0, 2);
-                        }
-                        break;
                     case 'x_axis':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Shuffle', '', ' ', 0, 0, 0, 2);
@@ -4487,48 +4463,6 @@ trait Zigbee2MQTTHelper
                     case 'ac_frequency':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
-                        }
-                        break;
-                    case 'small_detection_sensitivity':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
-                        }
-                        break;
-                    case 'small_detection_distance':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
-                        }
-                        break;
-                    case 'medium_motion_detection_distance':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
-                        }
-                        break;
-                    case 'medium_motion_detection_sensitivity':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
-                        }
-                        break;
-                    case 'large_motion_detection_distance':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
-                        }
-                        break;
-                    case 'large_motion_detection_sensitivity':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Motion', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
                         }
                         break;
                     case 'presence_sensitivity':
@@ -4568,6 +4502,7 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'action_transaction':
+                    case 'power_outage_count':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ', 0, 0, 0);
                         }
@@ -4600,24 +4535,10 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'load_estimate':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 1);
-                        }
-                        break;
                     case 'fan_speed':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 1);
-                        }
-                        break;
                     case 'load_room_mean':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 1);
-                        }
-                        break;
                     case 'algorithm_scale_factor':
+                    case 'display_brightness':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 1);
@@ -4640,12 +4561,6 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileFloat($ProfileName, 'Factory', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
                         break;
-                    case 'display_brightness':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Intensity', '', ' ', $expose['value_min'], $expose['value_max'], 1);
-                        }
-                        break;
                     case 'display_ontime':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -4653,23 +4568,8 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'side':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Shuffle', '', ' °', $expose['value_min'], $expose['value_max'], 1);
-                        }
-                        break;
                     case 'angle_x':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Shuffle', '', ' °', $expose['value_min'], $expose['value_max'], 1);
-                        }
-                        break;
                     case 'angle_y':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Shuffle', '', ' °', $expose['value_min'], $expose['value_max'], 1);
-                        }
-                        break;
                     case 'angle_z':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -4677,38 +4577,17 @@ trait Zigbee2MQTTHelper
                         }
                             break;
                     case 'boost_heating_countdown_time_set':
+                    case 'duration':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' s', $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
                     case 'min_temperature':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Temperature', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
-                        }
-                        break;
                     case 'max_temperature':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Temperature', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
-                        }
-                        break;
-                    case 'eco_temperature':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Temperature', '', ' °C', $expose['value_min'], $expose['value_max'], 1);
-                        }
-                        break;
-                    case 'power_outage_count':
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ', 0, 0, 0);
-                        }
-                        break;
-                    case 'duration':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' S', $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
                     case 'humidity_max':
@@ -4720,6 +4599,7 @@ trait Zigbee2MQTTHelper
                         break;
                     case 'temperature_max':
                     case 'temperature_min':
+                    case 'eco_temperature':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Temperature', '', ' °C', $expose['value_min'], $expose['value_max'], 1);
@@ -4838,6 +4718,9 @@ trait Zigbee2MQTTHelper
                         break;
                     case 'action_duration':
                     case 'action_transition_time':
+                    case 'calibration_time':
+                    case 'calibration_time_left':
+                    case 'calibration_time_right':
                         $ProfileName .= '_' . $expose['unit'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
@@ -4857,12 +4740,6 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'minimum_range':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
-                        }
-                        break;
                     case 'maximum_range':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -4871,12 +4748,6 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'deadzone_temperature':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Temperature', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
-                        }
-                        break;
                     case 'max_temperature_limit':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
@@ -4885,24 +4756,13 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'detection_delay':
+                    case 'fading_time':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
                         }
                         break;
                     case 'detection_interval':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 1);
-                        }
-                        break;
-                    case 'fading_time':
-                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                        $ProfileName = str_replace(',', '.', $ProfileName);
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
-                        }
-                        break;
                     case 'detfading_timeection_delay':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -4914,24 +4774,6 @@ trait Zigbee2MQTTHelper
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'intensity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
-                        }
-                        break;
-                    case 'calibration_time':
-                        $ProfileName .= '_' . $expose['unit'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
-                        }
-                        break;
-                    case 'calibration_time_left':
-                        $ProfileName .= '_' . $expose['unit'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
-                        }
-                        break;
-                    case 'calibration_time_right':
-                        $ProfileName .= '_' . $expose['unit'];
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
                         break;
                     default:
@@ -6258,6 +6100,66 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'voltage_X':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_VoltageX', $this->Translate('Voltage X'), $ProfileName);
+                            }
+                            break;
+                        case 'voltage_Y':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_VoltageY', $this->Translate('Voltage Y'), $ProfileName);
+                            }
+                            break;
+                        case 'voltage_Z':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_VoltageZ', $this->Translate('Voltage Z'), $ProfileName);
+                            }
+                            break;
+                        case 'current_X':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_CurrentX', $this->Translate('Current X'), $ProfileName);
+                            }
+                            break;
+                        case 'current_Y':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_CurrentY', $this->Translate('Current Y'), $ProfileName);
+                            }
+                            break;
+                        case 'current_Z':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_CurrentZ', $this->Translate('Current Z'), $ProfileName);
+                            }
+                            break;
+                        case 'power_X':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_PowerX', $this->Translate('Power X'), $ProfileName);
+                            }
+                            break;
+                        case 'power_Y':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_PowerY', $this->Translate('Power Y'), $ProfileName);
+                            }
+                            break;
+                        case 'power_Z':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_PowerZ', $this->Translate('Power Z'), $ProfileName);
+                            }
+                            break;
+                        case 'produced_energy':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_ProducedEnergy', $this->Translate('Produced Energy'), $ProfileName);
+                            }
+                            break;
                         case 'identify':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
