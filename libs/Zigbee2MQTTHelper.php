@@ -1873,7 +1873,7 @@ trait Zigbee2MQTTHelper
                     $this->handleStateChange('auto_lock', 'Z2M_AutoLock', 'Auto Lock', $Payload);
                 }
                 if (array_key_exists('child_lock', $Payload)) {
-                    $this->handleStateChange('child_lock', 'Z2M_ChildLock', 'Child Lock', $Payload);
+                    $this->handleStateChange('child_lock', 'Z2M_ChildLock', 'Child Lock', $Payload, ['LOCK' => true, 'UNLOCK' => false]);
                 }
                 if (array_key_exists('update_available', $Payload)) {
                     //Bleibt hier. gibt es nicht als Expose
