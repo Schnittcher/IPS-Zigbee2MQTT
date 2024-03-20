@@ -817,6 +817,9 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('auto_off', $Payload)) {
+                    $this->handleStateChange('auto_off', 'Z2M_AutoOff', 'Auto Off', $Payload);
+                }
                 if (array_key_exists('schedule_settings')) {
                     $this->SetValue('Z2M_ScheduleSettings', $Payload['schedule_settings']);
                 }
