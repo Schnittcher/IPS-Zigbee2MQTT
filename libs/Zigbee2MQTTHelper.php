@@ -11,6 +11,18 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'schedule_settings':
+                $Payload['schedule_settings'] = $Value;
+                break;
+            case 'schedule':
+                $Payload['schedule'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_externalTemperatureInput':
+                $Payload['external_temperature_input'] = $Value;
+                break;
+            case 'Z2M_Calibrate':
+                $Payload['calibrate'] = $Value;
+                break;
             case 'Z2M_Identify':
                 $Payload['identify'] = $Value;
                 break;
@@ -805,6 +817,33 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('voc_index', $Payload)) {
+                    $this->SetValue('Z2M_VOCIndex', $Payload['voc_index']);
+                }
+                if (array_key_exists('auto_off', $Payload)) {
+                    $this->handleStateChange('auto_off', 'Z2M_AutoOff', 'Auto Off', $Payload);
+                }
+                if (array_key_exists('schedule_settings')) {
+                    $this->SetValue('Z2M_ScheduleSettings', $Payload['schedule_settings']);
+                }
+                if (array_key_exists('schedule', $Payload)) {
+                    $this->handleStateChange('schedule', 'Z2M_Schedule', 'Schedule', $Payload);
+                }
+                if (array_key_exists('valve_alarm', $Payload)) {
+                    $this->handleStateChange('valve_alarm', 'Z2M_ValveAlarm', 'Valve Alarm', $Payload);
+                }
+                if (array_key_exists('setup', $Payload)) {
+                    $this->handleStateChange('setup', 'Z2M_Setup', 'Setup', $Payload);
+                }
+                if (array_key_exists('calibrated', $Payload)) {
+                    $this->handleStateChange('calibrated', 'Z2M_Calibration', 'Calibrated', $Payload);
+                }
+                if (array_key_exists('external_temperature_input', $Payload)) {
+                    $this->SetValue('Z2M_ExternalTemperatureInput', $Payload['external_temperature_input']);
+                }
+                if (array_key_exists('calibrate', $Payload)) {
+                    $this->SetValue('Z2M_Calibrate', $Payload['calibrate']);
+                }
                 if (array_key_exists('voltage_X', $Payload)) {
                     $this->SetValue('Z2M_VoltageX', $Payload['voltage_X']);
                 }
@@ -1264,7 +1303,6 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('temperature_min', $Payload)) {
                     $this->SetValue('Z2M_TemperatureMin', $Payload['temperature_min']);
                 }
-
                 if (array_key_exists('backlight_mode', $Payload)) {
                     if (in_array($Payload['backlight_mode'], ['ON', 'OFF'])) {
                         $this->handleStateChange('backlight_mode', 'Z2M_BacklightMode', 'backlight mode', $Payload);
@@ -1732,7 +1770,6 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('state', $Payload)) {
                     if (in_array($Payload['state'], ['ON', 'OFF'])) {
-                        // Verwende handleStateChange für ON/OFF Zustände
                         $this->handleStateChange('state', 'Z2M_State', 'State', $Payload, );
                     } elseif (in_array($Payload['state'], ['OPEN', 'CLOSE', 'STOP', 'move', 'presence', 'none'])) {
                         $this->SetValue('Z2M_State', $Payload['state']);
@@ -1744,34 +1781,12 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_LEDDisabledNight', $Payload['led_disabled_night']);
                 }
                 if (array_key_exists('state_rgb', $Payload)) {
-                    switch ($Payload['state_rgb']) {
-                            case 'ON':
-                                $this->EnableAction('Z2M_StateRGB');
-                                $this->SetValue('Z2M_StateRGB', true);
-                                break;
-                            case 'OFF':
-                                $this->EnableAction('Z2M_StateRGB');
-                                $this->SetValue('Z2M_StateRGB', false);
-                                break;
-                            default:
-                                $this->SendDebug('State RGB', 'Undefined State: ' . $Payload['state_rgb'], 0);
-                                break;
-                        }
+                    $this->handleStateChange('state_rgb', 'Z2M_StateRGB', 'State_rgb', $Payload, );
+                    $this->EnableAction('Z2M_StateRGB');
                 }
                 if (array_key_exists('state_cct', $Payload)) {
-                    switch ($Payload['state_cct']) {
-                            case 'ON':
-                                $this->EnableAction('Z2M_StateCCT');
-                                $this->SetValue('Z2M_StateCCT', true);
-                                break;
-                            case 'OFF':
-                                $this->EnableAction('Z2M_StateCCT');
-                                $this->SetValue('Z2M_StateCCT', false);
-                                break;
-                            default:
-                                $this->SendDebug('State CCT', 'Undefined State: ' . $Payload['state_CCT'], 0);
-                                break;
-                        }
+                    $this->handleStateChange('state_cct', 'Z2M_StateCCT', 'State_cct', $Payload, );
+                    $this->EnableAction('Z2M_StateCCT');
                 }
                 if (array_key_exists('state_white', $Payload)) {
                     $this->handleStateChange('state_white', 'Z2M_StateWhite', 'State White', $Payload);
@@ -1820,7 +1835,7 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('state_left', $Payload)) {
                     if (in_array($Payload['state_left'], ['ON', 'OFF'])) {
-                        $this->handleStateChange('state_left', 'Z2M_state_left', 'State left', $Payload, );
+                        $this->handleStateChange('state_left', 'Z2M_state_left', 'State left', $Payload);
                     } elseif (in_array($Payload['state_left'], ['OPEN', 'CLOSE', 'STOP'])) {
                         $this->SetValue('Z2M_state_left', $Payload['state_left']);
                     } else {
@@ -1829,7 +1844,7 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('state_right', $Payload)) {
                     if (in_array($Payload['state_right'], ['ON', 'OFF'])) {
-                        $this->handleStateChange('state_right', 'Z2M_state_right', 'State Right', $Payload, );
+                        $this->handleStateChange('state_right', 'Z2M_state_right', 'State Right', $Payload);
                     } elseif (in_array($Payload['state_right'], ['OPEN', 'CLOSE', 'STOP'])) {
                         $this->SetValue('Z2M_state_right', $Payload['state_right']);
                     } else {
@@ -2325,6 +2340,13 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M_Calibrate.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Calibrate', '', '', [
+                                    ['calibrate', $this->Translate('Calibrate'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M_temperature_alarm.15475477':
                         case 'Z2M_humidity_alarm.15475477':
                             if (!IPS_VariableProfileExists($ProfileName)) {
@@ -2391,8 +2413,8 @@ trait Zigbee2MQTTHelper
                                     ['none', $this->Translate('None'), '', 0x00FF00],
                                     ['ready_to_calibrate', $this->Translate('Ready To Calibrate'), '', 0x00FF00],
                                     ['calibration_in_progress', $this->Translate('Calibration in Progress'), '', 0x00FF00],
-                                    ['error', $this->Translate('Large'), 'Error', 0x00FF00],
-                                    ['success', $this->Translate('Large'), 'Success', 0x00FF00],
+                                    ['error', $this->Translate('Error'), '', 0x00FF00],
+                                    ['success', $this->Translate('Success'), '', 0x00FF00],
                                 ]);
                             }
                             break;
@@ -3520,6 +3542,14 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.sensor.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['external', $this->Translate('External'), '', 0xFF0000],
+                                    ['internal', $this->Translate('Internal'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.effect.988c295e':
                         case 'Z2M.effect.fe70ca86':
                         case 'Z2M.effect.efbfc77e':
@@ -3851,15 +3881,20 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
-                    case 'voltage_X':
-                    case 'current_X':
-                    case 'power_X':
-                    case 'voltage_Y':
-                    case 'current_Y':
-                    case 'power_Y':
-                    case 'voltage_Z':
+                    case 'voc_index':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ', 0, 0, 2);
+                        }
+                        break;
+                    case 'voltage_x':
+                    case 'current_x':
+                    case 'power_x':
+                    case 'voltage_y':
+                    case 'current_y':
+                    case 'power_y':
+                    case 'voltage_z':
                     case 'current_Z':
-                    case 'power_Z':
+                    case 'power_z':
                     case 'produced_energy':
                     case 'power_reactive':
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -4072,6 +4107,7 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'external_measured_room_sensor':
+                    case 'external_temperature_input':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Temperature', '', ' °', $expose['value_min'], $expose['value_max'], 1);
@@ -4330,6 +4366,11 @@ trait Zigbee2MQTTHelper
             switch ($expose['type']) {
                 case 'text':
                     switch ($expose['property']) {
+                        case 'schedule_settings':
+                            $this->RegisterVariableString('Z2M_ScheduleSettings', $this->Translate('Schedule Settings'), '');
+                            $this->EnableAction('Z2M_ScheduleSettings');
+                            break;
+
                         case 'action_zone':
                             $this->RegisterVariableString('Z2M_ActionZone', $this->Translate('Action Zone'), '');
                             break;
@@ -4836,6 +4877,16 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'schedule':
+                            $this->RegisterVariableBoolean('Z2M_Schedule', $this->Translate('Schedule'), '~Switch');
+                            $this->EnableAction('Z2M_Schedule');
+                            break;
+                        case 'valve_alarm':
+                            $this->RegisterVariableBoolean('Z2M_ValveAlarm', $this->Translate('Valve Alarm'), '~Alert');
+                            break;
+                        case 'setup':
+                            $this->RegisterVariableBoolean('Z2M_Setup', $this->Translate('Setup'), '~Switch');
+                            break;
                         case 'backlight_mode':
                             $this->RegisterVariableBoolean('Z2M_BacklightMode', $this->Translate('Backlight Mode'), '~Switch');
                             $this->EnableAction('Z2M_BacklightMode');
@@ -5076,6 +5127,9 @@ trait Zigbee2MQTTHelper
                             $this->RegisterVariableBoolean('Z2M_Calibration', $this->Translate('Calibration'), '~Switch');
                             $this->EnableAction('Z2M_Calibration');
                             break;
+                        case 'calibrated':
+                            $this->RegisterVariableBoolean('Z2M_Calibrated', $this->Translate('Calibrated'), '~Switch');
+                            break;
                         case 'calibration_left':
                             $this->RegisterVariableBoolean('Z2M_CalibrationLeft', $this->Translate('Calibration Left'), '~Switch');
                             $this->EnableAction('Z2M_CalibrationLeft');
@@ -5137,6 +5191,13 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'calibrate':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_Calibrate', $this->Translate('Calibrate'), $ProfileName);
+                                $this->EnableAction('Z2M_Calibrate');
+                            }
+                            break;
                         case 'humidity_alarm':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -5621,55 +5682,67 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
-                        case 'voltage_X':
+                        case 'voc_index':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_VocIndex', $this->Translate('VOC Index'), $ProfileName);
+                            }
+                            break;
+                        case 'external_temperature_input':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableFloat('Z2M_ExternalTemperatureInput', $this->Translate('External Temperature Input'), $ProfileName);
+                            }
+                            break;
+                        case 'voltage_x':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_VoltageX', $this->Translate('Voltage X'), $ProfileName);
                             }
                             break;
-                        case 'voltage_Y':
+                        case 'voltage_y':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_VoltageY', $this->Translate('Voltage Y'), $ProfileName);
                             }
                             break;
-                        case 'voltage_Z':
+                        case 'voltage_z':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_VoltageZ', $this->Translate('Voltage Z'), $ProfileName);
                             }
                             break;
-                        case 'current_X':
+                        case 'current_x':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_CurrentX', $this->Translate('Current X'), $ProfileName);
                             }
                             break;
-                        case 'current_Y':
+                        case 'current_y':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_CurrentY', $this->Translate('Current Y'), $ProfileName);
                             }
                             break;
-                        case 'current_Z':
+                        case 'current_z':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_CurrentZ', $this->Translate('Current Z'), $ProfileName);
                             }
                             break;
-                        case 'power_X':
+                        case 'power_x':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_PowerX', $this->Translate('Power X'), $ProfileName);
                             }
                             break;
-                        case 'power_Y':
+                        case 'power_y':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_PowerY', $this->Translate('Power Y'), $ProfileName);
                             }
                             break;
-                        case 'power_Z':
+                        case 'power_z':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_PowerZ', $this->Translate('Power Z'), $ProfileName);
