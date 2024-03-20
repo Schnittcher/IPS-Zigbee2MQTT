@@ -3877,15 +3877,15 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
-                    case 'voltage_X':
-                    case 'current_X':
-                    case 'power_X':
-                    case 'voltage_Y':
-                    case 'current_Y':
-                    case 'power_Y':
-                    case 'voltage_Z':
+                    case 'voltage_x':
+                    case 'current_x':
+                    case 'power_x':
+                    case 'voltage_y':
+                    case 'current_y':
+                    case 'power_y':
+                    case 'voltage_z':
                     case 'current_Z':
-                    case 'power_Z':
+                    case 'power_z':
                     case 'produced_energy':
                     case 'power_reactive':
                         if (!IPS_VariableProfileExists($ProfileName)) {
