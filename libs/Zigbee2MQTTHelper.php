@@ -823,7 +823,7 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('auto_off', $Payload)) {
                     $this->handleStateChange('auto_off', 'Z2M_AutoOff', 'Auto Off', $Payload);
                 }
-                if (array_key_exists('schedule_settings')) {
+                if (array_key_exists('schedule_settings', $Payload)) {
                     $this->SetValue('Z2M_ScheduleSettings', $Payload['schedule_settings']);
                 }
                 if (array_key_exists('schedule', $Payload)) {
