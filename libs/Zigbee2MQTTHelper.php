@@ -5694,7 +5694,7 @@ trait Zigbee2MQTTHelper
                         case 'voc_index':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableFloat('Z2M_VocIndex', $this->Translate('VOC Index'), $ProfileName);
+                                $this->RegisterVariableFloat('Z2M_VOCIndex', $this->Translate('VOC Index'), $ProfileName);
                             }
                             break;
                         case 'external_temperature_input':
