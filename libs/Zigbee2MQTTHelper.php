@@ -3887,14 +3887,23 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'voltage_x':
+                    case 'voltage_X':
+                    case 'current_X':
                     case 'current_x':
                     case 'power_x':
+                    case 'power_X':
                     case 'voltage_y':
+                    case 'voltage_Y':
                     case 'current_y':
+                    case 'current_Y':
                     case 'power_y':
+                    case 'power_Y':
                     case 'voltage_z':
+                    case 'voltage_Z':
                     case 'current_Z':
+                    case 'current_z':
                     case 'power_z':
+                    case 'power_Z':
                     case 'produced_energy':
                     case 'power_reactive':
                         if (!IPS_VariableProfileExists($ProfileName)) {
@@ -5695,54 +5704,63 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'voltage_x':
+                        case 'voltage_X':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_VoltageX', $this->Translate('Voltage X'), $ProfileName);
                             }
                             break;
                         case 'voltage_y':
+                        case 'voltage_Y':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_VoltageY', $this->Translate('Voltage Y'), $ProfileName);
                             }
                             break;
                         case 'voltage_z':
+                        case 'voltage_Z':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_VoltageZ', $this->Translate('Voltage Z'), $ProfileName);
                             }
                             break;
                         case 'current_x':
+                        case 'current_X':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_CurrentX', $this->Translate('Current X'), $ProfileName);
                             }
                             break;
                         case 'current_y':
+                        case 'current_Y':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_CurrentY', $this->Translate('Current Y'), $ProfileName);
                             }
                             break;
                         case 'current_z':
+                        case 'current_Z':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_CurrentZ', $this->Translate('Current Z'), $ProfileName);
                             }
                             break;
                         case 'power_x':
+                        case 'power_X':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_PowerX', $this->Translate('Power X'), $ProfileName);
                             }
                             break;
                         case 'power_y':
+                        case 'power_Y':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_PowerY', $this->Translate('Power Y'), $ProfileName);
                             }
                             break;
                         case 'power_z':
+                        case 'power_Z':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_PowerZ', $this->Translate('Power Z'), $ProfileName);
