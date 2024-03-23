@@ -11,6 +11,12 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_SmokeAlarmState':
+                $Payload['smoke_alarm_state'] = strval($this->OnOff($Value));
+                break;
+            case 'Z2M_IntruderAlarmState':
+                $Payload['intruder_alarm_state'] = strval($this->OnOff($Value));
+                break;
             case 'Z2M_ActionLevel':
                 $Payload['action_level'] = $Value;
                 break;
@@ -819,6 +825,12 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('smoke_alarm_state')) {
+                    $this->handleStateChange('smoke_alarm_state', 'Z2M_SmokeAlarmState', 'Smoke Alarm State', $Payload);
+                }
+                if (array_key_exists('intruder_alarm_state')) {
+                    $this->handleStateChange('intruder_alarm_state', 'Z2M_IntruderAlarmState', 'Intruder Alarm State', $Payload);
                 }
                 if (array_key_exists('voc_index', $Payload)) {
                     $this->SetValue('Z2M_VOCIndex', $Payload['voc_index']);
@@ -4901,6 +4913,14 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'smoke_alarm_state':
+                            $this->RegisterVariableBoolean('Z2M_SmokeAlarmState', $this->Translate('Smoke Alarm State'), '~Alert');
+                            $this->EnableAction('Z2M_SmokeAlarmState');
+                            break;
+                        case 'intruder_alarm_state':
+                            $this->RegisterVariableBoolean('Z2M_IntruderAlarmState', $this->Translate('Intruder Alarm State'), '~Alert');
+                            $this->EnableAction('Z2M_IntruderAlarmState');
+                            break;
                         case 'schedule':
                             $this->RegisterVariableBoolean('Z2M_Schedule', $this->Translate('Schedule'), '~Switch');
                             $this->EnableAction('Z2M_Schedule');
