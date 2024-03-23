@@ -11,10 +11,13 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
-            case 'schedule_settings':
+            case 'Z2M_ActionLevel':
+                $Payload['action_level'] = $Value;
+                break;
+            case 'Z2M_ScheduleSettings':
                 $Payload['schedule_settings'] = $Value;
                 break;
-            case 'schedule':
+            case 'Z2M_schedule':
                 $Payload['schedule'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_externalTemperatureInput':
@@ -397,7 +400,7 @@ trait Zigbee2MQTTHelper
                 $Payload['led_enable'] = $Value;
                 break;
             case 'Z2M_ActionRate':
-                $Payload['action_rate'] = strval($Value);
+                $Payload['action_rate'] = $Value;
                 break;
             case 'Z2M_ActionStepSize':
                 $Payload['action_step_size'] = strval($Value);
@@ -1001,7 +1004,7 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_ValveAdaptStatus', $Payload['valve_adapt_status']);
                 }
                 if (array_key_exists('indicator', $Payload)) {
-                    $this->SetValue('Z2M_Indicator', $Payload['indicator']);
+                    $this->handleStateChange('indicator', 'Z2M_Indicator', 'Indicator', $Payload);
                 }
                 if (array_key_exists('small_detection_sensitivity', $Payload)) {
                     $this->SetValue('Z2M_SmallDetectionSensitivity', $Payload['small_detection_sensitivity']);
@@ -1328,12 +1331,21 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_Attendance', $Payload['duration_of_attendance']);
                 }
                 if (array_key_exists('action_rate', $Payload)) {
+                    $this->RegisterVariableInteger('Z2M_ActionRate', $this->Translate('Action Rate'), $ProfileName);
+                    $this->EnableAction('Z2M_ActionRate');
                     $this->SetValue('Z2M_ActionRate', $Payload['action_rate']);
+                }
+                if (array_key_exists('action_level', $Payload)) {
+                    $this->RegisterVariableInteger('Z2M_ActionLevel', $this->Translate('Action Level'), $ProfileName);
+                    $this->EnableAction('Z2M_ActionLevel');
+                    $this->SetValue('Z2M_ActionLevel', $Payload['action_level']);
                 }
                 if (array_key_exists('action_step_size', $Payload)) {
                     $this->SetValue('Z2M_ActionStepSize', $Payload['action_step_size']);
                 }
                 if (array_key_exists('action_transition_time', $Payload)) {
+                    $this->RegisterVariableInteger('Z2M_ActionTransTime', $this->Translate('Action Transition Time'), $ProfileName);
+                    $this->EnableAction('Z2M_ActionTransTime');
                     $this->SetValue('Z2M_ActionTransTime', $Payload['action_transition_time']);
                 }
                 if (array_key_exists('action_group', $Payload)) {
@@ -4068,6 +4080,9 @@ trait Zigbee2MQTTHelper
                         break;
                     case 'action_transaction':
                     case 'power_outage_count':
+                    case 'action_rate':
+                    case 'action_level':
+                    case 'action_transition_time':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ', 0, 0, 0);
                         }
