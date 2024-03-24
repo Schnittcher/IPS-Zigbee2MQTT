@@ -2373,7 +2373,7 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M.occupancy_sensitivity.':
+                        case 'Z2M.occupancy_sensitivity.b8421401':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Occupancy Sensitivity', '', '', [
                                     ['low', $this->Translate('Low'), '', 0x00FF00],
@@ -2382,7 +2382,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.illumination.':
+                        case 'Z2M.illumination.f4cbb805':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Illumination', '', '', [
                                     ['dim', $this->Translate('Dim'), '', 0x00FF00],
