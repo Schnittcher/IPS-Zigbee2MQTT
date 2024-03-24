@@ -11,6 +11,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_OccupancySensitivity':
+                $Payload['occupancy_sensitivity'] = $Value;
+                break;
             case 'Z2M_SmokeAlarmState':
                 $Payload['smoke_alarm_state'] = strval($this->OnOff($Value));
                 break;
@@ -825,6 +828,12 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('illumination', $Payload)) {
+                    $this->SetValue('Z2M_Illumination', $Payload['illumination']);
+                }
+                if (array_key_exists('occupancy_sensitivity', $Payload)) {
+                    $this->SetValue('Z2M_OccupancySensitivity', $Payload['occupancy_sensitivity']);
                 }
                 if (array_key_exists('smoke_alarm_state')) {
                     $this->handleStateChange('smoke_alarm_state', 'Z2M_SmokeAlarmState', 'Smoke Alarm State', $Payload);
@@ -2364,15 +2373,32 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M_Calibrate.':
+                        case 'Z2M.occupancy_sensitivity.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Occupancy Sensitivity', '', '', [
+                                    ['low', $this->Translate('Low'), '', 0x00FF00],
+                                    ['medium', $this->Translate('Medium'), '', 0x00FF00],
+                                    ['high', $this->Translate('High'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.illumination.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Illumination', '', '', [
+                                    ['dim', $this->Translate('Dim'), '', 0x00FF00],
+                                    ['bright', $this->Translate('Bright'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.Calibrate.':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Calibrate', '', '', [
                                     ['calibrate', $this->Translate('Calibrate'), '', 0x00FF00],
                                 ]);
                             }
                             break;
-                        case 'Z2M_temperature_alarm.15475477':
-                        case 'Z2M_humidity_alarm.15475477':
+                        case 'Z2M.temperature_alarm.15475477':
+                        case 'Z2M.humidity_alarm.15475477':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Alarm', '', '', [
                                     ['lower_alarm', $this->Translate('Lower Alarm'), '', 0x00FF00],
@@ -5235,6 +5261,19 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'occupancy_sensitivity':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_OccupancySensitivity', $this->Translate('Occupancy Sensitivity'), $ProfileName);
+                                $this->EnableAction('Z2M_OccupancySensitivity');
+                            }
+                            break;
+                        case 'illumination':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_Illumination', $this->Translate('Illumination'), $ProfileName);
+                            }
+                            break;
                         case 'calibrate':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
