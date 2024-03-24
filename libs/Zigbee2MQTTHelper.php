@@ -835,10 +835,10 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('occupancy_sensitivity', $Payload)) {
                     $this->SetValue('Z2M_OccupancySensitivity', $Payload['occupancy_sensitivity']);
                 }
-                if (array_key_exists('smoke_alarm_state')) {
+                if (array_key_exists('smoke_alarm_state', $Payload)) {
                     $this->handleStateChange('smoke_alarm_state', 'Z2M_SmokeAlarmState', 'Smoke Alarm State', $Payload);
                 }
-                if (array_key_exists('intruder_alarm_state')) {
+                if (array_key_exists('intruder_alarm_state', $Payload)) {
                     $this->handleStateChange('intruder_alarm_state', 'Z2M_IntruderAlarmState', 'Intruder Alarm State', $Payload);
                 }
                 if (array_key_exists('voc_index', $Payload)) {
