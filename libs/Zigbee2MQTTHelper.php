@@ -4016,6 +4016,7 @@ trait Zigbee2MQTTHelper
                     case 'power_Z':
                     case 'produced_energy':
                     case 'power_reactive':
+                    case 'power_factor':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Electricity', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
