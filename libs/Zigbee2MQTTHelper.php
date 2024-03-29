@@ -3987,7 +3987,7 @@ trait Zigbee2MQTTHelper
                 switch ($expose['property']) {
                     case 'voc_index':
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ', 0, 0, 2);
+                            $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ', 0, 0, 0, 2);
                         }
                         break;
                     case 'voltage_a':
