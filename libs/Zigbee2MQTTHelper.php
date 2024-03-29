@@ -829,6 +829,9 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('execute_if_off')) {
+                    $this->handleStateChange('execute_if_off', 'Z2M_ExecuteIfOff', 'Execute If Off', $Payload);
+                }
                 if (array_key_exists('illumination', $Payload)) {
                     $this->SetValue('Z2M_Illumination', $Payload['illumination']);
                 }
@@ -6856,6 +6859,10 @@ trait Zigbee2MQTTHelper
                             switch ($feature['type']) {
                                 case 'binary':
                                     switch ($feature['property']) {
+                                        case 'execute_if_off':
+                                            $this->RegisterVariableBoolean('Z2M_ExecuteIfOff', $this->Translate('Execute If Off'), '~Switch');
+                                            $this->EnableAction('Z2M_ExecuteIfOff');
+                                            break;
                                         case 'strobe':
                                             $this->RegisterVariableBoolean('Z2M_Strobe', $this->Translate('Strobe'), '~Switch');
                                             $this->EnableAction('Z2M_Strobe');
