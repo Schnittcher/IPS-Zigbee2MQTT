@@ -829,7 +829,7 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
-                if (array_key_exists('execute_if_off')) {
+                if (array_key_exists('execute_if_off', $Payload)) {
                     $this->handleStateChange('execute_if_off', 'Z2M_ExecuteIfOff', 'Execute If Off', $Payload);
                 }
                 if (array_key_exists('illumination', $Payload)) {
