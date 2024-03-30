@@ -2429,7 +2429,7 @@ trait Zigbee2MQTTHelper
                     switch ($ProfileName) {
                         case 'Z2M.occupancy_sensitivity.b8421401':
                             if (!IPS_VariableProfileExists($ProfileName)) {
-                                $this->RegisterProfileStringEx($ProfileName, 'Occupancy Sensitivity', '', '', [
+                                $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
                                     ['low', $this->Translate('Low'), '', 0x00FF00],
                                     ['medium', $this->Translate('Medium'), '', 0x00FF00],
                                     ['high', $this->Translate('High'), '', 0x00FF00],
