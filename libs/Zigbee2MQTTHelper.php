@@ -6,6 +6,7 @@ namespace Zigbee2MQTT;
 
 trait Zigbee2MQTTHelper
 {
+    // Gehört zu RequestAction
     private $stateTypeMapping = [
         'Z2M_StateWindow'        => ['type' => 'openclose', 'dataType' =>'string'],
         'Z2M_AutoLock'           => ['type' => 'automode', 'dataType' => 'string'],
@@ -98,6 +99,7 @@ trait Zigbee2MQTTHelper
     }
     private function convertIdentToPayloadKey($Ident)
     {
+        // Gehört zu RequestAction
         // Entferne den Prefix 'Z2M_' vom Identifier, falls vorhanden
         $identWithoutPrefix = str_replace('Z2M_', '', $Ident);
 
