@@ -97,17 +97,6 @@ trait Zigbee2MQTTHelper
         // Übergebe das JSON-kodierte Payload an die Z2MSet Methode
         $this->Z2MSet($PayloadJSON);
     }
-    private function convertIdentToPayloadKey($Ident)
-    {
-        // Gehört zu RequestAction
-        // Entferne den Prefix 'Z2M_' vom Identifier, falls vorhanden
-        $identWithoutPrefix = str_replace('Z2M_', '', $Ident);
-
-        // Konvertiere CamelCase zu snake_case
-        $payloadKey = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $identWithoutPrefix));
-
-        return $payloadKey;
-    }
 
     public function getDeviceInfo()
     {
@@ -1602,6 +1591,17 @@ trait Zigbee2MQTTHelper
         } else {
             $this->SendDebug('Error :: No Expose for Value', 'Ident: ' . $Ident, 0);
         }
+    }
+    private function convertIdentToPayloadKey($Ident)
+    {
+        // Gehört zu RequestAction
+        // Entferne den Prefix 'Z2M_' vom Identifier, falls vorhanden
+        $identWithoutPrefix = str_replace('Z2M_', '', $Ident);
+
+        // Konvertiere CamelCase zu snake_case
+        $payloadKey = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $identWithoutPrefix));
+
+        return $payloadKey;
     }
     private function convertStateBasedOnMapping($key, $value, $variableType)
     {
