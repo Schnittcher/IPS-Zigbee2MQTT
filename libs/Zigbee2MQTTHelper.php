@@ -7,775 +7,166 @@ namespace Zigbee2MQTT;
 trait Zigbee2MQTTHelper
 {
     public function RequestAction($Ident, $Value)
-    {
-        $variableID = $this->GetIDForIdent($Ident);
-        $variableType = IPS_GetVariable($variableID)['VariableType'];
-        switch ($Ident) {
-            case 'Z2M_OccupancySensitivity':
-                $Payload['occupancy_sensitivity'] = $Value;
-                break;
-            case 'Z2M_SmokeAlarmState':
-                $Payload['smoke_alarm_state'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_IntruderAlarmState':
-                $Payload['intruder_alarm_state'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_ActionLevel':
-                $Payload['action_level'] = $Value;
-                break;
-            case 'Z2M_ScheduleSettings':
-                $Payload['schedule_settings'] = $Value;
-                break;
-            case 'Z2M_schedule':
-                $Payload['schedule'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_externalTemperatureInput':
-                $Payload['external_temperature_input'] = $Value;
-                break;
-            case 'Z2M_Calibrate':
-                $Payload['calibrate'] = $Value;
-                break;
-            case 'Z2M_Identify':
-                $Payload['identify'] = $Value;
-                break;
-            case 'Z2M_TemperaturePeriodicReport':
-                $Payload['temperature_periodic_report'] = $Value;
-                break;
-            case 'Z2M_HumidityPeriodicReport':
-                $Payload['humidity_periodic_report'] = $Value;
-                break;
-            case 'Z2M_TemperatureSensitivity':
-                $Payload['temperature_sensitivity'] = $Value;
-                break;
-            case 'Z2M_HumiditySensitivity':
-                $Payload['humidity_sensitivity'] = $Value;
-                break;
-            case 'Z2M_AlarmRingtone':
-                $Payload['alarm_ringtone'] = $Value;
-                break;
-            case 'Z2M_OpeningMode':
-                $Payload['opening_mode'] = $Value;
-                break;
-            case 'Z2M_SetUpperLimit':
-                $Payload['set_upper_limit'] = $Value;
-                break;
-            case 'Z2M_SetBottomLimit':
-                $Payload['set_bottom_limit'] = $Value;
-                break;
-            case 'Z2M_TemperatureAlarm':
-                $Payload['temperature_alarm'] = $Value;
-                break;
-            case 'Z2M_HumidityAlarm':
-                $Payload['humidity_alarm'] = $Value;
-                break;
-            case'Z2M_MinHumidityAlarm':
-                $Payload['min_humidity_alarm'] = $Value;
-                break;
-            case 'Z2M_MaxHumidityAlarm':
-                $Payload['max_humidity_alarm'] = $Value;
-                break;
-            case 'Z2M_MaxTemperatureAlarm':
-                $Payload['max_temperature_alarm'] = $Value;
-                break;
-            case 'Z2M_MinTemperatureAlarm':
-                $Payload['min_temperature_alarm'] = $Value;
-                break;
-            case 'Z2M_Online':
-                $Payload['online'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_WorkingDay':
-                $Payload['working_day'] = $Value;
-                break;
-            case 'Z2M_WeekDay':
-                $Payload['wek_day'] = $Value;
-                break;
-            case 'Z2M_CycleIrrigationNumTimes':
-                $Payload['cycle_irrigation_num_times'] = $Value;
-                break;
-            case 'Z2M_IrrigationTarget':
-                $Payload['irrigation_target'] = $Value;
-                break;
-            case 'Z2MCycleIrrigationInterval':
-                $Payload['cycle_irrigation_interval'] = $Value;
-                break;
-            case 'Z2M_CountdownL1':
-                $Payload['countdown_l1'] = $Value;
-                break;
-            case 'Z2M_CountdownL2':
-                $Payload['countdown_l2'] = $Value;
-                break;
-            case 'Z2M_Presence_Timeout':
-                $Payload['presence_timeout'] = $Value;
-                break;
-            case 'Z2M_RadarRange':
-                $Payload['radar_range'] = $Value;
-                break;
-            case 'Z2M_MoveSensitivity':
-                $Payload['move_sensitivity'] = $Value;
-                break;
-            case 'Z2M_ValveAdaptProcess':
-                $Payload['valve_adapt_process'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_Indicator':
-                $Payload['indicator'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_SmallDetectionSensitivity':
-                $Payload['small_detection_sensitivity'] = $Value;
-                break;
-            case 'Z2M_SmallDetectionDistance':
-                $Payload['small_detection_distance'] = $Value;
-                break;
-            case 'Z2M_MediumMotionDetectionDistance':
-                $Payload['medium_motion_detection_distance'] = $Value;
-                break;
-            case 'Z2M_MediumMotionDetectionSensitivity':
-                $Payload['medium_motion_detection_sensitivity'] = $Value;
-                break;
-            case 'Z2M_LargeMotionDetectionDistance':
-                $Payload['large_motion_detection_distance'] = $Value;
-                break;
-            case 'Z2M_LargeMotionDetectionSensitivity':
-                $Payload['large_motion_detection_sensitivity'] = $Value;
-                break;
-            case 'Z2M_DetectionDistance':
-                $Payload['detection_distance'] = strval($Value);
-                break;
-            case 'Z2M_TransmitPower':
-                $Payload['transmit_power'] = $Value;
-                break;
-            case 'Z2M_PresenceSensitivity':
-                $Payload['presence_sensitivity'] = $Value;
-                break;
-            case 'Z2M_DetectionDistanceMin':
-                $Payload['detection_distance_min'] = $Value;
-                break;
-            case 'Z2M_DetectionDistanceMax':
-                $Payload['detection_distance_max'] = $Value;
-                break;
-            case 'Z2M_DeviceMode':
-                $Payload['device_mode'] = $Value;
-                break;
-            case 'Z2M_MonitoringMode':
-                $Payload['monitoring_mode'] = $Value;
-                break;
-            case 'Z2M_ApproachDistance':
-                $Payload['approach_distance'] = $Value;
-                break;
-            case 'Z2M_ResetNopresenceStatus':
-                $Payload['reset_nopresence_status'] = $Value;
-                break;
-            case 'Z2M_ScaleProtection':
-                $Payload['scale_protection'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_LedIndication':
-                $Payload['led_indication'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_Silence':
-                $Payload['silence'] = $Value;
-                break;
-            case 'Z2M_LearnIRCode':
-                $Payload['learn_ir_code'] = strval($this->OnOff($Value));
-                break;
-            case'Z2M_IRCodeToSend':
-                $Payload['ir_code_to_send'] = $Value;
-                break;
-            case'Z2M_ProgrammingMode':
-                $Payload['programming_mode'] = $Value;
-                break;
-            case 'Z2M_FanMode':
-                $Payload['fan_mode'] = $Value;
-                break;
-            case 'Z2M_AlarmMode':
-                $Payload['alarm_mode'] = $Value;
-                break;
-            case 'Z2M_AlarmMelody':
-                $Payload['alarm_melody'] = $Value;
-                break;
-            case 'Z2M_AlarmTime':
-                $Payload['alarm_time'] = $Value;
-                break;
-            case 'Z2M_TamperAlarmSwitch':
-                $Payload['tamper_alarm_switch'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_AlarmSwitch':
-                $Payload['alarm_switch'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_AlarmState':
-                $Payload['alarm_state'] = $Value;
-                break;
-            case 'Z2M_PiHeatingDemand':
-                $Payload['pi_heating_demand'] = $Value;
-                break;
-            case 'Z2M_DoNotDisturb':
-                $Payload['do_not_disturb'] = $Value;
-                break;
-            case 'Z2M_MotorDirection':
-                $Payload['motor_direction'] = strval($Value);
-                break;
-            case 'Z2M_ColorPowerOnBehavior':
-                $Payload['color_power_on_behavior'] = strval($Value);
-                break;
-            case 'Z2M_DisplayedTemperature':
-                $Payload['displayed_temperature'] = strval($Value);
-                break;
-            case 'Z2M_RemoteTemperature':
-                $Payload['remote_temperature'] = strval($Value);
-                break;
-            case 'Z2M_TemperatureUnit':
-                $Payload['temperature_unit'] = strval($Value);
-                break;
-            case 'Z2M_ButtonLock':
-                $Payload['button_lock'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_WindowOpen':
-                $Payload['window_open'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_MuteBuzzer':
-                $Payload['mute_buzzer'] = strval($Value);
-                break;
-            case 'Z2M_AdaptationRunControl':
-                $Payload['adaptation_run_control'] = strval($Value);
-                break;
-            case 'Z2M_DayOfWeek':
-                $Payload['day_of_week'] = strval($Value);
-                break;
-            case 'Z2M_RegulationSetpointOffset':
-                $Payload['regulation_setpoint_offset'] = strval($Value);
-                break;
-            case 'Z2M_LoadRoomMean':
-                $Payload['load_room_mean'] = strval($Value);
-                break;
-            case 'Z2M_AlgorithmScaleFactor':
-                $Payload['algorithm_scale_factor'] = strval($Value);
-                break;
-            case 'Z2M_AdaptationRunSettings':
-                $Payload['adaptation_run_settings'] = strval($Value);
-                break;
-            case 'Z2M_TriggerTime':
-                $Payload['trigger_time'] = strval($Value);
-                break;
-            case 'Z2M_LoadBalancingEnable':
-                $Payload['load_balancing_enable'] = strval($Value);
-                break;
-            case 'Z2M_WindowOpenExternal':
-                $Payload['window_open_external'] = strval($Value);
-                break;
-            case 'Z2M_WindowOpenFeature':
-                $Payload['window_open_feature'] = strval($Value);
-                break;
-            case 'Z2M_RadiatorCovered':
-                $Payload['radiator_covered'] = strval($Value);
-                break;
-            case 'Z2M_ExternalMeasuredRoomSensor':
-                $Payload['external_measured_room_sensor'] = strval($Value);
-                break;
-            case 'Z2M_OccupiedHeatingSetpointScheduled':
-                $Payload['occupied_heating_setpoint_scheduled'] = number_format($Value, 2, '.', ' ');
-                break;
-            case 'Z2M_HeatAvailable':
-                $Payload['heat_available'] = strval($Value);
-                break;
-            case 'Z2M_ViewingDirection':
-                $Payload['viewing_direction'] = strval($Value);
-                break;
-            case 'Z2M_ThermostatVerticalOrientation':
-                $Payload['thermostat_vertical_orientation'] = strval($Value);
-                break;
-            case 'Z2M_MountedModeControl':
-                $Payload['mounted_mode_control'] = strval($Value);
-                break;
-            case 'Z2M_ProgrammingOperationMode':
-                $Payload['programming_operation_mode'] = strval($Value);
-                break;
-            case 'Z2M_Keypadlockout':
-                $Payload['keypad_lockout'] = strval($Value);
-                break;
-            case 'Z2M_LinkageAlarm':
-                $Payload['linkage_alarm'] = $Value;
-                break;
-            case 'Z2M_HeartbeatIndicator':
-                $Payload['heartbeat_indicator'] = $Value;
-                break;
-            case 'Z2M_Buzzer':
-                $Payload['buzzer'] = strval($Value);
-                break;
-            case 'Z2M_DisplayBrightness':
-                $Payload['display_brightness'] = strval($Value);
-                break;
-            case 'Z2M_DisplayOntime':
-                $Payload['display_ontime'] = strval($Value);
-                break;
-            case 'Z2M_DisplayOrientation':
-                $Payload['display_orientation'] = strval($Value);
-                break;
-            case 'Z2M_Boost':
-                $Payload['boost'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_StateRGB':
-                $Payload['state_rgb'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_StateCCT':
-                $Payload['state_cct'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_ComfortTemperature':
-                $Payload['comfort_temperature'] = number_format($Value, 2, '.', ' ');
-                break;
-            case 'Z2M_ColorTempStartup':
-                $Payload['color_temp_startup'] = strval($Value);
-                break;
-            case 'Z2M_GradientScene':
-                $Payload['gradient_scene'] = strval($Value);
-                break;
-            case 'Z2M_Vibration':
-                $Payload['vibration'] = strval($Value);
-                break;
-            case 'Z2M_AutoLock':
-                $Payload['auto_lock'] = strval($this->AutoManual($Value));
-                break;
-            case 'Z2M_BoostHeatingCountdownTimeSet':
-                $Payload['boost_heating_countdown_time_set'] = strval($Value);
-                break;
-            case 'Z2M_EcoTemperature':
-                $Payload['eco_temperature'] = number_format($Value, 2, '.', ' ');
-                break;
-            case 'Z2M_ValveState':
-                $Payload['valve_state'] = strval($this->ValveState($Value));
-                break;
-            case 'Z2M_ValvePosition':
-                $Payload['valve_position'] = strval($Value);
-                break;
-            case 'Z2M_EcoMode':
-                $Payload['eco_mode'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_FanState':
-                $Payload['fan_state'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_MaxTemperature':
-                $Payload['max_temperature'] = number_format($Value, 2, '.', ' ');
-                break;
-            case 'Z2M_MinTemperature':
-                $Payload['min_temperature'] = number_format($Value, 2, '.', ' ');
-                break;
-            case 'Z2M_PowerOutageCount':
-                $Payload['power_outage_count'] = strval($Value);
-                break;
-            case 'Z2M_SwitchType':
-                $Payload['switch_type'] = strval($Value);
-                break;
-            case 'Z2M_IndicatorMode':
-                $Payload['indicator_mode'] = strval($Value);
-                break;
-            case 'Z2M_TemperatureAlarm':
-                $Payload['temperature_alarm'] = strval($Value);
-                break;
-            case 'Z2M_HumidityAlarm':
-                $Payload['humidity_alarm'] = strval($Value);
-                break;
-            case 'Z2M_Alarm':
-                $Payload['alarm'] = strval($Value);
-                break;
-            case 'Z2M_Melody':
-                $Payload['melody'] = strval($Value);
-                break;
-            case 'Z2M_PowerType':
-                $Payload['power_type'] = strval($Value);
-                break;
-            case 'Z2M_Volume':
-                $Payload['volume'] = strval($Value);
-                break;
-            case 'Z2M_HumidityMax':
-                $Payload['humidity_max'] = strval($Value);
-                break;
-            case 'Z2M_HumidityMin':
-                $Payload['humidity_min'] = strval($Value);
-                break;
-            case 'Z2M_TemperatureMax':
-                $Payload['temperature_max'] = number_format($Value, 2, '.', ' ');
-                break;
-            case 'Z2M_TemperatureMin':
-                $Payload['temperature_min'] = number_format($Value, 2, '.', ' ');
-                break;
-                case 'Z2M_BacklightMode':
-                    if ($variableType == 3) {
-                        $Payload['backlight_mode'] = ($Value);
-                        break;
-                    }
-                    $Payload['backlight_mode'] = strval($this->OnOff($Value));
-                    break;
-            case 'Z2M_LedState':
-                $Payload['led_state'] = strval($Value);
-                break;
-            case 'Z2M_LEDEnable':
-                $Payload['led_enable'] = $Value;
-                break;
-            case 'Z2M_ActionRate':
-                $Payload['action_rate'] = $Value;
-                break;
-            case 'Z2M_ActionStepSize':
-                $Payload['action_step_size'] = strval($Value);
-                break;
-            case 'Z2M_ActionTransTime':
-                $Payload['action_transition_time'] = strval($Value);
-                break;
-            case 'Z2M_ActionGroup':
-                $Payload['action_group'] = strval($Value);
-                break;
-            case 'Z2M_ActionColorTemp':
-                $Payload['action_color_temperature'] = strval($Value);
-                break;
-            case 'Z2M_Brightness':
-                $Payload['brightness'] = strval($Value);
-                break;
-            case 'Z2M_BrightnessL1':
-                $Payload['brightness_l1'] = ($Value);
-                break;
-            case 'Z2M_BrightnessL2':
-                $Payload['brightness_l2'] = ($Value);
-                break;
-            case 'Z2M_MaxBrightnessL1':
-                $Payload['max_brightness_l1'] = ($Value);
-                break;
-            case 'Z2M_MinBrightnessL1':
-                $Payload['min_brightness_l1'] = ($Value);
-                break;
-            case 'Z2M_MaxBrightnessL2':
-                $Payload['max_brightness_l2'] = ($Value);
-                break;
-            case 'Z2M_MinBrightnessL2':
-                $Payload['min_brightness_l2'] = ($Value);
-                break;
-            case 'Z2M_BrightnessRGB':
-                $Payload['brightness_rgb'] = strval($Value);
-                break;
-            case 'Z2M_BrightnessCCT':
-                $Payload['brightness_cct'] = strval($Value);
-                break;
-            case 'Z2M_BrightnessWhite':
-                $Payload['brightness_white'] = strval($Value);
-                break;
-            case 'Z2M_ColorTemp':
-                $Payload['color_temp'] = strval($Value);
-                break;
-            case 'Z2M_ColorTempKelvin':
-                $Payload['color_temp'] = strval(intval(round(1000000 / $Value, 0)));
-                break;
-            case 'Z2M_ColorTempRGB':
-                $Payload['color_temp_rgb'] = strval($Value);
-                break;
-            case 'Z2M_ColorTempCCT':
-                $Payload['color_temp_cct'] = strval($Value);
-                break;
-            case 'Z2M_State':
-                if ($variableType == 3) {
-                    $Payload['state'] = strval($Value);
-                    break;
-                }
-                $Payload['state'] = strval($this->OnOff($Value));
-                break;
-            // case 'Z2M_StateLeft':
-            //     $Payload['state_left'] = strval($Value);
-            //     break;
-            // case 'Z2M_StateRight':
-            //     $Payload['state_right'] = strval($Value);
-            //     break;
-            case 'Z2M_RunningState':
-                $Payload['running_state'] = strval($Value);
-                break;
-            case 'Z2M_Sensor':
-                $Payload['sensor'] = strval($Value);
-                break;
-            case 'Z2M_StateRGB':
-                $Payload['state_rgb'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_StateCCT':
-                $Payload['state_cct'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_StateWhite':
-                $Payload['state_white'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_LEDDisabledNight':
-                $Payload['led_disabled_night'] = strval($Value);
-                break;
-            case 'Z2M_Statel1':
-                $Payload['state_l1'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_Statel2':
-                $Payload['state_l2'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_Statel3':
-                $Payload['state_l3'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_Statel4':
-                $Payload['state_l4'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_Statel5':
-                $Payload['state_l5'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_Statel6':
-                $Payload['state_l6'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_Statel7':
-                $Payload['state_l7'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_Statel8':
-                $Payload['state_l8'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_state_left':
-                if ($variableType == 3) {
-                    $Payload['state_left'] = strval($Value);
-                    break;
-                }
-                $Payload['state_left'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_state_right':
-                if ($variableType == 3) {
-                    $Payload['state_right'] = strval($Value);
-                    break;
-                }
-                $Payload['state_right'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_WindowDetection':
-                $Payload['window_detection'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_OpenWindow':
-                $Payload['open_window'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_ValveDetection':
-                $Payload['valve_detection'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_ChildLock':
-                $Payload['child_lock'] = strval($this->LockUnlock($Value));
-                break;
-            case'Z2M_PowerOutageMemory':
-                $Payload['power_outage_memory'] = strval($Value);
-                break;
-            case'Z2M_PowerOnBehavior':
-                $Payload['power_on_behavior'] = strval($Value);
-                break;
-            case'Z2M_PowerOnBehaviorL1':
-                $Payload['power_on_behavior_l1'] = strval($Value);
-                break;
-            case'Z2M_PowerOnBehaviorL2':
-                $Payload['power_on_behavior_l2'] = strval($Value);
-                break;
-            case'Z2M_PowerOnBehaviorL3':
-                $Payload['power_on_behavior_l3'] = strval($Value);
-                break;
-            case'Z2M_PowerOnBehaviorL4':
-                $Payload['power_on_behavior_l4'] = strval($Value);
-                break;
-            case'Z2M_AutoOff':
-                $Payload['auto_off'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_StateWindow':
-                $Payload['state'] = strval($this->OpenClose($Value));
-                break;
-            case 'Z2M_Sensitivity':
-                $Payload['sensitivity'] = strval($Value);
-                break;
-            case 'Z2M_RadarSensitivity':
-                $Payload['radar_sensitivity'] = strval($Value);
-                break;
-            case 'Z2M_RadarScene':
-                $Payload['radar_scene'] = strval($Value);
-                break;
-            case 'Z2M_MotorWorkingMode':
-                $Payload['motor_working_mode'] = strval($Value);
-                break;
-            case 'Z2M_Control':
-                $Payload['control'] = strval($Value);
-                break;
-            case 'Z2M_BoostHeating':
-                $Payload['boost_heating'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_FrostProtection':
-                $Payload['frost_protection'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_HeatingStop':
-                $Payload['heating_stop'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_Force':
-                $Payload['force'] = strval($Value);
-                break;
-            case 'Z2M_Moving':
-                $Payload['moving'] = strval($Value);
-                break;
-            case 'Z2M_MovingLeft':
-                $Payload['moving_left'] = strval($Value);
-                break;
-            case 'Z2M_MovingRight':
-                $Payload['moving_right'] = strval($Value);
-                break;
-            case 'Z2M_TRVMode':
-                $Payload['trv_mode'] = strval($Value);
-                break;
-            case 'Z2M_Calibration':
-                $Payload['calibration'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_CalibrationLeft':
-                $Payload['calibration_left'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_CalibrationRight':
-                $Payload['calibration_right'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_MotorReversal':
-                $Payload['motor_reversal'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_MotorReversalLeft':
-                $Payload['motor_reversal_left'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_MotorReversalRight':
-                $Payload['motor_reversal_right'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_CurrentHeatingSetpoint':
-                $Payload['current_heating_setpoint'] = $Value;
-                break;
-            case 'Z2M_CurrentHeatingSetpointAuto':
-                $Payload['current_heating_setpoint_auto'] = $Value;
-                break;
-            case 'Z2M_OccupiedHeatingSetpoint':
-                $Payload['occupied_heating_setpoint'] = $Value;
-                break;
-            case 'Z2M_LocalTemperatureCalibration':
-                $Payload['local_temperature_calibration'] = number_format($Value, 2, '.', ' ');
-                break;
-            case 'Z2M_OpenWindowTemperature':
-                $Payload['open_window_temperature'] = number_format($Value, 2, '.', ' ');
-                break;
-            case 'Z2M_HolidayTemperature':
-                $Payload['holiday_temperature'] = number_format($Value, 2, '.', ' ');
-                break;
-            case 'Z2M_BoostTimesetCountdown':
-                $Payload['boost_timeset_countdown'] = strval($Value);
-                break;
-            case 'Z2M_Preset':
-                $Payload['preset'] = strval($Value);
-                break;
-            case 'Z2M_AwayPresetDays':
-                $Payload['away_preset_days'] = strval($Value);
-                break;
-            case 'Z2M_AwayMode':
-                $Payload['away_mode'] = strval($Value);
-                break;
-            case 'Z2M_BoostTime':
-                $Payload['boost_time'] = strval($Value);
-                break;
-            case 'Z2M_SystemMode':
-                $Payload['system_mode'] = strval($Value);
-                break;
-            case 'Z2M_Color':
-                $this->SendDebug(__FUNCTION__ . ' Color', $Value, 0);
-                $this->setColor($Value, 'cie');
-                return;
-            case 'Z2M_ColorHS':
-                $this->SendDebug(__FUNCTION__ . ' Color HS', $Value, 0);
-                $this->setColor($Value, 'hs');
-                return;
-            case 'Z2M_ColorRGB':
-                $this->SendDebug(__FUNCTION__ . ' :: Color RGB', $Value, 0);
-                $this->setColor($Value, 'cie', 'color_rgb');
-                return;
-            case 'Z2M_Position':
-                $Payload['position'] = $Value;
-                break;
-            case 'Z2M_PositionLeft':
-                $Payload['position_left'] = $Value;
-                break;
-            case 'Z2M_PositionRight':
-                $Payload['position_right'] = $Value;
-                break;
-            case 'Z2M_MotorSpeed':
-                $Payload['motor_speed'] = strval($Value);
-                break;
-            case 'Z2M_RegionID':
-                $Payload['region_id'] = strval($Value);
-                break;
-            case 'Z2M_MotionSensitivity':
-                $Payload['motion_sensitivity'] = strval($Value);
-                break;
-            case 'Z2M_OccupancyTimeout':
-                $Payload['occupancy_timeout'] = strval($Value);
-                break;
-            case 'Z2M_OverloadProtection':
-                $Payload['overload_protection'] = strval($Value);
-                break;
-            case 'Z2M_Mode':
-                $Payload['mode'] = strval($Value);
-                break;
-            case 'Z2M_Week':
-                $Payload['week'] = strval($Value);
-                break;
-            case 'Z2M_ControlBackMode':
-                $Payload['control_back_mode'] = strval($Value);
-                break;
-            case 'Z2M_Border':
-                $Payload['border'] = strval($Value);
-                break;
-            case 'Z2M_Level':
-                $Payload['level'] = strval($Value);
-                break;
-            case 'Z2M_StrobeLevel':
-                $Payload['strobe_level'] = strval($Value);
-                break;
-            case 'Z2M_Strobe':
-                $Payload['strobe'] = strval($Value);
-                break;
-            case 'Z2M_StrobeDutyCycle':
-                $Payload['strobe_duty_cycle'] = strval($Value);
-                break;
-            case 'Z2M_Duration':
-                $Payload['duration'] = strval($Value);
-                break;
-            case 'Z2M_MinimumRange':
-                $Payload['minimum_range'] = strval($Value);
-                break;
-            case 'Z2M_MaximumRange':
-                $Payload['maximum_range'] = strval($Value);
-                break;
-            case 'Z2M_DeadzoneTemperature':
-                $Payload['deadzone_temperature'] = strval($Value);
-                break;
-            case 'Z2M_MaxTemperatureLimit':
-                $Payload['max_temperature_limit'] = strval($Value);
-                break;
-            case 'Z2M_DetectionDelay':
-                $Payload['detection_delay'] = strval($Value);
-                break;
-            case 'Z2M_DetectionInterval':
-                $Payload['detection_interval'] = strval($Value);
-                break;
-            case 'Z2M_Effect':
-                $Payload['effect'] = strval($Value);
-                break;
-            case 'Z2M_FadingTime':
-                $Payload['fading_time'] = strval($Value);
-                break;
-            case 'Z2M_SelfTest':
-                $Payload['self_test'] = strval($Value);
-                break;
-            case 'Z2M_GarageTrigger':
-                $Payload['trigger'] = $Value;
-                break;
-            case 'Z2M_GarageDoorContact':
-                $Payload['garage_door_contact'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_BrightnessLevel':
-                $Payload['brightness_level'] = strval($Value);
-                break;
-            case 'Z2M_TriggerIndicator':
-                $Payload['trigger_indicator'] = strval($this->OnOff($Value));
-                break;
-            case 'Z2M_FactoryReset':
-                $Payload['factory_reset'] = strval($this->OnOff($Value));
-                break;
-            default:
-                $this->SendDebug('Request Action', 'No Action defined: ' . $Ident, 0);
-                return false;
-        }
-
-        $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($PayloadJSON);
+{
+    // Behandle spezielle Fälle separat
+    switch ($Ident) {
+        case 'Z2M_Color':
+            $this->SendDebug(__FUNCTION__ . ' Color', $Value, 0);
+            $this->setColor($Value, 'cie');
+            return;
+        case 'Z2M_ColorHS':
+            $this->SendDebug(__FUNCTION__ . ' Color HS', $Value, 0);
+            $this->setColor($Value, 'hs');
+            return;
+        case 'Z2M_ColorRGB':
+            $this->SendDebug(__FUNCTION__ . ' :: Color RGB', $Value, 0);
+            $this->setColor($Value, 'cie', 'color_rgb');
+            return;
     }
+
+    // Generelle Logik für die meisten anderen Fälle
+    $variableID = $this->GetIDForIdent($Ident);
+    $variableInfo = IPS_GetVariable($variableID);
+    $variableType = $variableInfo['VariableType'];
+
+    $payloadKey = $this->convertIdentToPayloadKey($Ident);
+    $Payload = [$payloadKey => $this->convertStateBasedOnMapping($Ident, $Value, $variableType)];
+
+    // Kodiere das Payload-Array als JSON
+    $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+
+    // Übergebe das JSON-kodierte Payload an die Z2MSet Methode
+    $this->Z2MSet($PayloadJSON);
+}
+    private function convertStateBasedOnMapping($key, $value, $variableType)
+    {
+        // Standardmäßige Rückgabe, falls kein spezielles Mapping definiert ist
+        $defaultReturn = function() use ($value, $variableType) {
+            switch ($variableType) {
+                case 0: // Boolean
+                    return $value ? 'true' : 'false';
+                case 1: // Integer
+                    return (int)$value;
+                case 2: // Float
+                    return (float)$value;
+                case 3: // String
+                default:
+                    return strval($value);
+            }
+        };
+
+        // Überprüfe, ob ein spezielles Mapping für den Schlüssel definiert ist
+        if (array_key_exists($key, $this->stateTypeMapping)) {
+            $mapping = $this->stateTypeMapping[$key];
+            $type = $mapping['type'] ?? null;
+            $dataType = $mapping['dataType'] ?? 'string'; // Standard auf 'string', falls nicht definiert
+
+            // Wenn ein 'type' im Mapping vorhanden ist, führe eine spezielle Konvertierung durch
+            if ($type) {
+                $convertedValue = $this->convertState($value, $type);
+            } else {
+                // Keine spezielle Konvertierung definiert, verwende den Wert wie er ist
+                $convertedValue = $value;
+            }
+
+            // Berücksichtige das 'dataType' aus dem Mapping für die Formatierung des Wertes
+            switch ($dataType) {
+                case 'string':
+                    return strval($convertedValue);
+                case 'float':
+                    $format = $mapping['format'] ?? '%f';
+                    return sprintf($format, $convertedValue);
+                case 'numeric': // Behandle numerische Werte, die nicht explizit als Float formatiert werden
+                    return is_numeric($convertedValue) ? $convertedValue : strval($convertedValue);
+                default:
+                    return strval($convertedValue);
+            }
+        } else {
+            // Wenn kein spezielles Mapping vorhanden ist, verwende die Standard-Rückgabe basierend auf dem Variablentyp
+            return $defaultReturn();
+        }
+    }
+    private function convertState($value, $type)
+    {
+        // Erweiterte Zustandsmappings
+        $stateMappings = [
+            'onoff' => ['ON', 'OFF'],
+            'openclose' => ['OPEN', 'CLOSE'],
+            'lockunlock' => ['LOCK', 'UNLOCK'],
+            'automanual' => ['AUTO', 'MANUAL'],
+            'valve' => ['OPEN', 'CLOSED'],
+
+            // Füge hier weitere Zustandstypen und deren Werte hinzu
+        ];
+
+        // Prüfe, ob der Zustandstyp in den Mappings vorhanden ist
+        if (array_key_exists($type, $stateMappings)) {
+            // Wähle den korrekten Wert basierend auf dem booleschen $value
+            return $value ? $stateMappings[$type][0] : $stateMappings[$type][1];
+        } else {
+            // Fallback für nicht definierte Zustandstypen
+            return $value ? 'true' : 'false';
+        }
+    }
+
+    private $stateTypeMapping = [
+        'Z2M_StateWindow' => ['type' => 'openclose', 'dataType' =>'string'],
+        'Z2M_AutoLock' => ['type' => 'automode', 'dataType' => 'string'],
+        'Z2M_ValveState' => ['type' => 'valve', 'dataType' => 'string'],
+        'Z2M_EcoMode' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_FanState' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_FrostProtection' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_HeatingStop' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Calibration' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_CalibrationLeft' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_CalibrationRight' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_MotorReversal' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_MotorReversalLeft' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_MotorReversalRight' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_GarageDoorContact' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_BrightnessLevel' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_TriggerIndicator' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_FactoryReset' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_SmokeAlarmState' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_IntruderAlarmState' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_schedule' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Online' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_ValveAdaptProcess' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_ValveDetection' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Indicator' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_ScaleProtection' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_LedIndication' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_LearnIRCode' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_TamperAlarmSwitch' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_AlarmSwitch' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_ButtonLock' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_WindowOpen' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Boost' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_StateRGB' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_StateCCT' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_StateWhite' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_BacklightMode' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_State' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel1' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel2' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel3' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel4' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel5' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel6' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel7' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel8' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_state_left' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_state_right' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_WindowDetection' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_OpenWindow' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_AutoOff' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_BoostHeating' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_FrostProtection' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_HeatingStop' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_EcoTemperature' => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
+        'Z2M_MaxTemperature' => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
+        // Füge hier weitere Zuordnungen hinzu
+    ];
 
     public function getDeviceInfo()
     {
@@ -2333,70 +1724,7 @@ trait Zigbee2MQTTHelper
         }
     }
 
-    private function OnOff(bool $Value)
-    {
-        switch ($Value) {
-            case true:
-                $state = 'ON';
-                break;
-            case false:
-                $state = 'OFF';
-                break;
-        }
-        return $state;
-    }
 
-    private function ValveState(bool $Value)
-    {
-        switch ($Value) {
-            case true:
-                $state = 'OPEN';
-                break;
-            case false:
-                $state = 'CLOSED';
-                break;
-        }
-        return $state;
-    }
-
-    private function LockUnlock(bool $Value)
-    {
-        switch ($Value) {
-            case true:
-                $state = 'LOCK';
-                break;
-            case false:
-                $state = 'UNLOCK';
-                break;
-        }
-        return $state;
-    }
-
-    private function OpenClose(bool $Value)
-    {
-        switch ($Value) {
-            case true:
-                $state = 'OPEN';
-                break;
-            case false:
-                $state = 'CLOSE';
-                break;
-        }
-        return $state;
-    }
-
-    private function AutoManual(bool $Value)
-    {
-        switch ($Value) {
-            case true:
-                $state = 'AUTO';
-                break;
-            case false:
-                $state = 'MANUAL';
-                break;
-        }
-        return $state;
-    }
 
     private function registerVariableProfile($expose)
     {
