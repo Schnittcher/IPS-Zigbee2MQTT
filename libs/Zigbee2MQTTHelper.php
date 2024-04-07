@@ -1585,7 +1585,6 @@ trait Zigbee2MQTTHelper
         return is_numeric($value) ? $value : strval($value);
     }
 
-
     private function convertState($value, $type)
     {
         // Gehört zu RequestAction
