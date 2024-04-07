@@ -6,15 +6,14 @@ namespace Zigbee2MQTT;
 
 trait Zigbee2MQTTHelper
 {
-    // Gehört zu RequestAction
     private $stateTypeMapping = [
+        // Gehört zu RequestAction
         'Z2M_ChildLock'          => ['type' => 'lockunlock', 'dataType' =>'string'],
         'Z2M_StateWindow'        => ['type' => 'openclose', 'dataType' =>'string'],
         'Z2M_AutoLock'           => ['type' => 'automode', 'dataType' => 'string'],
         'Z2M_ValveState'         => ['type' => 'valve', 'dataType' => 'string'],
         'Z2M_EcoTemperature'     => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
         'Z2M_MaxTemperature'     => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        // Füge hier weitere Zuordnungen hinzu
     ];
 
     public function RequestAction($ident, $value)
@@ -33,7 +32,7 @@ trait Zigbee2MQTTHelper
             $this->SendDebug(__FUNCTION__ . ' :: Color RGB', $value, 0);
             $this->setColor($value, 'cie', 'color_rgb');
             return;
-    }
+        }
         // Generelle Logik für die meisten anderen Fälle
         $variableID = $this->GetIDForIdent($ident);
         $variableInfo = IPS_GetVariable($variableID);
@@ -1541,27 +1540,22 @@ trait Zigbee2MQTTHelper
     private function convertIdentToPayloadKey($ident)
     {
         // Gehört zu RequestAction
-        // Entferne den Prefix 'Z2M_' vom Identifier, falls vorhanden
         $identWithoutPrefix = str_replace('Z2M_', '', $ident);
-
-        // Konvertiere CamelCase zu snake_case
         $payloadKey = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $identWithoutPrefix));
-
         return $payloadKey;
     }
 
     private function convertStateBasedOnMapping($key, $value, $variableType)
     {
+        // Gehört zu RequestAction
         // Überprüfe zuerst das spezielle Mapping für den Schlüssel
         if (array_key_exists($key, $this->stateTypeMapping)) {
             $mapping = $this->stateTypeMapping[$key];
             $dataType = $mapping['dataType'] ?? 'string'; // Standard auf 'string', falls nicht definiert
-
             // Spezielle Konvertierung basierend auf dem Typ im Mapping
             if (isset($mapping['type'])) {
                 return $this->convertState($value, $mapping['type']);
             }
-
             // Formatierung des Wertes basierend auf dem definierten Datentyp
             switch ($dataType) {
                 case 'string':
@@ -1575,12 +1569,10 @@ trait Zigbee2MQTTHelper
                     return strval($value); // Standardfall: Konvertiere zu String
             }
         }
-
         // Direkte Behandlung für boolesche Werte, wenn kein spezielles Mapping vorhanden ist
         if ($variableType === 0) { // Boolean
             return $value ? 'ON' : 'OFF';
         }
-
         // Standardbehandlung für Werte ohne spezifisches Mapping
         return is_numeric($value) ? $value : strval($value);
     }
@@ -1607,6 +1599,7 @@ trait Zigbee2MQTTHelper
     }
     private function handleStateChange($payloadKey, $valueId, $debugTitle, $payload, $stateMapping = null)
     {
+        // Gehört zu ReceiveData
         if (array_key_exists($payloadKey, $payload)) {
             $state = $payload[$payloadKey];
             if ($stateMapping === null) {
