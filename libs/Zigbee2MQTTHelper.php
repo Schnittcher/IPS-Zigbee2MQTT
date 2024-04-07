@@ -8,6 +8,7 @@ trait Zigbee2MQTTHelper
 {
     // Gehört zu RequestAction
     private $stateTypeMapping = [
+        'Z2M_ChildLock'          => ['type' => 'lockunlock', 'dataType' =>'string'],
         'Z2M_StateWindow'        => ['type' => 'openclose', 'dataType' =>'string'],
         'Z2M_AutoLock'           => ['type' => 'automode', 'dataType' => 'string'],
         'Z2M_ValveState'         => ['type' => 'valve', 'dataType' => 'string'],
