@@ -1602,54 +1602,35 @@ trait Zigbee2MQTTHelper
 
     private function convertStateBasedOnMapping($key, $value, $variableType)
     {
-        // Gehört zu RequestAction
-        // Standardmäßige Rückgabe, falls kein spezielles Mapping definiert ist
-        $defaultReturn = function () use ($value, $variableType)
-        {
-            switch ($variableType) {
-                case 0: // Boolean
-                    return $value ? 'true' : 'false';
-                case 1: // Integer
-                    return (int) $value;
-                case 2: // Float
-                    return (float) $value;
-                case 3: // String
-                default:
-                    return strval($value);
-            }
-        };
+        // Direkte Behandlung für boolesche Werte
+        if ($variableType === 0) { // Boolean
+            return $value ? 'ON' : 'OFF';
+        }
 
-        // Überprüfe, ob ein spezielles Mapping für den Schlüssel definiert ist
+        // Für alle anderen Typen das spezielle Mapping berücksichtigen
         if (array_key_exists($key, $this->stateTypeMapping)) {
             $mapping = $this->stateTypeMapping[$key];
-            $type = $mapping['type'] ?? null;
-            $dataType = $mapping['dataType'] ?? 'string'; // Standard auf 'string', falls nicht definiert
-
-            // Wenn ein 'type' im Mapping vorhanden ist, führe eine spezielle Konvertierung durch
-            if ($type) {
-                $convertedValue = $this->convertState($value, $type);
-            } else {
-                // Keine spezielle Konvertierung definiert, verwende den Wert wie er ist
-                $convertedValue = $value;
-            }
+            // Keine spezielle Konvertierung definiert, verwende den Wert wie er ist
+            $convertedValue = $value;
 
             // Berücksichtige das 'dataType' aus dem Mapping für die Formatierung des Wertes
-            switch ($dataType) {
+            switch ($mapping['dataType'] ?? 'string') {
                 case 'string':
                     return strval($convertedValue);
                 case 'float':
                     $format = $mapping['format'] ?? '%f';
                     return sprintf($format, $convertedValue);
-                case 'numeric': // Behandle numerische Werte, die nicht explizit als Float formatiert werden
+                case 'numeric':
                     return is_numeric($convertedValue) ? $convertedValue : strval($convertedValue);
                 default:
                     return strval($convertedValue);
             }
-        } else {
-            // Wenn kein spezielles Mapping vorhanden ist, verwende die Standard-Rückgabe basierend auf dem Variablentyp
-            return $defaultReturn();
         }
+
+        // Standardrückgabe, wenn kein Mapping definiert ist
+        return is_numeric($value) ? $value : strval($value);
     }
+
     private function convertState($value, $type)
     {
         // Gehört zu RequestAction
