@@ -8,10 +8,59 @@ trait Zigbee2MQTTHelper
 {
     // Gehört zu RequestAction
     private $stateTypeMapping = [
-        'Z2M_ChildLock'          => ['type' => 'lockunlock', 'dataType' =>'string'],
         'Z2M_StateWindow'        => ['type' => 'openclose', 'dataType' =>'string'],
         'Z2M_AutoLock'           => ['type' => 'automode', 'dataType' => 'string'],
         'Z2M_ValveState'         => ['type' => 'valve', 'dataType' => 'string'],
+        'Z2M_EcoMode'            => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_FanState'           => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_FrostProtection'    => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_HeatingStop'        => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Calibration'        => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_CalibrationLeft'    => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_CalibrationRight'   => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_MotorReversal'      => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_MotorReversalLeft'  => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_MotorReversalRight' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_GarageDoorContact'  => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_BrightnessLevel'    => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_TriggerIndicator'   => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_FactoryReset'       => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_SmokeAlarmState'    => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_IntruderAlarmState' => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_schedule'           => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Online'             => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_ValveAdaptProcess'  => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_ValveDetection'     => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Indicator'          => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_ScaleProtection'    => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_LedIndication'      => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_LearnIRCode'        => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_TamperAlarmSwitch'  => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_AlarmSwitch'        => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_ButtonLock'         => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_WindowOpen'         => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Boost'              => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_StateRGB'           => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_StateCCT'           => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_StateWhite'         => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_BacklightMode'      => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_State'              => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel1'            => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel2'            => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel3'            => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel4'            => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel5'            => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel6'            => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel7'            => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_Statel8'            => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_state_left'         => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_state_right'        => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_WindowDetection'    => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_OpenWindow'         => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_AutoOff'            => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_BoostHeating'       => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_FrostProtection'    => ['type' => 'onoff', 'dataType' => 'string'],
+        'Z2M_HeatingStop'        => ['type' => 'onoff', 'dataType' => 'string'],
         'Z2M_EcoTemperature'     => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
         'Z2M_MaxTemperature'     => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
         // Füge hier weitere Zuordnungen hinzu
@@ -1550,47 +1599,56 @@ trait Zigbee2MQTTHelper
         return $payloadKey;
     }
 
-
-    private function convertStateBasedOnMapping($ident, $value, $variableType)
+    private function convertStateBasedOnMapping($key, $value, $variableType)
     {
-        // Direkte Behandlung für boolesche Werte
-        if ($variableType === 0) { // Boolean
-            return $value ? 'ON' : 'OFF';
-        }
+        // Gehört zu RequestAction
+        // Standardmäßige Rückgabe, falls kein spezielles Mapping definiert ist
+        $defaultReturn = function () use ($value, $variableType)
+        {
+            switch ($variableType) {
+                case 0: // Boolean
+                    return $value ? 'true' : 'false';
+                case 1: // Integer
+                    return (int) $value;
+                case 2: // Float
+                    return (float) $value;
+                case 3: // String
+                default:
+                    return strval($value);
+            }
+        };
 
         // Überprüfe, ob ein spezielles Mapping für den Schlüssel definiert ist
-        if (array_key_exists($ident, $this->stateTypeMapping)) {
-            $mapping = $this->stateTypeMapping[$ident];
+        if (array_key_exists($key, $this->stateTypeMapping)) {
+            $mapping = $this->stateTypeMapping[$key];
             $type = $mapping['type'] ?? null;
             $dataType = $mapping['dataType'] ?? 'string'; // Standard auf 'string', falls nicht definiert
 
-            // Spezielle Behandlung basierend auf dem Typ im Mapping
+            // Wenn ein 'type' im Mapping vorhanden ist, führe eine spezielle Konvertierung durch
             if ($type) {
-                // Benutze eine modifizierte Version von convertState, falls nötig
                 $convertedValue = $this->convertState($value, $type);
             } else {
+                // Keine spezielle Konvertierung definiert, verwende den Wert wie er ist
                 $convertedValue = $value;
             }
 
-            // Formatierung des Wertes basierend auf dem definierten Datentyp
+            // Berücksichtige das 'dataType' aus dem Mapping für die Formatierung des Wertes
             switch ($dataType) {
+                case 'string':
+                    return strval($convertedValue);
                 case 'float':
                     $format = $mapping['format'] ?? '%f';
                     return sprintf($format, $convertedValue);
-                case 'numeric':
+                case 'numeric': // Behandle numerische Werte, die nicht explizit als Float formatiert werden
                     return is_numeric($convertedValue) ? $convertedValue : strval($convertedValue);
-                case 'string':
                 default:
                     return strval($convertedValue);
             }
         } else {
-            // Standardbehandlung für Fälle ohne spezifisches Mapping
-            return is_numeric($value) ? $value : strval($value);
+            // Wenn kein spezielles Mapping vorhanden ist, verwende die Standard-Rückgabe basierend auf dem Variablentyp
+            return $defaultReturn();
         }
     }
-
-
-
     private function convertState($value, $type)
     {
         // Gehört zu RequestAction
