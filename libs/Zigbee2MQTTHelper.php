@@ -1616,7 +1616,7 @@ trait Zigbee2MQTTHelper
     private function handleStateChange($payloadKey, $valueId, $debugTitle, $Payload, $stateMapping = null)
     {
         if (array_key_exists($payloadKey, $Payload)) {
-            $state = $payload[$payloadKey];
+            $state = $Payload[$payloadKey];
             if ($stateMapping === null) {
                 $stateMapping = ['ON' => true, 'OFF' => false];
             }
