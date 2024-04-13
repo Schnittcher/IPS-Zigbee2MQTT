@@ -2910,6 +2910,7 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.action.815b927a':
                         case 'Z2M.action.b918bcb2':
                         case 'Z2M.action.555bdfc4':
+                        case 'Z2M.action.ebc86fda':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['1_single', $this->Translate('1 Single'), '', 0x00FF00],
@@ -2924,6 +2925,12 @@ trait Zigbee2MQTTHelper
                                     ['4_single', $this->Translate('4 Single'), '', 0x00FF00],
                                     ['4_double', $this->Translate('4 Double'), '', 0x00FF00],
                                     ['4_hold', $this->Translate('4 Hold'), '', 0x00FF00],
+                                    ['5_single', $this->Translate('5 Single'), '', 0x00FF00],
+                                    ['5_double', $this->Translate('5 Double'), '', 0x00FF00],
+                                    ['5_hold', $this->Translate('5 Hold'), '', 0x00FF00],
+                                    ['6_single', $this->Translate('6 Single'), '', 0x00FF00],
+                                    ['6_double', $this->Translate('6 Double'), '', 0x00FF00],
+                                    ['6_hold', $this->Translate('6 Hold'), '', 0x00FF00],
                                 ]);
                             }
                             break;
