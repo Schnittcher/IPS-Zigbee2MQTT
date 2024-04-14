@@ -1693,6 +1693,14 @@ trait Zigbee2MQTTHelper
         }
     }
 
+    // Folgende Funktionen entfallen durch das neue RequestAction:
+        // private function OnOff(bool $Value)
+        // private function ValveState(bool $Value)
+        // private function LockUnlock(bool $Value)
+        // private function OpenClose(bool $Value)
+        // private function AutoManual(bool $Value)
+
+    // Ab hier keine Änderungen mehr
     private function registerVariableProfile($expose) // Unverändert
     {
         $ProfileName = 'Z2M.' . $expose['name'];
