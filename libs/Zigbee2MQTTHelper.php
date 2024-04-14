@@ -974,12 +974,15 @@ trait Zigbee2MQTTHelper
                                                 if ($mainProfileName) {
                                                     $this->RegisterVariableInteger('Z2M_ColorTemp', $this->Translate('Color Temperature'), $mainProfileName);
                                                     $this->EnableAction('Z2M_ColorTemp');
+                                                    $this->SendDebug("Variable Registration", "Main Color Temp Variable Created with ID: $variableID", 0);
+
                                                 }
 
                                                 if ($presetProfileName) {
                                                     $this->RegisterVariableInteger('Z2M_ColorTempPresets', $this->Translate('Color Temperature Presets'), $presetProfileName);
                                                     $this->EnableAction('Z2M_ColorTempPresets');
-
+                                                    $this->SendDebug("Variable Registration", "Preset Color Temp Variable Created with ID: $presetVariableID", 0);
+                                                }
 
                                             // Anlegen weiterer nicht-automatisierter Kelvin Temperaturvariablen
                                             if (!IPS_VariableProfileExists('Z2M.ColorTemperatureKelvin')) {
@@ -987,7 +990,7 @@ trait Zigbee2MQTTHelper
                                             }
                                             $this->RegisterVariableInteger('Z2M_ColorTempKelvin', $this->Translate('Color Temperature Kelvin'), 'Z2M.ColorTemperatureKelvin');
                                             $this->EnableAction('Z2M_ColorTempKelvin');
-                                        }
+
                                             break;
                                         case 'color_temp_rgb':
                                             //Color Temperature Mired
