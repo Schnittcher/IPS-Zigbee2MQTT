@@ -673,24 +673,36 @@ trait Zigbee2MQTTHelper
                         return false;
                     }
                     break;
-                    case 'numeric':
-                        $ProfileName = 'Z2M.' . $expose['name']; // Bildet den Profilnamen
-                        $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : ''; // Fügt eine Einheit mit einem führenden Leerzeichen hinzu, falls vorhanden
-                        $min = $expose['value_min'] ?? 0; // Setzt Standard-Minimum, falls nicht vorhanden
-                        $max = $expose['value_max'] ?? 0; // Setzt Standard-Maximum, falls nicht vorhanden
-                        $step = 0.1; // Anpassbare Schrittweite, standardmäßig auf 0.1 gesetzt
-                        $digits = 2; // Festlegung der Anzahl der Nachkommastellen
+                case 'numeric':
+                    // Erstelle den Basisnamen des Profils
+                    $ProfileName = 'Z2M.' . $expose['name'];
 
-                        // Prüfe, ob das Profil bereits existiert, um Duplikate zu vermeiden
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            // Nutzt die bereits existierende Funktion, um das Profil zu registrieren
-                            $this->RegisterProfileFloat($ProfileName, 'Electricity', '', $unit, $min, $max, $step, $digits);
+                    // Füge Min- und Max-Werte zum Profilnamen hinzu
+                    $min = $expose['value_min'] ?? 0;
+                    $max = $expose['value_max'] ?? 0;
+                    $ProfileName .= $min . '_' . $max;
+
+                    $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : '';
+                    $step = 1; // Standardmäßig auf 1 für Integer gesetzt, anpassen falls nötig
+                    $digits = 0; // Für Integerprofile keine Nachkommastellen
+
+                    // Prüfe ob es ein Integerprofil sein sollte (wenn min und max Ganzzahlen sind)
+                    $isInteger = is_int($min) && is_int($max);
+
+                    // Prüfe, ob das Profil bereits existiert, um Duplikate zu vermeiden
+                    if (!IPS_VariableProfileExists($ProfileName)) {
+                        if ($isInteger) {
+                            // Nutzt die bereits existierende Funktion, um das Integer-Profil zu registrieren
+                            $this->RegisterProfileInteger($ProfileName, 'Electricity', '', $unit, $min, $max, $step);
                         } else {
-                            // Debugging für bereits existierende Profile
-                            $this->SendDebug(__FUNCTION__ . ':: Profile Exists', "Das Profil $ProfileName existiert bereits.", 0);
+                            // Nutzt die bereits existierende Funktion, um das Float-Profil zu registrieren
+                            $this->RegisterProfileFloat($ProfileName, 'Electricity', '', $unit, $min, $max, 0.1, 2);
                         }
-                        break;
-
+                    } else {
+                        // Debugging für bereits existierende Profile
+                        $this->SendDebug(__FUNCTION__ . ':: Profile Exists', "Das Profil $ProfileName existiert bereits.", 0);
+                    }
+                    break;
         }
         return $ProfileName;
     }
