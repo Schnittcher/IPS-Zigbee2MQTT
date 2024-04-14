@@ -676,6 +676,9 @@ trait Zigbee2MQTTHelper
                     case 'numeric':
                         // Erstelle den Basisnamen des Profils
                         $ProfileName = 'Z2M.' . $expose['name'];
+                        $ProfileName = 'Z2M.' . $expose['name'];
+                        $fullRangeProfileName = $ProfileName . $min . '_' . $max;
+                        $presetProfileName = $ProfileName . '_Presets';
                         // Füge Min- und Max-Werte zum Profilnamen hinzu
                         $min = $expose['value_min'] ?? 0;
                         $max = $expose['value_max'] ?? 0;
