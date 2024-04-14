@@ -676,11 +676,13 @@ trait Zigbee2MQTTHelper
                     case 'numeric':
                         // Erstelle den Basisnamen des Profils
                         $ProfileName = 'Z2M.' . $expose['name'];
-                        $fullRangeProfileName = $ProfileName . $min . '_' . $max;
-                        $presetProfileName = $ProfileName . '_Presets';
-
+                        // Füge Min- und Max-Werte zum Profilnamen hinzu
+                        $min = $expose['value_min'] ?? 0;
+                        $max = $expose['value_max'] ?? 0;
+                        $ProfileName .= $min . '_' . $max;
                         $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : '';
                         $step = 1; // Standardmäßig auf 1 für Integer gesetzt, anpassen falls nötig
+                        $digits = 0; // Für Integerprofile keine Nachkommastellen
 
                         // Profil für den vollen Bereich (ermöglicht freies Einstellen des Wertes)
                         if (!IPS_VariableProfileExists($fullRangeProfileName)) {
