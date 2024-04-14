@@ -676,23 +676,24 @@ trait Zigbee2MQTTHelper
                     case 'numeric':
                         // Erstelle den Basisnamen des Profils
                         $ProfileName = 'Z2M.' . $expose['name'];
-                        $ProfileName = 'Z2M.' . $expose['name'];
-                        $fullRangeProfileName = $ProfileName . $min . '_' . $max;
-                        $presetProfileName = $ProfileName . '_Presets';
-                        // Füge Min- und Max-Werte zum Profilnamen hinzu
+
+                        // Definiere $min und $max sicher
                         $min = $expose['value_min'] ?? 0;
                         $max = $expose['value_max'] ?? 0;
-                        $ProfileName .= $min . '_' . $max;
+
+                        // Füge Min- und Max-Werte zum Profilnamen hinzu
+                        $fullRangeProfileName = $ProfileName . $min . '_' . $max;
+                        $presetProfileName = $ProfileName . '_Presets';
+
                         $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : '';
                         $step = 1; // Standardmäßig auf 1 für Integer gesetzt, anpassen falls nötig
-                        $digits = 0; // Für Integerprofile keine Nachkommastellen
 
-                        // Profil für den vollen Bereich (ermöglicht freies Einstellen des Wertes)
+                        // Überprüfe, ob das Profil für den vollen Bereich existiert, wenn nicht, dann erstelle es
                         if (!IPS_VariableProfileExists($fullRangeProfileName)) {
                             $this->RegisterProfileInteger($fullRangeProfileName, 'Electricity', '', $unit, $min, $max, $step);
                         }
 
-                        // Zusätzliches Profil für Presets erstellen
+                        // Erstelle oder aktualisiere das Profil für Presets
                         if (isset($expose['presets'])) {
                             // Lösche das vorhandene Preset-Profil, falls es existiert, und erstelle es neu
                             if (IPS_VariableProfileExists($presetProfileName)) {
