@@ -974,14 +974,22 @@ trait Zigbee2MQTTHelper
                                             }
                                             break;
                                         case 'color_temp':
-                                            //Color Temperature Mired
-                                            $ProfileName = $this->registerVariableProfile($feature);
-                                            if ($ProfileName != false) {
-                                                $this->RegisterVariableInteger('Z2M_ColorTemp', $this->Translate('Color Temperature'), $ProfileName);
+                                            $profileData = $this->registerVariableProfile($feature);
+                                            $mainProfileName = $profileData[0];
+                                            $presetProfileName = $profileData[1];
+                                            $hasPresets = $profileData[2];
+
+                                            if ($mainProfileName) {
+                                                $this->RegisterVariableInteger('Z2M_ColorTemp', $this->Translate('Color Temperature'), $mainProfileName);
                                                 $this->EnableAction('Z2M_ColorTemp');
                                             }
-                                            //TODO: Color Temp Presets
-                                            // Color Temperature in Kelvin nicht automatisiert, deswegen nicht über die Funktion registerVariableProfile
+
+                                            if ($hasPresets) {
+                                                $this->RegisterVariableInteger('Z2M_ColorTempPresets', $this->Translate('Color Temperature Presets'), $presetProfileName);
+                                                $this->EnableAction('Z2M_ColorTempPresets');
+                                            }
+
+                                            // Anlegen weiterer nicht-automatisierter Kelvin Temperaturvariablen
                                             if (!IPS_VariableProfileExists('Z2M.ColorTemperatureKelvin')) {
                                                 $this->RegisterProfileInteger('Z2M.ColorTemperatureKelvin', 'Intensity', '', '', 2000, 6535, 1);
                                             }
