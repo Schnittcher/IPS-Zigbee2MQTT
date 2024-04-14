@@ -980,6 +980,7 @@ trait Zigbee2MQTTHelper
                                             }
                                             $this->RegisterVariableInteger('Z2M_ColorTempKelvin', $this->Translate('Color Temperature Kelvin'), 'Z2M.ColorTemperatureKelvin');
                                             $this->EnableAction('Z2M_ColorTempKelvin');
+                                        }
                                             break;
                                         case 'color_temp_rgb':
                                             //Color Temperature Mired
