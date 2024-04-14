@@ -683,7 +683,7 @@ trait Zigbee2MQTTHelper
 
                         // Füge Min- und Max-Werte zum Profilnamen hinzu
                         $fullRangeProfileName = $ProfileName . $min . '_' . $max;
-                        $presetProfileName = $ProfileName . '_Presets';
+                        $presetProfileName = $fullRangeProfileName . '_Presets';
 
                         $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : '';
                         $step = 1; // Standardmäßig auf 1 für Integer gesetzt, anpassen falls nötig
