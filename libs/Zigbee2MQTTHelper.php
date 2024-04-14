@@ -664,33 +664,40 @@ trait Zigbee2MQTTHelper
                 break;
 
             case 'numeric':
-                $min = $expose['value_min'] ?? 0;
-                $max = $expose['value_max'] ?? 0;
-                $fullRangeProfileName = $ProfileName . $min . '_' . $max;
-                $presetProfileName = $fullRangeProfileName . '_Presets';
+                // Auslagern der numeric Logik in eine spezialisierte Funktion
+                return $this->registerNumericProfile($expose);
 
-                if (!IPS_VariableProfileExists($fullRangeProfileName)) {
-                    $this->RegisterProfileInteger($fullRangeProfileName, 'Electricity', '', $unit, $min, $max, 1);
-                }
-
-                if (isset($expose['presets']) && !empty($expose['presets'])) {
-                    if (IPS_VariableProfileExists($presetProfileName)) {
-                        IPS_DeleteVariableProfile($presetProfileName);
-                    }
-                    $this->RegisterProfileInteger($presetProfileName, 'Electricity', '', $unit, 0, 0, 0);
-                    foreach ($expose['presets'] as $preset) {
-                        $presetValue = $preset['value'];
-                        $presetName = $this->Translate(ucwords(str_replace('_', ' ', $preset['name'])));
-                        IPS_SetVariableProfileAssociation($presetProfileName, $presetValue, $presetName, '', 0xFFFFFF);
-                    }
-                    return ['mainProfile' => $fullRangeProfileName, 'presetProfile' => $presetProfileName];
-                }
-
-                return ['mainProfile' => $fullRangeProfileName, 'presetProfile' => false];
+            default:
+                $this->SendDebug(__FUNCTION__ . ':: Type not handled', $ProfileName, 0);
+                return false;
         }
-        return $ProfileName;
     }
+    private function registerNumericProfile($expose) {
+        $ProfileName = 'Z2M.' . $expose['name'];
+        $min = $expose['value_min'] ?? 0;
+        $max = $expose['value_max'] ?? 0;
+        $fullRangeProfileName = $ProfileName . $min . '_' . $max;
+        $presetProfileName = $fullRangeProfileName . '_Presets';
+        $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : '';
 
+        if (!IPS_VariableProfileExists($fullRangeProfileName)) {
+            $this->RegisterProfileInteger($fullRangeProfileName, 'Bulb', '', $unit, $min, $max, 1);
+        }
+
+        if (isset($expose['presets']) && !empty($expose['presets'])) {
+            if (IPS_VariableProfileExists($presetProfileName)) {
+                IPS_DeleteVariableProfile($presetProfileName);
+            }
+            $this->RegisterProfileInteger($presetProfileName, 'Bulb', '', $unit, 0, 0, 0);
+            foreach ($expose['presets'] as $preset) {
+                $presetValue = $preset['value'];
+                $presetName = $this->Translate(ucwords(str_replace('_', ' ', $preset['name'])));
+                IPS_SetVariableProfileAssociation($presetProfileName, $presetValue, $presetName, '', 0xFFFFFF);
+            }
+        }
+
+        return ['mainProfile' => $fullRangeProfileName, 'presetProfile' => $presetProfileName];
+    }
 
     private function mapExposesToVariables(array $exposes)
     {
