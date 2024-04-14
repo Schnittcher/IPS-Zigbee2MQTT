@@ -6,8 +6,8 @@ namespace Zigbee2MQTT;
 
 trait Zigbee2MQTTHelper
 {
+
     private $stateTypeMapping = [
-        // Gehört zu RequestAction
         'Z2M_ChildLock'                         => ['type' => 'lockunlock', 'dataType' =>'string'],
         'Z2M_StateWindow'                       => ['type' => 'openclose', 'dataType' =>'string'],
         'Z2M_AutoLock'                          => ['type' => 'automode', 'dataType' => 'string'],
@@ -21,71 +21,7 @@ trait Zigbee2MQTTHelper
         'Z2M_ComfortTemperature'                => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
         'Z2M_LocalTemperatureCalibration'       => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
         'Z2M_OpenWindowTemperature'             => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_HolidayTemperature'                => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-
-    ];
-
-    public function RequestAction($ident, $value)
-    {
-        $handled = false; // Initialisierung mit false
-
-        // Behandle spezielle Fälle separat
-        switch ($ident) {
-            case 'Z2M_Color':
-                $this->SendDebug(__FUNCTION__ . ' Color', $value, 0);
-                $this->setColor($value, 'cie');
-                $handled = true; // Spezialfall wurde behandelt
-                break;
-            case 'Z2M_ColorHS':
-                $this->SendDebug(__FUNCTION__ . ' Color HS', $value, 0);
-                $this->setColor($value, 'hs');
-                $handled = true; // Spezialfall wurde behandelt
-                break;
-            case 'Z2M_ColorRGB':
-                $this->SendDebug(__FUNCTION__ . ' :: Color RGB', $value, 0);
-                $this->setColor($value, 'cie', 'color_rgb');
-                $handled = true; // Spezialfall wurde behandelt
-                break;
-            case 'Z2M_ColorTempKelvin':
-                $convertedValue = strval(intval(round(1000000 / $value, 0)));
-                $payloadKey = $this->convertIdentToPayloadKey($ident);
-                $payload = [$payloadKey => $convertedValue];
-                $payloadJSON = json_encode($payload, JSON_UNESCAPED_SLASHES);
-                $this->Z2MSet($payloadJSON);
-                $handled = true; // Spezialfall wurde behandelt
-                break;
-        }
-
-        // Überprüfen, ob ein spezieller Fall bereits behandelt wurde
-        if (!$handled) {
-            // Generelle Logik für die meisten anderen Fälle
-            $variableID = $this->GetIDForIdent($ident);
-            $variableInfo = IPS_GetVariable($variableID);
-            $variableType = $variableInfo['VariableType'];
-            $payloadKey = $this->convertIdentToPayloadKey($ident);
-            $payload = [$payloadKey => $this->convertStateBasedOnMapping($ident, $value, $variableType)];
-            $payloadJSON = json_encode($payload, JSON_UNESCAPED_SLASHES);
-            $this->Z2MSet($payloadJSON);
-        }
-    }
-
-    private $stateTypeMapping = [
-        // Gehört zu RequestAction
-        'Z2M_ChildLock'                         => ['type' => 'lockunlock', 'dataType' =>'string'],
-        'Z2M_StateWindow'                       => ['type' => 'openclose', 'dataType' =>'string'],
-        'Z2M_AutoLock'                          => ['type' => 'automode', 'dataType' => 'string'],
-        'Z2M_ValveState'                        => ['type' => 'valve', 'dataType' => 'string'],
-        'Z2M_EcoTemperature'                    => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_MaxTemperature'                    => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_MinTemperature'                    => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_TemperatureMax'                    => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_TemperatureMin'                    => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_OccupiedHeatingSetpointScheduled'  => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_ComfortTemperature'                => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_LocalTemperatureCalibration'       => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_OpenWindowTemperature'             => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_HolidayTemperature'                => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-
+        'Z2M_HolidayTemperature'                => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f']
     ];
 
     public function RequestAction($ident, $value)
