@@ -676,12 +676,10 @@ trait Zigbee2MQTTHelper
                 case 'numeric':
                     // Erstelle den Basisnamen des Profils
                     $ProfileName = 'Z2M.' . $expose['name'];
-
                     // Füge Min- und Max-Werte zum Profilnamen hinzu
                     $min = $expose['value_min'] ?? 0;
                     $max = $expose['value_max'] ?? 0;
                     $ProfileName .= $min . '_' . $max;
-
                     $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : '';
                     $step = 1; // Standardmäßig auf 1 für Integer gesetzt, anpassen falls nötig
                     $digits = 0; // Für Integerprofile keine Nachkommastellen
@@ -689,20 +687,38 @@ trait Zigbee2MQTTHelper
                     // Prüfe ob es ein Integerprofil sein sollte (wenn min und max Ganzzahlen sind)
                     $isInteger = is_int($min) && is_int($max);
 
-                    // Prüfe, ob das Profil bereits existiert, um Duplikate zu vermeiden
+                    // Erstelle oder aktualisiere das Profil
                     if (!IPS_VariableProfileExists($ProfileName)) {
                         if ($isInteger) {
-                            // Nutzt die bereits existierende Funktion, um das Integer-Profil zu registrieren
                             $this->RegisterProfileInteger($ProfileName, 'Electricity', '', $unit, $min, $max, $step);
                         } else {
-                            // Nutzt die bereits existierende Funktion, um das Float-Profil zu registrieren
                             $this->RegisterProfileFloat($ProfileName, 'Electricity', '', $unit, $min, $max, 0.1, 2);
+                        }
+                        // Nachdem das Profil erstellt wurde, füge Assoziationen hinzu, falls 'presets' existieren
+                        if (isset($expose['presets'])) {
+                            foreach ($expose['presets'] as $preset) {
+                                $presetValue = $preset['value'];
+                                $presetName = $this->Translate(ucwords(str_replace('_', ' ', $preset['name'])));
+                                IPS_SetVariableProfileAssociation($ProfileName, $presetValue, $presetName, '', 0xFFFFFF); // Weiß als Standardfarbe
+                            }
                         }
                     } else {
                         // Debugging für bereits existierende Profile
                         $this->SendDebug(__FUNCTION__ . ':: Profile Exists', "Das Profil $ProfileName existiert bereits.", 0);
+                        // Falls das Profil existiert, aber aktualisiert werden muss (z.B. neue Presets)
+                        if (isset($expose['presets'])) {
+                            // Lösche alle bestehenden Assoziationen
+                            IPS_DeleteVariableProfile($ProfileName);
+                            $this->RegisterProfileInteger($ProfileName, 'Electricity', '', $unit, $min, $max, $step);
+                            foreach ($expose['presets'] as $preset) {
+                                $presetValue = $preset['value'];
+                                $presetName = $this->Translate(ucwords(str_replace('_', ' ', $preset['name'])));
+                                IPS_SetVariableProfileAssociation($ProfileName, $presetValue, $presetName, '', 0xFFFFFF); // Weiß als Standardfarbe
+                            }
+                        }
                     }
                     break;
+
         }
         return $ProfileName;
     }
