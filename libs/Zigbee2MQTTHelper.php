@@ -30,7 +30,12 @@ trait Zigbee2MQTTHelper
         switch ($ident) {
         case 'Z2M_ColorTempPresets':
             $this->SendDebug(__FUNCTION__ . ' ColorTempPresets', $value, 0);
-            $this->setColor($value, 'color_temp');
+            // Erstellen des Payloads für die Farbtemperatur
+            $payload = json_encode(['color_temp' => $Value], JSON_UNESCAPED_SLASHES);
+
+            // Senden des Payloads
+            $this->Z2MSet($payload);
+            return;
         case 'Z2M_Color':
             $this->SendDebug(__FUNCTION__ . ' Color', $value, 0);
             $this->setColor($value, 'cie');
