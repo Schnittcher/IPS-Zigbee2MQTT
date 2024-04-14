@@ -959,21 +959,20 @@ trait Zigbee2MQTTHelper
                                                 $this->EnableAction('Z2M_BrightnessWhite');
                                             }
                                             break;
-                                        case 'color_temp':
-                                            $profileData = $this->registerVariableProfile($feature);
-                                            $mainProfileName = $profileData[0];
-                                            $presetProfileName = $profileData[1];
-                                            $hasPresets = $profileData[2];
+                                            case 'color_temp':
+                                                $profileData = $this->registerNumericProfile($feature);
+                                                $mainProfileName = $profileData['mainProfile'];
+                                                $presetProfileName = $profileData['presetProfile'];
 
-                                            if ($mainProfileName) {
-                                                $this->RegisterVariableInteger('Z2M_ColorTemp', $this->Translate('Color Temperature'), $mainProfileName);
-                                                $this->EnableAction('Z2M_ColorTemp');
-                                            }
+                                                if ($mainProfileName) {
+                                                    $this->RegisterVariableInteger('Z2M_ColorTemp', $this->Translate('Color Temperature'), $mainProfileName);
+                                                    $this->EnableAction('Z2M_ColorTemp');
+                                                }
 
-                                            if ($hasPresets) {
-                                                $this->RegisterVariableInteger('Z2M_ColorTempPresets', $this->Translate('Color Temperature Presets'), $presetProfileName);
-                                                $this->EnableAction('Z2M_ColorTempPresets');
-                                            }
+                                                if ($presetProfileName) {
+                                                    $this->RegisterVariableInteger('Z2M_ColorTempPresets', $this->Translate('Color Temperature Presets'), $presetProfileName);
+                                                    $this->EnableAction('Z2M_ColorTempPresets');
+
 
                                             // Anlegen weiterer nicht-automatisierter Kelvin Temperaturvariablen
                                             if (!IPS_VariableProfileExists('Z2M.ColorTemperatureKelvin')) {
