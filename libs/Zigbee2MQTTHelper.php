@@ -680,6 +680,8 @@ trait Zigbee2MQTTHelper
         $presetProfileName = $fullRangeProfileName . '_Presets';
         $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : '';
 
+        $this->SendDebug("registerNumericProfile", "ProfileName: $fullRangeProfileName, min: $min, max: $max, unit: $unit", 0);
+
         if (!IPS_VariableProfileExists($fullRangeProfileName)) {
             $this->RegisterProfileInteger($fullRangeProfileName, 'Bulb', '', $unit, $min, $max, 1);
         }
@@ -692,6 +694,9 @@ trait Zigbee2MQTTHelper
             foreach ($expose['presets'] as $preset) {
                 $presetValue = $preset['value'];
                 $presetName = $this->Translate(ucwords(str_replace('_', ' ', $preset['name'])));
+
+                $this->SendDebug("Preset Info", "presetValue: $presetValue, presetName: $presetName", 0);
+
                 IPS_SetVariableProfileAssociation($presetProfileName, $presetValue, $presetName, '', 0xFFFFFF);
             }
         }
@@ -963,6 +968,8 @@ trait Zigbee2MQTTHelper
                                                 $profileData = $this->registerNumericProfile($feature);
                                                 $mainProfileName = $profileData['mainProfile'];
                                                 $presetProfileName = $profileData['presetProfile'];
+
+                                                $this->SendDebug("Variable Registration", "Main Profile: $mainProfileName, Preset Profile: $presetProfileName", 0);
 
                                                 if ($mainProfileName) {
                                                     $this->RegisterVariableInteger('Z2M_ColorTemp', $this->Translate('Color Temperature'), $mainProfileName);
