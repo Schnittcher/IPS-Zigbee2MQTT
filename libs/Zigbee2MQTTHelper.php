@@ -690,7 +690,7 @@ trait Zigbee2MQTTHelper
             if (IPS_VariableProfileExists($presetProfileName)) {
                 IPS_DeleteVariableProfile($presetProfileName);
             }
-            $this->RegisterProfileInteger($presetProfileName, 'Bulb', '', $unit, 0, 0, 0);
+            $this->RegisterProfileInteger($presetProfileName, 'Bulb', '', '', 0, 0, 0);
             foreach ($expose['presets'] as $preset) {
                 $presetValue = $preset['value'];
                 $presetName = $this->Translate(ucwords(str_replace('_', ' ', $preset['name'])));
