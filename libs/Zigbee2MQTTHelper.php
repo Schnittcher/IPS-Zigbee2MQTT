@@ -3682,15 +3682,19 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.effect.efbfc77e':
                         case 'Z2M.effect.dd503500':
                         case 'Z2M.effect.5b9efbea':
+                        case 'Z2M.effect.91c72ab5':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
                                     ['blink', $this->Translate('Blink'), '', 0x0000FF],
+                                    ['glisten', $this->Translate('Glisten'), '', 0x0000FF],
                                     ['breathe', $this->Translate('Breathe'), '', 0x0000FF],
                                     ['okay', $this->Translate('Okay'), '', 0x0000FF],
+                                    ['opal', $this->Translate('Opal'), '', 0x0000FF],
                                     ['channel_change', $this->Translate('Channel Change'), '', 0x0000FF],
                                     ['candle', $this->Translate('Candle'), '', 0x0000FF],
                                     ['fireplace', $this->Translate('Fireplace'), '', 0x0000FF],
                                     ['colorloop', $this->Translate('Colorloop'), '', 0x0000FF],
+                                    ['sparkle', $this->Translate('Sparkle'), '', 0x0000FF],
                                     ['sunrise', $this->Translate('Sunrise'), '', 0x0000FF],
                                     ['stop_hue_effect', $this->Translate('Stop Hue Effect'), '', 0x0000FF],
                                     ['finish_effect', $this->Translate('Finish Effect'), '', 0x0000FF],
