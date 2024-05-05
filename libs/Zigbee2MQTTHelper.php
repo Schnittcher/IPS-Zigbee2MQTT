@@ -11,6 +11,15 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_Feed':
+                $Payload['feed'] = strval($Value);
+                break;
+            case 'Z2M_ServingSize':
+                $Payload['serving_size'] = $Value;
+                break;
+            case 'Z2M_PortionWeight':
+                $Payload['portion_weight'] = $Value;
+                break;
             case 'Z2M_OccupancySensitivity':
                 $Payload['occupancy_sensitivity'] = $Value;
                 break;
@@ -829,6 +838,36 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('feed', $Payload)) {
+                    $this->SetValue('Z2M_Feed', $Payload['feed']);
+                }
+                if (array_key_exists('feeding_source', $Payload)) {
+                    $this->SetValue('Z2M_FeedingSource', $Payload['feeding_source']);
+                }
+                if (array_key_exists('feeding_size', $Payload)) {
+                    $this->SetValue('Z2M_FeedingSize', $Payload['feeding_size']);
+                }
+                if (array_key_exists('portions_per_day', $Payload)) {
+                    $this->SetValue('Z2M_PortionsPerDay', $Payload['portions_per_day']);
+                }
+
+                if (array_key_exists('weight_per_day', $Payload)) {
+                    $this->SetValue('Z2M_WeightPerDay', $Payload['weight_per_day']);
+                }
+                if (array_key_exists('serving_size', $Payload)) {
+                    $this->SetValue('Z2M_ServeingSize', $Payload['serving_size']);
+                }
+                if (array_key_exists('portion_weight', $Payload)) {
+                    $this->SetValue('Z2M_PortionWeight', $Payload['portion_weight']);
+                }
+                if (array_key_exists('portions_per_day', $Payload)) {
+                    $this->SetValue('Z2M_PortionsPerDay', $Payload['portions_per_day']);
+                }
+
+
+
+
+
                 if (array_key_exists('execute_if_off', $Payload)) {
                     $this->handleStateChange('execute_if_off', 'Z2M_ExecuteIfOff', 'Execute If Off', $Payload);
                 }
@@ -2427,6 +2466,22 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.feeding_source.00000000':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Feeding Source', '', '', [
+                                    ['schadule', $this->Translate('Schedule'), '', 0x00FF00],
+                                    ['manual', $this->Translate('Manual'), '', 0x00FF00],
+                                    ['remote', $this->Translate('Remote'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.feed.00000000':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Feed', '', '', [
+                                    ['START', $this->Translate('Start'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.occupancy_sensitivity.b8421401':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
@@ -2910,6 +2965,7 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.action.815b927a':
                         case 'Z2M.action.b918bcb2':
                         case 'Z2M.action.555bdfc4':
+                        case 'Z2M.action.ebc86fda':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['1_single', $this->Translate('1 Single'), '', 0x00FF00],
@@ -2924,6 +2980,12 @@ trait Zigbee2MQTTHelper
                                     ['4_single', $this->Translate('4 Single'), '', 0x00FF00],
                                     ['4_double', $this->Translate('4 Double'), '', 0x00FF00],
                                     ['4_hold', $this->Translate('4 Hold'), '', 0x00FF00],
+                                    ['5_single', $this->Translate('5 Single'), '', 0x00FF00],
+                                    ['5_double', $this->Translate('5 Double'), '', 0x00FF00],
+                                    ['5_hold', $this->Translate('5 Hold'), '', 0x00FF00],
+                                    ['6_single', $this->Translate('6 Single'), '', 0x00FF00],
+                                    ['6_double', $this->Translate('6 Double'), '', 0x00FF00],
+                                    ['6_hold', $this->Translate('6 Hold'), '', 0x00FF00],
                                 ]);
                             }
                             break;
@@ -3675,15 +3737,19 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.effect.efbfc77e':
                         case 'Z2M.effect.dd503500':
                         case 'Z2M.effect.5b9efbea':
+                        case 'Z2M.effect.91c72ab5':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
                                     ['blink', $this->Translate('Blink'), '', 0x0000FF],
+                                    ['glisten', $this->Translate('Glisten'), '', 0x0000FF],
                                     ['breathe', $this->Translate('Breathe'), '', 0x0000FF],
                                     ['okay', $this->Translate('Okay'), '', 0x0000FF],
+                                    ['opal', $this->Translate('Opal'), '', 0x0000FF],
                                     ['channel_change', $this->Translate('Channel Change'), '', 0x0000FF],
                                     ['candle', $this->Translate('Candle'), '', 0x0000FF],
                                     ['fireplace', $this->Translate('Fireplace'), '', 0x0000FF],
                                     ['colorloop', $this->Translate('Colorloop'), '', 0x0000FF],
+                                    ['sparkle', $this->Translate('Sparkle'), '', 0x0000FF],
                                     ['sunrise', $this->Translate('Sunrise'), '', 0x0000FF],
                                     ['stop_hue_effect', $this->Translate('Stop Hue Effect'), '', 0x0000FF],
                                     ['finish_effect', $this->Translate('Finish Effect'), '', 0x0000FF],
@@ -4155,7 +4221,15 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileFloat($ProfileName, 'Shuffle', '', ' ', 0, 0, 0, 2);
                         }
                     break;
+                    case 'serving_size':
+                    case 'portion_weight':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
+                        }
+                        break;
                     case 'ac_frequency':
+                    case 'feeding_size':
+                    case 'weight_per_day':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
@@ -4201,6 +4275,7 @@ trait Zigbee2MQTTHelper
                     case 'action_rate':
                     case 'action_level':
                     case 'action_transition_time':
+                    case 'portions_per_day':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ', 0, 0, 0);
                         }
@@ -5341,6 +5416,19 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'feeding_source':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_FeedingSource', $this->Translate('Feeding Source'), $ProfileName);
+                            }
+                            break;
+                        case 'feed':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_Feed', $this->Translate('Feed'), $ProfileName);
+                                $this->EnableAction('Z2M_Feed');
+                            }
+                            break;
                         case 'occupancy_sensitivity':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -5845,6 +5933,39 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'portions_per_day':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_PortionsPerDay', $this->Translate('Portions Per Day'), $ProfileName);
+                            }
+                            break;
+                        case 'weight_per_day':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_WeightPerDay', $this->Translate('Weight Per Day'), $ProfileName);
+                            }
+                            break;
+                        case 'serving_size':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_ServingSize', $this->Translate('Serving Size'), $ProfileName);
+                                $this->EnableAction('Z2M_ServingSize');
+                            }
+                            break;
+                        case 'portion_weight':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_PortionWeight', $this->Translate('Portion Weight'), $ProfileName);
+                                $this->EnableAction('Z2M_PortionWeight');
+                            }
+                            break;
+                        case 'feeding_size':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_FeedingSize', $this->Translate('Feeding Size'), $ProfileName);
+                                    $this->EnableAction('Z2M_FeedingSize');
+                                }
+                            break;
                         case 'voc_index':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
