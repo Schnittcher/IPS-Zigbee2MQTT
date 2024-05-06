@@ -855,7 +855,7 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_WeightPerDay', $Payload['weight_per_day']);
                 }
                 if (array_key_exists('serving_size', $Payload)) {
-                    $this->SetValue('Z2M_ServeingSize', $Payload['serving_size']);
+                    $this->SetValue('Z2M_ServingSize', $Payload['serving_size']);
                 }
                 if (array_key_exists('portion_weight', $Payload)) {
                     $this->SetValue('Z2M_PortionWeight', $Payload['portion_weight']);
@@ -2478,6 +2478,7 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.feed.00000000':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Feed', '', '', [
+                                    [' ', ' ', '', 0x00FF00],
                                     ['START', $this->Translate('Start'), '', 0x00FF00],
                                 ]);
                             }
