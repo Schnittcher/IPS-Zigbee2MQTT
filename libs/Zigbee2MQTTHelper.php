@@ -855,7 +855,7 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_WeightPerDay', $Payload['weight_per_day']);
                 }
                 if (array_key_exists('serving_size', $Payload)) {
-                    $this->SetValue('Z2M_ServeingSize', $Payload['serving_size']);
+                    $this->SetValue('Z2M_ServingSize', $Payload['serving_size']);
                 }
                 if (array_key_exists('portion_weight', $Payload)) {
                     $this->SetValue('Z2M_PortionWeight', $Payload['portion_weight']);
@@ -863,10 +863,6 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('portions_per_day', $Payload)) {
                     $this->SetValue('Z2M_PortionsPerDay', $Payload['portions_per_day']);
                 }
-
-
-
-
 
                 if (array_key_exists('execute_if_off', $Payload)) {
                     $this->handleStateChange('execute_if_off', 'Z2M_ExecuteIfOff', 'Execute If Off', $Payload);
@@ -2478,6 +2474,7 @@ trait Zigbee2MQTTHelper
                         case 'Z2M.feed.00000000':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Feed', '', '', [
+                                    [' ', ' ', '', 0x00FF00],
                                     ['START', $this->Translate('Start'), '', 0x00FF00],
                                 ]);
                             }
@@ -3112,6 +3109,26 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.action.9dc63e5e':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['arrow_left_click', $this->Translate('Arrow Left Click'), '', 0x00FF00],
+                                    ['arrow_left_hold', $this->Translate('Arrow Left Hold'), '', 0x00FF00],
+                                    ['arrow_left_release', $this->Translate('Arrow Left Release'), '', 0x00FF00],
+                                    ['arrow_right_click', $this->Translate('Arrow Right click'), '', 0x00FF00],
+                                    ['arrow_right_hold', $this->Translate('Arrow Right Hold'), '', 0x00FF00],
+                                    ['arrow_right_release', $this->Translate('Arrow Right Release'), '', 0x00FF00],
+                                    ['brightness_down_hold', $this->Translate('Brightness Down Hold'), '', 0x00FF00],
+                                    ['brightness_down_release', $this->Translate('Brightness Down Release'), '', 0x00FF00],
+                                    ['brightness_down_click', $this->Translate('Brightness Down click'), '', 0x00FF00],
+                                    ['brightness_up_click', $this->Translate('Brightness Up click'), '', 0x00FF00],
+                                    ['brightness_up_hold', $this->Translate('Brightness Up Hold'), '', 0x00FF00],
+                                    ['brightness_up_release', $this->Translate('Brightness Up Release'), '', 0x00FF00],
+                                    ['toggle', $this->Translate('Toggle'), '', 0x00FF00],
+                                    ['toggle_hold', $this->Translate('Toggle Hold'), '', 0x00FF00],
+                                ]);
+                            }
+                                break;
                         case 'Z2M.action.817f2757':
                         case 'Z2M.action.bdac7927':
                         case 'Z2M.action.301a3bd1':
@@ -5963,8 +5980,8 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_FeedingSize', $this->Translate('Feeding Size'), $ProfileName);
-                                    $this->EnableAction('Z2M_FeedingSize');
-                                }
+                                $this->EnableAction('Z2M_FeedingSize');
+                            }
                             break;
                         case 'voc_index':
                             $ProfileName = $this->registerVariableProfile($expose);

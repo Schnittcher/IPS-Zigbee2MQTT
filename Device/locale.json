@@ -107,7 +107,6 @@
             "Brightness move up": "Helligkeit erhöhen",
             "Brightness Move Up 1": "Helligkeit Schrittweise erhöhen 1",
             "Brightness Move Up 2": "Helligkeit Schrittweise erhöhen 2",
-
             "Brightness RGB": "Helligkeit RGB",
             "Brightness State": "Helligkeitszustand",
             "Brightness Step Down": "Helligkeit Schrittweise senken",
@@ -755,6 +754,7 @@
             "Thursday": "Donnerstag",
             "Tilt": "Neigung",
             "Toggle": "Wechsel",
+            "Toggle Hold": "Wechsel Halten",
             "Toilet": "Badezimmer",
             "Tokyo": "Tokio",
             "Transmit Power": "Signalstärke",
