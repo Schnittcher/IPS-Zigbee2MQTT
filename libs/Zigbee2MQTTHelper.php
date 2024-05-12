@@ -3113,6 +3113,25 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.action.9dc63e5e':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['arrow_left_click', $this->Translate('Arrow Left Click'), '', 0x00FF00],
+                                    ['arrow_left_hold', $this->Translate('Arrow Left Hold'), '', 0x00FF00],
+                                    ['arrow_left_release', $this->Translate('Arrow Left Release'), '', 0x00FF00],
+                                    ['arrow_right_click', $this->Translate('Arrow Right click'), '', 0x00FF00],
+                                    ['arrow_right_hold', $this->Translate('Arrow Right Hold'), '', 0x00FF00],
+                                    ['arrow_right_release', $this->Translate('Arrow Right Release'), '', 0x00FF00],
+                                    ['brightness_down_hold', $this->Translate('Brightness Down Hold'), '', 0x00FF00],
+                                    ['brightness_down_release', $this->Translate('Brightness Down Release'), '', 0x00FF00],
+                                    ['brightness_down_click', $this->Translate('Brightness Down click'), '', 0x00FF00],
+                                    ['brightness_up_click', $this->Translate('Brightness Up click'), '', 0x00FF00],
+                                    ['brightness_up_hold', $this->Translate('Brightness Up Hold'), '', 0x00FF00],
+                                    ['brightness_up_release', $this->Translate('Brightness Up Release'), '', 0x00FF00],
+                                    ['toggle', $this->Translate('Toggle'), '', 0x00FF00],
+                                    ['toggle_hold', $this->Translate('Toggle Hold'), '', 0x00FF00],
+                                ]);
+                                break;
                         case 'Z2M.action.817f2757':
                         case 'Z2M.action.bdac7927':
                         case 'Z2M.action.301a3bd1':
