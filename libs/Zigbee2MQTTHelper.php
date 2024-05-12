@@ -864,10 +864,6 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_PortionsPerDay', $Payload['portions_per_day']);
                 }
 
-
-
-
-
                 if (array_key_exists('execute_if_off', $Payload)) {
                     $this->handleStateChange('execute_if_off', 'Z2M_ExecuteIfOff', 'Execute If Off', $Payload);
                 }
@@ -5984,8 +5980,8 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_FeedingSize', $this->Translate('Feeding Size'), $ProfileName);
-                                    $this->EnableAction('Z2M_FeedingSize');
-                                }
+                                $this->EnableAction('Z2M_FeedingSize');
+                            }
                             break;
                         case 'voc_index':
                             $ProfileName = $this->registerVariableProfile($expose);
