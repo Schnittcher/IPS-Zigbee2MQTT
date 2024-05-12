@@ -3131,6 +3131,7 @@ trait Zigbee2MQTTHelper
                                     ['toggle', $this->Translate('Toggle'), '', 0x00FF00],
                                     ['toggle_hold', $this->Translate('Toggle Hold'), '', 0x00FF00],
                                 ]);
+                            }
                                 break;
                         case 'Z2M.action.817f2757':
                         case 'Z2M.action.bdac7927':
