@@ -4149,32 +4149,32 @@ trait Zigbee2MQTTHelper
                 switch ($expose['property']) {
                     case 'tds':
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Information', '', 'ppm', 0, 0, 0, 2);
+                            $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
                         break;
                     case 'ph':
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Information', '', 'pH', 0, 0, 0, 2);
+                            $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
                         break;
                     case 'ec':
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Information', '', '\u00b5S\/cm', 0, 0, 0, 2);
+                            $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
                         break;
                     case 'orp':
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Information', '', 'mV', 0, 0, 0, 2);
+                            $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
                         break;
                     case 'free_chlorine':
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Information', '', 'mg\/L', 0, 0, 0, 2);
+                            $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
                         break;
                     case 'salinity':
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Information', '', 'ppm', 0, 0, 0, 2);
+                            $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
                         break;
                     case 'voc_index':
@@ -4186,33 +4186,33 @@ trait Zigbee2MQTTHelper
                     case 'ph_min':
                         $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' pH', $expose['value_min'], $expose['value_max'], 1, 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
                         }
                         break;
                     case 'ec_max':
                     case 'ec_min':
                         $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Information', '', '\u00b5S\/cm', $expose['value_min'], $expose['value_max'], 1, 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
                         }
                         break;
                     case 'orp_max':
                     case 'orp_min':
                         $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Information', '', 'mV', $expose['value_min'], $expose['value_max'], 1, 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
                         }
                         break;
                     case 'free_chlorine_max':
                     case 'free_chlorine_min':
                         $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Information', '', 'mg\/L', $expose['value_min'], $expose['value_max'], 1, 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
                         }
                         break;
                     case 'salinity':
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Information', '', 'ppm', 0, 0, 0, 2);
+                            $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
                         break;
                     case 'voc_index':
