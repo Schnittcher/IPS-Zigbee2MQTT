@@ -898,6 +898,9 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('free_chlorine_max', $Payload)) {
                     $this->SetValue('Z2M_FreeChlorineMax', $Payload['free_chlorine_max']);
                 }
+                if (array_key_exists('free_chlorine_min', $Payload)) {
+                    $this->SetValue('Z2M_FreeChlorineMin', $Payload['free_chlorine_min']);
+                }
                 if (array_key_exists('salinity', $Payload)) {
                     $this->SetValue('Z2M_Salinity', $Payload['salinity']);
                 }
