@@ -6121,48 +6121,56 @@ trait Zigbee2MQTTHelper
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_PHMax', $this->Translate('pH Max'), $ProfileName);
+                                $this->EnableAction('Z2M_PHMax');
                             }
                             break;
                         case 'ph_min':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_PHMin', $this->Translate('pH Min'), $ProfileName);
+                                $this->EnableAction('Z2M_PHMin');
                             }
                             break;
                         case 'ec_max':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_ECMax', $this->Translate('Electrical Conductivity Max'), $ProfileName);
+                                $this->EnableAction('Z2M_ECMax');
                             }
                             break;
                         case 'ec_min':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_ECMin', $this->Translate('Electrical Conductivity Min'), $ProfileName);
+                                $this->EnableAction('Z2M_ECMin');
                             }
                             break;
                         case 'orp_max':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_ORPMax', $this->Translate('Oxidation Reduction Potential Max'), $ProfileName);
+                                $this->EnableAction('Z2M_ORPMax');
                             }
                             break;
                         case 'orp_min':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_ORPMin', $this->Translate('Oxidation Reduction Potential Min'), $ProfileName);
+                                $this->EnableAction('Z2M_ORPMin');
                             }
                             break;
                         case 'free_chlorine_max':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_FreeChlorineMax', $this->Translate('Free Chlorine Max'), $ProfileName);
+                                $this->EnableAction('Z2M_FreeChlorineMax');
                             }
                             break;
                         case 'free_chlorine_min':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_FreeChlorineMin', $this->Translate('Free Chlorine Min'), $ProfileName);
+                                $this->EnableAction('Z2M_FreeChlorineMin');
                             }
                             break;
                         case 'portions_per_day':
