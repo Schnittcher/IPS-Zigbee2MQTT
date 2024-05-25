@@ -20,7 +20,7 @@
     ],
     "priority": 1,
     "action": [
-        "Z2M_Z2MSet($_IPS['TARGET'], ['brightness' => $_IPS['Brightness'], 'transition' => $_IPS['TransitionTime']])"
+        "Z2M_Z2MSet($_IPS['TARGET'], ['brightness' => $_IPS['Brightness'], 'transition' => $_IPS['TransitionTime']])";
     ],
     "restrictions": {
         "objectType": [
