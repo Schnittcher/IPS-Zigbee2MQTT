@@ -2528,7 +2528,7 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
-                        case 'Z2M.identify.00000000':
+                        case 'Z2M.identify.12619917':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Identify', '', '', [
                                     ['Identify', $this->Translate('Identify'), '', 0x00FF00],
