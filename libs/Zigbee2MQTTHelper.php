@@ -5576,8 +5576,11 @@ trait Zigbee2MQTTHelper
                     switch ($expose['property']) {
                         case 'identify':
                             $ProfileName = $this->registerVariableProfile($expose);
-                            $this->RegisterVariableBoolean('Z2M_Identify', $this->Translate('Identify'), '~Switch');
-                            $this->EnableAction('Z2M_Identify');
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_Identify', $this->Translate('Identify'), $ProfileName);
+                                $this->EnableAction('Z2M_Identify');
+                            }
+                            break;
                         case 'feeding_source':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
