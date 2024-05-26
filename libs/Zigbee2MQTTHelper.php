@@ -2848,7 +2848,7 @@ trait Zigbee2MQTTHelper
                                     ['off', $this->Translate('Off'), '', 0x000000],
                                 ]);
                             }
-                        break;
+                            break;
                         case 'Z2M.system_mode.3aabe70a':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
