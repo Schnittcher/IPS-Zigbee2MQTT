@@ -7,10 +7,10 @@ namespace Zigbee2MQTT;
 trait Zigbee2MQTTHelper
 {
     private $stateTypeMapping = [
-    // Gehört zu RequestAction
-    // Hier werden die Fälle behandelt, wo standard-Aktionen nicht funktionieren.
-    // boolean zu string, wenn ausser true und false andere Werte gesendet werden.
-    // numeric werden speziell formatiert, wenn ein spezielles Format gewünscht wird.
+        // Gehört zu RequestAction
+        // Hier werden die Fälle behandelt, wo standard-Aktionen nicht funktionieren.
+        // boolean zu string, wenn ausser true und false andere Werte gesendet werden.
+        // numeric werden speziell formatiert, wenn ein spezielles Format gewünscht wird.
         'Z2M_ChildLock'                         => ['type' => 'lockunlock', 'dataType' =>'string'],
         'Z2M_StateWindow'                       => ['type' => 'openclose', 'dataType' =>'string'],
         'Z2M_AutoLock'                          => ['type' => 'automode', 'dataType' => 'string'],
@@ -58,14 +58,14 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($ident);
         $variableInfo = IPS_GetVariable($variableID);
         $variableType = $variableInfo['VariableType'];
-        
+
         // Wandelt den Ident zum passenden Expose um
         $payloadKey = $this->convertIdentToPayloadKey($ident);
-        
+
         // konvertiert den Wert in ein für Z2MSet nutzbaren Wert
         // Keine Unterscheidung mehr in strval($value), $value (numerisch), etc. mehr notwendig
         $payload = [$payloadKey => $this->convertStateBasedOnMapping($ident, $value, $variableType)];
-        
+
         // Erstellung des passenden Payloads und versand durch Z2MSet
         $payloadJSON = json_encode($payload, JSON_UNESCAPED_SLASHES);
         $this->Z2MSet($payloadJSON);
@@ -1694,11 +1694,11 @@ trait Zigbee2MQTTHelper
     }
 
     // Folgende Funktionen entfallen durch das neue RequestAction:
-        // private function OnOff(bool $Value)
-        // private function ValveState(bool $Value)
-        // private function LockUnlock(bool $Value)
-        // private function OpenClose(bool $Value)
-        // private function AutoManual(bool $Value)
+    // private function OnOff(bool $Value)
+    // private function ValveState(bool $Value)
+    // private function LockUnlock(bool $Value)
+    // private function OpenClose(bool $Value)
+    // private function AutoManual(bool $Value)
 
     // Ab hier keine Änderungen mehr
     private function registerVariableProfile($expose) // Unverändert
@@ -2836,7 +2836,7 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterProfileStringEx($ProfileName, 'Light', '', '', [
                                     ['LOW', $this->Translate('Low'), '', 0xFFA500],
                                     ['MEDIUM', $this->Translate('Medium'), '', 0xFF0000],
-                                    ['HIGH', $this->Translate('High'), '', 0x000000]
+                                    ['HIGH', $this->Translate('High'), '', 0x000000],
                                 ]);
                             }
                             // No break. Add additional comment above this line if intentional
@@ -2845,7 +2845,7 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterProfileStringEx($ProfileName, 'Light', '', '', [
                                     ['inverted', $this->Translate('Inverted'), '', 0xFFA500],
                                     ['normal', $this->Translate('Normal'), '', 0xFF0000],
-                                    ['off', $this->Translate('Off'), '', 0x000000]
+                                    ['off', $this->Translate('Off'), '', 0x000000],
                                 ]);
                             }
                         break;
@@ -2854,7 +2854,7 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['auto', $this->Translate('Auto'), '', 0xFFA500],
                                     ['heat', $this->Translate('Heat'), '', 0xFF0000],
-                                    ['off', $this->Translate('Off'), '', 0x000000]
+                                    ['off', $this->Translate('Off'), '', 0x000000],
                                 ]);
                             }
                             break;
@@ -2862,7 +2862,7 @@ trait Zigbee2MQTTHelper
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
                                     ['heat', $this->Translate('Heat'), '', 0xFF0000],
-                                    ['off', $this->Translate('Off'), '', 0x000000]
+                                    ['off', $this->Translate('Off'), '', 0x000000],
                                 ]);
                             }
                             break;
@@ -2872,7 +2872,7 @@ trait Zigbee2MQTTHelper
                                     ['manual', $this->Translate('Manual'), '', 0x00FF00],
                                     ['schedule', $this->Translate('Schedule'), '', 0x8800FF],
                                     ['holiday', $this->Translate('Holiday'), '', 0xFFa500],
-                                    ['boost', $this->Translate('Boost'), '', 0xFF0000]
+                                    ['boost', $this->Translate('Boost'), '', 0xFF0000],
                                 ]);
                             }
                             break;
@@ -2882,7 +2882,7 @@ trait Zigbee2MQTTHelper
                                     ['manual', $this->Translate('Manual'), '', 0x00FF00],
                                     ['programming', $this->Translate('Programming'), '', 0x8800FF],
                                     ['holiday', $this->Translate('Holiday'), '', 0xFFa500],
-                                    ['temporary_manual', $this->Translate('Temporary Manual'), '', 0xFF0000]
+                                    ['temporary_manual', $this->Translate('Temporary Manual'), '', 0xFF0000],
                                 ]);
                             }
                             break;
