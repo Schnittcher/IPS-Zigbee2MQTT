@@ -2528,6 +2528,13 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.identify.00000000':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Identify', '', '', [
+                                    ['Identify', $this->Translate('Identify'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.feeding_source.00000000':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Feeding Source', '', '', [
@@ -5567,6 +5574,10 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'identify':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            $this->RegisterVariableBoolean('Z2M_Identify', $this->Translate('Identify'), '~Switch');
+                            $this->EnableAction('Z2M_Identify');
                         case 'feeding_source':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
