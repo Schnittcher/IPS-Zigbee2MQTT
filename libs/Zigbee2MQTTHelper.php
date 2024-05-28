@@ -2535,7 +2535,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.feeding_source.00000000':
+                        case 'Z2M.feeding_source.6fb04148':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Feeding Source', '', '', [
                                     ['schadule', $this->Translate('Schedule'), '', 0x00FF00],
@@ -2544,7 +2544,7 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
-                        case 'Z2M.feed.00000000':
+                        case 'Z2M.feed.682d973f':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Feed', '', '', [
                                     [' ', ' ', '', 0x00FF00],
