@@ -862,6 +862,12 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('alarm_1', $Payload)) {
+                    $this->handleStateChange('alarm_1', 'Z2M_Alarm1', 'Alarm 1', $Payload);
+                }
+                if (array_key_exists('alarm_2', $Payload)) {
+                    $this->handleStateChange('alarm_2', 'Z2M_Alarm2', 'Alarm 2', $Payload);
+                }
                 if (array_key_exists('ph', $Payload)) {
                     $this->SetValue('Z2M_PH', $Payload['ph']);
                 }
@@ -5252,6 +5258,12 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'alarm_2':
+                            $this->RegisterVariableBoolean('Z2M_Alarm2', $this->Translate('Alarm 2'), '~Alert');
+                            break;
+                        case 'alarm_1':
+                            $this->RegisterVariableBoolean('Z2M_Alarm1', $this->Translate('Alarm 1'), '~Alert');
+                            break;
                         case 'smoke_alarm_state':
                             $this->RegisterVariableBoolean('Z2M_SmokeAlarmState', $this->Translate('Smoke Alarm State'), '~Alert');
                             $this->EnableAction('Z2M_SmokeAlarmState');
