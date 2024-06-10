@@ -1982,7 +1982,7 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('state', $Payload)) {
                     if (in_array($Payload['state'], ['ON', 'OFF'])) {
-                        $this->handleStateChange('state', 'Z2M_State', 'State', $Payload, );
+                        $this->handleStateChange('state', 'Z2M_State', 'State', $Payload);
                     } elseif (in_array($Payload['state'], ['OPEN', 'CLOSE', 'STOP', 'move', 'presence', 'none'])) {
                         $this->SetValue('Z2M_State', $Payload['state']);
                     } else {
@@ -1993,11 +1993,11 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_LEDDisabledNight', $Payload['led_disabled_night']);
                 }
                 if (array_key_exists('state_rgb', $Payload)) {
-                    $this->handleStateChange('state_rgb', 'Z2M_StateRGB', 'State_rgb', $Payload, );
+                    $this->handleStateChange('state_rgb', 'Z2M_StateRGB', 'State_rgb', $Payload);
                     $this->EnableAction('Z2M_StateRGB');
                 }
                 if (array_key_exists('state_cct', $Payload)) {
-                    $this->handleStateChange('state_cct', 'Z2M_StateCCT', 'State_cct', $Payload, );
+                    $this->handleStateChange('state_cct', 'Z2M_StateCCT', 'State_cct', $Payload);
                     $this->EnableAction('Z2M_StateCCT');
                 }
                 if (array_key_exists('state_white', $Payload)) {
@@ -2209,7 +2209,6 @@ trait Zigbee2MQTTHelper
             }
         }
     }
-
     public function setColorExt($color, string $mode, array $params = [], string $Z2MMode = 'color')
     {
         switch ($mode) {
