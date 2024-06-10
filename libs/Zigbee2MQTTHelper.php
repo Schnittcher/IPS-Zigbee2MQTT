@@ -3871,6 +3871,21 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.effect.5c3f0174':
+                        case 'Z2M.effect.5c3f0174':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', [
+                                    ['blink', $this->Translate('Blink'), '', 0x0000FF],
+                                    ['breathe', $this->Translate('Breathe'), '', 0x0000FF],
+                                    ['okay', $this->Translate('Okay'), '', 0x0000FF],
+                                    ['channel_change', $this->Translate('Channel Change'), '', 0x0000FF],
+                                    ['colorloop', $this->Translate('Colorloop'), '', 0x0000FF],
+                                    ['finish_effect', $this->Translate('Finish Effect'), '', 0x0000FF],
+                                    ['stop_colorloop', $this->Translate('Stop Colorloop'), '', 0x0000FF],
+                                    ['stop_effect', $this->Translate('Stop Effect'), '', 0x0000FF]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.sensitivity.848c69b5':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Intensity', '', '', [
