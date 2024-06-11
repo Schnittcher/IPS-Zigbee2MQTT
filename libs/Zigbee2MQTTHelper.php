@@ -1993,11 +1993,11 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_LEDDisabledNight', $Payload['led_disabled_night']);
                 }
                 if (array_key_exists('state_rgb', $Payload)) {
-                    $this->handleStateChange('state_rgb', 'Z2M_StateRGB', 'State_rgb', $Payload);
+                    $this->handleStateChange('state_rgb', 'Z2M_StateRGB', 'State RGB', $Payload);
                     $this->EnableAction('Z2M_StateRGB');
                 }
                 if (array_key_exists('state_cct', $Payload)) {
-                    $this->handleStateChange('state_cct', 'Z2M_StateCCT', 'State_cct', $Payload);
+                    $this->handleStateChange('state_cct', 'Z2M_StateCCT', 'State CCT', $Payload);
                     $this->EnableAction('Z2M_StateCCT');
                 }
                 if (array_key_exists('state_white', $Payload)) {
