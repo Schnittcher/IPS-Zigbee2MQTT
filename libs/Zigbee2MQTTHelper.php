@@ -5403,6 +5403,7 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'button_lock':
                             $this->RegisterVariableBoolean('Z2M_ButtonLock', $this->Translate('Button Lock'), '~Switch');
+                            $this->EnableAction('Z2M_ButtonLock');
                             break;
                         case 'child_lock':
                             $this->RegisterVariableBoolean('Z2M_ChildLock', $this->Translate('Child Lock'), '~Switch');
