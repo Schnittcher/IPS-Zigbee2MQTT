@@ -14,7 +14,7 @@ trait Zigbee2MQTTHelper
             case 'Z2M_ChargingProtection':
                 $Payload['charging_protection'] = strval($this->OnOff($Value));
                 break;
-            case 'Z2M_LEDInidcator':
+            case 'Z2M_LEDIndicator':
                 $Payload['led_indicator'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_ChargingLimit':
