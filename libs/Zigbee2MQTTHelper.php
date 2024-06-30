@@ -4387,6 +4387,12 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'charging_limit':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Electricity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
+                        }
+                        break;
                     case 'presence_timeout':
                     case 'radar_range':
                     case 'move_sensitivity':
@@ -6162,10 +6168,11 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
-                        case 'charging_limiz':
+                        case 'charging_limit':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_ChargingLimit', $this->Translate('Charging Limit'), $ProfileName);
+                                $this->EnableAction('Z2M_ChargingLimit');
                             }
                             break;
                         case 'tds':
