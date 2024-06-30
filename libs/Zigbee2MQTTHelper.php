@@ -739,7 +739,7 @@ trait Zigbee2MQTTHelper
                 $Payload['occupancy_timeout'] = strval($Value);
                 break;
             case 'Z2M_OverloadProtection':
-                $Payload['overload_protection'] = strval($Value);
+                $Payload['overload_protection'] = $Value;
                 break;
             case 'Z2M_Mode':
                 $Payload['mode'] = strval($Value);
@@ -4680,7 +4680,7 @@ trait Zigbee2MQTTHelper
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Electricity', '', ' ' . $this->Translate('Watt'), $expose['value_min'], $expose['value_max'], 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Electricity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 0);
                         }
                         break;
                     case 'strobe_duty_cycle':
