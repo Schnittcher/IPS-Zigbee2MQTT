@@ -14,7 +14,7 @@ trait Zigbee2MQTTHelper
             case 'Z2M_ChargingProtection':
                 $Payload['charging_protection'] = strval($this->OnOff($Value));
                 break;
-            case 'Z2M_LEDInidcator':
+            case 'Z2M_LEDIndicator':
                 $Payload['led_indicator'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_ChargingLimit':
@@ -739,7 +739,7 @@ trait Zigbee2MQTTHelper
                 $Payload['occupancy_timeout'] = strval($Value);
                 break;
             case 'Z2M_OverloadProtection':
-                $Payload['overload_protection'] = strval($Value);
+                $Payload['overload_protection'] = $Value;
                 break;
             case 'Z2M_Mode':
                 $Payload['mode'] = strval($Value);
@@ -4387,6 +4387,12 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'charging_limit':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Electricity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], $expose['value_step'], 2);
+                        }
+                        break;
                     case 'presence_timeout':
                     case 'radar_range':
                     case 'move_sensitivity':
@@ -4680,7 +4686,7 @@ trait Zigbee2MQTTHelper
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Electricity', '', ' ' . $this->Translate('Watt'), $expose['value_min'], $expose['value_max'], 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Electricity', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
                     case 'strobe_duty_cycle':
@@ -5403,6 +5409,7 @@ trait Zigbee2MQTTHelper
                             break;
                         case 'button_lock':
                             $this->RegisterVariableBoolean('Z2M_ButtonLock', $this->Translate('Button Lock'), '~Switch');
+                            $this->EnableAction('Z2M_ButtonLock');
                             break;
                         case 'child_lock':
                             $this->RegisterVariableBoolean('Z2M_ChildLock', $this->Translate('Child Lock'), '~Switch');
@@ -6161,10 +6168,11 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
-                        case 'charging_limiz':
+                        case 'charging_limit':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_ChargingLimit', $this->Translate('Charging Limit'), $ProfileName);
+                                $this->EnableAction('Z2M_ChargingLimit');
                             }
                             break;
                         case 'tds':
