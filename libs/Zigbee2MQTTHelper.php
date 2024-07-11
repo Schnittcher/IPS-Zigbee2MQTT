@@ -1135,7 +1135,7 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_CycleIrrigationNumTimes', $Payload['cycle_irrigation_num_times']);
                 }
                 if (array_key_exists('irrigation_start_time', $Payload)) {
-                   try {
+                    try {
                         $startTime = $this->convertToUnixTimestamp($Payload['irrigation_start_time']);
                         $this->SetValue('Z2M_IrrigationStartTime', $startTime);
                     } catch (Exception $e) {
@@ -2227,18 +2227,18 @@ trait Zigbee2MQTTHelper
     
     public function convertToUnixTimestamp($timeString)
     {
-        $this->SendDebug(__FUNCTION__, "Input time string: " . $timeString, 0);
+        $this->SendDebug(__FUNCTION__, 'Input time string: ' . $timeString, 0);
         $currentDate = date('d.m.Y');
-        $this->SendDebug(__FUNCTION__, "Current date: " . $currentDate, 0);
+        $this->SendDebug(__FUNCTION__, 'Current date: ' . $currentDate, 0);
         $datetimeStr = $currentDate . ' ' . $timeString;
-        $this->SendDebug(__FUNCTION__, "Combined datetime string: " . $datetimeStr, 0);
+        $this->SendDebug(__FUNCTION__, 'Combined datetime string: ' . $datetimeStr, 0);
         $datetime = \DateTime::createFromFormat('d.m.Y H:i:s', $datetimeStr);
         if ($datetime === false) {
-            $this->SendDebug(__FUNCTION__, "Error creating DateTime object", 0);
-            throw new \Exception("Fehler beim Konvertieren von Datum und Uhrzeit.");
+            $this->SendDebug(__FUNCTION__, 'Error creating DateTime object', 0);
+            throw new \Exception('Fehler beim Konvertieren von Datum und Uhrzeit.');
         } else {
             $unixTimestamp = $datetime->getTimestamp();
-            $this->SendDebug(__FUNCTION__, "Unix timestamp: " . $unixTimestamp, 0);
+            $this->SendDebug(__FUNCTION__, 'Unix timestamp: ' . $unixTimestamp, 0);
             return $unixTimestamp;
         }
     }
