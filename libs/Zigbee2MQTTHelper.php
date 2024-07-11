@@ -1135,13 +1135,28 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_CycleIrrigationNumTimes', $Payload['cycle_irrigation_num_times']);
                 }
                 if (array_key_exists('irrigation_start_time', $Payload)) {
-                    $this->SetValue('Z2M_IrrigationStartTime', $Payload['irrigation_start_time']);
+                   try {
+                        $startTime = $this->convertToUnixTimestamp($Payload['irrigation_start_time']);
+                        $this->SetValue('Z2M_IrrigationStartTime', $startTime);
+                    } catch (Exception $e) {
+                        echo $e->getMessage();
+                    }
                 }
                 if (array_key_exists('irrigation_end_time', $Payload)) {
-                    $this->SetValue('Z2M_IrrigationEndTime', $Payload['irrigation_end_time']);
+                    try {
+                        $endTime = $this->convertToUnixTimestamp($Payload['irrigation_end_time']);
+                        $this->SetValue('Z2M_IrrigationEndTime', $endTime);
+                    } catch (Exception $e) {
+                        echo $e->getMessage();
+                    }
                 }
                 if (array_key_exists('last_irrigation_duration', $Payload)) {
-                    $this->SetValue('Z2M_LastIrrigationDuration', $Payload['last_irrigation_duration']);
+                    try {
+                        $duration = $this->convertToUnixTimestamp($Payload['last_irrigation_duration']);
+                        $this->SetValue('Z2M_LastIrrigationDuration', $duration);
+                    } catch (Exception $e) {
+                        echo $e->getMessage();
+                    }
                 }
                 if (array_key_exists('water_consumed', $Payload)) {
                     $this->SetValue('Z2M_WaterConsumed', $Payload['water_consumed']);
@@ -2209,6 +2224,25 @@ trait Zigbee2MQTTHelper
             }
         }
     }
+    
+    public function convertToUnixTimestamp($timeString)
+    {
+        $this->SendDebug(__FUNCTION__, "Input time string: " . $timeString, 0);
+        $currentDate = date('d.m.Y');
+        $this->SendDebug(__FUNCTION__, "Current date: " . $currentDate, 0);
+        $datetimeStr = $currentDate . ' ' . $timeString;
+        $this->SendDebug(__FUNCTION__, "Combined datetime string: " . $datetimeStr, 0);
+        $datetime = \DateTime::createFromFormat('d.m.Y H:i:s', $datetimeStr);
+        if ($datetime === false) {
+            $this->SendDebug(__FUNCTION__, "Error creating DateTime object", 0);
+            throw new \Exception("Fehler beim Konvertieren von Datum und Uhrzeit.");
+        } else {
+            $unixTimestamp = $datetime->getTimestamp();
+            $this->SendDebug(__FUNCTION__, "Unix timestamp: " . $unixTimestamp, 0);
+            return $unixTimestamp;
+        }
+    }
+    
     public function setColorExt($color, string $mode, array $params = [], string $Z2MMode = 'color')
     {
         switch ($mode) {
@@ -4242,28 +4276,28 @@ trait Zigbee2MQTTHelper
                         break;
                     case 'ph_max':
                     case 'ph_min':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
                         }
                         break;
                     case 'ec_max':
                     case 'ec_min':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
                         }
                         break;
                     case 'orp_max':
                     case 'orp_min':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
                         }
                         break;
                     case 'free_chlorine_max':
                     case 'free_chlorine_min':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
                         }
@@ -4313,7 +4347,7 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'identify':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' seconds', $expose['value_min'], $expose['value_max'], 1, 0);
                         }
@@ -4324,7 +4358,7 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'motor_speed':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Speedo', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
                         }
@@ -4333,7 +4367,7 @@ trait Zigbee2MQTTHelper
                     case 'humidity_periodic_report':
                     case 'temperature_sensitivity':
                     case 'humidity_sensitivity':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Report', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
                         }
@@ -4342,7 +4376,7 @@ trait Zigbee2MQTTHelper
                     case 'max_humidity_alarm':
                     case 'min_humidity_alarm':
                     case 'max_temperature_alarm':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Alert', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1, 0);
                         }
@@ -4353,16 +4387,16 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'cycle_irrigation_num_times':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', '', $expose['value_min'], $expose['value_max'], 1, 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ', $expose['value_min'], $expose['value_max'], 1, 0);
                         }
                         break;
                     case 'irrigation_end_time':
                     case 'last_irrigation_duration':
                     case 'irrigation_start_time':
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ', ' ', 0, 0, 2);
+                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ', ' ', 0, 0, 2);
                         }
                       break;
                     case 'water_consumed':
@@ -4371,11 +4405,16 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'irrigation_target':
-                    case 'cycle_irrigation_interval':
-                        $ProfileName = $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileFloat($ProfileName, 'Graph', '', ' ', ' ', $expose['value_min'], $expose['value_max'], 2);
+                            $this->RegisterProfileInteger($ProfileName, 'Graph', '', ' ' . $this->Translate('Seconds or Litres'), $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
+                        break;
+                    case 'cycle_irrigation_interval':
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Graph', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
                     case 'countdown_l2':
@@ -4455,11 +4494,11 @@ trait Zigbee2MQTTHelper
                         }
                       break;
                     case 'sensitivity':
-                    $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
-                    $ProfileName = str_replace(',', '.', $ProfileName);
-                    if (!IPS_VariableProfileExists($ProfileName)) {
-                        $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' min', $expose['value_min'], $expose['value_max'], 1, 0);
-                    }
+                        $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
+                        $ProfileName = str_replace(',', '.', $ProfileName);
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileFloat($ProfileName, 'Intensity', '', ' min', $expose['value_min'], $expose['value_max'], 1, 0);
+                        }
                     break;
                     case 'detection_distance_min':
                     case 'detection_distance_max':
