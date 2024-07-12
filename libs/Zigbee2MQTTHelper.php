@@ -2224,7 +2224,7 @@ trait Zigbee2MQTTHelper
             }
         }
     }
-    
+
     public function convertToUnixTimestamp($timeString)
     {
         $this->SendDebug(__FUNCTION__, 'Input time string: ' . $timeString, 0);
@@ -2242,7 +2242,7 @@ trait Zigbee2MQTTHelper
             return $unixTimestamp;
         }
     }
-    
+
     public function setColorExt($color, string $mode, array $params = [], string $Z2MMode = 'color')
     {
         switch ($mode) {
