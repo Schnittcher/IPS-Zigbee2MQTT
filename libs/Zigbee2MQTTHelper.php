@@ -6201,7 +6201,7 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
-                        case: 'smoke_concentration':
+                        case 'smoke_concentration':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_SmokeConcentration', $this->Translate('Smoke Concentration'), $ProfileName);
