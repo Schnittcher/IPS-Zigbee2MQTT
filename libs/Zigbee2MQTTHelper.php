@@ -2227,6 +2227,10 @@ trait Zigbee2MQTTHelper
 
     public function convertToUnixTimestamp($timeString)
     {
+        if ($timeString === '--:--:--') {
+            $this->SendDebug(__FUNCTION__, 'Invalid time string received, setting Unix timestamp to 0', 0);
+            return 0;
+        }
         $this->SendDebug(__FUNCTION__, 'Input time string: ' . $timeString, 0);
         $currentDate = date('d.m.Y');
         $this->SendDebug(__FUNCTION__, 'Current date: ' . $currentDate, 0);
@@ -4747,7 +4751,6 @@ trait Zigbee2MQTTHelper
                     case 'calibration_time':
                     case 'calibration_time_left':
                     case 'calibration_time_right':
-                        $ProfileName .= '_' . $expose['unit'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
@@ -4760,7 +4763,6 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'target_distance':
-                        $ProfileName .= '_' . $expose['unit'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Move', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
@@ -6559,19 +6561,19 @@ trait Zigbee2MQTTHelper
                         case 'irrigation_start_time':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableFloat('Z2M_IrrigationStartTime', $this->Translate('Irrigation Start Time'), $ProfileName);
+                                $this->RegisterVariableInteger('Z2M_IrrigationStartTime', $this->Translate('Irrigation Start Time'), $ProfileName);
                             }
                             break;
                         case 'irrigation_end_time':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableFloat('Z2M_IrrigationEndTime', $this->Translate('Irrigation End Time'), $ProfileName);
+                                $this->RegisterVariableInteger('Z2M_IrrigationEndTime', $this->Translate('Irrigation End Time'), $ProfileName);
                             }
                             break;
                         case 'last_irrigation_duration':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
-                                $this->RegisterVariableFloat('Z2M_LastIrrigationDuration', $this->Translate('Last Irrigation Duration'), $ProfileName);
+                                $this->RegisterVariableInteger('Z2M_LastIrrigationDuration', $this->Translate('Last Irrigation Duration'), $ProfileName);
                             }
                             break;
                         case 'water_consumed':
