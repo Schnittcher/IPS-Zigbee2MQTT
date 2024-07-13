@@ -871,6 +871,12 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('device_fault', $Payload)) {
+                    $this->handleStateChange('device_fault', 'Z2M_DeviceFault', 'Device Fault', $Payload);
+                }
+                if (array_key_exists('smoke_concentration', $Payload)) {
+                    $this->SetValue('Z2M_SmokeConcentration', $Payload['smoke_concentration']);
+                }
                 if (array_key_exists('charging_protection', $Payload)) {
                     $this->handleStateChange('charging_protection', 'Z2M_ChargingProtection', 'Charging Protection', $Payload);
                 }
@@ -4228,6 +4234,11 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'smoke_concentration':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ppm', 0, 0, 1, 0);
+                        }
+                        break;
                     case 'tds':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
@@ -5326,6 +5337,9 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'device_fault':
+                            $this->RegisterVariableBoolean('Z2M_DeviceFault', $this->Translate('Device Fault'), '~Switch');
+                            break;
                         case 'charging_protection':
                             $this->RegisterVariableBoolean('Z2M_ChargingProtection', $this->Translate('Charging Protection'), '~Switch');
                             $this->EnableAction('Z2M_ChargingProtection');
@@ -6187,6 +6201,12 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case: 'smoke_concentration':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_SmokeConcentration', $this->Translate('Smoke Concentration'), $ProfileName);
+                            }
+                            break;
                         case 'charging_limit':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
