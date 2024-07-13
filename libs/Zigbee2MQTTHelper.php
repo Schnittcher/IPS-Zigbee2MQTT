@@ -1135,28 +1135,13 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_CycleIrrigationNumTimes', $Payload['cycle_irrigation_num_times']);
                 }
                 if (array_key_exists('irrigation_start_time', $Payload)) {
-                    try {
-                        $startTime = $this->convertToUnixTimestamp($Payload['irrigation_start_time']);
-                        $this->SetValue('Z2M_IrrigationStartTime', $startTime);
-                    } catch (Exception $e) {
-                        echo $e->getMessage();
-                    }
+                    $this->SetValue('Z2M_IrrigationStartTime', $Payload['irrigation_start_time']);
                 }
                 if (array_key_exists('irrigation_end_time', $Payload)) {
-                    try {
-                        $endTime = $this->convertToUnixTimestamp($Payload['irrigation_end_time']);
-                        $this->SetValue('Z2M_IrrigationEndTime', $endTime);
-                    } catch (Exception $e) {
-                        echo $e->getMessage();
-                    }
+                    $this->SetValue('Z2M_IrrigationEndTime', $Payload['irrigation_end_time']);
                 }
                 if (array_key_exists('last_irrigation_duration', $Payload)) {
-                    try {
-                        $duration = $this->convertToUnixTimestamp($Payload['last_irrigation_duration']);
-                        $this->SetValue('Z2M_LastIrrigationDuration', $duration);
-                    } catch (Exception $e) {
-                        echo $e->getMessage();
-                    }
+                    $this->SetValue('Z2M_LastIrrigationDuration', $Payload['last_irrigation_duration']);
                 }
                 if (array_key_exists('water_consumed', $Payload)) {
                     $this->SetValue('Z2M_WaterConsumed', $Payload['water_consumed']);
@@ -4396,13 +4381,6 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ', $expose['value_min'], $expose['value_max'], 1, 0);
                         }
                         break;
-                    case 'irrigation_end_time':
-                    case 'last_irrigation_duration':
-                    case 'irrigation_start_time':
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ', ' ', 0, 0, 2);
-                        }
-                      break;
                     case 'water_consumed':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Drops', '', ' L', ' ', 0, 0, 2);
@@ -6558,24 +6536,6 @@ trait Zigbee2MQTTHelper
                                 $this->EnableAction('Z2M_CycleIrrigationNumTimes');
                             }
                             break;
-                        case 'irrigation_start_time':
-                            $ProfileName = $this->registerVariableProfile($expose);
-                            if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('Z2M_IrrigationStartTime', $this->Translate('Irrigation Start Time'), $ProfileName);
-                            }
-                            break;
-                        case 'irrigation_end_time':
-                            $ProfileName = $this->registerVariableProfile($expose);
-                            if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('Z2M_IrrigationEndTime', $this->Translate('Irrigation End Time'), $ProfileName);
-                            }
-                            break;
-                        case 'last_irrigation_duration':
-                            $ProfileName = $this->registerVariableProfile($expose);
-                            if ($ProfileName != false) {
-                                $this->RegisterVariableInteger('Z2M_LastIrrigationDuration', $this->Translate('Last Irrigation Duration'), $ProfileName);
-                            }
-                            break;
                         case 'water_consumed':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -7359,6 +7319,16 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableInteger('Z2M_BrightnessWhite', $this->Translate('Brightness White'), $ProfileName);
                                 $this->EnableAction('Z2M_BrightnessWhite');
                             }
+                            break;
+                        // Sonderfälle: numeric im Payload, string wird gesetzt
+                        case 'irrigation_start_time':
+                            $this->RegisterVariableString('Z2M_IrrigationStartTime', $this->Translate('Irrigation Start Time'), '');
+                            break;
+                        case 'irrigation_end_time':
+                            $this->RegisterVariableString('Z2M_IrrigationEndTime', $this->Translate('Irrigation End Time'), '');
+                            break;
+                        case 'last_irrigation_duration':
+                            $this->RegisterVariableString('Z2M_LastIrrigationDuration', $this->Translate('Last Irrigation Duration'), '');
                             break;
                         default:
                             $missedVariables['numeric'][] = $expose;
