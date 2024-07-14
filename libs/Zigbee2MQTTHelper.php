@@ -261,7 +261,7 @@ trait Zigbee2MQTTHelper
                 $Payload['displayed_temperature'] = strval($Value);
                 break;
             case 'Z2M_RemoteTemperature':
-                $Payload['remote_temperature'] = strval($Value);
+                $Payload['remote_temperature'] = $Value;
                 break;
             case 'Z2M_TemperatureUnit':
                 $Payload['temperature_unit'] = strval($Value);
