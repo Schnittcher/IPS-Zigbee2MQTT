@@ -261,7 +261,7 @@ trait Zigbee2MQTTHelper
                 $Payload['displayed_temperature'] = strval($Value);
                 break;
             case 'Z2M_RemoteTemperature':
-                $Payload['remote_temperature'] = strval($Value);
+                $Payload['remote_temperature'] = $Value;
                 break;
             case 'Z2M_TemperatureUnit':
                 $Payload['temperature_unit'] = strval($Value);
@@ -871,6 +871,12 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('device_fault', $Payload)) {
+                    $this->handleStateChange('device_fault', 'Z2M_DeviceFault', 'Device Fault', $Payload);
+                }
+                if (array_key_exists('smoke_concentration', $Payload)) {
+                    $this->SetValue('Z2M_SmokeConcentration', $Payload['smoke_concentration']);
+                }
                 if (array_key_exists('charging_protection', $Payload)) {
                     $this->handleStateChange('charging_protection', 'Z2M_ChargingProtection', 'Charging Protection', $Payload);
                 }
@@ -1135,28 +1141,13 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_CycleIrrigationNumTimes', $Payload['cycle_irrigation_num_times']);
                 }
                 if (array_key_exists('irrigation_start_time', $Payload)) {
-                    try {
-                        $startTime = $this->convertToUnixTimestamp($Payload['irrigation_start_time']);
-                        $this->SetValue('Z2M_IrrigationStartTime', $startTime);
-                    } catch (Exception $e) {
-                        echo $e->getMessage();
-                    }
+                    $this->SetValue('Z2M_IrrigationStartTime', $Payload['irrigation_start_time']);
                 }
                 if (array_key_exists('irrigation_end_time', $Payload)) {
-                    try {
-                        $endTime = $this->convertToUnixTimestamp($Payload['irrigation_end_time']);
-                        $this->SetValue('Z2M_IrrigationEndTime', $endTime);
-                    } catch (Exception $e) {
-                        echo $e->getMessage();
-                    }
+                    $this->SetValue('Z2M_IrrigationEndTime', $Payload['irrigation_end_time']);
                 }
                 if (array_key_exists('last_irrigation_duration', $Payload)) {
-                    try {
-                        $duration = $this->convertToUnixTimestamp($Payload['last_irrigation_duration']);
-                        $this->SetValue('Z2M_LastIrrigationDuration', $duration);
-                    } catch (Exception $e) {
-                        echo $e->getMessage();
-                    }
+                    $this->SetValue('Z2M_LastIrrigationDuration', $Payload['last_irrigation_duration']);
                 }
                 if (array_key_exists('water_consumed', $Payload)) {
                     $this->SetValue('Z2M_WaterConsumed', $Payload['water_consumed']);
@@ -2227,6 +2218,10 @@ trait Zigbee2MQTTHelper
 
     public function convertToUnixTimestamp($timeString)
     {
+        if ($timeString === '--:--:--') {
+            $this->SendDebug(__FUNCTION__, 'Invalid time string received, setting Unix timestamp to 0', 0);
+            return 0;
+        }
         $this->SendDebug(__FUNCTION__, 'Input time string: ' . $timeString, 0);
         $currentDate = date('d.m.Y');
         $this->SendDebug(__FUNCTION__, 'Current date: ' . $currentDate, 0);
@@ -4239,6 +4234,11 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'smoke_concentration':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ppm', 0, 0, 1, 0);
+                        }
+                        break;
                     case 'tds':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 0, 2);
@@ -4392,13 +4392,6 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ', $expose['value_min'], $expose['value_max'], 1, 0);
                         }
                         break;
-                    case 'irrigation_end_time':
-                    case 'last_irrigation_duration':
-                    case 'irrigation_start_time':
-                        if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Clock', '', ' ', ' ', 0, 0, 2);
-                        }
-                      break;
                     case 'water_consumed':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Drops', '', ' L', ' ', 0, 0, 2);
@@ -4747,7 +4740,6 @@ trait Zigbee2MQTTHelper
                     case 'calibration_time':
                     case 'calibration_time_left':
                     case 'calibration_time_right':
-                        $ProfileName .= '_' . $expose['unit'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Clock', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
@@ -4760,7 +4752,6 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'target_distance':
-                        $ProfileName .= '_' . $expose['unit'];
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileFloat($ProfileName, 'Move', '', ' ' . $expose['unit'], 0, 0, 0, 2);
                         }
@@ -5346,6 +5337,9 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'device_fault':
+                            $this->RegisterVariableBoolean('Z2M_DeviceFault', $this->Translate('Device Fault'), '~Switch');
+                            break;
                         case 'charging_protection':
                             $this->RegisterVariableBoolean('Z2M_ChargingProtection', $this->Translate('Charging Protection'), '~Switch');
                             $this->EnableAction('Z2M_ChargingProtection');
@@ -6207,6 +6201,12 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'smoke_concentration':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_SmokeConcentration', $this->Translate('Smoke Concentration'), $ProfileName);
+                            }
+                            break;
                         case 'charging_limit':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
@@ -6554,24 +6554,6 @@ trait Zigbee2MQTTHelper
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_CycleIrrigationNumTimes', $this->Translate('Cycle Irrigation Num Times'), $ProfileName);
                                 $this->EnableAction('Z2M_CycleIrrigationNumTimes');
-                            }
-                            break;
-                        case 'irrigation_start_time':
-                            $ProfileName = $this->registerVariableProfile($expose);
-                            if ($ProfileName != false) {
-                                $this->RegisterVariableFloat('Z2M_IrrigationStartTime', $this->Translate('Irrigation Start Time'), $ProfileName);
-                            }
-                            break;
-                        case 'irrigation_end_time':
-                            $ProfileName = $this->registerVariableProfile($expose);
-                            if ($ProfileName != false) {
-                                $this->RegisterVariableFloat('Z2M_IrrigationEndTime', $this->Translate('Irrigation End Time'), $ProfileName);
-                            }
-                            break;
-                        case 'last_irrigation_duration':
-                            $ProfileName = $this->registerVariableProfile($expose);
-                            if ($ProfileName != false) {
-                                $this->RegisterVariableFloat('Z2M_LastIrrigationDuration', $this->Translate('Last Irrigation Duration'), $ProfileName);
                             }
                             break;
                         case 'water_consumed':
@@ -7357,6 +7339,16 @@ trait Zigbee2MQTTHelper
                                 $this->RegisterVariableInteger('Z2M_BrightnessWhite', $this->Translate('Brightness White'), $ProfileName);
                                 $this->EnableAction('Z2M_BrightnessWhite');
                             }
+                            break;
+                        // Sonderfälle: numeric im Payload, string wird gesetzt
+                        case 'irrigation_start_time':
+                            $this->RegisterVariableString('Z2M_IrrigationStartTime', $this->Translate('Irrigation Start Time'), '');
+                            break;
+                        case 'irrigation_end_time':
+                            $this->RegisterVariableString('Z2M_IrrigationEndTime', $this->Translate('Irrigation End Time'), '');
+                            break;
+                        case 'last_irrigation_duration':
+                            $this->RegisterVariableString('Z2M_LastIrrigationDuration', $this->Translate('Last Irrigation Duration'), '');
                             break;
                         default:
                             $missedVariables['numeric'][] = $expose;
