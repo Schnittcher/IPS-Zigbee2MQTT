@@ -871,6 +871,15 @@ trait Zigbee2MQTTHelper
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
                 }
+                if (array_key_exists('action_type', $Payload)) {
+                    $this->SetValue('Z2M_ActionType', $Payload['action_type']);
+                }
+                if (array_key_exists('action_time', $Payload)) {
+                    $this->SetValue('Z2M_ActionTime', $Payload['action_time']);
+                }
+                if (array_key_exists('action_direction', $Payload)) {
+                    $this->SetValue('Z2M_ActionDirection', $Payload['action_direction']);
+                }
                 if (array_key_exists('device_fault', $Payload)) {
                     $this->handleStateChange('device_fault', 'Z2M_DeviceFault', 'Device Fault', $Payload);
                 }
@@ -2580,6 +2589,22 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.action_type':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['step', $this->Translate('Step'), '', 0x00FF00],
+                                    ['rotate', $this->Translate('Rotate'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.action_direction':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['left', $this->Translate('Left'), '', 0x00FF00],
+                                    ['right', $this->Translate('Right'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.identify.12619917':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Identify', '', '', [
@@ -4697,6 +4722,7 @@ trait Zigbee2MQTTHelper
                         }
                         break;
                     case 'occupancy_timeout':
+                    case 'action_time':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
                         $ProfileName = str_replace(',', '.', $ProfileName);
                         if (!IPS_VariableProfileExists($ProfileName)) {
