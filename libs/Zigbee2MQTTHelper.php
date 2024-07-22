@@ -6958,32 +6958,32 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'action_rate':
-                            $Profilename = $this->registerVariableProfile($expose);
-                            if ($Profilename != false) {
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_ActionRate', $this->Translate('Action Rate'), $ProfileName);
                             }
                             break;
                         case 'action_step_size':
-                            $Profilename = $this->registerVariableProfile($expose);
-                            if ($Profilename != false) {
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_ActionStepSize', $this->Translate('Action Step Size'), $ProfileName);
                             }
                             break;
                         case 'action_transition_time':
-                            $Profilename = $this->registerVariableProfile($expose);
-                            if ($Profilename != false) {
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_ActionTransTime', $this->Translate('Action Transition Time'), $ProfileName);
                             }
                             break;
                         case 'action_group':
-                            $Profilename = $this->registerVariableProfile($expose);
-                            if ($Profilename != false) {
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_ActionGroup', $this->Translate('Action Group'), $ProfileName);
                             }
                             break;
                         case 'action_color_temperature':
-                            $Profilename = $this->registerVariableProfile($expose);
-                            if ($Profilename != false) {
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_ActionColorTemp', $this->Translate('Action Color Temperature'), $ProfileName);
                             }
                             break;
