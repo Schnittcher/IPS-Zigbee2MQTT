@@ -1,7 +1,18 @@
 {
     "translations": {
         "de": {
-            "State": "Status"
+            "Install or upgrade Symcon-Extension": "Symcon Erweiterung installieren oder updaten",
+            "Error": "Fehler",
+            "Warning": "Warnungen",
+            "State": "Status",
+            "Log Level": "Protokollierung",
+            "Allow joining the network": "Beitritt zum Netzwerk zulassen",
+            "Restart Required": "Neustart erforderlich",
+            "Perform a restart": "Neustart durchführen",
+            "Network Channel": "Netzwerkkanal",
+            "Extension Version": "Erweiterung Version",
+            "Extension is up to date": "Erweiterung ist aktuell",
+            "Extension Loaded": "Erweiterung geladen"
         }
     }
 }

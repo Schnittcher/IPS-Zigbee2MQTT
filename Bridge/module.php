@@ -48,7 +48,7 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->RegisterProfileStringEx('Z2M.brigde.loglevel', '', '', '', [
             ['error', $this->Translate('Error'), '', 0x00FF00],
             ['warning', $this->Translate('Warning'), '', 0x00FF00],
-            ['info', $this->Translate('Info'), '', 0x00FF00],
+            ['info', $this->Translate('Information'), '', 0x00FF00],
             ['debug', $this->Translate('Debug'), '', 0x00FF00],
 
         ]);
@@ -84,14 +84,14 @@ class Zigbee2MQTTBridge extends IPSModule
                     $this->SetValue('log_level', $Payload['log_level']);
                 }
                 if (isset($Payload['permit_join'])) {
-                    $this->RegisterVariableBoolean('permit_join', $this->Translate('Permit Join'), '~Switch');
+                    $this->RegisterVariableBoolean('permit_join', $this->Translate('Allow joining the network'), '~Switch');
                     $this->EnableAction('permit_join');
                     $this->SetValue('permit_join', $Payload['permit_join']);
                 }
                 if (isset($Payload['restart_required'])) {
                     $this->RegisterVariableBoolean('restart_required', $this->Translate('Restart Required'));
                     $this->SetValue('restart_required', $Payload['restart_required']);
-                    $this->RegisterVariableInteger('restart_request', $this->Translate('Restart Request'), 'Z2M.bridge.restart');
+                    $this->RegisterVariableInteger('restart_request', $this->Translate('Perform a restart'), 'Z2M.bridge.restart');
                     $this->EnableAction('restart_request');
                 }
                 if (isset($Payload['version'])) {
@@ -117,9 +117,8 @@ class Zigbee2MQTTBridge extends IPSModule
                         }
                         $this->RegisterVariableString('extension_version', $this->Translate('Extension Version'));
                         $this->SetValue('extension_version', $Version);
-                        $this->RegisterVariableBoolean('extension_actual', $this->Translate('Extension Actual'));
-                        $this->SetValue('extension_actual', $this->GetBuffer('actualExtensionVersion') == $Version);
-                        $this->SendDebug('actualExtensionVersion', $this->GetBuffer('actualExtensionVersion'), 0);
+                        $this->RegisterVariableBoolean('extension_is_current', $this->Translate('Extension is up to date'));
+                        $this->SetValue('extension_is_current', $this->GetBuffer('actualExtensionVersion') == $Version);
                         break;
                     }
                 }
