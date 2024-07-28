@@ -13,6 +13,11 @@
             "onClick": "Z2M_InstallSymconExtension($id);"
         },
         {
+            "type": "Button",
+            "label": "Set last_seen setting to epoch",
+            "onClick": "Z2M_SetLastSeen($id);"
+        },        
+        {
             "type": "TestCenter"
         },
         {
