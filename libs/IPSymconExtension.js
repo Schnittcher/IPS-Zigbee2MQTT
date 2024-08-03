@@ -1,5 +1,9 @@
-const ZigbeeHerdsmanConverters = require('zigbee-herdsman-converters');
+/*
+ IPSymconExtension
+ Version: 4.4.0
+*/
 
+const ZigbeeHerdsmanConverters = require('zigbee-herdsman-converters');
 class IPSymconExtension {
     constructor(zigbee, mqtt, state, publishEntityState, eventBus, settings, logger) {
         this.zigbee = zigbee;
@@ -64,9 +68,9 @@ class IPSymconExtension {
     #createDevicePayload(device, boolExposes) {
         const definition = this.zigbeeHerdsmanConverters.findByDevice(device.zh);
         let exposes;
-            if (boolExposes) {
-                exposes =  device.exposes();
-            }
+        if (boolExposes) {
+            exposes = device.exposes();
+        }
 
         return {
             ieeeAddr: device.ieeeAddr,
