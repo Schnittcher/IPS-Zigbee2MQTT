@@ -18,6 +18,9 @@
             "onClick": "Z2M_getDeviceInfo($id);"
         },
         {
+            "type": "TestCenter"
+        },
+        {
             "type": "Label",
             "caption": "Spenden / Schenkung"
         },
