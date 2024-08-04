@@ -68,6 +68,19 @@ class Zigbee2MQTTBridge extends IPSModule
             ['info', $this->Translate('Information'), '', 0x00FF00],
             ['debug', $this->Translate('Debug'), '', 0x00FF00],
         ]);
+        $this->RegisterVariableBoolean('state', $this->Translate('State'));
+        $this->RegisterVariableBoolean('extension_loaded', $this->Translate('Extension Loaded'));
+        $this->RegisterVariableString('extension_version', $this->Translate('Extension Version'));
+        $this->RegisterVariableBoolean('extension_is_current', $this->Translate('Extension is up to date'));
+        $this->RegisterVariableString('log_level', $this->Translate('Log Level'), 'Z2M.brigde.loglevel');
+        $this->EnableAction('log_level');
+        $this->RegisterVariableBoolean('permit_join', $this->Translate('Allow joining the network'), '~Switch');
+        $this->EnableAction('permit_join');
+        $this->RegisterVariableBoolean('restart_required', $this->Translate('Restart Required'));
+        $this->RegisterVariableInteger('restart_request', $this->Translate('Perform a restart'), 'Z2M.bridge.restart');
+        $this->EnableAction('restart_request');
+        $this->RegisterVariableString('version', $this->Translate('Version'));
+        $this->RegisterVariableInteger('network_channel', $this->Translate('Network Channel'));
     }
 
     public function ReceiveData($JSONString)
@@ -108,28 +121,19 @@ class Zigbee2MQTTBridge extends IPSModule
                 }
                 break;
             case 'state':
-                $this->RegisterVariableBoolean('state', $this->Translate('State'));
                 $this->SetValue('state', $Payload['state'] == 'online');
                 break;
             case 'info':
                 if (isset($Payload['log_level'])) {
-                    $this->RegisterVariableString('log_level', $this->Translate('Log Level'), 'Z2M.brigde.loglevel');
-                    $this->EnableAction('log_level');
                     $this->SetValue('log_level', $Payload['log_level']);
                 }
                 if (isset($Payload['permit_join'])) {
-                    $this->RegisterVariableBoolean('permit_join', $this->Translate('Allow joining the network'), '~Switch');
-                    $this->EnableAction('permit_join');
                     $this->SetValue('permit_join', $Payload['permit_join']);
                 }
                 if (isset($Payload['restart_required'])) {
-                    $this->RegisterVariableBoolean('restart_required', $this->Translate('Restart Required'));
                     $this->SetValue('restart_required', $Payload['restart_required']);
-                    $this->RegisterVariableInteger('restart_request', $this->Translate('Perform a restart'), 'Z2M.bridge.restart');
-                    $this->EnableAction('restart_request');
                 }
                 if (isset($Payload['version'])) {
-                    $this->RegisterVariableString('version', $this->Translate('Version'));
                     $this->SetValue('version', $Payload['version']);
                 }
                 if (isset($Payload['config']['advanced']['last_seen'])) {
@@ -140,7 +144,6 @@ class Zigbee2MQTTBridge extends IPSModule
                     }
                 }
                 if (isset($Payload['network'])) {
-                    $this->RegisterVariableInteger('network_channel', $this->Translate('Network Channel'));
                     $this->SetValue('network_channel', $Payload['network']['channel']);
                 }
                 break;
@@ -156,9 +159,7 @@ class Zigbee2MQTTBridge extends IPSModule
                         if ($Start) {
                             $Version = trim(substr($Lines[2], $Start + strlen('Version: ')));
                         }
-                        $this->RegisterVariableString('extension_version', $this->Translate('Extension Version'));
                         $this->SetValue('extension_version', $Version);
-                        $this->RegisterVariableBoolean('extension_is_current', $this->Translate('Extension is up to date'));
                         $this->SetValue('extension_is_current', $this->actualExtensionVersion == $Version);
                         if ($this->actualExtensionVersion != $Version) {
                             $this->LogMessage($this->Translate('Symcon Extension in Zigbee2MQTT is outdated. Please update the extension.'), KL_ERROR);
@@ -166,7 +167,6 @@ class Zigbee2MQTTBridge extends IPSModule
                         break;
                     }
                 }
-                $this->RegisterVariableBoolean('extension_loaded', $this->Translate('Extension Loaded'));
                 $this->SetValue('extension_loaded', $foundExtension);
                 if (!$foundExtension) {
                     $this->LogMessage($this->Translate('No Symcon Extension in Zigbee2MQTT installed. Please install the extension.'), KL_ERROR);
@@ -406,6 +406,7 @@ class Zigbee2MQTTBridge extends IPSModule
         }
         return false;
     }
+
     private function SendData(string $Topic, array $Payload = [], int $Timeout = 5000)
     {
         if ($Timeout) {

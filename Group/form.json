@@ -18,6 +18,9 @@
             "onClick": "Z2M_getGroupInfo($id);"
         },
         {
+            "type": "TestCenter"
+        },
+        {
             "type": "Label",
             "caption": "Spenden / Schenkung"
         },
