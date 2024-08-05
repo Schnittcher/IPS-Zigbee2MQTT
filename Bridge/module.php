@@ -68,6 +68,7 @@ class Zigbee2MQTTBridge extends IPSModule
             ['info', $this->Translate('Information'), '', 0x00FF00],
             ['debug', $this->Translate('Debug'), '', 0x00FF00],
         ]);
+        $this->RegisterProfileInteger('Z2M.seconds', '', '', ' s', 0, 0, 1, 0);
         $this->RegisterVariableBoolean('state', $this->Translate('State'));
         $this->RegisterVariableBoolean('extension_loaded', $this->Translate('Extension Loaded'));
         $this->RegisterVariableString('extension_version', $this->Translate('Extension Version'));
@@ -76,7 +77,7 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->EnableAction('log_level');
         $this->RegisterVariableBoolean('permit_join', $this->Translate('Allow joining the network'), '~Switch');
         $this->EnableAction('permit_join');
-        $this->RegisterVariableInteger('permit_join_timeout', $this->Translate('Permit Join Timeout'));
+        $this->RegisterVariableInteger('permit_join_timeout', $this->Translate('Permit Join Timeout'), 'Z2M.seconds');
         $this->RegisterVariableBoolean('restart_required', $this->Translate('Restart Required'));
         $this->RegisterVariableInteger('restart_request', $this->Translate('Perform a restart'), 'Z2M.bridge.restart');
         $this->EnableAction('restart_request');
