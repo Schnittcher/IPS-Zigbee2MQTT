@@ -76,6 +76,7 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->EnableAction('log_level');
         $this->RegisterVariableBoolean('permit_join', $this->Translate('Allow joining the network'), '~Switch');
         $this->EnableAction('permit_join');
+        $this->RegisterVariableInteger('permit_join_timeout', $this->Translate('Permit Join Timeout'));
         $this->RegisterVariableBoolean('restart_required', $this->Translate('Restart Required'));
         $this->RegisterVariableInteger('restart_request', $this->Translate('Perform a restart'), 'Z2M.bridge.restart');
         $this->EnableAction('restart_request');
@@ -129,6 +130,9 @@ class Zigbee2MQTTBridge extends IPSModule
                 }
                 if (isset($Payload['permit_join'])) {
                     $this->SetValue('permit_join', $Payload['permit_join']);
+                }
+                if (isset($Payload['permit_join_timeout'])) {
+                    $this->SetValue('permit_join_timeout', $Payload['permit_join_timeout']);
                 }
                 if (isset($Payload['restart_required'])) {
                     $this->SetValue('restart_required', $Payload['restart_required']);
@@ -239,7 +243,7 @@ class Zigbee2MQTTBridge extends IPSModule
     public function SetPermitJoin(bool $PermitJoin)
     {
         $Topic = '/bridge/request/permit_join';
-        $Payload = ['value'=>$PermitJoin];
+        $Payload = ['value'=>$PermitJoin, 'time'=> 254];
         $Result = $this->SendData($Topic, $Payload);
         if ($Result) { //todo check the Response
             return true;
