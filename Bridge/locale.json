@@ -19,7 +19,8 @@
             "Wrong last_seen setting in Zigbee2MQTT. Please set last_seen to epoch.": "Falsche Einstellung für last_seen in Zigbee2MQTT. Bitte last_seen auf epoch einstellen.",
             "Symcon Extension in Zigbee2MQTT is outdated. Please update the extension.": "Symcon Erweiterung in Zigbee2MQTT ist veraltet. Bitte Erweiterung updaten.",
             "No Symcon Extension in Zigbee2MQTT installed. Please install the extension.": "Symcon Erweiterung in Zigebee2MQTT nicht installiert. Bitte die Erweiterung installieren.",
-            "Extension Loaded": "Erweiterung geladen"
+            "Extension Loaded": "Erweiterung geladen",
+            "Permit Join Time", "Restzeit Netzwerk geöffnet"
         }
     }
 }
