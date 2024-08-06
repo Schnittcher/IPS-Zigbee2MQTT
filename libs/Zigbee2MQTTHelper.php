@@ -1546,21 +1546,21 @@ trait Zigbee2MQTTHelper
                     $this->SetValue('Z2M_Attendance', $Payload['duration_of_attendance']);
                 }
                 if (array_key_exists('action_rate', $Payload)) {
-                    $this->RegisterVariableInteger('Z2M_ActionRate', $this->Translate('Action Rate'), $ProfileName);
-                    $this->EnableAction('Z2M_ActionRate');
+                    $this->RegisterVariableInteger('Z2M_ActionRate', $this->Translate('Action Rate'), '');
+                    // $this->EnableAction('Z2M_ActionRate');
                     $this->SetValue('Z2M_ActionRate', $Payload['action_rate']);
                 }
                 if (array_key_exists('action_level', $Payload)) {
-                    $this->RegisterVariableInteger('Z2M_ActionLevel', $this->Translate('Action Level'), $ProfileName);
-                    $this->EnableAction('Z2M_ActionLevel');
+                    $this->RegisterVariableInteger('Z2M_ActionLevel', $this->Translate('Action Level'), '');
+                    // $this->EnableAction('Z2M_ActionLevel');
                     $this->SetValue('Z2M_ActionLevel', $Payload['action_level']);
                 }
                 if (array_key_exists('action_step_size', $Payload)) {
                     $this->SetValue('Z2M_ActionStepSize', $Payload['action_step_size']);
                 }
                 if (array_key_exists('action_transition_time', $Payload)) {
-                    $this->RegisterVariableInteger('Z2M_ActionTransTime', $this->Translate('Action Transition Time'), $ProfileName);
-                    $this->EnableAction('Z2M_ActionTransTime');
+                    $this->RegisterVariableInteger('Z2M_ActionTransTime', $this->Translate('Action Transition Time'), '');
+                    // $this->EnableAction('Z2M_ActionTransTime');
                     $this->SetValue('Z2M_ActionTransTime', $Payload['action_transition_time']);
                 }
                 if (array_key_exists('action_group', $Payload)) {
