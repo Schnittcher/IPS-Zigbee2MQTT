@@ -82,6 +82,8 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->RegisterVariableInteger('restart_request', $this->Translate('Perform a restart'), 'Z2M.bridge.restart');
         $this->EnableAction('restart_request');
         $this->RegisterVariableString('version', $this->Translate('Version'));
+        $this->RegisterVariableString('zigbee_herdsman_converters', $this->Translate('Zigbee Herdsman Converters Version'));
+        $this->RegisterVariableString('zigbee_herdsman', $this->Translate('Zigbee Herdsman Version'));
         $this->RegisterVariableInteger('network_channel', $this->Translate('Network Channel'));
     }
 
@@ -140,6 +142,12 @@ class Zigbee2MQTTBridge extends IPSModule
                 }
                 if (isset($Payload['version'])) {
                     $this->SetValue('version', $Payload['version']);
+                }
+                if (isset($Payload['zigbee_herdsman_converters']['version'])) {
+                    $this->SetValue('zigbee_herdsman_converters', $Payload['zigbee_herdsman_converters']['version']);
+                }
+                if (isset($Payload['zigbee_herdsman']['version'])) {
+                    $this->SetValue('zigbee_herdsman', $Payload['zigbee_herdsman']['version']);
                 }
                 if (isset($Payload['config']['advanced']['last_seen'])) {
                     $this->SendDebug('last_seen', $Payload['config']['advanced']['last_seen'], 0);
