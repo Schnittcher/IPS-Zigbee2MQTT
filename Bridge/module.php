@@ -133,6 +133,9 @@ class Zigbee2MQTTBridge extends IPSModule
                 }
                 if (isset($Payload['permit_join'])) {
                     $this->SetValue('permit_join', $Payload['permit_join']);
+                    if ($Payload['permit_join'] === false) {
+                    $this->SetValue('permit_join_timeout', 0);
+                    }
                 }
                 if (isset($Payload['permit_join_timeout'])) {
                     $this->SetValue('permit_join_timeout', $Payload['permit_join_timeout']);
