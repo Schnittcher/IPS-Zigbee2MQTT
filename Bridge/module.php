@@ -70,6 +70,7 @@ class Zigbee2MQTTBridge extends IPSModule
             ['info', $this->Translate('Information'), '', 0x00FF00],
             ['debug', $this->Translate('Debug'), '', 0x00FF00],
         ]);
+        $this->RegisterProfileInteger('Z2M.seconds', '', '', ' s', 0, 0, 1, 0);
         $this->RegisterVariableBoolean('state', $this->Translate('State'));
         $this->RegisterVariableBoolean('extension_loaded', $this->Translate('Extension Loaded'));
         $this->RegisterVariableString('extension_version', $this->Translate('Extension Version'));
@@ -78,11 +79,13 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->EnableAction('log_level');
         $this->RegisterVariableBoolean('permit_join', $this->Translate('Allow joining the network'), '~Switch');
         $this->EnableAction('permit_join');
-        $this->RegisterVariableInteger('permit_join_timeout', $this->Translate('Permit Join Timeout'));
+        $this->RegisterVariableInteger('permit_join_timeout', $this->Translate('Permit Join Timeout'), 'Z2M.seconds');
         $this->RegisterVariableBoolean('restart_required', $this->Translate('Restart Required'));
         $this->RegisterVariableInteger('restart_request', $this->Translate('Perform a restart'), 'Z2M.bridge.restart');
         $this->EnableAction('restart_request');
         $this->RegisterVariableString('version', $this->Translate('Version'));
+        $this->RegisterVariableString('zigbee_herdsman_converters', $this->Translate('Zigbee Herdsman Converters Version'));
+        $this->RegisterVariableString('zigbee_herdsman', $this->Translate('Zigbee Herdsman Version'));
         $this->RegisterVariableInteger('network_channel', $this->Translate('Network Channel'));
     }
 
@@ -132,6 +135,9 @@ class Zigbee2MQTTBridge extends IPSModule
                 }
                 if (isset($Payload['permit_join'])) {
                     $this->SetValue('permit_join', $Payload['permit_join']);
+                    if ($Payload['permit_join'] === false) {
+                        $this->SetValue('permit_join_timeout', 0);
+                    }
                 }
                 if (isset($Payload['permit_join_timeout'])) {
                     $this->SetValue('permit_join_timeout', $Payload['permit_join_timeout']);
@@ -148,6 +154,12 @@ class Zigbee2MQTTBridge extends IPSModule
                     if ($Payload['config']['permit_join']) {
                         $this->LogMessage($this->Translate('Danger! In the Zigbee2MQTT configuration permit_join is activated. This leads to a possible security risk!'), KL_ERROR);
                     }
+                }
+                if (isset($Payload['zigbee_herdsman_converters']['version'])) {
+                    $this->SetValue('zigbee_herdsman_converters', $Payload['zigbee_herdsman_converters']['version']);
+                }
+                if (isset($Payload['zigbee_herdsman']['version'])) {
+                    $this->SetValue('zigbee_herdsman', $Payload['zigbee_herdsman']['version']);
                 }
                 if (isset($Payload['config']['advanced']['last_seen'])) {
                     $this->ConfigLastSeen = $Payload['config']['advanced']['last_seen'];
