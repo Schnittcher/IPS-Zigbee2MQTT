@@ -5,6 +5,7 @@
             "Symcon-Extension is up-to-date": "Symcon Erweiterung ist aktuell",
             "Set last_seen setting to epoch": "Setze die last_seen Einstellung auf epoch",
             "last_seen setting is correct": "last_seen Einstellung ist korrekt",
+            "Disable permit_join option in Z2M configuration.yaml": "Deaktiviere die Option permit_join in der Z2M configuration.yaml",
             "Error": "Fehler",
             "Warning": "Warnungen",
             "State": "Status",
@@ -19,8 +20,9 @@
             "Wrong last_seen setting in Zigbee2MQTT. Please set last_seen to epoch.": "Falsche Einstellung für last_seen in Zigbee2MQTT. Bitte last_seen auf epoch einstellen.",
             "Symcon Extension in Zigbee2MQTT is outdated. Please update the extension.": "Symcon Erweiterung in Zigbee2MQTT ist veraltet. Bitte Erweiterung updaten.",
             "No Symcon Extension in Zigbee2MQTT installed. Please install the extension.": "Symcon Erweiterung in Zigebee2MQTT nicht installiert. Bitte die Erweiterung installieren.",
+            "Danger! In the Zigbee2MQTT configuration permit_join is activated. This leads to a possible security risk!": "Achtung! In der Zigbee2MQTT Konfiguration ist permit_join aktiviert. Dies führt zu einem eventuellen Sicherheitsrisiko!",
             "Extension Loaded": "Erweiterung geladen",
-            "Permit Join Timeout", "Restzeit Netzwerk geöffnet"
+            "Permit Join Timeout": "Restzeit Netzwerk geöffnet"
         }
     }
 }
