@@ -59,7 +59,7 @@ class Zigbee2MQTTBridge extends IPSModule
         } else {
             $this->SetStatus(IS_ACTIVE);
             //Setze Filter für ReceiveData
-            $this->SetReceiveDataFilter('.*"Topic":"' . $this->ReadPropertyString('MQTTBaseTopic') . '/bridge/.*');
+            $this->SetReceiveDataFilter('.*"Topic":"' . $BaseTopic . '/bridge/.*');
         }
         $this->RegisterProfileIntegerEx('Z2M.bridge.restart', '', '', '', [
             [0, $this->Translate('Restart'), '', 0xFF0000],
@@ -87,6 +87,12 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->RegisterVariableString('zigbee_herdsman_converters', $this->Translate('Zigbee Herdsman Converters Version'));
         $this->RegisterVariableString('zigbee_herdsman', $this->Translate('Zigbee Herdsman Version'));
         $this->RegisterVariableInteger('network_channel', $this->Translate('Network Channel'));
+
+        if (!empty($BaseTopic)) {
+            if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
+                $this->RequestOptions();
+            }
+        }
     }
 
     public function ReceiveData($JSONString)
@@ -107,8 +113,8 @@ class Zigbee2MQTTBridge extends IPSModule
         $Topics = explode('/', $Topic);
         $Topic = array_shift($Topics);
         $this->SendDebug('MQTT Topic', $Topic, 0);
-        $this->SendDebug('MQTT Payload', $Buffer['Payload'], 0);
-        $Payload = json_decode($Buffer['Payload'], true);
+        $this->SendDebug('MQTT Payload', utf8_decode($Buffer['Payload']), 0);
+        $Payload = json_decode(utf8_decode($Buffer['Payload']), true);
         switch ($Topic) {
             case 'request': //nothing todo
                 break;
@@ -163,7 +169,9 @@ class Zigbee2MQTTBridge extends IPSModule
                 }
                 if (isset($Payload['config']['advanced']['last_seen'])) {
                     $this->ConfigLastSeen = $Payload['config']['advanced']['last_seen'];
-                    if ($Payload['config']['advanced']['last_seen'] != 'epoch') {
+                    if ($Payload['config']['advanced']['last_seen'] == 'epoch') {
+                        $this->UpdateFormField('SetLastSeen', 'enabled', false);
+                    } else {
                         $this->LogMessage($this->Translate('Wrong last_seen setting in Zigbee2MQTT. Please set last_seen to epoch.'), KL_ERROR);
                     }
                 }
@@ -185,7 +193,9 @@ class Zigbee2MQTTBridge extends IPSModule
                         }
                         $this->SetValue('extension_version', $Version);
                         $this->SetValue('extension_is_current', $this->actualExtensionVersion == $Version);
-                        if ($this->actualExtensionVersion != $Version) {
+                        if ($this->actualExtensionVersion == $Version) {
+                            $this->UpdateFormField('InstallExtension', 'enabled', false);
+                        } else {
                             $this->LogMessage($this->Translate('Symcon Extension in Zigbee2MQTT is outdated. Please update the extension.'), KL_ERROR);
                         }
                         break;
@@ -239,6 +249,19 @@ class Zigbee2MQTTBridge extends IPSModule
         }
         $Topic = '/bridge/request/extension/save';
         $Payload = ['name'=>$ExtensionName, 'code'=>file_get_contents(dirname(__DIR__) . '/libs/IPSymconExtension.js')];
+        $Result = $this->SendData($Topic, $Payload);
+        if ($Result) { //todo check the Response
+            return true;
+        }
+        return false;
+    }
+
+    public function RequestOptions()
+    {
+        $Topic = '/bridge/request/options';
+        $Payload = [
+            'options'=> []
+        ];
         $Result = $this->SendData($Topic, $Payload);
         if ($Result) { //todo check the Response
             return true;

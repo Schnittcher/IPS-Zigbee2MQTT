@@ -15,7 +15,7 @@
         {
             "type": "Button",
             "label": "Get Device Infos",
-            "onClick": "Z2M_getDeviceInfo($id);"
+            "onClick": "Z2M_UpdateDeviceInfo($id);"
         },
         {
             "type": "TestCenter"

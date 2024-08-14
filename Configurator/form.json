@@ -16,7 +16,6 @@
                     "type": "Configurator",
                     "name": "DeviceConfigurator",
                     "caption": "Devices",
-                    "rowCount": 35,
                     "delete": true,
                     "sort": {
                         "column": "name",
@@ -71,12 +70,12 @@
         {
             "type": "ExpansionPanel",
             "caption": "Groups",
+            "expanded": true,
             "items": [
                 {
                     "type": "Configurator",
                     "name": "GroupConfigurator",
                     "caption": "Groups",
-                    "rowCount": 25,
                     "delete": true,
                     "sort": {
                         "column": "name",
