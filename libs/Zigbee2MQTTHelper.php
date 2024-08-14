@@ -110,7 +110,7 @@ trait Zigbee2MQTTHelper
             case 'Z2M_HumidityAlarm':
                 $Payload['humidity_alarm'] = $Value;
                 break;
-            case'Z2M_MinHumidityAlarm':
+            case 'Z2M_MinHumidityAlarm':
                 $Payload['min_humidity_alarm'] = $Value;
                 break;
             case 'Z2M_MaxHumidityAlarm':
@@ -218,10 +218,10 @@ trait Zigbee2MQTTHelper
             case 'Z2M_LearnIRCode':
                 $Payload['learn_ir_code'] = strval($this->OnOff($Value));
                 break;
-            case'Z2M_IRCodeToSend':
+            case 'Z2M_IRCodeToSend':
                 $Payload['ir_code_to_send'] = $Value;
                 break;
-            case'Z2M_ProgrammingMode':
+            case 'Z2M_ProgrammingMode':
                 $Payload['programming_mode'] = $Value;
                 break;
             case 'Z2M_FanMode':
@@ -515,11 +515,11 @@ trait Zigbee2MQTTHelper
                 $Payload['state'] = strval($this->OnOff($Value));
                 break;
                 // case 'Z2M_StateLeft':
-            //     $Payload['state_left'] = strval($Value);
-            //     break;
+                //     $Payload['state_left'] = strval($Value);
+                //     break;
                 // case 'Z2M_StateRight':
-            //     $Payload['state_right'] = strval($Value);
-            //     break;
+                //     $Payload['state_right'] = strval($Value);
+                //     break;
             case 'Z2M_RunningState':
                 $Payload['running_state'] = strval($Value);
                 break;
@@ -588,25 +588,25 @@ trait Zigbee2MQTTHelper
             case 'Z2M_ChildLock':
                 $Payload['child_lock'] = strval($this->LockUnlock($Value));
                 break;
-            case'Z2M_PowerOutageMemory':
+            case 'Z2M_PowerOutageMemory':
                 $Payload['power_outage_memory'] = strval($Value);
                 break;
-            case'Z2M_PowerOnBehavior':
+            case 'Z2M_PowerOnBehavior':
                 $Payload['power_on_behavior'] = strval($Value);
                 break;
-            case'Z2M_PowerOnBehaviorL1':
+            case 'Z2M_PowerOnBehaviorL1':
                 $Payload['power_on_behavior_l1'] = strval($Value);
                 break;
-            case'Z2M_PowerOnBehaviorL2':
+            case 'Z2M_PowerOnBehaviorL2':
                 $Payload['power_on_behavior_l2'] = strval($Value);
                 break;
-            case'Z2M_PowerOnBehaviorL3':
+            case 'Z2M_PowerOnBehaviorL3':
                 $Payload['power_on_behavior_l3'] = strval($Value);
                 break;
-            case'Z2M_PowerOnBehaviorL4':
+            case 'Z2M_PowerOnBehaviorL4':
                 $Payload['power_on_behavior_l4'] = strval($Value);
                 break;
-            case'Z2M_AutoOff':
+            case 'Z2M_AutoOff':
                 $Payload['auto_off'] = strval($this->OnOff($Value));
                 break;
             case 'Z2M_StateWindow':
@@ -867,6 +867,79 @@ trait Zigbee2MQTTHelper
             }
         }
         return '';
+    }
+
+    public function convertToUnixTimestamp($timeString)
+    {
+        if ($timeString === '--:--:--') {
+            $this->SendDebug(__FUNCTION__, 'Invalid time string received, setting Unix timestamp to 0', 0);
+            return 0;
+        }
+        $this->SendDebug(__FUNCTION__, 'Input time string: ' . $timeString, 0);
+        $currentDate = date('d.m.Y');
+        $this->SendDebug(__FUNCTION__, 'Current date: ' . $currentDate, 0);
+        $datetimeStr = $currentDate . ' ' . $timeString;
+        $this->SendDebug(__FUNCTION__, 'Combined datetime string: ' . $datetimeStr, 0);
+        $datetime = \DateTime::createFromFormat('d.m.Y H:i:s', $datetimeStr);
+        if ($datetime === false) {
+            $this->SendDebug(__FUNCTION__, 'Error creating DateTime object', 0);
+            throw new \Exception('Fehler beim Konvertieren von Datum und Uhrzeit.');
+        } else {
+            $unixTimestamp = $datetime->getTimestamp();
+            $this->SendDebug(__FUNCTION__, 'Unix timestamp: ' . $unixTimestamp, 0);
+            return $unixTimestamp;
+        }
+    }
+
+    public function setColorExt($color, string $mode, array $params = [], string $Z2MMode = 'color')
+    {
+        switch ($mode) {
+            case 'cie':
+                $this->SendDebug(__FUNCTION__, $color, 0);
+                $this->SendDebug(__FUNCTION__, $mode, 0);
+                $this->SendDebug(__FUNCTION__, json_encode($params, JSON_UNESCAPED_SLASHES), 0);
+                $this->SendDebug(__FUNCTION__, $Z2MMode, 0);
+                if (preg_match('/^#[a-f0-9]{6}$/i', strval($color))) {
+                    $color = ltrim($color, '#');
+                    $color = hexdec($color);
+                }
+                $RGB = $this->HexToRGB($color);
+                $cie = $this->RGBToXy($RGB);
+                if ($Z2MMode = 'color') {
+                    $Payload['color'] = $cie;
+                    $Payload['brightness'] = $cie['bri'];
+                } elseif ($Z2MMode == 'color_rgb') {
+                    $Payload['color_rgb'] = $cie;
+                } else {
+                    return;
+                }
+
+                foreach ($params as $key => $value) {
+                    $Payload[$key] = $value;
+                }
+
+                $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
+                $this->SendDebug(__FUNCTION__, $PayloadJSON, 0);
+                $this->Z2MSet($PayloadJSON);
+                break;
+            default:
+                $this->SendDebug('setColor', 'Invalid Mode ' . $mode, 0);
+                break;
+        }
+    }
+
+    public function Z2MSet($payload)
+    {
+        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
+        $Data['PacketType'] = 3;
+        $Data['QualityOfService'] = 0;
+        $Data['Retain'] = false;
+        $Data['Topic'] = $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
+        $Data['Payload'] = $payload;
+        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
+        $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
+        $this->SendDebug(__FUNCTION__ . ' Payload', $Data['Payload'], 0);
+        $this->SendDataToParent($DataJSON);
     }
 
     protected function DecodeData($Payload)
@@ -2228,79 +2301,6 @@ trait Zigbee2MQTTHelper
         }
     }
 
-    public function convertToUnixTimestamp($timeString)
-    {
-        if ($timeString === '--:--:--') {
-            $this->SendDebug(__FUNCTION__, 'Invalid time string received, setting Unix timestamp to 0', 0);
-            return 0;
-        }
-        $this->SendDebug(__FUNCTION__, 'Input time string: ' . $timeString, 0);
-        $currentDate = date('d.m.Y');
-        $this->SendDebug(__FUNCTION__, 'Current date: ' . $currentDate, 0);
-        $datetimeStr = $currentDate . ' ' . $timeString;
-        $this->SendDebug(__FUNCTION__, 'Combined datetime string: ' . $datetimeStr, 0);
-        $datetime = \DateTime::createFromFormat('d.m.Y H:i:s', $datetimeStr);
-        if ($datetime === false) {
-            $this->SendDebug(__FUNCTION__, 'Error creating DateTime object', 0);
-            throw new \Exception('Fehler beim Konvertieren von Datum und Uhrzeit.');
-        } else {
-            $unixTimestamp = $datetime->getTimestamp();
-            $this->SendDebug(__FUNCTION__, 'Unix timestamp: ' . $unixTimestamp, 0);
-            return $unixTimestamp;
-        }
-    }
-
-    public function setColorExt($color, string $mode, array $params = [], string $Z2MMode = 'color')
-    {
-        switch ($mode) {
-            case 'cie':
-                $this->SendDebug(__FUNCTION__, $color, 0);
-                $this->SendDebug(__FUNCTION__, $mode, 0);
-                $this->SendDebug(__FUNCTION__, json_encode($params, JSON_UNESCAPED_SLASHES), 0);
-                $this->SendDebug(__FUNCTION__, $Z2MMode, 0);
-                if (preg_match('/^#[a-f0-9]{6}$/i', strval($color))) {
-                    $color = ltrim($color, '#');
-                    $color = hexdec($color);
-                }
-                $RGB = $this->HexToRGB($color);
-                $cie = $this->RGBToXy($RGB);
-                if ($Z2MMode = 'color') {
-                    $Payload['color'] = $cie;
-                    $Payload['brightness'] = $cie['bri'];
-                } elseif ($Z2MMode == 'color_rgb') {
-                    $Payload['color_rgb'] = $cie;
-                } else {
-                    return;
-                }
-
-                foreach ($params as $key => $value) {
-                    $Payload[$key] = $value;
-                }
-
-                $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-                $this->SendDebug(__FUNCTION__, $PayloadJSON, 0);
-                $this->Z2MSet($PayloadJSON);
-                break;
-            default:
-                $this->SendDebug('setColor', 'Invalid Mode ' . $mode, 0);
-                break;
-        }
-    }
-
-    public function Z2MSet($payload)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
-        $Data['Payload'] = $payload;
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__ . ' Payload', $Data['Payload'], 0);
-        $this->SendDataToParent($DataJSON);
-    }
-
     protected function createVariableProfiles()
     {
         /**
@@ -2436,7 +2436,7 @@ trait Zigbee2MQTTHelper
             $this->SendDebug('Error :: No Expose for Value', 'Ident: ' . $Ident, 0);
         }
     }
-    
+
     private function handleStateChange($payloadKey, $valueId, $debugTitle, $payload, $stateMapping = null)
     {
         if (array_key_exists($payloadKey, $payload)) {
@@ -3040,7 +3040,7 @@ trait Zigbee2MQTTHelper
                                     ['move_to_saturation', $this->Translate('Move To Saturation'), '', 0x00FF00],
                                     ['off', $this->Translate('Off'), '', 0x00FF00],
                                     ['on', $this->Translate('On'), '', 0x00FF00],
-                                    ['circle_click', $this->Translate('Circle Click'), '', 0x00ff00}
+                                    ['circle_click', $this->Translate('Circle Click'), '', 0x00ff00]
                                 ]);
                             }
                             break;
@@ -6600,7 +6600,7 @@ trait Zigbee2MQTTHelper
                                 $this->EnableAction('Z2M_IrrigationTarget');
                             }
                             break;
-                        case'cycle_irrigation_interval':
+                        case 'cycle_irrigation_interval':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableInteger('Z2M_CycleIrrigationInterval', $this->Translate('Cycle Irrigation Interval'), $ProfileName);

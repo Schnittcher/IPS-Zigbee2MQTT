@@ -219,7 +219,7 @@ class Zigbee2MQTTBridge extends IPSModule
             case 'log_level':
                 $this->SetLogLevel((string) $Value);
                 break;
-            case'restart_request':
+            case 'restart_request':
                 $this->Restart();
                 break;
         }

@@ -9,7 +9,7 @@
     "actions": [
         {
             "type": "Button",
-            "name":"InstallExtension",
+            "name": "InstallExtension",
             "label": "Install or upgrade Symcon-Extension",
             "onClick": "Z2M_InstallSymconExtension($id);"
         },
