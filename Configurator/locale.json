@@ -21,7 +21,8 @@
             "Battery": "Batterie",
             "Mains (single phase)": "Netz (einphasig)",
             "Please use this function with attention!": "Bitte benutzen Sie diese Funktion mit Aufmerksamkeit!",
-            "Read Variables": "Rufe Variablen ab"
+            "Read Variables": "Rufe Variablen ab",
+            "Zigbee2MQTT did not response.": "Zigbee2MQTT hat nicht geantwortet."
         }
     }
 }

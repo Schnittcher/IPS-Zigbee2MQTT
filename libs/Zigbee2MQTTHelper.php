@@ -836,20 +836,12 @@ trait Zigbee2MQTTHelper
         $this->SendDebug('MQTT FullTopic', $ReceiveTopic, 0);
         $this->SendDebug('MQTT first Topic', $Topics[0], 0);
         $this->SendDebug('MQTT Payload', utf8_decode($Buffer['Payload']), 0);
-
-        if ($Topics[0] == $MQTTTopic) {
-            if (end($Topics) == ('availability')) {
-                $this->RegisterVariableBoolean('Z2M_Status', $this->Translate('Status'), 'Z2M.DeviceStatus');
-                if ($Buffer['Payload'] == 'online') {
-                    $this->SetValue('Z2M_Status', true);
-                } else {
-                    $this->SetValue('Z2M_Status', false);
-                }
+        if (end($Topics) == ('availability')) {
+            $this->RegisterVariableBoolean('Z2M_Status', $this->Translate('Status'), 'Z2M.DeviceStatus');
+            if ($Buffer['Payload'] == 'online') {
+                $this->SetValue('Z2M_Status', true);
             } else {
-                $Payload = json_decode(utf8_decode($Buffer['Payload']), true);
-                if (is_array($Payload)) {
-                    $this->DecodeData($Payload);
-                }
+                $this->SetValue('Z2M_Status', false);
             }
             return '';
         }

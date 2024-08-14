@@ -51,7 +51,7 @@ class Zigbee2MQTTDevice extends IPSModule
         //Setze Filter für ReceiveData
         $Filter1 = preg_quote('"Topic":"' . $BaseTopic . '/' . $MQTTTopic . '"');
         $Filter2 = preg_quote('"Topic":"' . $BaseTopic . '/SymconExtension/response/getDeviceInfo/' . $MQTTTopic);
-        $this->SendDebug('Filter ', '.*(' . $Filter1 . '|' . $Filter2 . ').*', 0);
+        $this->SendDebug('Filter', '.*(' . $Filter1 . '|' . $Filter2 . ').*', 0);
         $this->SetReceiveDataFilter('.*(' . $Filter1 . '|' . $Filter2 . ').*');
 
         if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {

@@ -855,7 +855,8 @@
             "Working Day": "Arbeitstag",
             "X Axis": "X Achse",
             "Y Axis": "Y Achse",
-            "Z Axis": "Z Achse"
+            "Z Axis": "Z Achse",
+            "Zigbee2MQTT did not response.": "Zigbee2MQTT hat nicht geantwortet."
         }
     }
 }

@@ -90,7 +90,7 @@ class Zigbee2MQTTBridge extends IPSModule
 
         if (!empty($BaseTopic)) {
             if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
-                $this->RequestOptions();
+                @$this->RequestOptions();
             }
         }
     }
