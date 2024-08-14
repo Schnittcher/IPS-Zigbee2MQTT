@@ -845,18 +845,22 @@ trait Zigbee2MQTTHelper
             }
             return '';
         }
+        $Payload = json_decode(utf8_decode($Buffer['Payload']), true);        
         if ($Topic == 'SymconExtension/response/getDeviceInfo/' . $MQTTTopic) {
-            $Payload = json_decode(utf8_decode($Buffer['Payload']), true);
             if (isset($Payload['transaction'])) {
                 $this->UpdateTransaction($Payload);
             }
+            return '';
         }
 
         if ($Topic == 'SymconExtension/response/getGroupInfo/' . $MQTTTopic) {
-            $Payload = json_decode(utf8_decode($Buffer['Payload']), true);
             if (isset($Payload['transaction'])) {
                 $this->UpdateTransaction($Payload);
             }
+            return '';
+        }
+        if (is_array($Payload)) {
+            $this->DecodeData($Payload);
         }
         return '';
     }
