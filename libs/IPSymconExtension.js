@@ -1,6 +1,6 @@
 /*
  IPSymconExtension
- Version: 4.4.4
+ Version: 4.4.6
 */
 
 const ZigbeeHerdsmanConverters = require('zigbee-herdsman-converters');
@@ -30,7 +30,7 @@ class IPSymconExtension {
         const topicPrefix = `${this.symconTopic}/${this.baseTopic}`;
         if (data.topic.startsWith(`${this.baseTopic}/SymconExtension/request/getDeviceInfo/`)) {
             try {
-                const devicename = data.topic.split('/').at(-1);
+                const devicename = data.topic.split('/').slice(4).join('/');
                 const message = JSON.parse(data.message);
                 const device = this.zigbee.resolveEntity(devicename);
                 const devices = this.#createDevicePayload(device, true);
@@ -44,7 +44,7 @@ class IPSymconExtension {
         }
         if (data.topic.startsWith(`${this.baseTopic}/SymconExtension/request/getGroupInfo`)) {
             try {
-                const groupname = data.topic.split('/').at(-1);
+                const groupname = data.topic.split('/').slice(4).join('/');
                 const message = JSON.parse(data.message);
                 const groupExposes = this.#createGroupExposes(groupname);
                 groupExposes.transaction = message.transaction;

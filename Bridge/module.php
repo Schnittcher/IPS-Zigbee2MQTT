@@ -93,6 +93,19 @@ class Zigbee2MQTTBridge extends IPSModule
                 @$this->RequestOptions();
             }
         }
+
+        $ExtVersion = $this->GetValue('extension_version');
+        if (!empty($ExtVersion) && ($ExtVersion != 'unknown'))
+        {
+            $this->SetValue('extension_is_current', $this->actualExtensionVersion == $ExtVersion);
+            if ($this->actualExtensionVersion == $ExtVersion) {
+                $this->UpdateFormField('InstallExtension', 'enabled', false);
+            } else {
+                //$this->LogMessage($this->Translate('Symcon Extension in Zigbee2MQTT is outdated. Please update the extension.'), KL_ERROR);
+                @$this->InstallSymconExtension();
+            }
+        }
+
     }
 
     public function ReceiveData($JSONString)
@@ -181,18 +194,16 @@ class Zigbee2MQTTBridge extends IPSModule
                 break;
             case 'extensions':
                 $foundExtension = false;
+                $Version = 'unknown';
                 foreach ($Payload as $Extension) {
                     if (strpos($Extension['code'], 'class IPSymconExtension')) {
                         $foundExtension = true;
                         $this->ExtensionName = $Extension['name'];
-                        $Version = 'unknown';
                         $Lines = explode("\n", $Extension['code']);
                         $Start = strpos($Lines[2], 'Version: ');
                         if ($Start) {
                             $Version = trim(substr($Lines[2], $Start + strlen('Version: ')));
                         }
-                        $this->SetValue('extension_version', $Version);
-                        $this->SetValue('extension_is_current', $this->actualExtensionVersion == $Version);
                         if ($this->actualExtensionVersion == $Version) {
                             $this->UpdateFormField('InstallExtension', 'enabled', false);
                         } else {
@@ -202,6 +213,8 @@ class Zigbee2MQTTBridge extends IPSModule
                     }
                 }
                 $this->SetValue('extension_loaded', $foundExtension);
+                $this->SetValue('extension_version', $Version);
+                $this->SetValue('extension_is_current', $this->actualExtensionVersion == $Version);
                 if (!$foundExtension) {
                     $this->LogMessage($this->Translate('No Symcon Extension in Zigbee2MQTT installed. Please install the extension.'), KL_ERROR);
                 }
