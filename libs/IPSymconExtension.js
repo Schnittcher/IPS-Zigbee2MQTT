@@ -1,6 +1,6 @@
 /*
  IPSymconExtension
- Version: 4.5.0
+ Version: 4.5.1
 */
 
 const ZigbeeHerdsmanConverters = require('zigbee-herdsman-converters');
@@ -37,8 +37,10 @@ class IPSymconExtension {
                 devices.transaction = message.transaction;
                 this.logger.info('Symcon: request/getDevice');
                 await this.mqtt.publish(`SymconExtension/response/getDeviceInfo/${devicename}`, JSON.stringify(devices), { retain: false, qos: 0 }, `${this.baseTopic}`, false, false);
-            } catch (err) {
-                this.logger.error(`Symcon: ${data.topic} error`);
+            } catch (error) {
+                let message = 'Unknown Error'
+                if (error instanceof Error) message = error.message
+                this.logger.error(`Symcon error (${message}) at Topic ${data.topic}`);
             }
             return;
         }
@@ -50,8 +52,10 @@ class IPSymconExtension {
                 groupExposes.transaction = message.transaction;
                 this.logger.info('Symcon: request/getGroupe');
                 await this.mqtt.publish(`SymconExtension/response/getGroupInfo/${groupname}`, JSON.stringify(groupExposes), { retain: false, qos: 0 }, `${this.baseTopic}`, false, false);
-            } catch (err) {
-                this.logger.error(`Symcon: ${data.topic} error`);
+            } catch (error) {
+                let message = 'Unknown Error'
+                if (error instanceof Error) message = error.message
+                this.logger.error(`Symcon error (${message}) at Topic ${data.topic}`);
             }
             return;
         }
@@ -66,8 +70,10 @@ class IPSymconExtension {
                 groups.transaction = message.transaction;
                 this.logger.info('Symcon: lists/request/getGroups');
                 await this.mqtt.publish('SymconExtension/lists/response/getGroups', JSON.stringify(groups), { retain: false, qos: 0 }, `${this.baseTopic}`, false, false);
-            } catch (err) {
-                this.logger.error(`Symcon: ${data.topic} error`);
+            } catch (error) {
+                let message = 'Unknown Error'
+                if (error instanceof Error) message = error.message
+                this.logger.error(`Symcon error (${message}) at Topic ${data.topic}`);
             }
             return;
         }
@@ -88,8 +94,10 @@ class IPSymconExtension {
                 devices.transaction = message.transaction;
                 this.logger.info('Symcon: lists/request/getDevices');
                 await this.mqtt.publish('SymconExtension/lists/response/getDevices', JSON.stringify(devices), { retain: false, qos: 0 }, `${this.baseTopic}`, false, false);
-            } catch (err) {
-                this.logger.error(`Symcon: ${data.topic} error`);
+            } catch (error) {
+                let message = 'Unknown Error'
+                if (error instanceof Error) message = error.message
+                this.logger.error(`Symcon error (${message}) at Topic ${data.topic}`);
             }
             return;
         }
