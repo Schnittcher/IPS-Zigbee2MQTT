@@ -31,13 +31,20 @@ class IPSymconExtension {
         switch (data.topic) {
             case `${topicPrefix}/getDevices`:
             case `${this.baseTopic}/bridge/symcon/getDevices`:
-                const devices = this.zigbee.devices(false).map(device => this.#createDevicePayload(device, false));
+                let devices = [];
+                try {
+                    for (const device of this.zigbee.devicesIterator(this.#deviceNotCoordinator)) {
+                        devices = devices.concat(this.#createDevicePayload(device, false));
+                    }
+                } catch (error) {
+                    devices = this.zigbee.devices(false).map(device => this.#createDevicePayload(device, false));
+                }
                 this.logger.info('Symcon: publish devices list');
                 await this.#publishToMqtt('devices', devices);
                 break;
             case `${topicPrefix}/getDevice`:
             case `${this.baseTopic}/bridge/symcon/getDevice`:
-                if (data.message) {
+               if (data.message) {
                     const device = this.zigbee.resolveEntity(data.message);
                     const devices = this.#createDevicePayload(device, true);
                     this.logger.info('Symcon: getDevice');
