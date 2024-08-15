@@ -32,7 +32,7 @@ class Zigbee2MQTTBridge extends IPSModule
         //Never delete this line!
         parent::Create();
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
-        $this->RegisterPropertyString('MQTTBaseTopic', 'zigbee2mqtt');
+        $this->RegisterPropertyString('MQTTBaseTopic', '');
         $Version = 'unknown';
         $File = file(dirname(__DIR__) . '/libs/IPSymconExtension.js');
         $Start = strpos($File[2], 'Version: ');

@@ -22,7 +22,12 @@
             "Mains (single phase)": "Netz (einphasig)",
             "Please use this function with attention!": "Bitte benutzen Sie diese Funktion mit Aufmerksamkeit!",
             "Read Variables": "Rufe Variablen ab",
-            "Zigbee2MQTT did not response.": "Zigbee2MQTT hat nicht geantwortet."
+            "Zigbee2MQTT did not response.": "Zigbee2MQTT hat nicht geantwortet.",
+            "Close": "Schließen",
+            "No devices found!": "Keine Geräte gefunden!",
+            "The Symcon extension in Zigbee2MQTT is not installed or not up to date.\r\nPlease install or update the extension within the Bridge instance configuration.": "Die Symcon-Erweiterung in Zigbee2MQTT ist nicht installiert oder nicht auf dem neuesten Stand.\r\nBitte installieren oder aktualisieren Sie die Erweiterung innerhalb der Bridge-Instanzkonfiguration.",
+            "Open bridge instance": "Bridge-Instanz öffnen",
+            "Create bridge instance": "Bridge-Instanz erstellen"
         }
     }
 }

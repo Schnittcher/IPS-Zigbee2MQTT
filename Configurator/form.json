@@ -17,6 +17,7 @@
                     "name": "DeviceConfigurator",
                     "caption": "Devices",
                     "delete": true,
+                    "rowCount": 5,
                     "sort": {
                         "column": "name",
                         "direction": "ascending"
@@ -77,6 +78,7 @@
                     "name": "GroupConfigurator",
                     "caption": "Groups",
                     "delete": true,
+                    "rowCount": 5,
                     "sort": {
                         "column": "name",
                         "direction": "ascending"
@@ -102,6 +104,39 @@
                     "values": []
                 }
             ]
+        },
+        {
+            "name": "ErrorPopup",
+            "type": "PopupAlert",
+            "visible": false,
+            "popup": {
+                "closeCaption": "Close",
+                "items": [
+                    {
+                        "name": "ErrorTitle",
+                        "type": "Label",
+                        "bold": true,
+                        "caption": "No devices found!"
+                    },
+                    {
+                        "name": "ErrorText",
+                        "type": "Label",
+                        "caption": "The Symcon extension in Zigbee2MQTT is not installed or not up to date.\r\nPlease install or update the extension within the Bridge instance configuration."
+                    },
+                    {
+                        "type": "OpenObjectButton",
+                        "caption": "Open bridge instance",
+                        "objectID": 0,
+                        "visible": false
+                    },
+                    {
+                        "type": "Button",
+                        "caption": "Create bridge instance",
+                        "visible": false,
+                        "onClick": []
+                    }
+                ]
+            }
         },
         {
             "type": "Label",
