@@ -149,6 +149,9 @@ class IPSymconExtension {
             }
         });
     }
+    #deviceNotCoordinator(device) {
+        return device.type !== 'Coordinator';
+    }
 }
 
 module.exports = IPSymconExtension;
