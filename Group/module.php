@@ -29,6 +29,7 @@ class Zigbee2MQTTGroup extends IPSModule
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
         $this->RegisterPropertyString('MQTTBaseTopic', 'zigbee2mqtt');
         $this->RegisterPropertyString('MQTTTopic', '');
+        $this->RegisterPropertyInteger('GroupId', 0);
         $this->createVariableProfiles();
         $this->TransactionData = [];
     }

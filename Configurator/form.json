@@ -33,7 +33,7 @@
                             "visible": false
                         },
                         {
-                            "caption": "Friendlyname",
+                            "caption": "Name",
                             "name": "name",
                             "width": "200px"
                         },
@@ -89,7 +89,12 @@
                             "visible": false
                         },
                         {
-                            "caption": "Friendlyname",
+                            "caption": "Devices",
+                            "name": "DevicesCount",
+                            "width": "100px"
+                        },
+                        {
+                            "caption": "Name",
                             "name": "name",
                             "width": "auto"
                         }

@@ -95,8 +95,7 @@ class Zigbee2MQTTBridge extends IPSModule
         }
 
         $ExtVersion = $this->GetValue('extension_version');
-        if (!empty($ExtVersion) && ($ExtVersion != 'unknown'))
-        {
+        if (!empty($ExtVersion) && ($ExtVersion != 'unknown')) {
             $this->SetValue('extension_is_current', $this->actualExtensionVersion == $ExtVersion);
             if ($this->actualExtensionVersion == $ExtVersion) {
                 $this->UpdateFormField('InstallExtension', 'enabled', false);

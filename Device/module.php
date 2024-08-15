@@ -64,6 +64,14 @@ class Zigbee2MQTTDevice extends IPSModule
     {
         $Result = $this->SendData('/SymconExtension/request/getDeviceInfo/' . $this->ReadPropertyString('MQTTTopic'));
         if ($Result) {
+            if (array_key_exists('ieeeAddr', $Result)) {
+                if (empty($this->ReadPropertyString('IEEE')) && ($this->ReadPropertyString('IEEE') != $Result['ieeeAddr'])) {
+                    // Einmalig die leere IEEE Adresse in der Konfig setzen.
+                    IPS_SetProperty($this->InstanceID, 'IEEE', $Result['ieeeAddr']);
+                    IPS_ApplyChanges($this->InstanceID);
+                    return true;
+                }
+            }
             $this->mapExposesToVariables($Result['exposes']);
             return true;
         }

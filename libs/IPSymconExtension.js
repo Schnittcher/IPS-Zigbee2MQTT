@@ -1,6 +1,6 @@
 /*
  IPSymconExtension
- Version: 4.4.6
+ Version: 4.5.0
 */
 
 const ZigbeeHerdsmanConverters = require('zigbee-herdsman-converters');

@@ -6,6 +6,13 @@ namespace Zigbee2MQTT;
 
 trait ColorHelper
 {
+    /**
+     * HexToRGB
+     *
+     * @alias IntegerToArray
+     * @param  integer $value
+     * @return array
+     */
     protected function HexToRGB($value)
     {
         $RGB = [];

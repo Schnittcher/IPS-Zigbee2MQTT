@@ -845,7 +845,7 @@ trait Zigbee2MQTTHelper
             }
             return '';
         }
-        $Payload = json_decode(utf8_decode($Buffer['Payload']), true);        
+        $Payload = json_decode(utf8_decode($Buffer['Payload']), true);
         if ($Topic == 'SymconExtension/response/getDeviceInfo/' . $MQTTTopic) {
             if (isset($Payload['transaction'])) {
                 $this->UpdateTransaction($Payload);
@@ -865,7 +865,13 @@ trait Zigbee2MQTTHelper
         return '';
     }
 
-    public function convertToUnixTimestamp($timeString)
+    /**
+     * convertToUnixTimestamp
+     *
+     * @param  string $timeString
+     * @return integer Unixtimestamp
+     */
+    public function convertToUnixTimestamp(string $timeString)
     {
         if ($timeString === '--:--:--') {
             $this->SendDebug(__FUNCTION__, 'Invalid time string received, setting Unix timestamp to 0', 0);
@@ -887,6 +893,15 @@ trait Zigbee2MQTTHelper
         }
     }
 
+    /**
+     * setColorExt
+     *
+     * @param  string|integer $color Kann einen HTML-Hex-Color-String (#00fe00) oder einen Integer enthalten.
+     * @param  string $mode
+     * @param  array $params
+     * @param  string $Z2MMode
+     * @return void
+     */
     public function setColorExt($color, string $mode, array $params = [], string $Z2MMode = 'color')
     {
         switch ($mode) {
