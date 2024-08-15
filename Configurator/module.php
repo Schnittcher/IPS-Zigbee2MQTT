@@ -54,7 +54,16 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
         $Devices = [];
         $Groups = [];
+        $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         if (!empty($BaseTopic)) {
+            // todo versuchen die bridge zu erreichen um zu testen ob das BaseTopic passt
+            /*if ($InfoResultDevices === false){
+                $Form['actions'][0]['expanded'] = false;
+                $Form['actions'][1]['expanded'] = false;
+                $Form['actions'][2]['visible'] = true;
+                $Form['actions'][2]['popup']['items'][0]['caption']='';
+                $Form['actions'][2]['popup']['items'][1]['caption']='';
+            }*/
             if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
                 $Devices = $this->getDevices();
                 $Groups = $this->getGroups();
@@ -65,13 +74,6 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $this->SendDebug('IPS Devices IEEE', json_encode($IPSDevicesByIEEE), 0);
         $IPSDevicesByTopic = $this->GetIPSInstancesByBaseTopic('{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}', $BaseTopic);
         $this->SendDebug('IPS Devices Topic', json_encode($IPSDevicesByTopic), 0);
-        $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        /**
-         * Todo:
-         * Wenn beides Arrays leer sind, Hinweis das die Erweiterung fehlt oder veraltet ist
-         * PopUp mit Button um zur Bridge zu springen? -> Sofern Instanz gefunden wurde
-         * Bridge mit Aufnehmen in die Geräteliste?!
-         */
         if (!(count($Devices) + count($Groups))) {
             $Form['actions'][0]['expanded'] = false;
             $Form['actions'][1]['expanded'] = false;

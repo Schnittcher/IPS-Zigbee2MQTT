@@ -27,7 +27,7 @@ class Zigbee2MQTTDevice extends IPSModule
         //Never delete this line!
         parent::Create();
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
-        $this->RegisterPropertyString('MQTTBaseTopic', 'zigbee2mqtt');
+        $this->RegisterPropertyString('MQTTBaseTopic', '');
         $this->RegisterPropertyString('MQTTTopic', '');
         $this->RegisterPropertyString('IEEE', '');
         $this->createVariableProfiles();
@@ -45,7 +45,6 @@ class Zigbee2MQTTDevice extends IPSModule
         if (empty($BaseTopic) || empty($MQTTTopic)) {
             $this->SetStatus(IS_INACTIVE);
             $this->SetReceiveDataFilter('NOTHING_TO_RECEIVE'); //block all
-            $this->SetStatus(201);
             return;
         }
         //Setze Filter für ReceiveData
@@ -57,7 +56,7 @@ class Zigbee2MQTTDevice extends IPSModule
         if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
             $this->UpdateDeviceInfo();
         }
-        $this->SetStatus(102);
+        $this->SetStatus(IS_ACTIVE);
     }
 
     public function UpdateDeviceInfo()
