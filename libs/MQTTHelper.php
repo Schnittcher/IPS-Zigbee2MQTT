@@ -82,6 +82,7 @@ trait MQTTHelper
             }
             if (count($Buffer[$TransactionId])) {
                 $this->RemoveTransaction($TransactionId);
+                unset($Buffer[$TransactionId]['transaction']);
                 return $Buffer[$TransactionId];
             }
             IPS_Sleep($Sleep);
@@ -112,9 +113,7 @@ trait MQTTHelper
         }
         $TransactionData = $this->TransactionData;
         if (array_key_exists($Data['transaction'], $TransactionData)) {
-            $TransactionId = $Data['transaction'];
-            unset($Data['transaction']);
-            $TransactionData[$TransactionId] = $Data;
+            $TransactionData[$Data['transaction']] = $Data;
             $this->TransactionData = $TransactionData;
             $this->unlock('TransactionData');
             return;

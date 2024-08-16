@@ -1,6 +1,6 @@
 /*
  IPSymconExtension
- Version: 4.5.1
+ Version: 4.5.2
 */
 
 const ZigbeeHerdsmanConverters = require('zigbee-herdsman-converters');
@@ -33,14 +33,17 @@ class IPSymconExtension {
                 const devicename = data.topic.split('/').slice(4).join('/');
                 const message = JSON.parse(data.message);
                 const device = this.zigbee.resolveEntity(devicename);
-                const devices = this.#createDevicePayload(device, true);
-                devices.transaction = message.transaction;
+                let devicepayload = {};
+                if (device) {
+                    devicepayload = this.#createDevicePayload(device, true);
+                }
+                devicepayload.transaction = message.transaction;
                 this.logger.info('Symcon: request/getDevice');
-                await this.mqtt.publish(`SymconExtension/response/getDeviceInfo/${devicename}`, JSON.stringify(devices), { retain: false, qos: 0 }, `${this.baseTopic}`, false, false);
+                await this.mqtt.publish(`SymconExtension/response/getDeviceInfo/${devicename}`, JSON.stringify(devicepayload), { retain: false, qos: 0 }, `${this.baseTopic}`, false, false);
             } catch (error) {
-                let message = 'Unknown Error'
-                if (error instanceof Error) message = error.message
-                this.logger.error(`Symcon error (${message}) at Topic ${data.topic}`);
+                let errormessage = 'Unknown Error'
+                if (error instanceof Error) errormessage = error.message
+                this.logger.error(`Symcon error (${errormessage}) at Topic ${data.topic}`);
             }
             return;
         }
@@ -53,9 +56,9 @@ class IPSymconExtension {
                 this.logger.info('Symcon: request/getGroupe');
                 await this.mqtt.publish(`SymconExtension/response/getGroupInfo/${groupname}`, JSON.stringify(groupExposes), { retain: false, qos: 0 }, `${this.baseTopic}`, false, false);
             } catch (error) {
-                let message = 'Unknown Error'
-                if (error instanceof Error) message = error.message
-                this.logger.error(`Symcon error (${message}) at Topic ${data.topic}`);
+                let errormessage = 'Unknown Error'
+                if (error instanceof Error) errormessage = error.message
+                this.logger.error(`Symcon error (${errormessage}) at Topic ${data.topic}`);
             }
             return;
         }
@@ -71,9 +74,9 @@ class IPSymconExtension {
                 this.logger.info('Symcon: lists/request/getGroups');
                 await this.mqtt.publish('SymconExtension/lists/response/getGroups', JSON.stringify(groups), { retain: false, qos: 0 }, `${this.baseTopic}`, false, false);
             } catch (error) {
-                let message = 'Unknown Error'
-                if (error instanceof Error) message = error.message
-                this.logger.error(`Symcon error (${message}) at Topic ${data.topic}`);
+                let errormessage = 'Unknown Error'
+                if (error instanceof Error) errormessage = error.message
+                this.logger.error(`Symcon error (${errormessage}) at Topic ${data.topic}`);
             }
             return;
         }
@@ -95,9 +98,9 @@ class IPSymconExtension {
                 this.logger.info('Symcon: lists/request/getDevices');
                 await this.mqtt.publish('SymconExtension/lists/response/getDevices', JSON.stringify(devices), { retain: false, qos: 0 }, `${this.baseTopic}`, false, false);
             } catch (error) {
-                let message = 'Unknown Error'
-                if (error instanceof Error) message = error.message
-                this.logger.error(`Symcon error (${message}) at Topic ${data.topic}`);
+                let errormessage = 'Unknown Error'
+                if (error instanceof Error) errormessage = error.message
+                this.logger.error(`Symcon error (${errormessage}) at Topic ${data.topic}`);
             }
             return;
         }
@@ -174,12 +177,13 @@ class IPSymconExtension {
     #createGroupExposes(groupName) {
         const groupSupportedTypes = ['light', 'switch', 'lock', 'cover'];
         const groups = this.settings.getGroups();
-        const groupExposes = {};
+        const groupExposes = { foundGroup: false };
 
         groupSupportedTypes.forEach(type => groupExposes[type] = { type, features: [] });
 
         groups.forEach(group => {
             if (group.friendly_name === groupName) {
+                groupExposes.foundGroup = true;
                 this.#processGroupDevices(group, groupExposes);
             }
         });

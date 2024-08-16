@@ -64,8 +64,12 @@ class Zigbee2MQTTGroup extends IPSModule
         $Result = $this->SendData('/SymconExtension/request/getGroupInfo/' . $this->ReadPropertyString('MQTTTopic'));
 
         if ($Result) {
-            $this->mapExposesToVariables($Result);
-            return true;
+            if ($Result['foundGroup']){
+                unset($Result['foundGroup']);
+                $this->mapExposesToVariables($Result);
+                return true;
+            }
+            trigger_error($this->Translate('Group not found. Check topic'), E_USER_NOTICE);
         }
         return false;
     }
