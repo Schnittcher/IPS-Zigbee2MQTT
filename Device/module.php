@@ -10,15 +10,13 @@ require_once __DIR__ . '/../libs/ColorHelper.php';
 require_once __DIR__ . '/../libs/MQTTHelper.php';
 require_once __DIR__ . '/../libs/Zigbee2MQTTHelper.php';
 
-/**
- * @property array $TransactionData
- */
 class Zigbee2MQTTDevice extends IPSModule
 {
     use \Zigbee2MQTT\BufferHelper;
     use \Zigbee2MQTT\Semaphore;
     use \Zigbee2MQTT\ColorHelper;
     use \Zigbee2MQTT\MQTTHelper;
+    use \Zigbee2MQTT\SendData;
     use \Zigbee2MQTT\VariableProfileHelper;
     use \Zigbee2MQTT\Zigbee2MQTTHelper;
 
@@ -41,7 +39,7 @@ class Zigbee2MQTTDevice extends IPSModule
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
         $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
         $MQTTTopic = $this->ReadPropertyString('MQTTTopic');
-
+        $this->TransactionData = [];
         if (empty($BaseTopic) || empty($MQTTTopic)) {
             $this->SetStatus(IS_INACTIVE);
             $this->SetReceiveDataFilter('NOTHING_TO_RECEIVE'); //block all
@@ -62,8 +60,8 @@ class Zigbee2MQTTDevice extends IPSModule
     public function UpdateDeviceInfo()
     {
         $Result = $this->SendData('/SymconExtension/request/getDeviceInfo/' . $this->ReadPropertyString('MQTTTopic'));
-        $this->SendDebug('result',json_encode($Result),0);
-        if ($Result === false){
+        $this->SendDebug('result', json_encode($Result), 0);
+        if ($Result === false) {
             return false;
         }
         if (array_key_exists('ieeeAddr', $Result)) {
@@ -74,7 +72,7 @@ class Zigbee2MQTTDevice extends IPSModule
                 return true;
             }
             $this->mapExposesToVariables($Result['exposes']);
-        return true;
+            return true;
         }
         trigger_error($this->Translate('Device not found. Check topic'), E_USER_NOTICE);
         return false;

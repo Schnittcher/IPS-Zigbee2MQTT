@@ -4,26 +4,8 @@ declare(strict_types=1);
 
 namespace Zigbee2MQTT;
 
-if (!function_exists('fnmatch')) {
-    function fnmatch($pattern, $string)
-    {
-        return preg_match('#^' . strtr(preg_quote($pattern, '#'), ['\*' => '.*', '\?' => '.']) . '$#i', $string);
-    }
-}
-
-define('MQTT_GROUP_TOPIC', 'zigbee2mqtt');
-
 trait MQTTHelper
 {
-    private static $MQTTDataArray = [
-        'DataID'           => '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}',
-        'PacketType'       => 3,
-        'QualityOfService' => 0,
-        'Retain'           => false,
-        'Topic'            => '',
-        'Payload'          => ''
-    ];
-
     public function Command(string $topic, string $value)
     {
         $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
@@ -51,7 +33,34 @@ trait MQTTHelper
         $this->SendDebug(__FUNCTION__ . ' Payload', $Data['Payload'], 0);
         $this->SendDataToParent($DataJSON);
     }
+}
 
+/**
+ * @property array $TransactionData
+ */
+trait SendData
+{
+    private static $MQTTDataArray = [
+        'DataID'           => '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}',
+        'PacketType'       => 3,
+        'QualityOfService' => 0,
+        'Retain'           => false,
+        'Topic'            => '',
+        'Payload'          => ''
+    ];
+
+    /**
+     * SendData
+     *
+     * Sendet eine MQTT Nachricht an den Parent.
+     * Bei aktivem Timeout wird die Nachtricht mit einer TransactionId versehen,
+     * und auf eine eingehende Nachricht mit der entsprechenden TransactionId gewartet.
+     *
+     * @param  string $Topic
+     * @param  array $Payload
+     * @param  int $Timeout default 5000ms, 0 = senden ohne auf die Antwort zuw arten
+     * @return array|bool Enthält die Antwort als Array, oder True bei inaktivem Timeout, oder false im Fehlerfall.
+     */
     protected function SendData(string $Topic, array $Payload = [], int $Timeout = 5000)
     {
         if ($Timeout) {
@@ -72,6 +81,15 @@ trait MQTTHelper
         return true;
     }
 
+    /**
+     * WaitForTransactionEnd
+     *
+     * Liefert die Antwort aus dem Buffer TransactionData.
+     *
+     * @param  int $TransactionId
+     * @param  int $Timeout
+     * @return array|false Enthält die Antwort, oder false beim erreichen des Timeout oder im Fehlerfall.
+     */
     private function WaitForTransactionEnd(int $TransactionId, int $Timeout)
     {
         $Sleep = intdiv($Timeout, 1000);
@@ -92,6 +110,14 @@ trait MQTTHelper
     }
     //################# SENDQUEUE
 
+    /**
+     * AddTransaction
+     *
+     * Generiert eine TransactionId, fügt diese dem Payload hinzu und erzeugt einen Eintrag im Buffer TransactionData.
+     *
+     * @param  array $Payload MQTT Payload als Referenz
+     * @return int Erzeugte TransactionId
+     */
     private function AddTransaction(array &$Payload)
     {
         if (!$this->lock('TransactionData')) {
@@ -106,6 +132,14 @@ trait MQTTHelper
         return $TransactionId;
     }
 
+    /**
+     * UpdateTransaction
+     *
+     * Aktualisiert einen Eintrag im TransactionData Buffer.
+     *
+     * @param  array $Data Payload welches im Buffer abgelegt werden soll.
+     * @return void
+     */
     private function UpdateTransaction(array $Data)
     {
         if (!$this->lock('TransactionData')) {
@@ -119,9 +153,16 @@ trait MQTTHelper
             return;
         }
         $this->unlock('TransactionData');
-        return;
     }
 
+    /**
+     * RemoveTransaction
+     *
+     * Entfernt den Eintrag der TransactionId aus dem Buffer TransactionData.
+     *
+     * @param  int $TransactionId
+     * @return void
+     */
     private function RemoveTransaction(int $TransactionId)
     {
         if (!$this->lock('TransactionData')) {
@@ -133,6 +174,15 @@ trait MQTTHelper
         $this->unlock('TransactionData');
     }
 
+    /**
+     * BuildRequest
+     *
+     * Erzeugt ein JSON-String für den Datenaustausch mit einem MQTT-Splitter
+     *
+     * @param  string $Topic MQTT Topic
+     * @param  array $Payload MQTT Payload welches als JSON kodierter Payload gesetzt wird.
+     * @return string JSON-String des Datenaustausch
+     */
     private static function BuildRequest(string $Topic, array $Payload)
     {
         return json_encode(
@@ -140,7 +190,7 @@ trait MQTTHelper
                 self::$MQTTDataArray,
                 [
                     'Topic'  => $Topic,
-                    'Payload'=> json_encode($Payload)
+                    'Payload'=> utf8_encode(json_encode($Payload))
                 ]
             ),
             JSON_UNESCAPED_SLASHES

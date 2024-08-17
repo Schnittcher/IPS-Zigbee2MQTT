@@ -10,15 +10,13 @@ require_once __DIR__ . '/../libs/MQTTHelper.php';
 require_once __DIR__ . '/../libs/VariableProfileHelper.php';
 require_once __DIR__ . '/../libs/Zigbee2MQTTHelper.php';
 
-/**
- * @property array $TransactionData
- */
 class Zigbee2MQTTGroup extends IPSModule
 {
     use \Zigbee2MQTT\BufferHelper;
     use \Zigbee2MQTT\Semaphore;
     use \Zigbee2MQTT\ColorHelper;
     use \Zigbee2MQTT\MQTTHelper;
+    use \Zigbee2MQTT\SendData;
     use \Zigbee2MQTT\VariableProfileHelper;
     use \Zigbee2MQTT\Zigbee2MQTTHelper;
 
@@ -41,7 +39,7 @@ class Zigbee2MQTTGroup extends IPSModule
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
         $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
         $MQTTTopic = $this->ReadPropertyString('MQTTTopic');
-
+        $this->TransactionData = [];
         if (empty($BaseTopic) || empty($MQTTTopic)) {
             $this->SetStatus(IS_INACTIVE);
             $this->SetReceiveDataFilter('NOTHING_TO_RECEIVE'); //block all
@@ -64,7 +62,7 @@ class Zigbee2MQTTGroup extends IPSModule
         $Result = $this->SendData('/SymconExtension/request/getGroupInfo/' . $this->ReadPropertyString('MQTTTopic'));
 
         if ($Result) {
-            if ($Result['foundGroup']){
+            if ($Result['foundGroup']) {
                 unset($Result['foundGroup']);
                 $this->mapExposesToVariables($Result);
                 return true;
