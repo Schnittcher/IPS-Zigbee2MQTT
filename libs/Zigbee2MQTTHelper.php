@@ -3035,7 +3035,8 @@ trait Zigbee2MQTTHelper
                                     ['hue_stop', $this->Translate('Hue Stop'), '', 0x00FF00],
                                     ['move_to_saturation', $this->Translate('Move To Saturation'), '', 0x00FF00],
                                     ['off', $this->Translate('Off'), '', 0x00FF00],
-                                    ['on', $this->Translate('On'), '', 0x00FF00]
+                                    ['on', $this->Translate('On'), '', 0x00FF00],
+                                    ['circle_click', $this->Translate('Circle Click'), '', 0x00ff0]
                                 ]);
                             }
                             break;
