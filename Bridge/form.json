@@ -16,7 +16,14 @@
             "type": "Button",
             "label": "Set last_seen setting to epoch",
             "onClick": "Z2M_SetLastSeen($id);"
-        },        
+        },
+        {
+            "type": "Button",
+            "name": "PermitJoinOption",
+            "label": "Disable permit_join option in Z2M configuration.yaml",
+            "onClick": "Z2M_SetPermitJoinOption($id, false);",
+            "visible": false
+        },
         {
             "type": "TestCenter"
         },

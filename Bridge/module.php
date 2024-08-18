@@ -10,6 +10,7 @@ require_once dirname(__DIR__) . '/libs/VariableProfileHelper.php';
  * @property string $actualExtensionVersion
  * @property string $ExtensionFilename
  * @property string $ConfigLastSeen
+ * @property bool $ConfigPermitJoin
  */
 class Zigbee2MQTTBridge extends IPSModule
 {
@@ -42,6 +43,7 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->ExtensionFilename = '';
         $this->ConfigLastSeen = 'epoch';
         $this->TransactionData = [];
+        $this->ConfigPermitJoin = false;
     }
 
     public function ApplyChanges()
@@ -134,7 +136,7 @@ class Zigbee2MQTTBridge extends IPSModule
                 if (isset($Payload['permit_join'])) {
                     $this->SetValue('permit_join', $Payload['permit_join']);
                     if ($Payload['permit_join'] === false) {
-                    $this->SetValue('permit_join_timeout', 0);
+                        $this->SetValue('permit_join_timeout', 0);
                     }
                 }
                 if (isset($Payload['permit_join_timeout'])) {
@@ -146,6 +148,13 @@ class Zigbee2MQTTBridge extends IPSModule
                 if (isset($Payload['version'])) {
                     $this->SetValue('version', $Payload['version']);
                 }
+                if (isset($Payload['config']['permit_join'])) {
+                    $this->ConfigPermitJoin = $Payload['config']['permit_join'];
+                    $this->UpdateFormField('PermitJoinOption', 'visible', $Payload['config']['permit_join']);
+                    if ($Payload['config']['permit_join']) {
+                        $this->LogMessage($this->Translate('Danger! In the Zigbee2MQTT configuration permit_join is activated. This leads to a possible security risk!'), KL_ERROR);
+                    }
+                }
                 if (isset($Payload['zigbee_herdsman_converters']['version'])) {
                     $this->SetValue('zigbee_herdsman_converters', $Payload['zigbee_herdsman_converters']['version']);
                 }
@@ -153,7 +162,6 @@ class Zigbee2MQTTBridge extends IPSModule
                     $this->SetValue('zigbee_herdsman', $Payload['zigbee_herdsman']['version']);
                 }
                 if (isset($Payload['config']['advanced']['last_seen'])) {
-                    $this->SendDebug('last_seen', $Payload['config']['advanced']['last_seen'], 0);
                     $this->ConfigLastSeen = $Payload['config']['advanced']['last_seen'];
                     if ($Payload['config']['advanced']['last_seen'] != 'epoch') {
                         $this->LogMessage($this->Translate('Wrong last_seen setting in Zigbee2MQTT. Please set last_seen to epoch.'), KL_ERROR);
@@ -218,6 +226,9 @@ class Zigbee2MQTTBridge extends IPSModule
             $Form['actions'][1]['enabled'] = false;
             $Form['actions'][1]['label'] = $this->Translate('last_seen setting is correct');
         }
+        if ($this->ConfigPermitJoin) {
+            $Form['actions'][2]['visible'] = true;
+        }
         return json_encode($Form);
     }
 
@@ -245,6 +256,17 @@ class Zigbee2MQTTBridge extends IPSModule
                 ]
             ]
         ];
+        $Result = $this->SendData($Topic, $Payload);
+        if ($Result) { //todo check the Response
+            return true;
+        }
+        return false;
+    }
+
+    public function SetPermitJoinOption(bool $PermitJoin)
+    {
+        $Topic = '/bridge/request/options';
+        $Payload = ['options'=> ['permit_join' => $PermitJoin]];
         $Result = $this->SendData($Topic, $Payload);
         if ($Result) { //todo check the Response
             return true;
