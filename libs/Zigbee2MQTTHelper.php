@@ -11,21 +11,20 @@ trait Zigbee2MQTTHelper
         // Hier werden die Fälle behandelt, wo standard-Aktionen nicht funktionieren.
         // boolean zu string, wenn ausser true und false andere Werte gesendet werden.
         // numeric werden speziell formatiert, wenn ein spezielles Format gewünscht wird.
-        'Z2M_ChildLock'                         => ['type' => 'lockunlock', 'dataType' =>'string'],
-        'Z2M_StateWindow'                       => ['type' => 'openclose', 'dataType' =>'string'],
-        'Z2M_AutoLock'                          => ['type' => 'automode', 'dataType' => 'string'],
-        'Z2M_ValveState'                        => ['type' => 'valve', 'dataType' => 'string'],
-        'Z2M_EcoTemperature'                    => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_MaxTemperature'                    => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_MinTemperature'                    => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_TemperatureMax'                    => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_TemperatureMin'                    => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_OccupiedHeatingSetpointScheduled'  => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_ComfortTemperature'                => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_LocalTemperatureCalibration'       => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_OpenWindowTemperature'             => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-        'Z2M_HolidayTemperature'                => ['type' => 'numeric', 'dataType' => 'float', 'format' => '%.2f'],
-
+        'Z2M_ChildLock'                         => ['type' => 'lockunlock', 'dataType' => VARIABLETYPE_STRING],
+        'Z2M_StateWindow'                       => ['type' => 'openclose', 'dataType' => VARIABLETYPE_STRING],
+        'Z2M_AutoLock'                          => ['type' => 'automode', 'dataType' => VARIABLETYPE_STRING],
+        'Z2M_ValveState'                        => ['type' => 'valve', 'dataType' => VARIABLETYPE_STRING],
+        'Z2M_EcoTemperature'                    => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
+        'Z2M_MaxTemperature'                    => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
+        'Z2M_MinTemperature'                    => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
+        'Z2M_TemperatureMax'                    => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
+        'Z2M_TemperatureMin'                    => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
+        'Z2M_OccupiedHeatingSetpointScheduled'  => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
+        'Z2M_ComfortTemperature'                => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
+        'Z2M_LocalTemperatureCalibration'       => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
+        'Z2M_OpenWindowTemperature'             => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
+        'Z2M_HolidayTemperature'                => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
     ];
 
     public function RequestAction($ident, $value)
@@ -1694,61 +1693,54 @@ trait Zigbee2MQTTHelper
         return $payloadKey;
     }
 
-    private function convertStateBasedOnMapping($key, $value, $variableType) // Neu
+    private function convertStateBasedOnMapping($key, $value, $variableType)
     {
         // Gehört zu RequestAction
         // Überprüfe zuerst das spezielle Mapping für den Schlüssel
         if (array_key_exists($key, $this->stateTypeMapping)) {
             $mapping = $this->stateTypeMapping[$key];
-            $dataType = $mapping['dataType'] ?? 'string'; // Standard auf 'string', falls nicht definiert
-            // Spezielle Konvertierung basierend auf dem Typ im Mapping
-            if (isset($mapping['type'])) {
-                return $this->convertState($value, $mapping['type']);
+            $dataType = $mapping['dataType'] ?? VARIABLETYPE_STRING; // Standard auf VARIABLETYPE_STRING, falls nicht definiert
+
+            // Map für erweiterte Zustandsmappings
+            $stateMappings = [
+                'onoff'      => ['ON', 'OFF'],
+                'openclose'  => ['OPEN', 'CLOSE'],
+                'lockunlock' => ['LOCK', 'UNLOCK'],
+                'automanual' => ['AUTO', 'MANUAL'],
+                'valve'      => ['OPEN', 'CLOSED'],
+            ];
+            // Prüfe, ob für den Typ ein spezielles Mapping existiert
+            if (isset($mapping['type']) && array_key_exists($mapping['type'], $stateMappings)) {
+                // Wähle den korrekten Wert basierend auf dem booleschen $value
+                $convertedValue = $value ? $stateMappings[$mapping['type']][0] : $stateMappings[$mapping['type']][1];
+            } else {
+                // Standard-Fallback-Wert, wenn kein spezielles Mapping existiert
+                $convertedValue = $value ? 'true' : 'false';
             }
-            // Formatierung des Wertes basierend auf dem definierten Datentyp
-            // Verhindert "cannot autoconvert"-Fehler
+            // Konvertiere den Wert basierend auf dem definierten Datentyp
             switch ($dataType) {
-                case 'string':
-                    return strval($value);
-                case 'float':
-                    $format = $mapping['format'] ?? '%f';
+                case VARIABLETYPE_STRING:
+                    return (string)$convertedValue;
+                case VARIABLETYPE_FLOAT:
+                    $format = '%0.2f';  // Standardformat für float-Werte (2 Dezimalstellen)
                     return sprintf($format, $value);
-                case 'numeric':
-                    return $value; // Keine Umwandlung notwendig
+                case VARIABLETYPE_INTEGER:
+                    return (int)$value;
+                case VARIABLETYPE_BOOLEAN:
+                    return (bool)$value;
                 default:
-                    return strval($value); // Standardfall: Konvertiere zu String
+                    return (string)$convertedValue; // Standardfall: Konvertiere zu String
             }
         }
+
         // Direkte Behandlung für boolesche Werte, wenn kein spezielles Mapping vorhanden ist
-        // Setzt true/false auf "ON"/"OFF"
-        if ($variableType === 0) { // Boolean
+        if ($variableType === VARIABLETYPE_BOOLEAN) {
             return $value ? 'ON' : 'OFF';
         }
         // Standardbehandlung für Werte ohne spezifisches Mapping
         return is_numeric($value) ? $value : strval($value);
     }
-
-    private function convertState($value, $type) // Neu
-    {
-        // Gehört zu RequestAction
-        // Erweiterte Zustandsmappings
-        // Setzt ankommende Werte auf true/false zur Nutzung als boolean in Symcon
-        $stateMappings = [
-            'onoff'      => ['ON', 'OFF'],
-            'openclose'  => ['OPEN', 'CLOSE'],
-            'lockunlock' => ['LOCK', 'UNLOCK'],
-            'automanual' => ['AUTO', 'MANUAL'],
-            'valve'      => ['OPEN', 'CLOSED'],
-        ];
-        // Prüfe, ob der Zustandstyp in den Mappings vorhanden ist
-        if (array_key_exists($type, $stateMappings)) {
-            // Wähle den korrekten Wert basierend auf dem booleschen $value
-            return $value ? $stateMappings[$type][0] : $stateMappings[$type][1];
-        } else {
-            // Fallback für nicht definierte Zustandstypen
-            return $value ? 'true' : 'false';
-        }
-    }
+    
     private function handleStateChange($payloadKey, $valueId, $debugTitle, $Payload, $stateMapping = null) // Neu
     {
         if (array_key_exists($payloadKey, $Payload)) {
