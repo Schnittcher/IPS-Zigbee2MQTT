@@ -132,6 +132,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
                 $Value['instanceID'] = 0;
             }
             $Value['ieee_address'] = $device['ieeeAddr'];
+            $Value['topic'] = $device['friendly_name'];
             $Value['networkAddress'] = $device['networkAddress'];
             $Value['type'] = $device['type'];
             $Value['vendor'] = (array_key_exists('vendor', $device) ? $device['vendor'] : $this->Translate('Unknown'));
@@ -150,7 +151,9 @@ class Zigbee2MQTTConfigurator extends IPSModule
             array_push($ValuesDevices, $Value);
         }
         foreach ($IPSDevicesByIEEE as $instanceID => $IEEE) {
+            $Topic = '';
             if (array_key_exists($instanceID, $IPSDevicesByTopic)) { //wenn auch in IPSDevicesByTopic vorhanden, hier löschen
+                $Topic = $IPSDevicesByTopic[$instanceID];
                 unset($IPSDevicesByTopic[$instanceID]);
             }
 
@@ -158,6 +161,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
                 'name'               => IPS_GetName($instanceID),
                 'instanceID'         => $instanceID,
                 'ieee_address'       => $IEEE,
+                'topic'              => $Topic,
                 'networkAddress'     => '',
                 'type'               => '',
                 'vendor'             => '',
@@ -172,6 +176,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
                 'name'               => IPS_GetName($instanceID),
                 'instanceID'         => $instanceID,
                 'ieee_address'       => IPS_GetProperty($instanceID, 'IEEE'),
+                'topic'              => $Topic,
                 'networkAddress'     => '',
                 'type'               => '',
                 'vendor'             => '',
@@ -214,6 +219,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
                 $Value['instanceID'] = 0;
             }
             $Value['ID'] = $group['ID'];
+            $Value['topic'] = $group['friendly_name'];
             $Value['DevicesCount'] = (string) count($group['devices']);
             $Value['create'] =
                 [
@@ -227,24 +233,28 @@ class Zigbee2MQTTConfigurator extends IPSModule
             array_push($ValuesGroups, $Value);
         }
         foreach ($IPSGroupById as $instanceID => $ID) {
+            $Topic = '';
             if (array_key_exists($instanceID, $IPSGroupByTopic)) { //wenn auch in IPSGroupByTopic vorhanden, hier löschen
+                $Topic = $IPSGroupByTopic[$instanceID];
                 unset($IPSGroupByTopic[$instanceID]);
             }
 
             $ValuesGroups[] = [
-                'name'               => IPS_GetName($instanceID),
-                'instanceID'         => $instanceID,
-                'ID'                 => $ID,
-                'DevicesCount'       => ''
+                'name'                  => IPS_GetName($instanceID),
+                'instanceID'            => $instanceID,
+                'ID'                    => $ID,
+                'topic'                 => $Topic,
+                'DevicesCount'          => ''
 
             ];
         }
         foreach ($IPSGroupByTopic as $instanceID => $Topic) {
             $ValuesGroups[] = [
-                'name'               => IPS_GetName($instanceID),
-                'instanceID'         => $instanceID,
-                'ID'                 => IPS_GetProperty($instanceID, 'GroupId'),
-                'DevicesCount'       => ''
+                'name'                  => IPS_GetName($instanceID),
+                'instanceID'            => $instanceID,
+                'ID'                    => IPS_GetProperty($instanceID, 'GroupId'),
+                'topic'                 => $Topic,
+                'DevicesCount'          => ''
 
             ];
         }

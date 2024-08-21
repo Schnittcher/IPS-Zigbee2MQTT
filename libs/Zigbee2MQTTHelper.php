@@ -32,25 +32,25 @@ trait Zigbee2MQTTHelper
         // Behandle spezielle Fälle separat
         // Fälle, wie z.B. die ganzen Farben, wo nicht einfach nur das $value gesetzt werden kann
         switch ($ident) {
-        case 'Z2M_Color':
-            $this->SendDebug(__FUNCTION__ . ' Color', $value, 0);
-            $this->setColor($value, 'cie');
-            return;
-        case 'Z2M_ColorHS':
-            $this->SendDebug(__FUNCTION__ . ' Color HS', $value, 0);
-            $this->setColor($value, 'hs');
-            return;
-        case 'Z2M_ColorRGB':
-            $this->SendDebug(__FUNCTION__ . ' :: Color RGB', $value, 0);
-            $this->setColor($value, 'cie', 'color_rgb');
-            return;
-        case 'Z2M_ColorTempKelvin':
-            $convertedValue = strval(intval(round(1000000 / $value, 0)));
-            $payloadKey = $this->convertIdentToPayloadKey($ident);
-            $payload = [$payloadKey => $convertedValue];
-            $payloadJSON = json_encode($payload, JSON_UNESCAPED_SLASHES);
-            $this->Z2MSet($payloadJSON);
-            return;
+            case 'Z2M_Color':
+                $this->SendDebug(__FUNCTION__ . ' Color', $value, 0);
+                $this->setColor($value, 'cie');
+                return;
+            case 'Z2M_ColorHS':
+                $this->SendDebug(__FUNCTION__ . ' Color HS', $value, 0);
+                $this->setColor($value, 'hs');
+                return;
+            case 'Z2M_ColorRGB':
+                $this->SendDebug(__FUNCTION__ . ' :: Color RGB', $value, 0);
+                $this->setColor($value, 'cie', 'color_rgb');
+                return;
+            case 'Z2M_ColorTempKelvin':
+                $convertedValue = strval(intval(round(1000000 / $value, 0)));
+                $payloadKey = $this->convertIdentToPayloadKey($ident);
+                $payload = [$payloadKey => $convertedValue];
+                $payloadJSON = json_encode($payload, JSON_UNESCAPED_SLASHES);
+                $this->Z2MSet($payloadJSON);
+                return;
         }
         // Generelle Logik für die meisten anderen Fälle
         // ermitteln des Variablen-Typs
@@ -1698,7 +1698,7 @@ trait Zigbee2MQTTHelper
             $this->SendDebug('Error :: No Expose for Value', 'Ident: ' . $Ident, 0);
         }
     }
-    
+
     private function convertIdentToPayloadKey($ident) // Neu
     {
         // Gehört zu RequestAction
@@ -1735,16 +1735,16 @@ trait Zigbee2MQTTHelper
             // Konvertiere den Wert basierend auf dem definierten Datentyp
             switch ($dataType) {
                 case VARIABLETYPE_STRING:
-                    return (string)$convertedValue;
+                    return (string) $convertedValue;
                 case VARIABLETYPE_FLOAT:
                     $format = '%0.2f';  // Standardformat für float-Werte (2 Dezimalstellen)
                     return sprintf($format, $value);
                 case VARIABLETYPE_INTEGER:
-                    return (int)$value;
+                    return (int) $value;
                 case VARIABLETYPE_BOOLEAN:
-                    return (bool)$value;
+                    return (bool) $value;
                 default:
-                    return (string)$convertedValue; // Standardfall: Konvertiere zu String
+                    return (string) $convertedValue; // Standardfall: Konvertiere zu String
             }
         }
 
@@ -1755,7 +1755,7 @@ trait Zigbee2MQTTHelper
         // Standardbehandlung für Werte ohne spezifisches Mapping
         return is_numeric($value) ? $value : strval($value);
     }
-    
+
     private function handleStateChange($payloadKey, $valueId, $debugTitle, $Payload, $stateMapping = null) // Neu
     {
         if (array_key_exists($payloadKey, $Payload)) {

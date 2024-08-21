@@ -29,6 +29,11 @@
                             "width": "200px"
                         },
                         {
+                            "caption": "Topic",
+                            "name": "topic",
+                            "width": "200px"
+                        },
+                        {
                             "caption": "Network Address",
                             "name": "networkAddress",
                             "visible": false
@@ -89,6 +94,11 @@
                             "name": "id",
                             "width": "auto",
                             "visible": false
+                        },
+                        {
+                            "caption": "Topic",
+                            "name": "topic",
+                            "width": "200px"
                         },
                         {
                             "caption": "Devices",
