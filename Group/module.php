@@ -50,7 +50,9 @@ class Zigbee2MQTTGroup extends IPSModule
         $Filter2 = preg_quote('"Topic":"' . $BaseTopic . '/SymconExtension/response/getGroupInfo/' . $MQTTTopic);
         $this->SendDebug('Filter ', '.*(' . $Filter1 . '|' . $Filter2 . ').*', 0);
         $this->SetReceiveDataFilter('.*(' . $Filter1 . '|' . $Filter2 . ').*');
-
+        $GroupId=$this->ReadPropertyInteger('GroupId');
+        $GroupId = $GroupId ? 'Group Id: '. $GroupId : '';
+        $this->SetSummary($GroupId);
         if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
             $this->UpdateGroupInfo();
         }

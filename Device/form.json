@@ -9,6 +9,12 @@
             "type": "ValidationTextBox",
             "name": "MQTTTopic",
             "caption": "MQTT Topic"
+        },
+        {
+            "type": "ValidationTextBox",
+            "name": "IEEE",
+            "caption": "IEEE Address",
+            "enabled": false
         }
     ],
     "actions": [

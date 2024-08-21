@@ -50,7 +50,7 @@ class Zigbee2MQTTDevice extends IPSModule
         $Filter2 = preg_quote('"Topic":"' . $BaseTopic . '/SymconExtension/response/getDeviceInfo/' . $MQTTTopic);
         $this->SendDebug('Filter', '.*(' . $Filter1 . '|' . $Filter2 . ').*', 0);
         $this->SetReceiveDataFilter('.*(' . $Filter1 . '|' . $Filter2 . ').*');
-
+        $this->SetSummary($this->ReadPropertyString('IEEE'));
         if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
             $this->UpdateDeviceInfo();
         }

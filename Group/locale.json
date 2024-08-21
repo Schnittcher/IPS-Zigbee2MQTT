@@ -48,7 +48,8 @@
             "Effect": "Effekt",
             "Get Device Infos": "Geräteinformationen abrufen",
             "Zigbee2MQTT did not response.": "Zigbee2MQTT hat nicht geantwortet.",
-            "Group not found. Check topic": "Gruppe nicht gefunden. Topic prüfen."
+            "Group not found. Check topic": "Gruppe nicht gefunden. Topic prüfen.",
+            "Group Id": "Gruppen ID"
         }
     }
 }
