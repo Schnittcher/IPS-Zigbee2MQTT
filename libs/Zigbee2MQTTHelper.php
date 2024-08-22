@@ -6,13 +6,15 @@ namespace Zigbee2MQTT;
 
 trait Zigbee2MQTTHelper
 {
-    private $stateTypeMapping = [
-        // Gehört zu RequestAction
-        // Hier werden die Fälle behandelt, wo standard-Aktionen nicht funktionieren.
-        // boolean zu string, wenn ausser true und false andere Werte gesendet werden.
-        // numeric werden speziell formatiert, wenn ein spezielles Format gewünscht wird.
-        'Z2M_ChildLock'                         => ['type' => 'lockunlock', 'dataType' => VARIABLETYPE_STRING],
-        'Z2M_StateWindow'                       => ['type' => 'openclose', 'dataType' => VARIABLETYPE_STRING],
+    /** @var array $stateTypeMapping
+     * Gehört zu RequestAction
+     * Hier werden die Fälle behandelt, wo standard-Aktionen nicht funktionieren.
+     * boolean zu string, wenn ausser true und false andere Werte gesendet werden.
+     * numeric werden speziell formatiert, wenn ein spezielles Format gewünscht wird.
+     */
+    protected static $stateTypeMapping = [
+        'Z2M_ChildLock'                         => ['type' => 'lockunlock', 'dataType' =>VARIABLETYPE_STRING],
+        'Z2M_StateWindow'                       => ['type' => 'openclose', 'dataType' =>VARIABLETYPE_STRING],
         'Z2M_AutoLock'                          => ['type' => 'automode', 'dataType' => VARIABLETYPE_STRING],
         'Z2M_ValveState'                        => ['type' => 'valve', 'dataType' => VARIABLETYPE_STRING],
         'Z2M_EcoTemperature'                    => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
@@ -25,6 +27,20 @@ trait Zigbee2MQTTHelper
         'Z2M_LocalTemperatureCalibration'       => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
         'Z2M_OpenWindowTemperature'             => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
         'Z2M_HolidayTemperature'                => ['type' => 'numeric', 'dataType' => VARIABLETYPE_FLOAT],
+
+    ];
+
+    /** @var array $stateMappings
+     * Gehört zu RequestAction
+     * Erweiterte Zustandsmappings
+     * Setzt ankommende Werte auf true/false zur Nutzung als boolean in Symcon
+     */
+    protected static $stateMappings = [
+        'onoff'      => ['ON', 'OFF'],
+        'openclose'  => ['OPEN', 'CLOSE'],
+        'lockunlock' => ['LOCK', 'UNLOCK'],
+        'automanual' => ['AUTO', 'MANUAL'],
+        'valve'      => ['OPEN', 'CLOSED'],
     ];
 
     public function RequestAction($ident, $value)
@@ -46,7 +62,7 @@ trait Zigbee2MQTTHelper
                 return;
             case 'Z2M_ColorTempKelvin':
                 $convertedValue = strval(intval(round(1000000 / $value, 0)));
-                $payloadKey = $this->convertIdentToPayloadKey($ident);
+                $payloadKey = self::convertIdentToPayloadKey($ident);
                 $payload = [$payloadKey => $convertedValue];
                 $payloadJSON = json_encode($payload, JSON_UNESCAPED_SLASHES);
                 $this->Z2MSet($payloadJSON);
@@ -59,11 +75,11 @@ trait Zigbee2MQTTHelper
         $variableType = $variableInfo['VariableType'];
 
         // Wandelt den Ident zum passenden Expose um
-        $payloadKey = $this->convertIdentToPayloadKey($ident);
+        $payloadKey = self::convertIdentToPayloadKey($ident);
 
         // konvertiert den Wert in ein für Z2MSet nutzbaren Wert
         // Keine Unterscheidung mehr in strval($value), $value (numerisch), etc. mehr notwendig
-        $payload = [$payloadKey => $this->convertStateBasedOnMapping($ident, $value, $variableType)];
+        $payload = [$payloadKey => self::convertStateBasedOnMapping($ident, $value, $variableType)];
 
         // Erstellung des passenden Payloads und versand durch Z2MSet
         $payloadJSON = json_encode($payload, JSON_UNESCAPED_SLASHES);
@@ -1698,8 +1714,8 @@ trait Zigbee2MQTTHelper
             $this->SendDebug('Error :: No Expose for Value', 'Ident: ' . $Ident, 0);
         }
     }
-
-    private function convertIdentToPayloadKey($ident) // Neu
+    
+    private static function convertIdentToPayloadKey($ident) // Neu
     {
         // Gehört zu RequestAction
         // Wandelt den Ident zu einem gültigen Expose um
@@ -1708,26 +1724,17 @@ trait Zigbee2MQTTHelper
         return $payloadKey;
     }
 
-    private function convertStateBasedOnMapping($key, $value, $variableType)
+    private static function convertStateBasedOnMapping($key, $value, $variableType)
     {
         // Gehört zu RequestAction
         // Überprüfe zuerst das spezielle Mapping für den Schlüssel
-        if (array_key_exists($key, $this->stateTypeMapping)) {
-            $mapping = $this->stateTypeMapping[$key];
+        if (array_key_exists($key, self::$stateTypeMapping)) {
+            $mapping = self::$stateTypeMapping[$key];
             $dataType = $mapping['dataType'] ?? VARIABLETYPE_STRING; // Standard auf VARIABLETYPE_STRING, falls nicht definiert
-
-            // Map für erweiterte Zustandsmappings
-            $stateMappings = [
-                'onoff'      => ['ON', 'OFF'],
-                'openclose'  => ['OPEN', 'CLOSE'],
-                'lockunlock' => ['LOCK', 'UNLOCK'],
-                'automanual' => ['AUTO', 'MANUAL'],
-                'valve'      => ['OPEN', 'CLOSED'],
-            ];
             // Prüfe, ob für den Typ ein spezielles Mapping existiert
-            if (isset($mapping['type']) && array_key_exists($mapping['type'], $stateMappings)) {
+            if (isset($mapping['type']) && array_key_exists($mapping['type'], self::$stateMappings)) {
                 // Wähle den korrekten Wert basierend auf dem booleschen $value
-                $convertedValue = $value ? $stateMappings[$mapping['type']][0] : $stateMappings[$mapping['type']][1];
+                $convertedValue = $value ? self::$stateMappings[$mapping['type']][0] : self::$stateMappings[$mapping['type']][1];
             } else {
                 // Standard-Fallback-Wert, wenn kein spezielles Mapping existiert
                 $convertedValue = $value ? 'true' : 'false';
@@ -6068,6 +6075,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'filter_age':
+                            $ProfileName = $this->registerVariableProfile($expose);                            
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_FilterAge', $this->Translate('Filter Age'), '');
                             }
