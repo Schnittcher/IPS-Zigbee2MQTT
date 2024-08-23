@@ -57,7 +57,7 @@ trait SendData
      * durch die Funktionen UpdateDeviceInfo, UpdateGroupInfo, getDevices und getGroups
      * Bei aktivem Timeout wird die Nachtricht mit einer TransactionId versehen,
      * und auf eine eingehende Nachricht mit der entsprechenden TransactionId gewartet.
-     * 
+     *
      * @param  string $Topic
      * @param  array $Payload
      * @param  int $Timeout default 5000ms, 0 = senden ohne auf die Antwort zuw arten

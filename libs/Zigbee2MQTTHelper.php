@@ -1714,7 +1714,7 @@ trait Zigbee2MQTTHelper
             $this->SendDebug('Error :: No Expose for Value', 'Ident: ' . $Ident, 0);
         }
     }
-    
+
     private static function convertIdentToPayloadKey($ident) // Neu
     {
         // Gehört zu RequestAction
@@ -6075,7 +6075,7 @@ trait Zigbee2MQTTHelper
                             }
                             break;
                         case 'filter_age':
-                            $ProfileName = $this->registerVariableProfile($expose);                            
+                            $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
                                 $this->RegisterVariableFloat('Z2M_FilterAge', $this->Translate('Filter Age'), '');
                             }

@@ -50,8 +50,8 @@ class Zigbee2MQTTGroup extends IPSModule
         $Filter2 = preg_quote('"Topic":"' . $BaseTopic . '/SymconExtension/response/getGroupInfo/' . $MQTTTopic);
         $this->SendDebug('Filter ', '.*(' . $Filter1 . '|' . $Filter2 . ').*', 0);
         $this->SetReceiveDataFilter('.*(' . $Filter1 . '|' . $Filter2 . ').*');
-        $GroupId=$this->ReadPropertyInteger('GroupId');
-        $GroupId = $GroupId ? 'Group Id: '. $GroupId : '';
+        $GroupId = $this->ReadPropertyInteger('GroupId');
+        $GroupId = $GroupId ? 'Group Id: ' . $GroupId : '';
         $this->SetSummary($GroupId);
         if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
             $this->UpdateGroupInfo();
@@ -62,15 +62,18 @@ class Zigbee2MQTTGroup extends IPSModule
     public function UpdateGroupInfo()
     {
         $Result = $this->SendData('/SymconExtension/request/getGroupInfo/' . $this->ReadPropertyString('MQTTTopic'));
-
-        if ($Result) {
+        $this->SendDebug('result', json_encode($Result), 0);
+        if ($Result === false) {
+            return false;
+        }
+        if (array_key_exists('foundGroup', $Result)) {
             if ($Result['foundGroup']) {
                 unset($Result['foundGroup']);
                 $this->mapExposesToVariables($Result);
                 return true;
             }
-            trigger_error($this->Translate('Group not found. Check topic'), E_USER_NOTICE);
         }
+        trigger_error($this->Translate('Group not found. Check topic'), E_USER_NOTICE);        
         return false;
     }
 }
