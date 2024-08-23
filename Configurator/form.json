@@ -16,8 +16,8 @@
                     "type": "Configurator",
                     "name": "DeviceConfigurator",
                     "caption": "Devices",
-                    "rowCount": 35,
                     "delete": true,
+                    "rowCount": 5,
                     "sort": {
                         "column": "name",
                         "direction": "ascending"
@@ -29,12 +29,17 @@
                             "width": "200px"
                         },
                         {
+                            "caption": "Topic",
+                            "name": "topic",
+                            "width": "200px"
+                        },
+                        {
                             "caption": "Network Address",
                             "name": "networkAddress",
                             "visible": false
                         },
                         {
-                            "caption": "Friendlyname",
+                            "caption": "Name",
                             "name": "name",
                             "width": "200px"
                         },
@@ -71,13 +76,14 @@
         {
             "type": "ExpansionPanel",
             "caption": "Groups",
+            "expanded": true,
             "items": [
                 {
                     "type": "Configurator",
                     "name": "GroupConfigurator",
                     "caption": "Groups",
-                    "rowCount": 25,
                     "delete": true,
+                    "rowCount": 5,
                     "sort": {
                         "column": "name",
                         "direction": "ascending"
@@ -90,7 +96,17 @@
                             "visible": false
                         },
                         {
-                            "caption": "Friendlyname",
+                            "caption": "Topic",
+                            "name": "topic",
+                            "width": "200px"
+                        },
+                        {
+                            "caption": "Devices",
+                            "name": "DevicesCount",
+                            "width": "100px"
+                        },
+                        {
+                            "caption": "Name",
                             "name": "name",
                             "width": "auto"
                         }
@@ -98,6 +114,39 @@
                     "values": []
                 }
             ]
+        },
+        {
+            "name": "ErrorPopup",
+            "type": "PopupAlert",
+            "visible": false,
+            "popup": {
+                "closeCaption": "Close",
+                "items": [
+                    {
+                        "name": "ErrorTitle",
+                        "type": "Label",
+                        "bold": true,
+                        "caption": "No devices found!"
+                    },
+                    {
+                        "name": "ErrorText",
+                        "type": "Label",
+                        "caption": "The Symcon extension in Zigbee2MQTT is not installed or not up to date.\r\nPlease install or update the extension within the Bridge instance configuration."
+                    },
+                    {
+                        "type": "OpenObjectButton",
+                        "caption": "Open bridge instance",
+                        "objectID": 0,
+                        "visible": false
+                    },
+                    {
+                        "type": "Button",
+                        "caption": "Create bridge instance",
+                        "visible": false,
+                        "onClick": []
+                    }
+                ]
+            }
         },
         {
             "type": "Label",

@@ -6,6 +6,13 @@ namespace Zigbee2MQTT;
 
 trait ColorHelper
 {
+    /**
+     * HexToRGB
+     *
+     * @alias IntegerToArray
+     * @param  integer $value
+     * @return array
+     */
     protected function HexToRGB($value)
     {
         $RGB = [];
@@ -31,12 +38,30 @@ trait ColorHelper
             $q = $brightness * (1 - $saturation * $f);
             $t = $brightness * (1 - $saturation * (1 - $f));
             switch ($i) {
-                case 0: $r = $brightness; $g = $t; $b = $p; break;
-                case 1: $r = $q; $g = $brightness; $b = $p; break;
-                case 2: $r = $p; $g = $brightness; $b = $t; break;
-                case 3: $r = $p; $g = $q; $b = $brightness; break;
-                case 4: $r = $t; $g = $p; $b = $brightness; break;
-                default: $r = $brightness; $g = $p; $b = $q; break;
+                case 0: $r = $brightness;
+                    $g = $t;
+                    $b = $p;
+                    break;
+                case 1: $r = $q;
+                    $g = $brightness;
+                    $b = $p;
+                    break;
+                case 2: $r = $p;
+                    $g = $brightness;
+                    $b = $t;
+                    break;
+                case 3: $r = $p;
+                    $g = $q;
+                    $b = $brightness;
+                    break;
+                case 4: $r = $t;
+                    $g = $p;
+                    $b = $brightness;
+                    break;
+                default: $r = $brightness;
+                    $g = $p;
+                    $b = $q;
+                    break;
             }
         }
         $r = round($r * 255);
@@ -76,7 +101,7 @@ trait ColorHelper
     protected function xyToHEX($x, $y, $bri)
     {
 
-    // Calculate XYZ values
+        // Calculate XYZ values
         $z = 1 - $x - $y;
         $Y = $bri / 254; // Brightness coeff.
         if ($y == 0) {

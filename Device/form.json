@@ -9,13 +9,19 @@
             "type": "ValidationTextBox",
             "name": "MQTTTopic",
             "caption": "MQTT Topic"
+        },
+        {
+            "type": "ValidationTextBox",
+            "name": "IEEE",
+            "caption": "IEEE Address",
+            "enabled": false
         }
     ],
     "actions": [
         {
             "type": "Button",
             "label": "Get Device Infos",
-            "onClick": "Z2M_getDeviceInfo($id);"
+            "onClick": "Z2M_UpdateDeviceInfo($id);"
         },
         {
             "type": "TestCenter"

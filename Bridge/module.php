@@ -4,9 +4,9 @@ declare(strict_types=1);
 require_once dirname(__DIR__) . '/libs/BufferHelper.php';
 require_once dirname(__DIR__) . '/libs/SemaphoreHelper.php';
 require_once dirname(__DIR__) . '/libs/VariableProfileHelper.php';
+require_once dirname(__DIR__) . '/libs/MQTTHelper.php';
 
 /**
- * @property array $TransactionData
  * @property string $actualExtensionVersion
  * @property string $ExtensionFilename
  * @property string $ConfigLastSeen
@@ -17,22 +17,14 @@ class Zigbee2MQTTBridge extends IPSModule
     use \Zigbee2MQTT\BufferHelper;
     use \Zigbee2MQTT\Semaphore;
     use \Zigbee2MQTT\VariableProfileHelper;
-
-    private static $MQTTDataArray = [
-        'DataID'           => '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}',
-        'PacketType'       => 3,
-        'QualityOfService' => 0,
-        'Retain'           => false,
-        'Topic'            => '',
-        'Payload'          => ''
-    ];
+    use \Zigbee2MQTT\SendData;
 
     public function Create()
     {
         //Never delete this line!
         parent::Create();
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
-        $this->RegisterPropertyString('MQTTBaseTopic', 'zigbee2mqtt');
+        $this->RegisterPropertyString('MQTTBaseTopic', '');
         $Version = 'unknown';
         $File = file(dirname(__DIR__) . '/libs/IPSymconExtension.js');
         $Start = strpos($File[2], 'Version: ');
@@ -59,7 +51,7 @@ class Zigbee2MQTTBridge extends IPSModule
         } else {
             $this->SetStatus(IS_ACTIVE);
             //Setze Filter für ReceiveData
-            $this->SetReceiveDataFilter('.*"Topic":"' . $this->ReadPropertyString('MQTTBaseTopic') . '/bridge/.*');
+            $this->SetReceiveDataFilter('.*"Topic":"' . $BaseTopic . '/bridge/.*');
         }
         $this->RegisterProfileIntegerEx('Z2M.bridge.restart', '', '', '', [
             [0, $this->Translate('Restart'), '', 0xFF0000],
@@ -87,6 +79,24 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->RegisterVariableString('zigbee_herdsman_converters', $this->Translate('Zigbee Herdsman Converters Version'));
         $this->RegisterVariableString('zigbee_herdsman', $this->Translate('Zigbee Herdsman Version'));
         $this->RegisterVariableInteger('network_channel', $this->Translate('Network Channel'));
+
+        if (!empty($BaseTopic)) {
+            if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
+                @$this->RequestOptions();
+            }
+        }
+
+        $ExtVersion = $this->GetValue('extension_version');
+        if (!empty($ExtVersion) && ($ExtVersion != 'unknown')) {
+            $this->SetValue('extension_is_current', $this->actualExtensionVersion == $ExtVersion);
+            if ($this->actualExtensionVersion == $ExtVersion) {
+                $this->UpdateFormField('InstallExtension', 'enabled', false);
+            } else {
+                //$this->LogMessage($this->Translate('Symcon Extension in Zigbee2MQTT is outdated. Please update the extension.'), KL_ERROR);
+                @$this->InstallSymconExtension();
+            }
+        }
+
     }
 
     public function ReceiveData($JSONString)
@@ -107,8 +117,8 @@ class Zigbee2MQTTBridge extends IPSModule
         $Topics = explode('/', $Topic);
         $Topic = array_shift($Topics);
         $this->SendDebug('MQTT Topic', $Topic, 0);
-        $this->SendDebug('MQTT Payload', $Buffer['Payload'], 0);
-        $Payload = json_decode($Buffer['Payload'], true);
+        $this->SendDebug('MQTT Payload', utf8_decode($Buffer['Payload']), 0);
+        $Payload = json_decode(utf8_decode($Buffer['Payload']), true);
         switch ($Topic) {
             case 'request': //nothing todo
                 break;
@@ -163,7 +173,9 @@ class Zigbee2MQTTBridge extends IPSModule
                 }
                 if (isset($Payload['config']['advanced']['last_seen'])) {
                     $this->ConfigLastSeen = $Payload['config']['advanced']['last_seen'];
-                    if ($Payload['config']['advanced']['last_seen'] != 'epoch') {
+                    if ($Payload['config']['advanced']['last_seen'] == 'epoch') {
+                        $this->UpdateFormField('SetLastSeen', 'enabled', false);
+                    } else {
                         $this->LogMessage($this->Translate('Wrong last_seen setting in Zigbee2MQTT. Please set last_seen to epoch.'), KL_ERROR);
                     }
                 }
@@ -173,25 +185,27 @@ class Zigbee2MQTTBridge extends IPSModule
                 break;
             case 'extensions':
                 $foundExtension = false;
+                $Version = 'unknown';
                 foreach ($Payload as $Extension) {
                     if (strpos($Extension['code'], 'class IPSymconExtension')) {
                         $foundExtension = true;
                         $this->ExtensionName = $Extension['name'];
-                        $Version = 'unknown';
                         $Lines = explode("\n", $Extension['code']);
                         $Start = strpos($Lines[2], 'Version: ');
                         if ($Start) {
                             $Version = trim(substr($Lines[2], $Start + strlen('Version: ')));
                         }
-                        $this->SetValue('extension_version', $Version);
-                        $this->SetValue('extension_is_current', $this->actualExtensionVersion == $Version);
-                        if ($this->actualExtensionVersion != $Version) {
+                        if ($this->actualExtensionVersion == $Version) {
+                            $this->UpdateFormField('InstallExtension', 'enabled', false);
+                        } else {
                             $this->LogMessage($this->Translate('Symcon Extension in Zigbee2MQTT is outdated. Please update the extension.'), KL_ERROR);
                         }
                         break;
                     }
                 }
                 $this->SetValue('extension_loaded', $foundExtension);
+                $this->SetValue('extension_version', $Version);
+                $this->SetValue('extension_is_current', $this->actualExtensionVersion == $Version);
                 if (!$foundExtension) {
                     $this->LogMessage($this->Translate('No Symcon Extension in Zigbee2MQTT installed. Please install the extension.'), KL_ERROR);
                 }
@@ -209,7 +223,7 @@ class Zigbee2MQTTBridge extends IPSModule
             case 'log_level':
                 $this->SetLogLevel((string) $Value);
                 break;
-            case'restart_request':
+            case 'restart_request':
                 $this->Restart();
                 break;
         }
@@ -239,6 +253,19 @@ class Zigbee2MQTTBridge extends IPSModule
         }
         $Topic = '/bridge/request/extension/save';
         $Payload = ['name'=>$ExtensionName, 'code'=>file_get_contents(dirname(__DIR__) . '/libs/IPSymconExtension.js')];
+        $Result = $this->SendData($Topic, $Payload);
+        if ($Result) { //todo check the Response
+            return true;
+        }
+        return false;
+    }
+
+    public function RequestOptions()
+    {
+        $Topic = '/bridge/request/options';
+        $Payload = [
+            'options'=> []
+        ];
         $Result = $this->SendData($Topic, $Payload);
         if ($Result) { //todo check the Response
             return true;
@@ -445,97 +472,4 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
-    private function SendData(string $Topic, array $Payload = [], int $Timeout = 5000)
-    {
-        if ($Timeout) {
-            $TransactionId = $this->AddTransaction($Payload);
-        }
-        $this->SendDebug(__FUNCTION__ . ':Topic', $Topic, 0);
-        $this->SendDebug(__FUNCTION__ . ':Payload', json_encode($Payload), 0);
-        $DataJSON = self::BuildRequest($this->ReadPropertyString('MQTTBaseTopic') . $Topic, $Payload);
-        $this->SendDataToParent($DataJSON);
-        if ($Timeout) {
-            $Result = $this->WaitForTransactionEnd($TransactionId, $Timeout);
-            if ($Result === false) {
-                trigger_error($this->Translate('Zigbee2MQTT did not response.'), E_USER_NOTICE);
-                return false;
-            }
-            return $Result;
-        }
-        return true;
-    }
-
-    private function WaitForTransactionEnd(int $TransactionId, int $Timeout)
-    {
-        $Sleep = intdiv($Timeout, 1000);
-        for ($i = 0; $i < 1000; $i++) {
-            $Buffer = $this->TransactionData;
-            if (!array_key_exists($TransactionId, $Buffer)) {
-                return false;
-            }
-            if (count($Buffer[$TransactionId])) {
-                $this->RemoveTransaction($TransactionId);
-                return $Buffer[$TransactionId];
-            }
-            IPS_Sleep($Sleep);
-        }
-        $this->RemoveTransaction($TransactionId);
-        return false;
-    }
-    //################# SENDQUEUE
-
-    private function AddTransaction(array &$Payload)
-    {
-        if (!$this->lock('TransactionData')) {
-            throw new Exception($this->Translate('TransactionData is locked'), E_USER_NOTICE);
-        }
-        $TransactionId = mt_rand(1, 10000);
-        $Payload['transaction'] = $TransactionId;
-        $TransactionData = $this->TransactionData;
-        $TransactionData[$TransactionId] = [];
-        $this->TransactionData = $TransactionData;
-        $this->unlock('TransactionData');
-        return $TransactionId;
-    }
-
-    private function UpdateTransaction(array $Data)
-    {
-        if (!$this->lock('TransactionData')) {
-            throw new Exception($this->Translate('TransactionData is locked'), E_USER_NOTICE);
-        }
-        $TransactionData = $this->TransactionData;
-        if (array_key_exists($Data['transaction'], $TransactionData)) {
-            $TransactionData[$Data['transaction']] = $Data;
-            $this->TransactionData = $TransactionData;
-            $this->unlock('TransactionData');
-            return;
-        }
-        $this->unlock('TransactionData');
-        return;
-    }
-
-    private function RemoveTransaction(int $TransactionId)
-    {
-        if (!$this->lock('TransactionData')) {
-            throw new Exception($this->Translate('TransactionData is locked'), E_USER_NOTICE);
-        }
-        $TransactionData = $this->TransactionData;
-        unset($TransactionData[$TransactionId]);
-        $this->TransactionData = $TransactionData;
-        $this->unlock('TransactionData');
-    }
-
-    private static function BuildRequest(string $Topic, array $Payload)
-    {
-        return json_encode(
-            array_merge(
-                self::$MQTTDataArray,
-                [
-                    'Topic'  => $Topic,
-                    'Payload'=> json_encode($Payload)
-                ]
-            ),
-            JSON_UNESCAPED_SLASHES
-        );
-    }
 }

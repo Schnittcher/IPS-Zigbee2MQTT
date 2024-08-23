@@ -1,4 +1,6 @@
+[submodule "tests/stubs"]
+	path = tests/stubs
+	url = https://github.com/Symcon/SymconStubs
 [submodule ".style"]
 	path = .style
 	url = https://github.com/Schnittcher/StylePHP
-	branch = master

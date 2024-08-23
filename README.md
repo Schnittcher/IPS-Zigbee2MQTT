@@ -7,18 +7,21 @@
    Anbindung von www.zigbee2mqtt.io an IP-Symcon.
 
    ## Inhaltverzeichnis
-   1. [Voraussetzungen](#1-voraussetzungen)
-   2. [Enthaltene Module](#2-enthaltene-module)
-   3. [Installation](#3-installation)
-   4. [Konfiguration in IP-Symcon](#4-konfiguration-in-ip-symcon)
-   5. [Spenden](#5-spenden)
-   6. [Lizenz](#6-lizenz)
+- [Zigbee2MQTT](#zigbee2mqtt)
+  - [Inhaltverzeichnis](#inhaltverzeichnis)
+  - [1. Voraussetzungen](#1-voraussetzungen)
+  - [2. Enthaltene Module](#2-enthaltene-module)
+  - [3. Installation](#3-installation)
+    - [3.1 Installation der IP-Symcon Extension in Zigbee2MQTT](#31-installation-der-ip-symcon-extension-in-zigbee2mqtt)
+  - [4. Konfiguration in IP-Symcon](#4-konfiguration-in-ip-symcon)
+- [5. Spenden](#5-spenden)
+  - [6. Lizenz](#6-lizenz)
 
 ## 1. Voraussetzungen
 
 * mindestens IPS Version 6.1
 * MQTT Server (IPS Modul) oder externer MQTT-Broker (z.B. Mosquitto)
-* Installierte Symcon Erweiterung in Zigbee2MQTT
+* Installierte Symcon Erweiterung in Zigbee2MQTT [siehe hier](#31-installation-der-ip-symcon-extension-in-zigbee2mqtt)
 
 
 ## 2. Enthaltene Module
@@ -59,16 +62,38 @@ Z2M_BoostTime | Integer | - | variabel | Integer
 
 ### 3.1 Installation der IP-Symcon Extension in Zigbee2MQTT
 
-Um Devices im Konfigurator anzeigen zu können und diese anzulegen und Eigenschaften abholen zu können, benötigt das Modul eine Extension in Z2M.
-Dazu die Datei [IPSymconExtension.js](libs/IPSymconExtension.js) in das Verzeichnis **"/opt/zigbee2mqtt/data/extension"** auf dem Rechner, wo Z2M installiert ist ablegen.<br>
+Für den Konfigurator in Symcon und auch für das korrekte Anlagen von Instanzen wird eine Erweiterung (Extension) in Z2M benötigt.
 
-Alternativ kann über das Frontend die Datei angelegt werden und der Inhalt eingefügt werden.
+**Folgende Varianten zum Einreichten der Erweiterung sind möglich:**  
 
-Dazu geht Ihr auf den Punkt "Erweiterungen": <br> ![Erweiterungen](/docs/pictures/Erweiterung_Z2M.jpg)<br> Legt eine neue Extension über den Plus-Button an:  ![Erweiterungen](/docs/pictures/Erweiterung_erstellen_1.jpg)<br> Dann gebt Ihr der Erweiterung den Namen: symcon.js:<br> ![Erweiterung erstellen](/docs/pictures/Erweiterung_erstellen.jpg)<br> Danach öffnet sich ein Fenster für die Code-Eingabe:<br> ![Code Eingabe](/docs/pictures/Erweiterung_code.jpg). <br>Den dort bereits enthaltenen Code bitte komplett löschen. Danach wird der Code aus [IPSymconExtension.js](libs/IPSymconExtension.js) herein kopiert und gespeichert.<br> Danach Z2M bitte neu starten: <br>![Code Eingabe](/docs/pictures/Erweiterung_neustart.jpg)<br>
+1. Über die [Bridge](Bridge/README.md)-Instanz in Symcon (empfohlen)
+2. Über das Z2M Frontend den Inhalt der Datei [IPSymconExtension.js](libs/IPSymconExtension.js) unter dem Menüpunkt Erweiterungen hinzufügen.
+3.  Die Datei [IPSymconExtension.js](libs/IPSymconExtension.js) in das Verzeichnis **"/opt/zigbee2mqtt/data/extension"** auf dem Rechner, wo Z2M installiert ist ablegen. (Experten)
+   
+**Anleitungen:**  
 
+1. Ist in der Dokumentation der [Bridge](Bridge/README.md)-Instanz beschrieben.  
+2. Das Frontend von Z2M im Browser öffnen und den Punkt "Erweiterungen" wählen.  
+   ![Erweiterungen](/docs/pictures/Erweiterung_Z2M.jpg)  
+   Eine neue Extension über den Plus-Button anlegen:  
+   ![Erweiterungen](/docs/pictures/Erweiterung_erstellen_1.jpg)  
+   Der Erweiterung einen Namen geben, z.B. symcon.js:  
+   ![Erweiterung erstellen](/docs/pictures/Erweiterung_erstellen.jpg)  
+   Es öffnet sich ein Fenster für die Code-Eingabe:  
+   ![Code Eingabe](/docs/pictures/Erweiterung_code.jpg)  
+   Den dort bereits enthaltenen Code bitte komplett löschen.  
+   Anschließend der Inhalt (Code) aus [IPSymconExtension.js](libs/IPSymconExtension.js) einfügen und speichern.  
+   Danach sollte Z2M neu gestartet werden:  
+   ![Code Eingabe](/docs/pictures/Erweiterung_neustart.jpg)  
+3. Sollte nur von versierten Usern gemacht werden, da es aufgrund der vielzahl an Systemen unter welchen Z2M laufen kann, keine global gültige Anleitung gibt.  
 
 ## 4. Konfiguration in IP-Symcon
-Bitte den einzelnen Modulen entnehmen.
+Bitte den einzelnen Modulen entnehmen:
+
+* [Bridge](Bridge/README.md)
+* [Configurator](Configurator/README.md)
+* [Device](Device/README.md)
+* [Group](Group/README.md)
 
 # 5. Spenden
 
