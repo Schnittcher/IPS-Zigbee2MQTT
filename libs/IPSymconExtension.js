@@ -3,7 +3,6 @@
  Version: 4.5.3
 */
 
-const ZigbeeHerdsmanConverters = require('zigbee-herdsman-converters');
 class IPSymconExtension {
     constructor(zigbee, mqtt, state, publishEntityState, eventBus, settings, logger) {
         this.zigbee = zigbee;
@@ -13,7 +12,6 @@ class IPSymconExtension {
         this.eventBus = eventBus;
         this.settings = settings;
         this.logger = logger;
-        this.zigbeeHerdsmanConverters = ZigbeeHerdsmanConverters;
 
         this.baseTopic = settings.get().mqtt.base_topic;
         this.symconTopic = 'symcon';
@@ -153,8 +151,6 @@ class IPSymconExtension {
         if (boolExposes) {
             exposes = device.exposes();
         }
-        const definitionIcon = device.definition.icon;
-        let icon = device.options.icon ?? definitionIcon;
         return {
             ieeeAddr: device.ieeeAddr,
             type: device.zh.type,
@@ -166,7 +162,6 @@ class IPSymconExtension {
             manufacturerName: device.zh.manufacturerName,
             powerSource: device.zh.powerSource,
             modelID: device.zh.modelID,
-            icon: icon,  
             exposes: exposes,
         };
     }

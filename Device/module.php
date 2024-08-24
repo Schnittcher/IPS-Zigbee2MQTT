@@ -72,8 +72,19 @@ class Zigbee2MQTTDevice extends IPSModule
                 IPS_ApplyChanges($this->InstanceID);
                 return true;
             }
-            if (array_key_exists('icon', $Result)) {
-                $this->WriteAttributeString('Icon', $Result['icon']);
+            if (array_key_exists('model', $Result)) {
+                $Model = $Result['model'];
+                if ($Model != 'Unknown Model') { // nur wenn Z2M ein Model liefert
+                    if (!$this->ReadAttributeString('Icon')) { // und wir noch kein Bild haben
+                        $Url = 'https://raw.githubusercontent.com/Koenkk/zigbee2mqtt.io/master/public/images/devices/' . $Model . '.png';
+                        $this->SendDebug('loadImage', $Url, 0);
+                        $ImageRaw = @file_get_contents($Url);
+                        if ($ImageRaw) {
+                            $Icon = 'data:image/png;base64,' . base64_encode($ImageRaw);
+                            $this->WriteAttributeString('Icon', $Icon);
+                        }
+                    }
+                }
             }
             $this->mapExposesToVariables($Result['exposes']);
             return true;
