@@ -73,7 +73,7 @@ class Zigbee2MQTTGroup extends IPSModule
                 return true;
             }
         }
-        trigger_error($this->Translate('Group not found. Check topic'), E_USER_NOTICE);        
+        trigger_error($this->Translate('Group not found. Check topic'), E_USER_NOTICE);
         return false;
     }
 }

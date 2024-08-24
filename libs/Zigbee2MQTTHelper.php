@@ -2331,6 +2331,36 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.action.319a6616':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['brightness_move_down_1', $this->Translate('Brightness Move Down 1'), '', 0x00FF00],
+                                    ['brightness_move_down_2', $this->Translate('Brightness Move Down 2'), '', 0x00FF00],
+                                    ['brightness_move_down_3', $this->Translate('Brightness Move Down 3'), '', 0x00FF00],
+                                    ['brightness_move_down_4', $this->Translate('Brightness Move Down 4'), '', 0x00FF00],
+                                    ['brightness_stop_1', $this->Translate('Brightness Move Stop 1'), '', 0x00FF00],
+                                    ['brightness_stop_2', $this->Translate('Brightness Move Stop 2'), '', 0x00FF00],
+                                    ['brightness_stop_3', $this->Translate('Brightness Move Stop 3'), '', 0x00FF00],
+                                    ['brightness_stop_4', $this->Translate('Brightness Move Stop 4'), '', 0x00FF00],
+                                    ['brightness_move_up_1', $this->Translate('Brightness Move Up 1'), '', 0x00FF00],
+                                    ['brightness_move_up_2', $this->Translate('Brightness Move Up 2'), '', 0x00FF00],
+                                    ['brightness_move_up_3', $this->Translate('Brightness Move Up 3'), '', 0x00FF00],
+                                    ['brightness_move_up_4', $this->Translate('Brightness Move Up 4'), '', 0x00FF00],
+                                    ['off_1', $this->Translate('Off 1'), '', 0x00FF00],
+                                    ['off_2', $this->Translate('Off 2'), '', 0x00FF00],
+                                    ['off_3', $this->Translate('Off 3'), '', 0x00FF00],
+                                    ['off_4', $this->Translate('Off 4'), '', 0x00FF00],
+                                    ['on_1', $this->Translate('On 1'), '', 0x00FF00],
+                                    ['on_2', $this->Translate('On 2'), '', 0x00FF00],
+                                    ['on_3', $this->Translate('On 3'), '', 0x00FF00],
+                                    ['on_4', $this->Translate('On 4'), '', 0x00FF00],
+                                    ['stop_1', $this->Translate('Stop 1'), '', 0x00FF00],
+                                    ['stop_2', $this->Translate('Stop 2'), '', 0x00FF00],
+                                    ['stop_3', $this->Translate('Stop 3'), '', 0x00FF00],
+                                    ['stop_4', $this->Translate('Stop 4'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.action.177702c6':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
