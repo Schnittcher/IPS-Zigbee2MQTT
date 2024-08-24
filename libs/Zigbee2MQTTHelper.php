@@ -1054,7 +1054,34 @@ trait Zigbee2MQTTHelper
             $this->SetValue('Z2M_MaxBrightnessL2', $Payload['max_brightness_l2']);
         }
         if (array_key_exists('brightness', $Payload)) {
+             if (@!$this->GetIDForIdent('brightness')) {
+                $this->RegisterVariableInteger('Z2M_Brightness', $this->Translate('Brightness'), '~Intensity.255');
+             }
             $this->SetValue('Z2M_Brightness', $Payload['brightness']);
+        }
+        if (array_key_exists('brightness_1', $Payload)) {
+             if (@!$this->GetIDForIdent('brightness_1')) {
+                $this->RegisterVariableInteger('Z2M_Brightness_1', $this->Translate('Brightness 1'), '~Intensity.255');
+             }
+            $this->SetValue('Z2M_Brightness_1', $Payload['brightness_1']);
+        }
+        if (array_key_exists('brightness_2', $Payload)) {
+             if (@!$this->GetIDForIdent('brightness_2')) {
+                $this->RegisterVariableInteger('Z2M_Brightness_2', $this->Translate('Brightness 2'), '~Intensity.255');
+             }
+            $this->SetValue('Z2M_Brightness_2', $Payload['brightness_2']);
+        }
+        if (array_key_exists('brightness_3', $Payload)) {
+             if (@!$this->GetIDForIdent('brightness_3')) {
+                $this->RegisterVariableInteger('Z2M_Brightness_3', $this->Translate('Brightness 3'), '~Intensity.255');
+             }
+            $this->SetValue('Z2M_Brightness_3', $Payload['brightness_3']);
+        }
+        if (array_key_exists('brightness_4', $Payload)) {
+             if (@!$this->GetIDForIdent('brightness_4')) {
+                $this->RegisterVariableInteger('Z2M_Brightness_4', $this->Translate('Brightness 4'), '~Intensity.255');
+             }
+            $this->SetValue('Z2M_Brightness_4', $Payload['brightness_4']);
         }
         if (array_key_exists('brightness_l1', $Payload)) {
             $this->SetValue('Z2M_BrightnessL1', $Payload['brightness_l1']);
