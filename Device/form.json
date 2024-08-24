@@ -1,20 +1,35 @@
 {
     "elements": [
         {
-            "type": "ValidationTextBox",
-            "name": "MQTTBaseTopic",
-            "caption": "MQTT Base Topic"
-        },
-        {
-            "type": "ValidationTextBox",
-            "name": "MQTTTopic",
-            "caption": "MQTT Topic"
-        },
-        {
-            "type": "ValidationTextBox",
-            "name": "IEEE",
-            "caption": "IEEE Address",
-            "enabled": false
+            "type": "RowLayout",
+            "items": [
+                {
+                    "type": "ColumnLayout",
+                    "items": [
+                        {
+                            "type": "ValidationTextBox",
+                            "name": "MQTTBaseTopic",
+                            "caption": "MQTT Base Topic"
+                        },
+                        {
+                            "type": "ValidationTextBox",
+                            "name": "MQTTTopic",
+                            "caption": "MQTT Topic"
+                        },
+                        {
+                            "type": "ValidationTextBox",
+                            "name": "IEEE",
+                            "caption": "IEEE Address",
+                            "enabled": false
+                        }
+                    ]
+                },
+                {
+                    "type": "Image",
+                    "image": "",
+                    "width": "200px"
+                }
+            ]
         }
     ],
     "actions": [

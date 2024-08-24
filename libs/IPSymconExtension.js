@@ -1,6 +1,6 @@
 /*
  IPSymconExtension
- Version: 4.5.2
+ Version: 4.5.3
 */
 
 const ZigbeeHerdsmanConverters = require('zigbee-herdsman-converters');
@@ -149,12 +149,12 @@ class IPSymconExtension {
     }
 
     #createDevicePayload(device, boolExposes) {
-        const definition = this.zigbeeHerdsmanConverters.findByDevice(device.zh);
         let exposes;
         if (boolExposes) {
             exposes = device.exposes();
         }
-
+        const definitionIcon = device.definition.icon;
+        let icon = device.options.icon ?? definitionIcon;
         return {
             ieeeAddr: device.ieeeAddr,
             type: device.zh.type,
@@ -166,6 +166,7 @@ class IPSymconExtension {
             manufacturerName: device.zh.manufacturerName,
             powerSource: device.zh.powerSource,
             modelID: device.zh.modelID,
+            icon: icon,  
             exposes: exposes,
         };
     }
