@@ -1722,8 +1722,8 @@ trait Zigbee2MQTTHelper
         $identWithoutPrefix = str_replace('Z2M_', '', $ident);
         // Füge einen Unterstrich nach "state" ein, falls es im String enthalten ist, unabhängig von Groß/Kleinschreibung
         // Löst Probem, wenn das ident zum Beispiel "Z2M_Statel1" lautet
-        if (preg_match('/state/i', $identWithoutPrefix)) {
-            $identWithoutPrefix = preg_replace('/state/i', 'state_', $identWithoutPrefix);
+        if (preg_match('/state(?=[a-zA-Z])/i', $identWithoutPrefix)) {
+            $identWithoutPrefix = preg_replace('/state(?=[a-zA-Z])/i', 'state_', $identWithoutPrefix);
         }
         // Füge Unterstriche vor Großbuchstaben ein, außer am Anfang des Strings
         $payloadKey = strtolower(preg_replace('/(?<!^)([A-Z])/', '_$1', $identWithoutPrefix));
