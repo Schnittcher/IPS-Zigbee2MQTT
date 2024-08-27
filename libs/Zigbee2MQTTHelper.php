@@ -68,10 +68,10 @@ trait Zigbee2MQTTHelper
             case 'Z2M_ScheduleSettings':
                 $Payload['schedule_settings'] = $Value;
                 break;
-            case 'Z2M_schedule':
+            case 'Z2M_Schedule':
                 $Payload['schedule'] = strval($this->OnOff($Value));
                 break;
-            case 'Z2M_externalTemperatureInput':
+            case 'Z2M_ExternalTemperatureInput':
                 $Payload['external_temperature_input'] = $Value;
                 break;
             case 'Z2M_Calibrate':
