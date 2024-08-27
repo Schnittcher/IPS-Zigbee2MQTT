@@ -137,7 +137,7 @@ trait Zigbee2MQTTHelper
             case 'Z2M_IrrigationTarget':
                 $Payload['irrigation_target'] = $Value;
                 break;
-            case 'Z2MCycleIrrigationInterval':
+            case 'Z2M_CycleIrrigationInterval':
                 $Payload['cycle_irrigation_interval'] = $Value;
                 break;
             case 'Z2M_CountdownL1':
