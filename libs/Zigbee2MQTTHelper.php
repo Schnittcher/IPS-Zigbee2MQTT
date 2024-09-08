@@ -156,7 +156,7 @@ trait Zigbee2MQTTHelper
                 $Payload['move_sensitivity'] = $Value;
                 break;
             case 'Z2M_ValveAdaptProcess':
-                $Payload['valve_adapt_process'] = strval($this->OnOff($Value));
+                $Payload['valve_adapt_process'] = strval($Value);
                 break;
             case 'Z2M_Indicator':
                 $Payload['indicator'] = strval($this->OnOff($Value));
