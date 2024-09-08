@@ -11,7 +11,7 @@
             "caption": "MQTT Topic"
         },
         {
-            "type": "ValidationTextBox",
+            "type": "NumberSpinner",
             "name": "GroupId",
             "caption": "Group Id",
             "enabled": false
