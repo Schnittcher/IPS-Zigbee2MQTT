@@ -123,12 +123,14 @@ class Zigbee2MQTTConfigurator extends IPSModule
                     unset($IPSDevicesByIEEE[$instanceID]);
                 }
             }
+            $Location = explode('/',$device['friendly_name']);
+            $Name = array_pop($Location);            
             if ($instanceID) {
                 $Value['name'] = IPS_GetName($instanceID);
                 $Value['instanceID'] = $instanceID;
 
             } else {
-                $Value['name'] = $device['friendly_name'];
+                $Value['name'] = $Name;
                 $Value['instanceID'] = 0;
             }
             $Value['ieee_address'] = $device['ieeeAddr'];
@@ -141,8 +143,9 @@ class Zigbee2MQTTConfigurator extends IPSModule
             $Value['power_source'] = (array_key_exists('powerSource', $device) ? $this->Translate($device['powerSource']) : $this->Translate('Unknown'));
             $Value['create'] =
                 [
-                    'moduleID'      => '{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}',
-                    'configuration' => [
+                    'moduleID'      =>  '{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}',
+                    'location'      =>  $Location,
+                    'configuration' =>  [
                         'MQTTBaseTopic'    => $BaseTopic,
                         'MQTTTopic'        => $device['friendly_name'],
                         'IEEE'             => $device['ieeeAddr']

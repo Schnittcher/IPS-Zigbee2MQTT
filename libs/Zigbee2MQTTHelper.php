@@ -1054,7 +1054,34 @@ trait Zigbee2MQTTHelper
             $this->SetValue('Z2M_MaxBrightnessL2', $Payload['max_brightness_l2']);
         }
         if (array_key_exists('brightness', $Payload)) {
+            if (@!$this->GetIDForIdent('brightness')) {
+                $this->RegisterVariableInteger('Z2M_Brightness', $this->Translate('Brightness'), '~Intensity.255');
+            }
             $this->SetValue('Z2M_Brightness', $Payload['brightness']);
+        }
+        if (array_key_exists('brightness_1', $Payload)) {
+            if (@!$this->GetIDForIdent('brightness_1')) {
+                $this->RegisterVariableInteger('Z2M_Brightness_1', $this->Translate('Brightness 1'), '~Intensity.255');
+            }
+            $this->SetValue('Z2M_Brightness_1', $Payload['brightness_1']);
+        }
+        if (array_key_exists('brightness_2', $Payload)) {
+            if (@!$this->GetIDForIdent('brightness_2')) {
+                $this->RegisterVariableInteger('Z2M_Brightness_2', $this->Translate('Brightness 2'), '~Intensity.255');
+            }
+            $this->SetValue('Z2M_Brightness_2', $Payload['brightness_2']);
+        }
+        if (array_key_exists('brightness_3', $Payload)) {
+            if (@!$this->GetIDForIdent('brightness_3')) {
+                $this->RegisterVariableInteger('Z2M_Brightness_3', $this->Translate('Brightness 3'), '~Intensity.255');
+            }
+            $this->SetValue('Z2M_Brightness_3', $Payload['brightness_3']);
+        }
+        if (array_key_exists('brightness_4', $Payload)) {
+            if (@!$this->GetIDForIdent('brightness_4')) {
+                $this->RegisterVariableInteger('Z2M_Brightness_4', $this->Translate('Brightness 4'), '~Intensity.255');
+            }
+            $this->SetValue('Z2M_Brightness_4', $Payload['brightness_4']);
         }
         if (array_key_exists('brightness_l1', $Payload)) {
             $this->SetValue('Z2M_BrightnessL1', $Payload['brightness_l1']);
@@ -1720,7 +1747,13 @@ trait Zigbee2MQTTHelper
         // Gehört zu RequestAction
         // Wandelt den Ident zu einem gültigen Expose um
         $identWithoutPrefix = str_replace('Z2M_', '', $ident);
-        $payloadKey = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $identWithoutPrefix));
+        // Füge einen Unterstrich nach "state" ein, falls es im String enthalten ist, unabhängig von Groß/Kleinschreibung
+        // Löst Probem, wenn das ident zum Beispiel "Z2M_Statel1" lautet
+        if (preg_match('/state(?=[a-zA-Z])/i', $identWithoutPrefix)) {
+            $identWithoutPrefix = preg_replace('/state(?=[a-zA-Z])/i', 'state_', $identWithoutPrefix);
+        }
+        // Füge Unterstriche vor Großbuchstaben ein, außer am Anfang des Strings
+        $payloadKey = strtolower(preg_replace('/(?<!^)([A-Z])/', '_$1', $identWithoutPrefix));
         return $payloadKey;
     }
 
@@ -2328,6 +2361,36 @@ trait Zigbee2MQTTHelper
                                     ['off_2', $this->Translate('Off 2'), '', 0x00FF00],
                                     ['on_1', $this->Translate('On 1'), '', 0x00FF00],
                                     ['on_2', $this->Translate('On 2'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.action.319a6616':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['brightness_move_down_1', $this->Translate('Brightness Move Down 1'), '', 0x00FF00],
+                                    ['brightness_move_down_2', $this->Translate('Brightness Move Down 2'), '', 0x00FF00],
+                                    ['brightness_move_down_3', $this->Translate('Brightness Move Down 3'), '', 0x00FF00],
+                                    ['brightness_move_down_4', $this->Translate('Brightness Move Down 4'), '', 0x00FF00],
+                                    ['brightness_stop_1', $this->Translate('Brightness Move Stop 1'), '', 0x00FF00],
+                                    ['brightness_stop_2', $this->Translate('Brightness Move Stop 2'), '', 0x00FF00],
+                                    ['brightness_stop_3', $this->Translate('Brightness Move Stop 3'), '', 0x00FF00],
+                                    ['brightness_stop_4', $this->Translate('Brightness Move Stop 4'), '', 0x00FF00],
+                                    ['brightness_move_up_1', $this->Translate('Brightness Move Up 1'), '', 0x00FF00],
+                                    ['brightness_move_up_2', $this->Translate('Brightness Move Up 2'), '', 0x00FF00],
+                                    ['brightness_move_up_3', $this->Translate('Brightness Move Up 3'), '', 0x00FF00],
+                                    ['brightness_move_up_4', $this->Translate('Brightness Move Up 4'), '', 0x00FF00],
+                                    ['off_1', $this->Translate('Off 1'), '', 0x00FF00],
+                                    ['off_2', $this->Translate('Off 2'), '', 0x00FF00],
+                                    ['off_3', $this->Translate('Off 3'), '', 0x00FF00],
+                                    ['off_4', $this->Translate('Off 4'), '', 0x00FF00],
+                                    ['on_1', $this->Translate('On 1'), '', 0x00FF00],
+                                    ['on_2', $this->Translate('On 2'), '', 0x00FF00],
+                                    ['on_3', $this->Translate('On 3'), '', 0x00FF00],
+                                    ['on_4', $this->Translate('On 4'), '', 0x00FF00],
+                                    ['stop_1', $this->Translate('Stop 1'), '', 0x00FF00],
+                                    ['stop_2', $this->Translate('Stop 2'), '', 0x00FF00],
+                                    ['stop_3', $this->Translate('Stop 3'), '', 0x00FF00],
+                                    ['stop_4', $this->Translate('Stop 4'), '', 0x00FF00]
                                 ]);
                             }
                             break;
