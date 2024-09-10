@@ -10,7 +10,6 @@ class Zigbee2MQTTConfigurator extends IPSModule
 {
     use \Zigbee2MQTT\BufferHelper;
     use \Zigbee2MQTT\Semaphore;
-    use \Zigbee2MQTT\MQTTHelper;
     use \Zigbee2MQTT\SendData;
 
     public function Create()
@@ -123,8 +122,8 @@ class Zigbee2MQTTConfigurator extends IPSModule
                     unset($IPSDevicesByIEEE[$instanceID]);
                 }
             }
-            $Location = explode('/',$device['friendly_name']);
-            $Name = array_pop($Location);            
+            $Location = explode('/', $device['friendly_name']);
+            $Name = array_pop($Location);
             if ($instanceID) {
                 $Value['name'] = IPS_GetName($instanceID);
                 $Value['instanceID'] = $instanceID;
@@ -143,9 +142,9 @@ class Zigbee2MQTTConfigurator extends IPSModule
             $Value['power_source'] = (array_key_exists('powerSource', $device) ? $this->Translate($device['powerSource']) : $this->Translate('Unknown'));
             $Value['create'] =
                 [
-                    'moduleID'      =>  '{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}',
-                    'location'      =>  $Location,
-                    'configuration' =>  [
+                    'moduleID'      => '{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}',
+                    'location'      => $Location,
+                    'configuration' => [
                         'MQTTBaseTopic'    => $BaseTopic,
                         'MQTTTopic'        => $device['friendly_name'],
                         'IEEE'             => $device['ieeeAddr']

@@ -4,37 +4,6 @@ declare(strict_types=1);
 
 namespace Zigbee2MQTT;
 
-trait MQTTHelper
-{
-    public function Command(string $topic, string $value)
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/' . $topic;
-        $Data['Payload'] = utf8_encode($value);
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__ . ' Payload', $Data['Payload'], 0);
-        $this->SendDataToParent($DataJSON);
-    }
-
-    public function CommandExt(string $topic, string $value) //ohne MQTTTopic
-    {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = $this->ReadPropertyString('MQTTBaseTopic') . '/' . $topic;
-        $Data['Payload'] = utf8_encode($value);
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__ . ' Payload', $Data['Payload'], 0);
-        $this->SendDataToParent($DataJSON);
-    }
-}
-
 /**
  * @property array $TransactionData
  */
@@ -49,15 +18,24 @@ trait SendData
         'Payload'          => ''
     ];
 
+    public function Command(string $topic, string $value)
+    {
+        $this->SendData('/' . $this->ReadPropertyString('MQTTTopic') . '/' . $topic, json_decode($value, true), 0);
+    }
+
+    public function CommandExt(string $topic, string $value) //ohne MQTTTopic
+    {
+        $this->SendData('/' . $topic, json_decode($value, true), 0);
+    }
+
     /**
      * SendData
      *
      * Sendet eine MQTT Nachricht an den Parent.
-     * Wird aktuell nur zur Kommunikation mit dem Bridge Topic, sowie der Extension in Z2M verwendet,
-     * durch die Funktionen UpdateDeviceInfo, UpdateGroupInfo, getDevices und getGroups
      * Bei aktivem Timeout wird die Nachtricht mit einer TransactionId versehen,
      * und auf eine eingehende Nachricht mit der entsprechenden TransactionId gewartet.
-     *
+     * TransactionId wird nur zur Kommunikation mit dem Bridge Topic, sowie der Extension in Z2M verwendet,
+     * durch die Funktionen UpdateDeviceInfo, getDevices und getGroups
      * @param  string $Topic
      * @param  array $Payload
      * @param  int $Timeout default 5000ms, 0 = senden ohne auf die Antwort zuw arten

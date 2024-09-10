@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 namespace Zigbee2MQTT;
 
+require_once __DIR__ . '/../libs/MQTTHelper.php';
+
+/**
+ * @method void UpdateDeviceInfo()
+ */
 trait Zigbee2MQTTHelper
 {
+    use SendData;
+
     /** @var array $stateTypeMapping
      * Gehört zu RequestAction
      * Hier werden die Fälle behandelt, wo standard-Aktionen nicht funktionieren.
@@ -45,6 +52,11 @@ trait Zigbee2MQTTHelper
 
     public function RequestAction($ident, $value)
     {
+        // Behandle interne Fälle separat
+        if ($ident == 'UpdateInfo') {
+            $this->UpdateDeviceInfo();
+            return;
+        }
         // Behandle spezielle Fälle separat
         // Fälle, wie z.B. die ganzen Farben, wo nicht einfach nur das $value gesetzt werden kann
         switch ($ident) {
@@ -64,8 +76,7 @@ trait Zigbee2MQTTHelper
                 $convertedValue = strval(intval(round(1000000 / $value, 0)));
                 $payloadKey = self::convertIdentToPayloadKey($ident);
                 $payload = [$payloadKey => $convertedValue];
-                $payloadJSON = json_encode($payload, JSON_UNESCAPED_SLASHES);
-                $this->Z2MSet($payloadJSON);
+                $this->SendSetCommand($payload);
                 return;
         }
         // Generelle Logik für die meisten anderen Fälle
@@ -77,13 +88,12 @@ trait Zigbee2MQTTHelper
         // Wandelt den Ident zum passenden Expose um
         $payloadKey = self::convertIdentToPayloadKey($ident);
 
-        // konvertiert den Wert in ein für Z2MSet nutzbaren Wert
+        // konvertiert den Wert in ein für Z2M nutzbaren Wert
         // Keine Unterscheidung mehr in strval($value), $value (numerisch), etc. mehr notwendig
         $payload = [$payloadKey => self::convertStateBasedOnMapping($ident, $value, $variableType)];
 
-        // Erstellung des passenden Payloads und versand durch Z2MSet
-        $payloadJSON = json_encode($payload, JSON_UNESCAPED_SLASHES);
-        $this->Z2MSet($payloadJSON);
+        // Erstellung des passenden Payloads und versand durch SendSetCommand
+        $this->SendSetCommand($payload);
     }
 
     public function ReceiveData($JSONString)
@@ -133,34 +143,6 @@ trait Zigbee2MQTTHelper
     }
 
     /**
-     * convertToUnixTimestamp
-     *
-     * @param  string $timeString
-     * @return integer Unixtimestamp
-     */
-    public function convertToUnixTimestamp(string $timeString)
-    {
-        if ($timeString === '--:--:--') {
-            $this->SendDebug(__FUNCTION__, 'Invalid time string received, setting Unix timestamp to 0', 0);
-            return 0;
-        }
-        $this->SendDebug(__FUNCTION__, 'Input time string: ' . $timeString, 0);
-        $currentDate = date('d.m.Y');
-        $this->SendDebug(__FUNCTION__, 'Current date: ' . $currentDate, 0);
-        $datetimeStr = $currentDate . ' ' . $timeString;
-        $this->SendDebug(__FUNCTION__, 'Combined datetime string: ' . $datetimeStr, 0);
-        $datetime = \DateTime::createFromFormat('d.m.Y H:i:s', $datetimeStr);
-        if ($datetime === false) {
-            $this->SendDebug(__FUNCTION__, 'Error creating DateTime object', 0);
-            throw new \Exception('Fehler beim Konvertieren von Datum und Uhrzeit.');
-        } else {
-            $unixTimestamp = $datetime->getTimestamp();
-            $this->SendDebug(__FUNCTION__, 'Unix timestamp: ' . $unixTimestamp, 0);
-            return $unixTimestamp;
-        }
-    }
-
-    /**
      * setColorExt
      *
      * @param  string|integer $color Kann einen HTML-Hex-Color-String (#00fe00) oder einen Integer enthalten.
@@ -169,7 +151,7 @@ trait Zigbee2MQTTHelper
      * @param  string $Z2MMode
      * @return void
      */
-    public function setColorExt($color, string $mode, array $params = [], string $Z2MMode = 'color')
+    public function setColorExt(mixed $color, string $mode, array $params = [], string $Z2MMode = 'color')
     {
         switch ($mode) {
             case 'cie':
@@ -196,9 +178,7 @@ trait Zigbee2MQTTHelper
                     $Payload[$key] = $value;
                 }
 
-                $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-                $this->SendDebug(__FUNCTION__, $PayloadJSON, 0);
-                $this->Z2MSet($PayloadJSON);
+                $this->SendSetCommand($Payload);
                 break;
             default:
                 $this->SendDebug('setColor', 'Invalid Mode ' . $mode, 0);
@@ -206,18 +186,12 @@ trait Zigbee2MQTTHelper
         }
     }
 
-    public function Z2MSet($payload)
+    public function SendSetCommand(array $Payload)
     {
-        $Data['DataID'] = '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}';
-        $Data['PacketType'] = 3;
-        $Data['QualityOfService'] = 0;
-        $Data['Retain'] = false;
-        $Data['Topic'] = $this->ReadPropertyString('MQTTBaseTopic') . '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
-        $Data['Payload'] = $payload;
-        $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);
-        $this->SendDebug(__FUNCTION__ . ' Topic', $Data['Topic'], 0);
-        $this->SendDebug(__FUNCTION__ . ' Payload', $Data['Payload'], 0);
-        $this->SendDataToParent($DataJSON);
+        // Baue /set Topic
+        $Topic = '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
+        // Sende Daten
+        $this->SendData($Topic, $Payload, 0);
     }
 
     protected function DecodeData($Payload)
@@ -1827,8 +1801,7 @@ trait Zigbee2MQTTHelper
                 } else {
                     return;
                 }
-                $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-                $this->Z2MSet($PayloadJSON);
+                $this->SendSetCommand($Payload);
                 break;
             case 'hs':
                 $this->SendDebug('setColor - Input Color', json_encode($color), 0);
@@ -1851,8 +1824,7 @@ trait Zigbee2MQTTHelper
                 } else {
                     return;
                 }
-                $PayloadJSON = json_encode($Payload, JSON_UNESCAPED_SLASHES);
-                $this->Z2MSet($PayloadJSON);
+                $this->SendSetCommand($Payload);
                 break;
             default:
                 $this->SendDebug('setColor', 'Invalid Mode ' . $mode, 0);

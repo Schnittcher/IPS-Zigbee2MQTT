@@ -21,7 +21,7 @@
         {
             "type": "Button",
             "label": "Get Device Infos",
-            "onClick": "Z2M_UpdateGroupInfo($id);"
+            "onClick": "IPS_RequestAction($id, 'UpdateInfo', true);"
         },
         {
             "type": "TestCenter"

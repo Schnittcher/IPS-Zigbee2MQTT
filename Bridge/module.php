@@ -162,7 +162,7 @@ class Zigbee2MQTTBridge extends IPSModule
                     $this->ConfigPermitJoin = $Payload['config']['permit_join'];
                     $this->UpdateFormField('PermitJoinOption', 'visible', $Payload['config']['permit_join']);
                     if ($Payload['config']['permit_join']) {
-                        $this->LogMessage($this->Translate('Danger! In the Zigbee2MQTT configuration permit_join is activated. This leads to a possible security risk!'), KL_ERROR);
+                        $this->LogMessage($this->Translate("Danger! In the Zigbee2MQTT configuration permit_join is activated.\r\nThis leads to a possible security risk!"), KL_ERROR);
                     }
                 }
                 if (isset($Payload['zigbee_herdsman_converters']['version'])) {
@@ -187,7 +187,11 @@ class Zigbee2MQTTBridge extends IPSModule
                 $foundExtension = false;
                 $Version = 'unknown';
                 foreach ($Payload as $Extension) {
-                    if (strpos($Extension['code'], 'class IPSymconExtension')) {
+                    if (strpos($Extension['code'], 'class IPSymconExtension') !== false) {
+                        if ($foundExtension) {
+                            $this->LogMessage($this->Translate("Danger! Several extensions for Symcon have been found.\r\nPlease delete outdated versions manually to avoid malfunctions."), KL_ERROR);
+                            continue;
+                        }
                         $foundExtension = true;
                         $this->ExtensionName = $Extension['name'];
                         $Lines = explode("\n", $Extension['code']);
@@ -200,7 +204,6 @@ class Zigbee2MQTTBridge extends IPSModule
                         } else {
                             $this->LogMessage($this->Translate('Symcon Extension in Zigbee2MQTT is outdated. Please update the extension.'), KL_ERROR);
                         }
-                        break;
                     }
                 }
                 $this->SetValue('extension_loaded', $foundExtension);

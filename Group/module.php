@@ -6,7 +6,6 @@ require_once dirname(__DIR__) . '/libs/BufferHelper.php';
 require_once dirname(__DIR__) . '/libs/SemaphoreHelper.php';
 
 require_once __DIR__ . '/../libs/ColorHelper.php';
-require_once __DIR__ . '/../libs/MQTTHelper.php';
 require_once __DIR__ . '/../libs/VariableProfileHelper.php';
 require_once __DIR__ . '/../libs/Zigbee2MQTTHelper.php';
 
@@ -15,7 +14,6 @@ class Zigbee2MQTTGroup extends IPSModule
     use \Zigbee2MQTT\BufferHelper;
     use \Zigbee2MQTT\Semaphore;
     use \Zigbee2MQTT\ColorHelper;
-    use \Zigbee2MQTT\MQTTHelper;
     use \Zigbee2MQTT\SendData;
     use \Zigbee2MQTT\VariableProfileHelper;
     use \Zigbee2MQTT\Zigbee2MQTTHelper;
@@ -54,12 +52,12 @@ class Zigbee2MQTTGroup extends IPSModule
         $GroupId = $GroupId ? 'Group Id: ' . $GroupId : '';
         $this->SetSummary($GroupId);
         if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
-            $this->UpdateGroupInfo();
+            $this->UpdateDeviceInfo();
         }
         $this->SetStatus(IS_ACTIVE);
     }
 
-    public function UpdateGroupInfo()
+    private function UpdateDeviceInfo()
     {
         $Result = $this->SendData('/SymconExtension/request/getGroupInfo/' . $this->ReadPropertyString('MQTTTopic'));
         $this->SendDebug('result', json_encode($Result), 0);

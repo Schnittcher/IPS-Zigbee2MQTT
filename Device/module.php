@@ -7,7 +7,6 @@ require_once dirname(__DIR__) . '/libs/SemaphoreHelper.php';
 
 require_once __DIR__ . '/../libs/VariableProfileHelper.php';
 require_once __DIR__ . '/../libs/ColorHelper.php';
-require_once __DIR__ . '/../libs/MQTTHelper.php';
 require_once __DIR__ . '/../libs/Zigbee2MQTTHelper.php';
 
 class Zigbee2MQTTDevice extends IPSModule
@@ -15,7 +14,6 @@ class Zigbee2MQTTDevice extends IPSModule
     use \Zigbee2MQTT\BufferHelper;
     use \Zigbee2MQTT\Semaphore;
     use \Zigbee2MQTT\ColorHelper;
-    use \Zigbee2MQTT\MQTTHelper;
     use \Zigbee2MQTT\SendData;
     use \Zigbee2MQTT\VariableProfileHelper;
     use \Zigbee2MQTT\Zigbee2MQTTHelper;
@@ -58,7 +56,14 @@ class Zigbee2MQTTDevice extends IPSModule
         $this->SetStatus(IS_ACTIVE);
     }
 
-    public function UpdateDeviceInfo()
+    public function GetConfigurationForm()
+    {
+        $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        $Form['elements'][0]['items'][1]['image'] = $this->ReadAttributeString('Icon');
+        return json_encode($Form);
+    }
+
+    private function UpdateDeviceInfo()
     {
         $Result = $this->SendData('/SymconExtension/request/getDeviceInfo/' . $this->ReadPropertyString('MQTTTopic'));
         $this->SendDebug('result', json_encode($Result), 0);
@@ -91,12 +96,5 @@ class Zigbee2MQTTDevice extends IPSModule
         }
         trigger_error($this->Translate('Device not found. Check topic'), E_USER_NOTICE);
         return false;
-    }
-
-    public function GetConfigurationForm()
-    {
-        $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        $Form['elements'][0]['items'][1]['image'] = $this->ReadAttributeString('Icon');
-        return json_encode($Form);
     }
 }
