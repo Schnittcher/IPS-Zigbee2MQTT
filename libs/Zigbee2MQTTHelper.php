@@ -2280,6 +2280,20 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.action.7faffd29':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['brightness_move_to_level', $this->Translate('Brightness Move To Level'), '', 0x00FF00],
+                                    ['brightness_step_down', $this->Translate('Brightness Step Down'), '', 0x00FF00],
+                                    ['brightness_step_up', $this->Translate('Brightness Step Up'), '', 0x00FF00],
+                                    ['color_temperature_move', $this->Translate('Color Temperature Move'), '', 0x00FF00],                                        ['double', $this->Translate('Double'), '', 0x00FF00],
+                                    ['hold', $this->Translate('Hold'), '', 0x00FF00],
+                                    ['off', $this->Translate('Off'), '', 0x00FF00],
+                                    ['on', $this->Translate('On'), '', 0x00FF00],
+                                    ['single', $this->Translate('Single'), '', 0x00FF00]
+                                ]);
+                            }
+                            break;
                         case 'Z2M.action.2b653bba':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -3570,6 +3584,21 @@ trait Zigbee2MQTTHelper
                 break;
             case 'numeric':
                 switch ($expose['property']) {
+                    case 'rain_intensity':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ', 0, 0, 1, 0);
+                        }
+                        break;
+                    case 'illuminance_maximum_today':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 1, 0);
+                        }
+                        break;
+                    case 'illuminance_average_20min':
+                        if (!IPS_VariableProfileExists($ProfileName)) {
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' . $expose['unit'], 0, 0, 1, 0);
+                        }
+                        break;
                     case 'smoke_concentration':
                         if (!IPS_VariableProfileExists($ProfileName)) {
                             $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ppm', 0, 0, 1, 0);
@@ -4674,6 +4703,9 @@ trait Zigbee2MQTTHelper
                     break; //Lock break
                 case 'binary':
                     switch ($expose['property']) {
+                        case 'cleaning_reminder':
+                            $this->RegisterVariableBoolean('Z2M_CleaningReminder', $this->Translate('Cleaning Reminder'), '~Switch');
+                            break;
                         case 'device_fault':
                             $this->RegisterVariableBoolean('Z2M_DeviceFault', $this->Translate('Device Fault'), '~Switch');
                             break;
@@ -5538,6 +5570,24 @@ trait Zigbee2MQTTHelper
                     break; //enum break
                 case 'numeric':
                     switch ($expose['property']) {
+                        case 'rain_intensity':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_RainIntensity', $this->Translate('Rain Intensity'), $ProfileName);
+                            }
+                            break;
+                        case 'illuminance_maximum_today':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_IlluminanceMaximumToday', $this->Translate('Illuminance Maximum Today'), $ProfileName);
+                            }
+                            break;
+                        case 'illuminance_average_20min':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_IlluminanceAverage20min', $this->Translate('Illuminance Average 20min'), $ProfileName);
+                            }
+                            break;
                         case 'smoke_concentration':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
