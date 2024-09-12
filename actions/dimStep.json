@@ -1,0 +1,43 @@
+{
+    "id": "{01561217-6EEA-4E8C-A87A-66FD47190241}",
+    "caption": "Increases or decreases brightness",
+    "form": [
+        {
+            "type": "NumberSpinner",
+            "name": "Step",
+            "minimum": -100,
+            "maximum": 100,
+            "caption": "Dim step",
+            "suffix": " %"
+        }
+    ],
+    "priority": 1,
+    "action": [
+        "Z2M_SendSetCommand($_IPS['TARGET'], ['brightness_step_onoff' => (int)($_IPS['Step']*254/100)]);"
+    ],
+    "restrictions": {
+        "objectType": [
+            1
+        ],
+        "moduleID": [
+            "{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}",
+            "{11BF3773-E940-469B-9DD7-FB9ACD7199A2}"
+        ],
+        "includeEnvironments": [
+            "Default",
+            "TestCommands"
+        ],
+        "hasIdent": [
+            "Z2M_Brightness",
+            "Z2M_State"
+        ]
+    },
+    "locale": {
+        "de": {
+            "Increases or decreases brightness": "Erhöhe oder verringere Helligkeit",
+            "Dim step": "Dim Schritt",
+            "Single relative dimming step. Use positive Values to dim up or negative values to dim down.": "Einzelner relativer Dimmer Schritt. Verwende positive Werte zum Aufdimmen oder negative Werte zum Abdimmen."
+        }
+    },
+    "description": "Single relative dimming step. Use positive Values to dim up or negative values to dim down."
+}
