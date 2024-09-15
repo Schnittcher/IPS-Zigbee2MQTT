@@ -214,7 +214,7 @@
             "Color HS": "Farbe HSB",
             "Colorloop": "Farbverlauf",
             "Color Power On Behavior": "Einschaltverhalten der Farbe",
-            "Color Temp": "Farbtemperatur";
+            "Color Temp": "Farbtemperatur",
             "Color Temp Presets": "Farbtemperatur Profil",
             "Color Temp Startup": "Start Farbtemperatur",
             "Color Temp Startup Presets": "Start Farbtemperatur Profil",
@@ -817,7 +817,7 @@
             "Toilet": "Badezimmer",
             "Tokyo": "Tokio",
             "Transmit Power": "Signalstärke",
-            "Trigger Adaption Process": "Kalibrierung Starten",
+            "Trigger Adaptation Process": "Kalibrierung Starten",
             "Trigger Indicator": "Auslöseanzeige",
             "Trigger Time": "Auslösezeit",
             "Trigger": "Auslöser",
