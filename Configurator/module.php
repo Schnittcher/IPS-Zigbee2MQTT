@@ -48,6 +48,9 @@ class Zigbee2MQTTConfigurator extends IPSModule
 
     public function GetConfigurationForm()
     {
+        if ($this->GetStatus() == IS_CREATING) {
+            return '';
+        }
         $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
         $Devices = [];
         $Groups = [];
