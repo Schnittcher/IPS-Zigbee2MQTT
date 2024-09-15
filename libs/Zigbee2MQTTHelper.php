@@ -2010,7 +2010,7 @@ trait Zigbee2MQTTHelper
         $type = $feature['type'];
         $property = $feature['property'];
         $ident = $this->convertPropertyToIdent($property);
-        $label = ucwords(str_replace('_', ' ', $feature['label'] ?? $property));
+        $label = ucwords(str_replace('_', ' ', $feature['property'] ?? $property));
 
         $isFloat = in_array($feature['unit'] ?? '', self::$floatUnits);
 
