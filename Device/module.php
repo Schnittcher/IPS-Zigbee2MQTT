@@ -27,7 +27,9 @@ class Zigbee2MQTTDevice extends IPSModule
         $this->RegisterPropertyString('MQTTTopic', '');
         $this->RegisterPropertyString('IEEE', '');
         $this->RegisterAttributeString('Icon', '');
-        $this->createVariableProfiles();
+        // createVariableProfiles existiert nicht
+        // Wurden hier nicht die Basis Profile erstellt?
+        //$this->createVariableProfiles();
         $this->TransactionData = [];
     }
 

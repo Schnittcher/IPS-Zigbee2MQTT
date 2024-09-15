@@ -26,7 +26,9 @@ class Zigbee2MQTTGroup extends IPSModule
         $this->RegisterPropertyString('MQTTBaseTopic', '');
         $this->RegisterPropertyString('MQTTTopic', '');
         $this->RegisterPropertyInteger('GroupId', 0);
-        $this->createVariableProfiles();
+        // createVariableProfiles exisitert nicht
+        // Wurden hier nicht die Basis Profile erstellt?
+        //$this->createVariableProfiles();
         $this->TransactionData = [];
     }
 
