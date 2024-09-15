@@ -63,14 +63,14 @@ trait Zigbee2MQTTHelper
         'bar', 'mbar', 'atm', 'torr', 'psi', 'ohm', 'kohm', 'mohm', 'S', 'mS', 'µS', 'F', 'mF', 'µF', 'nF', 'pF', 'H',
         'mH', 'µH', '%', 'dB', 'dBA', 'dBC'
     ];
-    
+
     /**
      * Führt eine Aktion basierend auf dem Identifikator ($ident) und dem Wert ($value) aus.
      * Behandelt spezielle Aktionen wie Farbanpassungen und Preset-Handling.
      *
      * @param string $ident Der Identifikator der Variablen oder Aktion.
      * @param mixed  $value Der Wert, der der Variablen zugewiesen oder zur Aktion übergeben wird.
-     * 
+     *
      * @return void
      */
     public function RequestAction($ident, $value)
@@ -86,7 +86,7 @@ trait Zigbee2MQTTHelper
         /**
          * Überprüft, ob es sich bei $ident um eine Preset-Variable handelt,
          * und passt den $ident an, um den Wert der eigentlichen Variable zu ändern.
-         * 
+         *
          * Wenn der $ident "_presets" enthält, wird der Suffix entfernt, um die Hauptvariable zu setzen.
          */
         if (strpos($ident, '_presets') !== false) {
@@ -123,7 +123,7 @@ trait Zigbee2MQTTHelper
                 $this->SendSetCommand($payload);
                 return;
         }
-    
+
         // Generelle Logik für die meisten anderen Fälle, ermitteln des Variablen-Typs
         $variableID = $this->GetIDForIdent($ident);
         $variableInfo = IPS_GetVariable($variableID);
@@ -139,13 +139,13 @@ trait Zigbee2MQTTHelper
         // Sendet den Befehl mit dem erstellten Payload
         $this->SendSetCommand($payload);
     }
-    
+
     /**
      * Verarbeitet empfangene MQTT-Daten und aktualisiert den Status oder decodiert den Payload,
      * basierend auf dem empfangenen Topic.
      *
      * @param string $JSONString Das empfangene JSON-String-Datenpaket.
-     * 
+     *
      * @return string Gibt einen leeren String zurück, wenn keine weiteren Aktionen erforderlich sind.
      */
     public function ReceiveData($JSONString)
@@ -1643,7 +1643,7 @@ trait Zigbee2MQTTHelper
     }
     /**
      * Konvertiert eine Eigenschaft (Property) in einen CamelCase-Identifikator,
-     * der mit 'Z2M_' beginnt. 
+     * der mit 'Z2M_' beginnt.
      * Beispiel: 'color_temp' wird zu 'Z2M_ColorTemp'.
      *
      * @param string $property Die zu konvertierende Property.
@@ -1652,20 +1652,20 @@ trait Zigbee2MQTTHelper
     private static function convertPropertyToIdent($property)
     {
         $ident = 'Z2M_';
-    
+
         // Zerlegt den Property-Namen in Worte und wandelt sie in CamelCase um
         $words = explode('_', strtolower($property));
         $camelCased = array_map('ucfirst', $words);
-    
+
         // Fügt die CamelCase-Worte zusammen und hängt sie an 'Z2M_' an
         $ident .= implode('', $camelCased);
-    
+
         return $ident;
     }
 
     /**
      * Konvertiert einen Ident in einen gültigen Payload-Key, der den Konventionen
-     * der Expose-Payload entspricht. Entfernt das Präfix 'Z2M_' und fügt bei Bedarf 
+     * der Expose-Payload entspricht. Entfernt das Präfix 'Z2M_' und fügt bei Bedarf
      * Unterstriche ein, um das Format anzupassen.
      * Beispiel: 'Z2M_StateL1' wird zu 'state_l1'.
      *
@@ -1814,25 +1814,25 @@ trait Zigbee2MQTTHelper
                 break;
         }
     }
-    
+
     /**
-     * Registriert ein Variablenprofil basierend auf den übergebenen Expose-Daten. 
+     * Registriert ein Variablenprofil basierend auf den übergebenen Expose-Daten.
      * Abhängig vom Typ des Expose wird ein entsprechendes Profil erstellt:
-     * - **binary**: Ein Profil für binäre Werte (boolean) wird registriert, 
+     * - **binary**: Ein Profil für binäre Werte (boolean) wird registriert,
      *   es sei denn, es handelt sich um eine spezielle 'consumer_connected' Property.
-     * - **enum**: Ein Profil für enumerierte Werte wird erstellt, das die möglichen 
+     * - **enum**: Ein Profil für enumerierte Werte wird erstellt, das die möglichen
      *   Werte und deren Beschreibungen enthält.
-     * - **numeric**: Für numerische Typen wird eine separate Funktion zur 
+     * - **numeric**: Für numerische Typen wird eine separate Funktion zur
      *   Profilerstellung aufgerufen.
-     * 
-     * Wenn das Profil bereits existiert, wird es nicht neu erstellt. Fehlende 
+     *
+     * Wenn das Profil bereits existiert, wird es nicht neu erstellt. Fehlende
      * Profile werden im Debug-Protokoll gemeldet.
-     * 
-     * @param array $expose Ein Array, das die Details des Profils enthält, 
-     *                       einschließlich Name, Typ, Werte und andere spezifische 
+     *
+     * @param array $expose Ein Array, das die Details des Profils enthält,
+     *                       einschließlich Name, Typ, Werte und andere spezifische
      *                       Eigenschaften.
-     * @return string|false Gibt den Namen des registrierten Profils zurück. 
-     *                      Gibt `false` zurück, wenn das Profil nicht registriert 
+     * @return string|false Gibt den Namen des registrierten Profils zurück.
+     *                      Gibt `false` zurück, wenn das Profil nicht registriert
      *                      werden konnte oder der Typ nicht verarbeitet wird.
      */
     private function registerVariableProfile($expose)
@@ -1857,7 +1857,7 @@ trait Zigbee2MQTTHelper
                     //Sortieren, damit der Hash auch dann passt, wenn die Values von Z2M in einer anderen Reihenfolge geliefert werden.
                     sort($expose['values']);
                     $tmpProfileName = implode('', $expose['values']);
-                    $ProfileName .= '.' . dechex(crc32($tmpProfileName));;
+                    $ProfileName .= '.' . dechex(crc32($tmpProfileName));
                     if (!IPS_VariableProfileExists($ProfileName)) {
                         $profileValues = [];
                         foreach ($expose['values'] as $value) {
@@ -1873,7 +1873,7 @@ trait Zigbee2MQTTHelper
                     return false;
                 }
                 break;
-            
+
             case 'numeric':
                 return $this->registerNumericProfile($expose)['mainProfile'];
 
@@ -1886,20 +1886,20 @@ trait Zigbee2MQTTHelper
     }
 
     /**
-     * Registriert ein numerisches Profil basierend auf den übergebenen Expose-Daten. 
+     * Registriert ein numerisches Profil basierend auf den übergebenen Expose-Daten.
      * Es werden zwei Hauptprofile erstellt:
-     * - **Hauptprofil**: Ein Profil, das entweder für Fließkommazahlen oder ganze Zahlen erstellt wird, 
+     * - **Hauptprofil**: Ein Profil, das entweder für Fließkommazahlen oder ganze Zahlen erstellt wird,
      *   abhängig vom Typ. Es wird ein Bereich definiert, wenn `value_min` und `value_max` angegeben sind.
-     * - **Preset-Profil**: Falls Presets im Expose angegeben sind, wird ein zusätzliches Profil erstellt, 
+     * - **Preset-Profil**: Falls Presets im Expose angegeben sind, wird ein zusätzliches Profil erstellt,
      *   das die Presets als Assoziationen enthält.
-     * 
-     * Die Funktion überprüft, ob die Profile bereits existieren und erstellt oder aktualisiert sie 
+     *
+     * Die Funktion überprüft, ob die Profile bereits existieren und erstellt oder aktualisiert sie
      * entsprechend. Die Profile werden für die angegebene Einheit und den Bereich registriert, falls vorhanden.
-     * 
-     * @param array $expose Ein Array, das die Details für das numerische Profil enthält, 
+     *
+     * @param array $expose Ein Array, das die Details für das numerische Profil enthält,
      *                       einschließlich Name, minimalem und maximalem Wert, Einheit und optionalen Presets.
      * @param bool $isFloat Gibt an, ob das Profil für Fließkommazahlen (true) oder ganze Zahlen (false) erstellt werden soll.
-     * @return array Gibt ein Array mit den Namen der registrierten Haupt- und Preset-Profile zurück. 
+     * @return array Gibt ein Array mit den Namen der registrierten Haupt- und Preset-Profile zurück.
      *               Falls kein Preset-Profil erstellt wurde, ist der Wert für 'presetProfile' null.
      */
     private function registerNumericProfile($expose, $isFloat = false)
@@ -1960,17 +1960,17 @@ trait Zigbee2MQTTHelper
     }
     /**
      * Registriert Variablen basierend auf den übergebenen Expose-Daten.
-     * 
-     * Diese Funktion verarbeitet ein Array von Expose-Daten und ruft für jedes Expose die 
-     * Methode `registerVariable` auf. Falls ein Expose Features enthält, werden diese Features 
+     *
+     * Diese Funktion verarbeitet ein Array von Expose-Daten und ruft für jedes Expose die
+     * Methode `registerVariable` auf. Falls ein Expose Features enthält, werden diese Features
      * separat bearbeitet. Andernfalls wird das Expose direkt verarbeitet.
-     * 
+     *
      * Die Funktion dient dazu, alle Expose-Daten zu verarbeiten und die entsprechenden Variablen
      * im System zu registrieren, basierend auf den Informationen in den Expose-Daten.
-     * 
+     *
      * @param array $exposes Ein Array von Expose-Daten. Jedes Expose kann ein oder mehrere Features enthalten.
      *                       Jedes Feature wird einzeln bearbeitet, um Variablen zu registrieren.
-     * 
+     *
      * @return void Keine Rückgabewerte.
      */
     private function mapExposesToVariables(array $exposes)
@@ -1990,17 +1990,17 @@ trait Zigbee2MQTTHelper
 
     /**
      * Registriert eine Variable basierend auf dem übergebenen Feature-Daten.
-     * 
+     *
      * Diese Funktion registriert eine Variable in IPS basierend auf den Informationen im
      * übergebenen Feature. Je nach Typ des Features werden verschiedene Variablenarten
-     * und Profile registriert. Die Funktion behandelt verschiedene Typen wie 'binary', 
-     * 'numeric', 'enum', 'text' und 'composite'. Bei Bedarf werden auch entsprechende 
+     * und Profile registriert. Die Funktion behandelt verschiedene Typen wie 'binary',
+     * 'numeric', 'enum', 'text' und 'composite'. Bei Bedarf werden auch entsprechende
      * Profile für numerische Variablen und Enum-Variablen erstellt.
-     * 
-     * @param array $feature Ein Array mit den Daten des Features, das registriert werden soll. 
-     *                       Die Daten können unter anderem den Typ, die Eigenschaft, das Label 
+     *
+     * @param array $feature Ein Array mit den Daten des Features, das registriert werden soll.
+     *                       Die Daten können unter anderem den Typ, die Eigenschaft, das Label
      *                       und die Einheit des Features enthalten.
-     * 
+     *
      * @return void Keine Rückgabewerte.
      */
     private function registerVariable($feature)
@@ -2011,7 +2011,6 @@ trait Zigbee2MQTTHelper
         $property = $feature['property'];
         $ident = $this->convertPropertyToIdent($property);
         $label = ucwords(str_replace('_', ' ', $feature['label'] ?? $property));
-
 
         $isFloat = in_array($feature['unit'] ?? '', self::$floatUnits);
 
