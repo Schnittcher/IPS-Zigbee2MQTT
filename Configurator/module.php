@@ -81,7 +81,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
             $BridgeIDs = array_filter(IPS_GetInstanceListByModuleID('{00160D82-9E2F-D1BD-6D0B-952F945332C5}'), [$this, 'FilterInstances']);
             $BridgeID = 0;
             foreach ($BridgeIDs as $BridgeID) {
-                if (IPS_GetProperty($BridgeID, 'MQTTBaseTopic') == $BaseTopic) {
+                if (@IPS_GetProperty($BridgeID, 'MQTTBaseTopic') == $BaseTopic) {
                     break;
                 }
             }
@@ -180,7 +180,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
             $ValuesDevices[] = [
                 'name'               => IPS_GetName($instanceID),
                 'instanceID'         => $instanceID,
-                'ieee_address'       => IPS_GetProperty($instanceID, 'IEEE'),
+                'ieee_address'       => @IPS_GetProperty($instanceID, 'IEEE'),
                 'topic'              => $Topic,
                 'networkAddress'     => '',
                 'type'               => '',
@@ -257,7 +257,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
             $ValuesGroups[] = [
                 'name'                  => IPS_GetName($instanceID),
                 'instanceID'            => $instanceID,
-                'ID'                    => IPS_GetProperty($instanceID, 'GroupId'),
+                'ID'                    => @IPS_GetProperty($instanceID, 'GroupId'),
                 'topic'                 => $Topic,
                 'DevicesCount'          => ''
 
@@ -324,7 +324,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $Devices = [];
         $InstanceIDList = array_filter(IPS_GetInstanceListByModuleID('{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}'), [$this, 'FilterInstances']);
         foreach ($InstanceIDList as $InstanceID) {
-            $Devices[$InstanceID] = IPS_GetProperty($InstanceID, 'IEEE');
+            $Devices[$InstanceID] = @IPS_GetProperty($InstanceID, 'IEEE');
         }
         return array_filter($Devices);
     }
@@ -335,7 +335,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
 
         $InstanceIDList = array_filter(IPS_GetInstanceListByModuleID('{11BF3773-E940-469B-9DD7-FB9ACD7199A2}'), [$this, 'FilterInstances']);
         foreach ($InstanceIDList as $InstanceID) {
-            $Devices[$InstanceID] = IPS_GetProperty($InstanceID, 'GroupId');
+            $Devices[$InstanceID] = @IPS_GetProperty($InstanceID, 'GroupId');
         }
         return array_filter($Devices);
     }
@@ -345,8 +345,8 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $Devices = [];
         $InstanceIDList = array_filter(IPS_GetInstanceListByModuleID($GUID), [$this, 'FilterInstances']);
         foreach ($InstanceIDList as $InstanceID) {
-            if (IPS_GetProperty($InstanceID, 'MQTTBaseTopic') == $BaseTopic) {
-                $Devices[$InstanceID] = IPS_GetProperty($InstanceID, 'MQTTTopic');
+            if (@IPS_GetProperty($InstanceID, 'MQTTBaseTopic') == $BaseTopic) {
+                $Devices[$InstanceID] = @IPS_GetProperty($InstanceID, 'MQTTTopic');
             }
         }
         return $Devices;

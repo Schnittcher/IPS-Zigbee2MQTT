@@ -253,6 +253,18 @@ trait Zigbee2MQTTHelper
             $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
             $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
         }
+        if (array_key_exists('cleaning_reminder', $Payload)) {
+            $this->SetValue('Z2M_CleaningReminder', $Payload['cleaning_reminder']);
+        }
+        if (array_key_exists('rain_intensity', $Payload)) {
+            $this->SetValue('Z2M_RainIntensity', $Payload['rain_intensity']);
+        }
+        if (array_key_exists('illuminance_average_20min', $Payload)) {
+            $this->SetValue('Z2M_IlluminanceAverage20min', $Payload['illuminance_average_20min']);
+        }
+        if (array_key_exists('illuminance_maximum_today', $Payload)) {
+            $this->SetValue('Z2M_IlluminanceMaximumToday', $Payload['illuminance_maximum_today']);
+        }
         if (array_key_exists('action_type', $Payload)) {
             $this->SetValue('Z2M_ActionType', $Payload['action_type']);
         }
