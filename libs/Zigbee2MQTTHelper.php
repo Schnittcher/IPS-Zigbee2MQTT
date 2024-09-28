@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Zigbee2MQTT;
 
 require_once __DIR__ . '/../libs/MQTTHelper.php';
+require_once __DIR__ . '/../libs/ColorHelper.php';
 
 /**
  * @method void UpdateDeviceInfo()
