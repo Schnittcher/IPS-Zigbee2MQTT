@@ -99,8 +99,8 @@ trait Zigbee2MQTTHelper
         }
 
         // Handhabung von Preset-Variablen
-        if (strpos($ident, '_presets') !== false) {
-            $mainIdent = str_replace('_presets', '', $ident);
+        if (strpos($ident, '_Presets') !== false) {
+            $mainIdent = str_replace('_Presets', '', $ident);
             $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, "Preset action detected, redirecting to main ident: $mainIdent", 0);
             $this->SetValue($mainIdent, $value);
             $payloadKey = self::convertIdentToPayloadKey($mainIdent);
@@ -456,7 +456,7 @@ trait Zigbee2MQTTHelper
 
             // Prüfe, ob Preset-Profile erstellt werden müssen
             if (isset($Payload[$key]['presets'])) {
-                $presetIdent = $variableIdent . '_presets';
+                $presetIdent = $variableIdent . '_Presets';
                 if (!$this->VariableExists($presetIdent)) {
                     $this->registerPresetProfile($Payload[$key]['presets'], $key);
                 }
@@ -531,7 +531,7 @@ trait Zigbee2MQTTHelper
      *
      * **Besondere Behandlung**:
      * - Farbvariablen: Unterstützt XY-, HEX- und HSV-Farben, die in entsprechende RGB- oder HEX-Werte umgerechnet werden.
-     * - Preset-Variablen: Setzt den Wert sowohl in der Hauptvariable als auch in der Preset-Variable (z.B. 'Z2M_Color_presets').
+     * - Preset-Variablen: Setzt den Wert sowohl in der Hauptvariable als auch in der Preset-Variable (z.B. 'Z2M_Color_Presets').
      *
      * **Typkonvertierung**:
      * - Boolean: Der übergebene Wert wird in einen Boolean konvertiert.
@@ -565,7 +565,7 @@ trait Zigbee2MQTTHelper
             $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Handling variable: ' . $Ident, '', 0);
 
             // Farbvariablen und Preset-Variablen spezifische Behandlung
-            if (strpos($Ident, '_presets') !== false || $Ident === 'Z2M_ColorTemp' || $Ident === 'Z2M_ColorTempStartup' || $Ident === 'Z2M_Color') {
+            if (strpos($Ident, '_Presets') !== false || $Ident === 'Z2M_ColorTemp' || $Ident === 'Z2M_ColorTempStartup' || $Ident === 'Z2M_Color') {
                 // Spezielle Behandlung für Farbvariablen (z.B. Z2M_Color)
                 if ($Ident === 'Z2M_Color') {
                     // Verarbeite den Farbwert, der als Array übergeben wird
@@ -612,16 +612,16 @@ trait Zigbee2MQTTHelper
                 }
 
                 // Preset-Variable Verarbeitung
-                if (strpos($Ident, '_presets') !== false) {
-                    // Setze den Wert für die Hauptvariable (ohne '_presets')
-                    $mainIdent = str_replace('_presets', '', $Ident);
+                if (strpos($Ident, '_Presets') !== false) {
+                    // Setze den Wert für die Hauptvariable (ohne '_Presets')
+                    $mainIdent = str_replace('_Presets', '', $Ident);
                     if ($this->VariableExists($mainIdent)) {
                         $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Setting main variable value: ', $adjustedValue, 0);
                         parent::SetValue($mainIdent, $adjustedValue); // Hauptvariable setzen
                     }
                 } else {
-                    // Setze den Wert für die Preset-Variable (füge '_presets' an den Ident)
-                    $presetIdent = $Ident . '_presets';
+                    // Setze den Wert für die Preset-Variable (füge '_Presets' an den Ident)
+                    $presetIdent = $Ident . '_Presets';
                     if ($this->VariableExists($presetIdent)) {
                         $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Setting preset variable value: ', $adjustedValue, 0);
                         parent::SetValue($presetIdent, $adjustedValue); // Preset-Variable setzen
@@ -1038,9 +1038,9 @@ trait Zigbee2MQTTHelper
             }
 
             // Eine Variable für die Presets registrieren, basierend auf dem Typ der Hauptvariable
-            $this->RegisterVariableInteger($ident . '_presets', $this->Translate($label . ' Presets'), $presetProfileName);
+            $this->RegisterVariableInteger($ident . '_Presets', $this->Translate($label . ' Presets'), $presetProfileName);
 
-            $presetIdent = $ident . '_presets';
+            $presetIdent = $ident . '_Presets';
             $this->EnableAction($presetIdent); // Aktion für die Preset-Variable setzen
             $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Preset profile and variable created for ' . $label, $presetProfileName, 0);
         }
@@ -1094,7 +1094,7 @@ trait Zigbee2MQTTHelper
 
                 // Wenn Presets existieren, füge die Preset-Profile hinzu
                 if ($profiles['presetProfile'] !== null) {
-                    $presetIdent = $ident . '_presets';
+                    $presetIdent = $ident . '_Presets';
                     // Verwende denselben Variablentyp wie die Hauptvariable
                     $this->RegisterVariableInteger($presetIdent, $this->Translate($label . ' Presets'), $profiles['presetProfile']);
                     $this->EnableAction($presetIdent); // Aktion für die Preset-Variable setzen
@@ -1301,8 +1301,8 @@ trait Zigbee2MQTTHelper
 
         // Preset-Profil erstellen, falls Presets vorhanden sind
         if (isset($expose['presets']) && !empty($expose['presets'])) {
-            // Der Name des Preset-Profils basiert auf dem vollständigen Hauptprofilnamen (inkl. Min und Max) mit dem Zusatz '_presets'
-            $presetProfileName = $fullRangeProfileName . '_presets';
+            // Der Name des Preset-Profils basiert auf dem vollständigen Hauptprofilnamen (inkl. Min und Max) mit dem Zusatz '_Presets'
+            $presetProfileName = $fullRangeProfileName . '_Presets';
             $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating preset profile: ', $presetProfileName, 0);
 
             // Prüfen, ob das Preset-Profil existiert, sonst erstellen
