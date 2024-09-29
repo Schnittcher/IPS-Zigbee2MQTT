@@ -177,6 +177,40 @@ trait ColorHelper
         return $colorRGB;
     }
 
+    protected function RGBToHSV($R, $G, $B)
+    {
+        $R /= 255.0;
+        $G /= 255.0;
+        $B /= 255.0;
+
+        $max = max($R, $G, $B);
+        $min = min($R, $G, $B);
+        $delta = $max - $min;
+
+        $hue = 0;
+        if ($delta != 0) {
+            if ($max == $R) {
+                $hue = 60 * (($G - $B) / $delta);
+            } elseif ($max == $G) {
+                $hue = 60 * (($B - $R) / $delta) + 120;
+            } elseif ($max == $B) {
+                $hue = 60 * (($R - $G) / $delta) + 240;
+            }
+            if ($hue < 0) {
+                $hue += 360;
+            }
+        }
+
+        $saturation = ($max == 0) ? 0 : ($delta / $max) * 100;
+        $value = $max * 100;
+
+        return [
+            'hue' => $hue,
+            'saturation' => $saturation,
+            'value' => $value
+        ];
+    }
+
     protected function RGBToHSB($R, $G, $B)
     {
         $R /= 255.0;
