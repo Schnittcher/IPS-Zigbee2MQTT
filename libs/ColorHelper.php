@@ -36,12 +36,12 @@ trait ColorHelper
             $hue /= 6;
         }
 
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: Output HSL', "Hue: " . ($hue * 360) . ", Saturation: " . ($saturation * 100) . ", Lightness: " . ($lightness * 100), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Output HSL', 'Hue: ' . ($hue * 360) . ', Saturation: ' . ($saturation * 100) . ', Lightness: ' . ($lightness * 100), 0);
 
         return [
-            'hue' => round($hue * 360, 2),
+            'hue'        => round($hue * 360, 2),
             'saturation' => round($saturation * 100, 2),
-            'lightness' => round($lightness * 100, 2),
+            'lightness'  => round($lightness * 100, 2),
         ];
     }
 
@@ -73,33 +73,13 @@ trait ColorHelper
         return $RGB;
     }
 
-    private function hueToRGB($p, $q, $t)
-    {
-        if ($t < 0) {
-            $t += 1;
-        }
-        if ($t > 1) {
-            $t -= 1;
-        }
-        if ($t < 1 / 6) {
-            return $p + ($q - $p) * 6 * $t;
-        }
-        if ($t < 1 / 2) {
-            return $q;
-        }
-        if ($t < 2 / 3) {
-            return $p + ($q - $p) * (2 / 3 - $t) * 6;
-        }
-        return $p;
-    }
-
     protected function HexToRGB($value)
     {
         $RGB = [];
         $RGB[0] = (($value >> 16) & 0xFF);
         $RGB[1] = (($value >> 8) & 0xFF);
         $RGB[2] = ($value & 0xFF);
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: HexToRGB', 'R: ' . $RGB[0] . ' G: ' . $RGB[1] . ' B: ' . $RGB[2], 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: HexToRGB', 'R: ' . $RGB[0] . ' G: ' . $RGB[1] . ' B: ' . $RGB[2], 0);
         return $RGB;
     }
 
@@ -173,8 +153,8 @@ trait ColorHelper
         $g = round($g * 255);
         $b = round($b * 255);
         $colorHSV = sprintf('#%02x%02x%02x', $r, $g, $b);
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: HSVToRGB', 'R: ' . $r . ' G: ' . $g . ' B: ' . $b, 0);
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: HSVToRGB', 'HSV ' . $colorHSV, 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: HSVToRGB', 'R: ' . $r . ' G: ' . $g . ' B: ' . $b, 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: HSVToRGB', 'HSV ' . $colorHSV, 0);
 
         return $colorHSV;
     }
@@ -202,7 +182,7 @@ trait ColorHelper
                 $hue += 360;
             }
         }
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: Output HSB', "Hue: $hue, Saturation: $saturation, Brightness: $brightness", 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Output HSB', "Hue: $hue, Saturation: $saturation, Brightness: $brightness", 0);
         return ['hue' => $hue, 'saturation' => $saturation, 'brightness' => $brightness];
     }
 
@@ -238,10 +218,10 @@ trait ColorHelper
         $g = ($g > 255 ? 255 : $g);
         $b = ($b > 255 ? 255 : $b);
 
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: RGB', 'R: ' . $r . ' G: ' . $g . ' B: ' . $b, 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: RGB', 'R: ' . $r . ' G: ' . $g . ' B: ' . $b, 0);
 
         $color = sprintf('#%02x%02x%02x', $r, $g, $b);
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: colorHEX', $color, 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: colorHEX', $color, 0);
 
         return $color;
     }
@@ -281,8 +261,28 @@ trait ColorHelper
         $cie['x'] = $x;
         $cie['y'] = $y;
         $cie['bri'] = $bri;
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: RGBToXYX', json_encode($cie), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: RGBToXYX', json_encode($cie), 0);
 
         return $cie;
+    }
+
+    private function hueToRGB($p, $q, $t)
+    {
+        if ($t < 0) {
+            $t += 1;
+        }
+        if ($t > 1) {
+            $t -= 1;
+        }
+        if ($t < 1 / 6) {
+            return $p + ($q - $p) * 6 * $t;
+        }
+        if ($t < 1 / 2) {
+            return $q;
+        }
+        if ($t < 2 / 3) {
+            return $p + ($q - $p) * (2 / 3 - $t) * 6;
+        }
+        return $p;
     }
 }
