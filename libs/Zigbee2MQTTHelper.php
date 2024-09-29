@@ -280,114 +280,136 @@ trait Zigbee2MQTTHelper
     /**
      * Setzt die Farbe des Geräts basierend auf dem angegebenen Farbmodus.
      *
-     * Diese Methode unterstützt verschiedene Farbmodi (z.B. 'cie', 'hs' und 'hsv') und
-     * konvertiert die Farbe in das entsprechende Format, bevor sie an das Gerät gesendet wird.
-     * Sie kann optional auch die Helligkeit (brightness) in das Payload integrieren.
+     * Diese Methode unterstützt verschiedene Farbmodi und konvertiert die Farbe in das entsprechende Format,
+     * bevor sie an das Gerät gesendet wird. Unterstützte Modi sind:
+     * - **cie**: Konvertiert RGB in den XY-Farbraum (CIE 1931).
+     * - **hs**: Verwendet den Hue-Saturation-Modus (HS), um die Farbe zu setzen.
+     * - **hsl**: Nutzt den Farbton, Sättigung und Helligkeit (HSL), um die Farbe zu setzen.
+     * - **hsv**: Nutzt den Farbton, Sättigung und den Wert (HSV), um die Farbe zu setzen.
      *
-     * **Unterstützte Farbmodi**:
-     * - 'cie': Verwendet den XY-Farbraum und konvertiert Farben aus Hex- oder RGB-Formaten.
-     * - 'hs': Verwendet Farbton (Hue) und Sättigung (Saturation), konvertiert zu RGB und dann zu XY.
-     * - 'hsv': Verwendet Farbton (Hue), Sättigung (Saturation) und Helligkeit (Value), konvertiert zu RGB und dann zu XY.
+     * Die Funktion bietet auch die Möglichkeit, zusätzlich die Helligkeit (Brightness) zu senden, falls gewünscht.
      *
-     * @param int $color Die Farbwerte in Hexadezimal- oder RGB-Format.
-     *                   - Für 'cie' kann die Farbe als Hex- oder RGB-Array übergeben werden.
-     *                   - Für 'hs' und 'hsv' wird die Farbe als Array erwartet, z.B. ['hue' => 360, 'saturation' => 100, 'value' => 100].
-     * @param string $mode Der Farbmodus, der verwendet werden soll. Unterstützte Modi sind:
-     *                     - 'cie': Hex oder RGB wird in den XY-Farbraum konvertiert.
-     *                     - 'hs': Verwendet Hue und Saturation, um RGB zu berechnen.
-     *                     - 'hsv': Verwendet Hue, Saturation und Value (Brightness), um RGB zu berechnen.
-     * @param string $Z2MMode Der Zigbee2MQTT-Modus, der verwendet werden soll. Standardmäßig 'color' (XY-Farbraum), kann auch 'color_rgb' sein.
-     *                        - 'color': Die Farbe wird im XY-Farbraum gesendet.
-     *                        - 'color_rgb': Die Farbe wird im RGB-Format gesendet.
-     * @param bool $includeBrightness Gibt an, ob die Helligkeit zusammen mit der Farbe gesendet werden soll. Standardmäßig `false`.
+     * @param int $color Der Farbwert in Hexadezimal- oder RGB-Format.
+     *                   Die Farbe wird intern in verschiedene Farbmodelle umgerechnet.
+     * @param string $mode Der Farbmodus, der verwendet werden soll. Unterstützte Werte:
+     *                     - 'cie': Konvertiert die RGB-Werte in den XY-Farbraum.
+     *                     - 'hs': Verwendet den Hue-Saturation-Modus.
+     *                     - 'hsl': Nutzt den HSL-Modus für die Umrechnung.
+     *                     - 'hsv': Nutzt den HSV-Modus für die Umrechnung.
+     * @param string $Z2MMode Der Zigbee2MQTT-Modus, standardmäßig 'color'. Kann auch 'color_rgb' sein.
+     *                        - 'color': Setzt den Farbwert im XY-Farbraum.
+     *                        - 'color_rgb': Setzt den Farbwert im RGB-Modus (nur für 'cie' relevant).
+     * @param bool $includeBrightness Optional. Standardmäßig false. Wenn true, wird die Helligkeit
+     *                                zusätzlich zum Farbwert an das Gerät gesendet.
      *
      * @return void
+     *
+     * @throws InvalidArgumentException Wenn der Modus ungültig ist.
+     *
+     * @example
+     * // Setze eine Farbe im HSL-Modus und sende zusätzlich die Helligkeit.
+     * $this->setColor(0xFF5733, 'hsl', 'color', true);
+     *
+     * // Setze eine Farbe im HSV-Modus, ohne Helligkeit zu senden.
+     * $this->setColor(0x4287f5, 'hsv', 'color', false);
      */
     private function setColor(int $color, string $mode, string $Z2MMode = 'color', bool $includeBrightness = false)
     {
         switch ($mode) {
-            case 'cie':
-                // Nutze die HexToRGB- und RGBToXy-Funktion aus der ColorHelper-Datei
-                $RGB = $this->HexToRGB($color);
-                $cie = $this->RGBToXy($RGB);
+        case 'cie':
+            // Nutze die HexToRGB- und RGBToXy-Funktion aus der ColorHelper-Datei
+            $RGB = $this->HexToRGB($color);
+            $cie = $this->RGBToXy($RGB);
 
-                // Füge die Farbe dem Payload hinzu
-                if ($Z2MMode === 'color') {
-                    $Payload['color'] = $cie;
+            // Füge die Farbe dem Payload hinzu
+            if ($Z2MMode === 'color') {
+                $Payload['color'] = $cie;
 
-                    // Nur die Helligkeit hinzufügen, wenn es explizit gewünscht ist
-                    if ($includeBrightness) {
-                        $Payload['brightness'] = $cie['bri'];
-                    }
-                } elseif ($Z2MMode === 'color_rgb') {
-                    $Payload['color_rgb'] = $cie;
-                } else {
-                    return;
+                // Nur die Helligkeit hinzufügen, wenn es explizit gewünscht ist
+                if ($includeBrightness) {
+                    $Payload['brightness'] = $cie['bri'];
                 }
+            } elseif ($Z2MMode === 'color_rgb') {
+                $Payload['color_rgb'] = $cie;
+            } else {
+                return;
+            }
 
-                $this->SendSetCommand($Payload);
-                break;
+            $this->SendSetCommand($Payload);
+            break;
 
-            case 'hs':
-                $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - Input Color', json_encode($color), 0);
+        case 'hs':
+            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - Input Color', json_encode($color), 0);
 
-                if (!is_array($color)) {
-                    $RGB = $this->HexToRGB($color);
-                    $HSB = $this->RGBToHSB($RGB[0], $RGB[1], $RGB[2]);
-                } else {
-                    $HSB = $color;
-                }
+            $RGB = $this->HexToRGB($color);
+            $HSB = $this->RGBToHSB($RGB[0], $RGB[1], $RGB[2]);
 
-                $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - RGB Values for HSB Conversion', json_encode($HSB), 0);
+            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - RGB Values for HSB Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
 
-                if ($Z2MMode == 'color') {
-                    $Payload = [
-                        'color' => [
-                            'hue'        => $HSB['hue'],
-                            'saturation' => $HSB['saturation'],
-                        ]
-                    ];
-                } else {
-                    return;
-                }
+            if ($Z2MMode == 'color') {
+                $Payload = [
+                    'color' => [
+                        'hue'        => $HSB['hue'],
+                        'saturation' => $HSB['saturation'],
+                    ]
+                ];
+            } else {
+                return;
+            }
 
-                $this->SendSetCommand($Payload);
-                break;
+            $this->SendSetCommand($Payload);
+            break;
 
-            case 'hsv':
-                $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - Input Color (HSV)', json_encode($color), 0);
+        case 'hsl':
+            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - Input Color', json_encode($color), 0);
 
-                if (is_array($color)) {
-                    $hue = $color['hue'];
-                    $saturation = $color['saturation'];
-                    $value = $color['value'];
+            $RGB = $this->HexToRGB($color);
+            $HSL = $this->RGBToHSL($RGB[0], $RGB[1], $RGB[2]);
 
-                    // Nutze die HSToRGB-Funktion, um aus HSV RGB zu berechnen
-                    $RGB = $this->HSToRGB($hue, $saturation);
+            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - RGB Values for HSL Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
 
-                    // Konvertiere RGB in den XY-Farbraum
-                    $cie = $this->RGBToXy($RGB);
+            if ($Z2MMode == 'color') {
+                $Payload = [
+                    'color' => [
+                        'hue'        => $HSL['hue'],
+                        'saturation' => $HSL['saturation'],
+                        'lightness'  => $HSL['lightness']
+                    ]
+                ];
+            } else {
+                return;
+            }
 
-                    // Füge die Farbwerte und optional die Helligkeit dem Payload hinzu
-                    if ($Z2MMode === 'color') {
-                        $Payload['color'] = $cie;
-                        if ($includeBrightness) {
-                            $Payload['brightness'] = $value; // Nutze den Value als Helligkeit
-                        }
-                    } elseif ($Z2MMode === 'color_rgb') {
-                        $Payload['color_rgb'] = $cie;
-                    } else {
-                        return;
-                    }
+            $this->SendSetCommand($Payload);
+            break;
 
-                    $this->SendSetCommand($Payload);
-                }
-                break;
+        case 'hsv':
+            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - Input Color', json_encode($color), 0);
 
-            default:
-                $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor', 'Invalid Mode ' . $mode, 0);
-                break;
-        }
+            $RGB = $this->HexToRGB($color);
+            $HSV = $this->RGBToHSV($RGB[0], $RGB[1], $RGB[2]);
+
+            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - RGB Values for HSV Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
+
+            if ($Z2MMode == 'color') {
+                $Payload = [
+                    'color' => [
+                        'hue'        => $HSV['hue'],
+                        'saturation' => $HSV['saturation'],
+                        'value'      => $HSV['value']
+                    ]
+                ];
+            } else {
+                return;
+            }
+
+            $this->SendSetCommand($Payload);
+            break;
+
+        default:
+            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor', 'Invalid Mode ' . $mode, 0);
+            throw new InvalidArgumentException('Invalid color mode: ' . $mode);
+    }
     }
 
     /**
@@ -772,11 +794,6 @@ trait Zigbee2MQTTHelper
         }
     }
 
-
-
-
-
-
     /**
      * Konvertiert einen Eigenschaftsnamen (Property) in einen Identifikator (Ident).
      * Wandelt das Property von snake_case in CamelCase um und fügt das Präfix "Z2M_" hinzu.
@@ -1100,7 +1117,28 @@ trait Zigbee2MQTTHelper
         }
     }
 
-    // Hilfsfunktion zur Erzeugung des vollständigen Profilnamens
+    /**
+     * Erzeugt den vollständigen Namen eines Variablenprofils basierend auf den Expose-Daten.
+     *
+     * Diese Methode generiert den vollständigen Namen eines Variablenprofils für ein bestimmtes Feature
+     * (Expose). Der Profilname wird basierend auf dem Namen des Features gebildet. Falls das Feature
+     * minimale und maximale Werte (`value_min`, `value_max`) enthält, werden diese in den Profilnamen
+     * integriert, um eine eindeutige Benennung sicherzustellen. Zusätzlich wird optional eine Einheit
+     * (falls vorhanden) an den Namen angefügt. Der resultierende Name kann zum Erstellen oder Identifizieren
+     * eines Variablenprofils verwendet werden.
+     *
+     * Beispiel:
+     * Wenn das Feature den Namen "temperature", einen minimalen Wert von 10 und einen maximalen Wert von 30 hat,
+     * wird der Profilname "Z2M.temperature_10_30" generiert. Ohne Min- und Max-Werte wird nur "Z2M.temperature" verwendet.
+     *
+     * @param array $feature Ein Array, das die Eigenschaften des Features enthält. Erwartete Schlüssel sind:
+     *  - 'name' (string): Der Name des Features, der als Basis für den Profilnamen verwendet wird.
+     *  - 'value_min' (int|float|null, optional): Der minimale Wert des Features, der in den Profilnamen eingefügt wird, wenn er nicht null ist.
+     *  - 'value_max' (int|float|null, optional): Der maximale Wert des Features, der in den Profilnamen eingefügt wird, wenn er nicht null ist.
+     *  - 'unit' (string|null, optional): Eine optionale Einheit, die dem Profilnamen als Suffix hinzugefügt werden kann.
+     *
+     * @return string Der vollständige Name des Variablenprofils, basierend auf den Eigenschaften des Features.
+     */
     private function getFullRangeProfileName($feature)
     {
         $ProfileName = 'Z2M.' . $feature['name'];
@@ -1167,59 +1205,59 @@ trait Zigbee2MQTTHelper
         // Wenn ein State-Mapping vorhanden ist, ein String-Profil für das Mapping erstellen
         if ($stateMapping) {
             $this->RegisterProfileStringEx($ProfileName, '', '', '', [
-            [$stateMapping[0], $this->Translate($stateMapping[0]), '', 0xFF0000],
-            [$stateMapping[1], $this->Translate($stateMapping[1]), '', 0x00FF00]
-        ]);
+                [$stateMapping[0], $this->Translate($stateMapping[0]), '', 0xFF0000],
+                [$stateMapping[1], $this->Translate($stateMapping[1]), '', 0x00FF00]
+            ]);
             $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: State mapping profile created for: ', $ProfileName . json_encode($stateMapping), 0);
             return $ProfileName;
         }
 
         // Erstelle das Profil basierend auf dem Expose-Typ
         switch ($expose['type']) {
-        case 'binary':
-            // Erstelle ein Boolean-Profil (z.B. für Plug-Status)
-            $this->RegisterProfileBooleanEx($ProfileName, 'Plug', '', '', [
-                [false, $this->Translate('off'), '', 0xFF0000],
-                [true, $this->Translate('on'), '', 0x00FF00]
-            ]);
-            break;
+            case 'binary':
+                // Erstelle ein Boolean-Profil (z.B. für Plug-Status)
+                $this->RegisterProfileBooleanEx($ProfileName, 'Plug', '', '', [
+                    [false, $this->Translate('off'), '', 0xFF0000],
+                    [true, $this->Translate('on'), '', 0x00FF00]
+                ]);
+                break;
 
-        case 'enum':
-            // Erstelle ein String-Profil mit möglichen Werten aus dem Expose
-            if (array_key_exists('values', $expose)) {
-                sort($expose['values']);  // Sortiere die Werte für Konsistenz
-                $tmpProfileName = implode('', $expose['values']);
-                $ProfileName .= '.' . dechex(crc32($tmpProfileName));  // Erstelle einen einzigartigen Profilnamen
+            case 'enum':
+                // Erstelle ein String-Profil mit möglichen Werten aus dem Expose
+                if (array_key_exists('values', $expose)) {
+                    sort($expose['values']);  // Sortiere die Werte für Konsistenz
+                    $tmpProfileName = implode('', $expose['values']);
+                    $ProfileName .= '.' . dechex(crc32($tmpProfileName));  // Erstelle einen einzigartigen Profilnamen
 
-                // Falls das Profil bereits existiert, abbrechen
-                if (IPS_VariableProfileExists($ProfileName)) {
-                    $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Modified Profile already exists, skipping: ', $ProfileName, 0);
-                    return $ProfileName;
+                    // Falls das Profil bereits existiert, abbrechen
+                    if (IPS_VariableProfileExists($ProfileName)) {
+                        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Modified Profile already exists, skipping: ', $ProfileName, 0);
+                        return $ProfileName;
+                    }
+
+                    // Erstelle das Profil basierend auf den Enum-Werten
+                    $profileValues = [];
+                    foreach ($expose['values'] as $value) {
+                        $readableValue = ucwords(str_replace('_', ' ', $value));
+                        $translatedValue = $this->Translate($readableValue);
+                        $profileValues[] = [$value, $translatedValue, '', 0x00FF00];
+                    }
+                    $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', $profileValues);
+                    $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Enum profile created for: ' . $ProfileName, json_encode($profileValues), 0);
+                } else {
+                    $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable profile missing for enum type', '', 0);
                 }
+                break;
 
-                // Erstelle das Profil basierend auf den Enum-Werten
-                $profileValues = [];
-                foreach ($expose['values'] as $value) {
-                    $readableValue = ucwords(str_replace('_', ' ', $value));
-                    $translatedValue = $this->Translate($readableValue);
-                    $profileValues[] = [$value, $translatedValue, '', 0x00FF00];
-                }
-                $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', $profileValues);
-                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Enum profile created for: ' . $ProfileName, json_encode($profileValues), 0);
-            } else {
-                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable profile missing for enum type', '', 0);
-            }
-            break;
+            case 'numeric':
+                // Erstelle ein numerisches Profil für den Expose-Typ
+                return $this->registerNumericProfile($expose)['mainProfile'];
 
-        case 'numeric':
-            // Erstelle ein numerisches Profil für den Expose-Typ
-            return $this->registerNumericProfile($expose)['mainProfile'];
-
-        default:
-            // Unbekannter Typ, Debug-Meldung ausgeben
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Type not handled: ', $expose['type'], 0);
-            break;
-    }
+            default:
+                // Unbekannter Typ, Debug-Meldung ausgeben
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Type not handled: ', $expose['type'], 0);
+                break;
+        }
 
         return $ProfileName;
     }
@@ -1395,53 +1433,6 @@ trait Zigbee2MQTTHelper
 
         return $profileName;
     }
-
-    /**
-     * Aktualisiert die Preset-Variable basierend auf dem Hauptwert und dem zugehörigen Profil.
-     *
-     * @param int|string $mainValue Der Hauptwert der Variable (z.B. color_temp).
-     * @param string $mainIdent Der Identifikator der Hauptvariable.
-     * @param string $presetIdent Der Identifikator der Preset-Variable.
-     *
-     * @return void
-     */
-    protected function updatePresetVariable($mainValue, $mainIdent, $presetIdent)
-    {
-        // Prüfe, ob die Preset-Variable existiert
-        if (!$this->VariableExists($presetIdent)) {
-            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: Preset variable does not exist: ', $presetIdent, 0);
-            return;
-        }
-
-        // Hole die ID der Preset-Variable
-        $presetVariableID = $this->GetIDForIdent($presetIdent);
-
-        // Hole das Profil der Preset-Variable
-        $presetProfileName = IPS_GetVariable($presetVariableID)['VariableCustomProfile'];
-
-        // Wenn kein Profil existiert, breche ab
-        if (empty($presetProfileName) || !IPS_VariableProfileExists($presetProfileName)) {
-            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: No profile found for preset variable: ', $presetIdent, 0);
-            return;
-        }
-
-        // Hole alle Assoziationen des Preset-Profils
-        $presetAssociations = IPS_GetVariableProfile($presetProfileName)['Associations'];
-
-        // Suche nach dem Preset, das dem aktuellen Wert entspricht
-        foreach ($presetAssociations as $association) {
-            if ($association['Value'] == $mainValue) {
-                // Setze das Preset entsprechend des Hauptwertes
-                $this->SetValue($presetIdent, $association['Name']);
-                $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: Updated Preset Variable: ', $presetIdent . ' -> ' . $association['Name'], 0);
-                return;
-            }
-        }
-
-        // Falls kein Preset gefunden wurde
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: No matching preset found for value: ', $mainValue, 0);
-    }
-
 
     /**
      * Aktiviert die Aktion für eine Variable ohne Access-Feature.
