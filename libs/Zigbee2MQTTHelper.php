@@ -90,7 +90,7 @@ trait Zigbee2MQTTHelper
      */
     public function RequestAction($ident, $value)
     {
-        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__. ' :: Aufgerufen für Ident: ', $ident . ' mit Wert: ' . json_encode($value), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Aufgerufen für Ident: ', $ident . ' mit Wert: ' . json_encode($value), 0);
 
         // Sonderfall: Geräteinformationen aktualisieren
         if ($ident == 'UpdateInfo') {
@@ -111,7 +111,7 @@ trait Zigbee2MQTTHelper
 
         // Prüfen, ob die Variable in der Liste der String-Variablen ohne Rückmeldung ist
         if (in_array($ident, self::$stringVariablesNoResponse)) {
-            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: Handling string variable without response: ' . $ident, $value, 0);
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Handling string variable without response: ' . $ident, $value, 0);
 
             // Sende den Befehl an das Gerät
             $payloadKey = self::convertIdentToPayloadKey($ident);
@@ -126,15 +126,15 @@ trait Zigbee2MQTTHelper
         // Handhabung von Color-Variablen
         switch ($ident) {
             case 'Z2M_Color':
-                $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: Color', $value, 0);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Color', $value, 0);
                 $this->setColor($value, 'cie');
                 return;
             case 'Z2M_ColorHS':
-                $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: Color HS', $value, 0);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Color HS', $value, 0);
                 $this->setColor($value, 'hs');
                 return;
             case 'Z2M_ColorRGB':
-                $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: Color RGB', $value, 0);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Color RGB', $value, 0);
                 $this->setColor($value, 'cie', 'color_rgb');
                 return;
             case 'Z2M_ColorTempKelvin':
@@ -156,12 +156,12 @@ trait Zigbee2MQTTHelper
         // Umwandlung von true/false zu "ON"/"OFF" für state
         if ($payloadKey === 'state' && is_bool($value)) {
             $value = $value ? 'ON' : 'OFF';
-            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: Converted boolean to state: ', $value, 0);
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Converted boolean to state: ', $value, 0);
         }
 
         $payload = [$payloadKey => $value];
 
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: Sending payload: ', json_encode($payload), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Sending payload: ', json_encode($payload), 0);
         $this->SendSetCommand($payload);
     }
 
@@ -178,7 +178,7 @@ trait Zigbee2MQTTHelper
      */
     public function ReceiveData($JSONString)
     {
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: JSONString: ', $JSONString, 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: JSONString: ', $JSONString, 0);
 
         // Lese die MQTT-Base- und Topic-Konfiguration aus den Instanzeinstellungen
         $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
@@ -203,9 +203,9 @@ trait Zigbee2MQTTHelper
         $Topics = explode('/', $Topic);
 
         // Debug-Ausgaben des empfangenen Topics und Payloads
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: MQTT FullTopic', $ReceiveTopic, 0);
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: MQTT first Topic', $Topics[0], 0);
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: MQTT Payload', utf8_decode($Buffer['Payload']), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: MQTT FullTopic', $ReceiveTopic, 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: MQTT first Topic', $Topics[0], 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: MQTT Payload', utf8_decode($Buffer['Payload']), 0);
 
         // Separates Verarbeiten des Verfügbarkeitsstatus (online/offline)
         if (end($Topics) == 'availability') {
@@ -242,174 +242,6 @@ trait Zigbee2MQTTHelper
             $this->DecodeData($PayloadWithTypes);
         }
         return '';
-    }
-
-    /**
-     * Fügt den übergebenen Payload-Daten die entsprechenden Variablentypen hinzu.
-     * Diese Methode durchläuft die übergebenen Payload-Daten, prüft, ob die zugehörige
-     * Variable existiert, und fügt den Variablentyp als neuen Schlüssel-Wert-Paar hinzu.
-     *
-     * Beispiel:
-     * Wenn der Key 'temperature' vorhanden ist und die zugehörige Variable existiert, wird
-     * ein neuer Eintrag 'temperature_type' hinzugefügt, der den Typ der Variable enthält.
-     *
-     * @param array $Payload Assoziatives Array mit den Payload-Daten.
-     *
-     * @return array Das modifizierte Payload-Array mit den hinzugefügten Variablentypen.
-     */
-    protected function AppendVariableTypes($Payload)
-    {
-        foreach ($Payload as $key => $value) {
-            // Konvertiere den Key in einen Variablen-Ident
-            $variableIdent = self::convertPropertyToIdent($key);
-
-            // Prüfe, ob die Variable existiert
-            if ($this->VariableExists($variableIdent)) {
-                // Hole den Typ der existierenden Variablen
-                $variableType = IPS_GetVariable($this->GetIDForIdent($variableIdent))['VariableType'];
-
-                // Füge dem Payload den Variablentyp als neuen Schlüssel hinzu
-                $Payload[$key . '_type'] = $variableType;
-            }
-        }
-
-        // Gib das modifizierte Payload zurück
-        return $Payload;
-    }
-
-    /**
-     * Setzt die Farbe des Geräts basierend auf dem angegebenen Farbmodus.
-     *
-     * Diese Methode unterstützt verschiedene Farbmodi und konvertiert die Farbe in das entsprechende Format,
-     * bevor sie an das Gerät gesendet wird. Unterstützte Modi sind:
-     * - **cie**: Konvertiert RGB in den XY-Farbraum (CIE 1931).
-     * - **hs**: Verwendet den Hue-Saturation-Modus (HS), um die Farbe zu setzen.
-     * - **hsl**: Nutzt den Farbton, Sättigung und Helligkeit (HSL), um die Farbe zu setzen.
-     * - **hsv**: Nutzt den Farbton, Sättigung und den Wert (HSV), um die Farbe zu setzen.
-     *
-     * Die Funktion bietet auch die Möglichkeit, zusätzlich die Helligkeit (Brightness) zu senden, falls gewünscht.
-     *
-     * @param int $color Der Farbwert in Hexadezimal- oder RGB-Format.
-     *                   Die Farbe wird intern in verschiedene Farbmodelle umgerechnet.
-     * @param string $mode Der Farbmodus, der verwendet werden soll. Unterstützte Werte:
-     *                     - 'cie': Konvertiert die RGB-Werte in den XY-Farbraum.
-     *                     - 'hs': Verwendet den Hue-Saturation-Modus.
-     *                     - 'hsl': Nutzt den HSL-Modus für die Umrechnung.
-     *                     - 'hsv': Nutzt den HSV-Modus für die Umrechnung.
-     * @param string $Z2MMode Der Zigbee2MQTT-Modus, standardmäßig 'color'. Kann auch 'color_rgb' sein.
-     *                        - 'color': Setzt den Farbwert im XY-Farbraum.
-     *                        - 'color_rgb': Setzt den Farbwert im RGB-Modus (nur für 'cie' relevant).
-     * @param bool $includeBrightness Optional. Standardmäßig false. Wenn true, wird die Helligkeit
-     *                                zusätzlich zum Farbwert an das Gerät gesendet.
-     *
-     * @return void
-     *
-     * @throws InvalidArgumentException Wenn der Modus ungültig ist.
-     *
-     * @example
-     * // Setze eine Farbe im HSL-Modus und sende zusätzlich die Helligkeit.
-     * $this->setColor(0xFF5733, 'hsl', 'color', true);
-     *
-     * // Setze eine Farbe im HSV-Modus, ohne Helligkeit zu senden.
-     * $this->setColor(0x4287f5, 'hsv', 'color', false);
-     */
-    private function setColor(int $color, string $mode, string $Z2MMode = 'color', bool $includeBrightness = false)
-    {
-        switch ($mode) {
-        case 'cie':
-            // Nutze die HexToRGB- und RGBToXy-Funktion aus der ColorHelper-Datei
-            $RGB = $this->HexToRGB($color);
-            $cie = $this->RGBToXy($RGB);
-
-            // Füge die Farbe dem Payload hinzu
-            if ($Z2MMode === 'color') {
-                $Payload['color'] = $cie;
-
-                // Nur die Helligkeit hinzufügen, wenn es explizit gewünscht ist
-                if ($includeBrightness) {
-                    $Payload['brightness'] = $cie['bri'];
-                }
-            } elseif ($Z2MMode === 'color_rgb') {
-                $Payload['color_rgb'] = $cie;
-            } else {
-                return;
-            }
-
-            $this->SendSetCommand($Payload);
-            break;
-
-        case 'hs':
-            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - Input Color', json_encode($color), 0);
-
-            $RGB = $this->HexToRGB($color);
-            $HSB = $this->RGBToHSB($RGB[0], $RGB[1], $RGB[2]);
-
-            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - RGB Values for HSB Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
-
-            if ($Z2MMode == 'color') {
-                $Payload = [
-                    'color' => [
-                        'hue'        => $HSB['hue'],
-                        'saturation' => $HSB['saturation'],
-                    ]
-                ];
-            } else {
-                return;
-            }
-
-            $this->SendSetCommand($Payload);
-            break;
-
-        case 'hsl':
-            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - Input Color', json_encode($color), 0);
-
-            $RGB = $this->HexToRGB($color);
-            $HSL = $this->RGBToHSL($RGB[0], $RGB[1], $RGB[2]);
-
-            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - RGB Values for HSL Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
-
-            if ($Z2MMode == 'color') {
-                $Payload = [
-                    'color' => [
-                        'hue'        => $HSL['hue'],
-                        'saturation' => $HSL['saturation'],
-                        'lightness'  => $HSL['lightness']
-                    ]
-                ];
-            } else {
-                return;
-            }
-
-            $this->SendSetCommand($Payload);
-            break;
-
-        case 'hsv':
-            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - Input Color', json_encode($color), 0);
-
-            $RGB = $this->HexToRGB($color);
-            $HSV = $this->RGBToHSV($RGB[0], $RGB[1], $RGB[2]);
-
-            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor - RGB Values for HSV Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
-
-            if ($Z2MMode == 'color') {
-                $Payload = [
-                    'color' => [
-                        'hue'        => $HSV['hue'],
-                        'saturation' => $HSV['saturation'],
-                        'value'      => $HSV['value']
-                    ]
-                ];
-            } else {
-                return;
-            }
-
-            $this->SendSetCommand($Payload);
-            break;
-
-        default:
-            $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColor', 'Invalid Mode ' . $mode, 0);
-            throw new InvalidArgumentException('Invalid color mode: ' . $mode);
-    }
     }
 
     /**
@@ -476,7 +308,7 @@ trait Zigbee2MQTTHelper
                 break;
 
             default:
-                $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: setColorExt', 'Invalid mode ' . $mode, 0);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColorExt', 'Invalid mode ' . $mode, 0);
                 return;
         }
 
@@ -505,10 +337,43 @@ trait Zigbee2MQTTHelper
         $Topic = '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
 
         // Debug-Ausgabe des zu sendenden Payloads
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: Payload to be sent: ', json_encode($Payload), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Payload to be sent: ', json_encode($Payload), 0);
 
         // Sende die Daten an das Gerät
         $this->SendData($Topic, $Payload, 0);
+    }
+
+    /**
+     * Fügt den übergebenen Payload-Daten die entsprechenden Variablentypen hinzu.
+     * Diese Methode durchläuft die übergebenen Payload-Daten, prüft, ob die zugehörige
+     * Variable existiert, und fügt den Variablentyp als neuen Schlüssel-Wert-Paar hinzu.
+     *
+     * Beispiel:
+     * Wenn der Key 'temperature' vorhanden ist und die zugehörige Variable existiert, wird
+     * ein neuer Eintrag 'temperature_type' hinzugefügt, der den Typ der Variable enthält.
+     *
+     * @param array $Payload Assoziatives Array mit den Payload-Daten.
+     *
+     * @return array Das modifizierte Payload-Array mit den hinzugefügten Variablentypen.
+     */
+    protected function AppendVariableTypes($Payload)
+    {
+        foreach ($Payload as $key => $value) {
+            // Konvertiere den Key in einen Variablen-Ident
+            $variableIdent = self::convertPropertyToIdent($key);
+
+            // Prüfe, ob die Variable existiert
+            if ($this->VariableExists($variableIdent)) {
+                // Hole den Typ der existierenden Variablen
+                $variableType = IPS_GetVariable($this->GetIDForIdent($variableIdent))['VariableType'];
+
+                // Füge dem Payload den Variablentyp als neuen Schlüssel hinzu
+                $Payload[$key . '_type'] = $variableType;
+            }
+        }
+
+        // Gib das modifizierte Payload zurück
+        return $Payload;
     }
 
     /**
@@ -545,7 +410,7 @@ trait Zigbee2MQTTHelper
     protected function DecodeData($Payload)
     {
         // Debug-Ausgabe des eingehenden Payloads
-        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: json incoming: ', json_encode($Payload), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: json incoming: ', json_encode($Payload), 0);
 
         // Schleife durch die Payload-Daten
         foreach ($Payload as $key => $value) {
@@ -560,7 +425,7 @@ trait Zigbee2MQTTHelper
 
             // Prüfe, ob die Variable existiert, falls nicht, registriere sie
             if (!$this->VariableExists($variableIdent)) {
-                $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: DecodeData', 'Variable not found, registering: ' . $key, 0);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: DecodeData', 'Variable not found, registering: ' . $key, 0);
 
                 // Überprüfen, ob der Payload 'exposes' enthält und Variablen registrieren
                 if (isset($Payload['exposes'])) {
@@ -584,7 +449,7 @@ trait Zigbee2MQTTHelper
 
                 // Überprüfe, ob die Variable erfolgreich registriert wurde
                 if (!$this->VariableExists($variableIdent)) {
-                    $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: DecodeData', 'Error: Variable could not be registered: ' . $key, 0);
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: DecodeData', 'Error: Variable could not be registered: ' . $key, 0);
                     continue;
                 }
             }
@@ -606,7 +471,7 @@ trait Zigbee2MQTTHelper
             $currentValue = GetValue($this->GetIDForIdent($variableIdent));
             if ($currentValue === $value || (is_array($value) && $currentValue === json_encode($value))) {
                 // Überspringe das Setzen, wenn der Wert gleich bleibt
-                $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: Skipping update for ' . $variableIdent . ' (no change)', json_encode($value), 0);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Skipping update for ' . $variableIdent . ' (no change)', json_encode($value), 0);
                 continue;
             }
 
@@ -622,24 +487,24 @@ trait Zigbee2MQTTHelper
                     // Verarbeite den Wert basierend auf dem Typ
                     switch ($variableType) {
                     case 0: // Boolean
-                        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: processed', 'Boolean processed: ' . $key, 0);
+                        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: processed', 'Boolean processed: ' . $key, 0);
                         $mappedValue = self::convertStateBasedOnMapping($key, $value, $variableType);
                         $this->SetValue($variableIdent, $mappedValue);
                         break;
                     case 1: // Integer
-                        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: processed', 'Integer processed: ' . $key, 0);
+                        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: processed', 'Integer processed: ' . $key, 0);
                         $this->SetValue($variableIdent, $value);
                         break;
                     case 2: // Float
-                        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: processed', 'Float processed: ' . $key, 0);
+                        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: processed', 'Float processed: ' . $key, 0);
                         $this->SetValue($variableIdent, $value);
                         break;
                     case 3: // String
-                        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: processed', 'String processed: ' . $key, 0);
+                        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: processed', 'String processed: ' . $key, 0);
                         $this->SetValue($variableIdent, is_array($value) ? json_encode($value) : $value);
                         break;
                     default:
-                        $this->SendDebug(__FUNCTION__ . ' :: '. __LINE__.' :: processed', 'Unknown Variable Type: ' . $variableType, 0);
+                        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: processed', 'Unknown Variable Type: ' . $variableType, 0);
                         break;
                 }
                 }
@@ -715,7 +580,7 @@ trait Zigbee2MQTTHelper
                             $adjustedValue = hexdec(str_replace('#', '', $rgb)); // RGB in Integer umwandeln
                         }
                     } else {
-                        $adjustedValue = (int)$Value; // Fallback auf Integer, falls kein Array übergeben wird
+                        $adjustedValue = (int) $Value; // Fallback auf Integer, falls kein Array übergeben wird
                     }
                 }
 
@@ -768,16 +633,16 @@ trait Zigbee2MQTTHelper
                 // Standardverarbeitung für andere Variablentypen
                 switch ($varType) {
                     case VARIABLETYPE_BOOLEAN:
-                        $adjustedValue = (bool)$Value;
+                        $adjustedValue = (bool) $Value;
                         break;
                     case VARIABLETYPE_INTEGER:
-                        $adjustedValue = (int)$Value;
+                        $adjustedValue = (int) $Value;
                         break;
                     case VARIABLETYPE_FLOAT:
-                        $adjustedValue = (float)$Value;
+                        $adjustedValue = (float) $Value;
                         break;
                     case VARIABLETYPE_STRING:
-                        $adjustedValue = (string)$Value;
+                        $adjustedValue = (string) $Value;
                         break;
                     default:
                         $adjustedValue = $Value; // Fallback, falls der Typ unbekannt ist
@@ -792,6 +657,168 @@ trait Zigbee2MQTTHelper
         } else {
             $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: No variable found for', $Ident, 0);
         }
+    }
+
+    /**
+     * Überprüft, ob eine Variable mit dem angegebenen Ident in der aktuellen Instanz existiert.
+     *
+     * Diese Funktion prüft, ob eine Variable mit dem übergebenen Ident in der aktuellen Instanz
+     * existiert, indem sie die Funktion `IPS_GetObjectIDByIdent` aufruft. Falls die Variable existiert,
+     * wird `true` zurückgegeben, andernfalls `false`. Die Funktion verwendet das `@`-Zeichen, um
+     * mögliche Warnungen zu unterdrücken, wenn die Variable nicht existiert.
+     *
+     * @param string $ident Der Ident der zu überprüfenden Variablen.
+     *
+     * @return bool Gibt `true` zurück, wenn die Variable existiert, andernfalls `false`.
+     */
+    protected function VariableExists($ident)
+    {
+        // Versuche, die Objekt-ID der Variablen anhand des Ident zu erhalten
+    $objectID = @IPS_GetObjectIDByIdent($ident, $this->InstanceID); // Verwendet @, um die Warnung zu unterdrücken
+
+    // Falls die Variable nicht gefunden wird, Debug-Meldung ausgeben und false zurückgeben
+        if ($objectID === false) {
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable with Ident ', $ident . ' not found.', 0);
+            return false;
+        }
+
+        // Wenn die Variable gefunden wurde, true zurückgeben
+        return true;
+    }
+
+    /**
+     * Setzt die Farbe des Geräts basierend auf dem angegebenen Farbmodus.
+     *
+     * Diese Methode unterstützt verschiedene Farbmodi und konvertiert die Farbe in das entsprechende Format,
+     * bevor sie an das Gerät gesendet wird. Unterstützte Modi sind:
+     * - **cie**: Konvertiert RGB in den XY-Farbraum (CIE 1931).
+     * - **hs**: Verwendet den Hue-Saturation-Modus (HS), um die Farbe zu setzen.
+     * - **hsl**: Nutzt den Farbton, Sättigung und Helligkeit (HSL), um die Farbe zu setzen.
+     * - **hsv**: Nutzt den Farbton, Sättigung und den Wert (HSV), um die Farbe zu setzen.
+     *
+     * Die Funktion bietet auch die Möglichkeit, zusätzlich die Helligkeit (Brightness) zu senden, falls gewünscht.
+     *
+     * @param int $color Der Farbwert in Hexadezimal- oder RGB-Format.
+     *                   Die Farbe wird intern in verschiedene Farbmodelle umgerechnet.
+     * @param string $mode Der Farbmodus, der verwendet werden soll. Unterstützte Werte:
+     *                     - 'cie': Konvertiert die RGB-Werte in den XY-Farbraum.
+     *                     - 'hs': Verwendet den Hue-Saturation-Modus.
+     *                     - 'hsl': Nutzt den HSL-Modus für die Umrechnung.
+     *                     - 'hsv': Nutzt den HSV-Modus für die Umrechnung.
+     * @param string $Z2MMode Der Zigbee2MQTT-Modus, standardmäßig 'color'. Kann auch 'color_rgb' sein.
+     *                        - 'color': Setzt den Farbwert im XY-Farbraum.
+     *                        - 'color_rgb': Setzt den Farbwert im RGB-Modus (nur für 'cie' relevant).
+     * @param bool $includeBrightness Optional. Standardmäßig false. Wenn true, wird die Helligkeit
+     *                                zusätzlich zum Farbwert an das Gerät gesendet.
+     *
+     * @return void
+     *
+     * @throws InvalidArgumentException Wenn der Modus ungültig ist.
+     *
+     * @example
+     * // Setze eine Farbe im HSL-Modus und sende zusätzlich die Helligkeit.
+     * $this->setColor(0xFF5733, 'hsl', 'color', true);
+     *
+     * // Setze eine Farbe im HSV-Modus, ohne Helligkeit zu senden.
+     * $this->setColor(0x4287f5, 'hsv', 'color', false);
+     */
+    private function setColor(int $color, string $mode, string $Z2MMode = 'color', bool $includeBrightness = false)
+    {
+        switch ($mode) {
+        case 'cie':
+            // Nutze die HexToRGB- und RGBToXy-Funktion aus der ColorHelper-Datei
+            $RGB = $this->HexToRGB($color);
+            $cie = $this->RGBToXy($RGB);
+
+            // Füge die Farbe dem Payload hinzu
+            if ($Z2MMode === 'color') {
+                $Payload['color'] = $cie;
+
+                // Nur die Helligkeit hinzufügen, wenn es explizit gewünscht ist
+                if ($includeBrightness) {
+                    $Payload['brightness'] = $cie['bri'];
+                }
+            } elseif ($Z2MMode === 'color_rgb') {
+                $Payload['color_rgb'] = $cie;
+            } else {
+                return;
+            }
+
+            $this->SendSetCommand($Payload);
+            break;
+
+        case 'hs':
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - Input Color', json_encode($color), 0);
+
+            $RGB = $this->HexToRGB($color);
+            $HSB = $this->RGBToHSB($RGB[0], $RGB[1], $RGB[2]);
+
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - RGB Values for HSB Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
+
+            if ($Z2MMode == 'color') {
+                $Payload = [
+                    'color' => [
+                        'hue'        => $HSB['hue'],
+                        'saturation' => $HSB['saturation'],
+                    ]
+                ];
+            } else {
+                return;
+            }
+
+            $this->SendSetCommand($Payload);
+            break;
+
+        case 'hsl':
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - Input Color', json_encode($color), 0);
+
+            $RGB = $this->HexToRGB($color);
+            $HSL = $this->RGBToHSL($RGB[0], $RGB[1], $RGB[2]);
+
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - RGB Values for HSL Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
+
+            if ($Z2MMode == 'color') {
+                $Payload = [
+                    'color' => [
+                        'hue'        => $HSL['hue'],
+                        'saturation' => $HSL['saturation'],
+                        'lightness'  => $HSL['lightness']
+                    ]
+                ];
+            } else {
+                return;
+            }
+
+            $this->SendSetCommand($Payload);
+            break;
+
+        case 'hsv':
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - Input Color', json_encode($color), 0);
+
+            $RGB = $this->HexToRGB($color);
+            $HSV = $this->RGBToHSV($RGB[0], $RGB[1], $RGB[2]);
+
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - RGB Values for HSV Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
+
+            if ($Z2MMode == 'color') {
+                $Payload = [
+                    'color' => [
+                        'hue'        => $HSV['hue'],
+                        'saturation' => $HSV['saturation'],
+                        'value'      => $HSV['value']
+                    ]
+                ];
+            } else {
+                return;
+            }
+
+            $this->SendSetCommand($Payload);
+            break;
+
+        default:
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor', 'Invalid Mode ' . $mode, 0);
+            throw new InvalidArgumentException('Invalid color mode: ' . $mode);
+    }
     }
 
     /**
@@ -867,19 +894,19 @@ trait Zigbee2MQTTHelper
         // Debug-Ausgabe vor der Rückgabe
         switch ($dataType) {
         case VARIABLETYPE_STRING:
-            $convertedValue = (string)$value;
+            $convertedValue = (string) $value;
             break;
         case VARIABLETYPE_FLOAT:
-            $convertedValue = (float)$value;
+            $convertedValue = (float) $value;
             break;
         case VARIABLETYPE_INTEGER:
-            $convertedValue = (int)$value;
+            $convertedValue = (int) $value;
             break;
         case VARIABLETYPE_BOOLEAN:
-            $convertedValue = (bool)$value;
+            $convertedValue = (bool) $value;
             break;
         default:
-            $convertedValue = (string)$value; // Fallback zu String, wenn kein gültiger Datentyp übergeben wird
+            $convertedValue = (string) $value; // Fallback zu String, wenn kein gültiger Datentyp übergeben wird
             break;
     }
 
@@ -1146,33 +1173,6 @@ trait Zigbee2MQTTHelper
         $max = $feature['value_max'] ?? 0;
         $unit = isset($feature['unit']) ? ' ' . $feature['unit'] : '';
         return ($min !== 0 || $max !== 0) ? $ProfileName . '_' . $min . '_' . $max : $ProfileName;
-    }
-
-    /**
-     * Überprüft, ob eine Variable mit dem angegebenen Ident in der aktuellen Instanz existiert.
-     *
-     * Diese Funktion prüft, ob eine Variable mit dem übergebenen Ident in der aktuellen Instanz
-     * existiert, indem sie die Funktion `IPS_GetObjectIDByIdent` aufruft. Falls die Variable existiert,
-     * wird `true` zurückgegeben, andernfalls `false`. Die Funktion verwendet das `@`-Zeichen, um
-     * mögliche Warnungen zu unterdrücken, wenn die Variable nicht existiert.
-     *
-     * @param string $ident Der Ident der zu überprüfenden Variablen.
-     *
-     * @return bool Gibt `true` zurück, wenn die Variable existiert, andernfalls `false`.
-     */
-    protected function VariableExists($ident)
-    {
-        // Versuche, die Objekt-ID der Variablen anhand des Ident zu erhalten
-    $objectID = @IPS_GetObjectIDByIdent($ident, $this->InstanceID); // Verwendet @, um die Warnung zu unterdrücken
-
-    // Falls die Variable nicht gefunden wird, Debug-Meldung ausgeben und false zurückgeben
-        if ($objectID === false) {
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable with Ident ', $ident . ' not found.', 0);
-            return false;
-        }
-
-        // Wenn die Variable gefunden wurde, true zurückgeben
-        return true;
     }
 
     /**
