@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__) . '/libs/BufferHelper.php';
 require_once dirname(__DIR__) . '/libs/SemaphoreHelper.php';
-require_once __DIR__ . '/../libs/MQTTHelper.php';
+require_once dirname(__DIR__) . '/libs/MQTTHelper.php';
 
 class Zigbee2MQTTConfigurator extends IPSModule
 {

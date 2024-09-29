@@ -142,21 +142,39 @@ trait ColorHelper
         $q = $value * (1 - $f * $saturation);
         $t = $value * (1 - (1 - $f) * $saturation);
         switch ($i % 6) {
-            case 0: $r = $value; $g = $t; $b = $p; break;
-            case 1: $r = $q; $g = $value; $b = $p; break;
-            case 2: $r = $p; $g = $value; $b = $t; break;
-            case 3: $r = $p; $g = $q; $b = $value; break;
-            case 4: $r = $t; $g = $p; $b = $value; break;
-            case 5: $r = $value; $g = $p; $b = $q; break;
+            case 0: $r = $value;
+                $g = $t;
+                $b = $p;
+                break;
+            case 1: $r = $q;
+                $g = $value;
+                $b = $p;
+                break;
+            case 2: $r = $p;
+                $g = $value;
+                $b = $t;
+                break;
+            case 3: $r = $p;
+                $g = $q;
+                $b = $value;
+                break;
+            case 4: $r = $t;
+                $g = $p;
+                $b = $value;
+                break;
+            case 5: $r = $value;
+                $g = $p;
+                $b = $q;
+                break;
         }
         $r = round($r * 255);
         $g = round($g * 255);
         $b = round($b * 255);
-        $colorHSV = sprintf('#%02x%02x%02x', $r, $g, $b);
+        $colorRGB = sprintf('#%02x%02x%02x', $r, $g, $b);
         $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: HSVToRGB', 'R: ' . $r . ' G: ' . $g . ' B: ' . $b, 0);
-        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: HSVToRGB', 'HSV ' . $colorHSV, 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: HSVToRGB', 'RGB ' . $colorRGB, 0);
 
-        return $colorHSV;
+        return $colorRGB;
     }
 
     protected function RGBToHSB($R, $G, $B)
