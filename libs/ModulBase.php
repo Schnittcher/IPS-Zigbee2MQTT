@@ -20,7 +20,6 @@ abstract class ModulBase extends \IPSModule
     use BufferHelper;
     use Semaphore;
     use ColorHelper;
-    use SendData;
     use VariableProfileHelper;
     use SendData;
 
@@ -201,11 +200,6 @@ abstract class ModulBase extends \IPSModule
                 $this->SendSetCommand($payload);
                 return;
         }
-
-        // Generelle Logik für die meisten anderen Fälle, ermitteln des Variablen-Typs
-        $variableID = @$this->GetIDForIdent($ident);
-        $variableInfo = IPS_GetVariable($variableID);
-        $variableType = $variableInfo['VariableType'];
 
         // Wandelt den $Ident zum passenden Expose um
         $payloadKey = self::convertIdentToPayloadKey($ident);
@@ -433,7 +427,7 @@ abstract class ModulBase extends \IPSModule
             // Prüfe, ob die Variable existiert
             $objectID = @$this->GetIDForIdent($ident);
             $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable exists for Ident: ', $ident, 0);
-            if ($objectID !== false) {
+            if ($objectID) {
                 // Hole den Typ der existierenden Variablen
                 $variableType = IPS_GetVariable($objectID)['VariableType'];
 
@@ -497,7 +491,7 @@ abstract class ModulBase extends \IPSModule
             $variableTypeKey = $key . '_type';
 
             // Prüfe, ob die Variable existiert, falls nicht, registriere sie
-            if (!$this->GetIDForIdent($ident)) {
+            if (!@$this->GetIDForIdent($ident)) {
                 $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: DecodeData', 'Variable not found, registering: ' . $key, 0);
 
                 // Überprüfen, ob der Payload 'exposes' enthält und Variablen registrieren
@@ -521,7 +515,7 @@ abstract class ModulBase extends \IPSModule
                 }
 
                 // Überprüfe, ob die Variable erfolgreich registriert wurde
-                if (!$this->GetIDForIdent($ident)) {
+                if (!@$this->GetIDForIdent($ident)) {
                     $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: DecodeData', 'Error: Variable could not be registered: ' . $key, 0);
                     continue;
                 }
@@ -530,7 +524,7 @@ abstract class ModulBase extends \IPSModule
             // Prüfe, ob Preset-Profile erstellt werden müssen
             if (isset($Payload[$key]['presets'])) {
                 $presetIdent = $ident . '_Presets';
-                if (!$this->GetIDForIdent($presetIdent)) {
+                if (!@$this->GetIDForIdent($presetIdent)) {
                     $this->registerPresetProfile($Payload[$key]['presets'], $key);
                 }
             }
@@ -622,106 +616,107 @@ abstract class ModulBase extends \IPSModule
         $adjustedValue = $Value;
 
         // Überprüfen, ob die Variable existiert
-        if ($this->GetIDForIdent($Ident)) {
-            // Typ der vorhandenen Variable abrufen
-            $varType = IPS_GetVariable($this->GetIDForIdent($Ident))['VariableType'];
+        if (!@$this->GetIDForIdent($Ident)) {
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: No variable found for', $Ident, 0);
+            return;
+        }
 
-            // Debug-Ausgabe: Verarbeitet die Variable
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Handling variable: ' . $Ident, '', 0);
+        // Debug-Ausgabe: Verarbeitet die Variable
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Handling variable: ' . $Ident, '', 0);
 
-            // Farbvariablen und Preset-Variablen spezifische Behandlung
-            if (strpos($Ident, '_Presets') !== false || $Ident === 'Z2M_ColorTemp' || $Ident === 'Z2M_ColorTempStartup' || $Ident === 'Z2M_Color') {
-                // Spezielle Behandlung für Farbvariablen (z.B. Z2M_Color)
-                if ($Ident === 'Z2M_Color') {
-                    // Verarbeite den Farbwert, der als Array übergeben wird
-                    if (is_array($Value)) {
-                        if (isset($Value['x']) && isset($Value['y'])) {
-                            // Konvertiere XY-Farbwerte in einen HEX-Farbwert
-                            $rgb = $this->xyToHEX($Value['x'], $Value['y'], 255);
-                            $adjustedValue = hexdec(str_replace('#', '', $rgb)); // Hex in Integer umwandeln
-                        } elseif (isset($Value['hue']) && isset($Value['saturation']) && isset($Value['value'])) {
-                            // Konvertiere HSV-Werte in einen RGB-Farbwert
-                            $rgb = $this->HSVToRGB($Value['hue'], $Value['saturation'], $Value['value']);
-                            $adjustedValue = hexdec(str_replace('#', '', $rgb)); // RGB in Integer umwandeln
-                        }
-                    } else {
-                        $adjustedValue = (int) $Value; // Fallback auf Integer, falls kein Array übergeben wird
-                    }
-                }
-
-                // Überprüfen, ob die Variable ein Profil hat
-                $profileName = IPS_GetVariable($this->GetIDForIdent($Ident))['VariableProfile'];
-
-                if ($profileName) {
-                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Using profile for ' . $Ident, $profileName, 0);
-
-                    // Profilinformationen abrufen und Assoziationen verarbeiten
-                    $profileData = IPS_GetVariableProfile($profileName);
-
-                    if ($profileData && isset($profileData['Associations'])) {
-                        $associations = $profileData['Associations'];
-
-                        // Wert anhand der Profilassoziationen anpassen
-                        foreach ($associations as $association) {
-                            if ($association['Value'] == $Value) {
-                                $adjustedValue = $association['Value'];
-                                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Adjusted value from profile: ', $adjustedValue, 0);
-                                break;
-                            }
-                        }
-                    } else {
-                        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: No associations found for profile: ', $profileName, 0);
+        // Farbvariablen und Preset-Variablen spezifische Behandlung
+        if (strpos($Ident, '_Presets') !== false || $Ident === 'Z2M_ColorTemp' || $Ident === 'Z2M_ColorTempStartup' || $Ident === 'Z2M_Color') {
+            // Spezielle Behandlung für Farbvariablen (z.B. Z2M_Color)
+            if ($Ident === 'Z2M_Color') {
+                // Verarbeite den Farbwert, der als Array übergeben wird
+                if (is_array($Value)) {
+                    if (isset($Value['x']) && isset($Value['y'])) {
+                        // Konvertiere XY-Farbwerte in einen HEX-Farbwert
+                        $rgb = $this->xyToHEX($Value['x'], $Value['y'], 255);
+                        $adjustedValue = hexdec(str_replace('#', '', $rgb)); // Hex in Integer umwandeln
+                    } elseif (isset($Value['hue']) && isset($Value['saturation']) && isset($Value['value'])) {
+                        // Konvertiere HSV-Werte in einen RGB-Farbwert
+                        $rgb = $this->HSVToRGB($Value['hue'], $Value['saturation'], $Value['value']);
+                        $adjustedValue = hexdec(str_replace('#', '', $rgb)); // RGB in Integer umwandeln
                     }
                 } else {
-                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: No profile found for variable: ', $Ident, 0);
-                }
-
-                // Preset-Variable Verarbeitung
-                if (strpos($Ident, '_Presets') !== false) {
-                    // Setze den Wert für die Hauptvariable (ohne '_Presets')
-                    $mainIdent = str_replace('_Presets', '', $Ident);
-                    if ($this->GetIDForIdent($mainIdent)) {
-                        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Setting main variable value: ', $adjustedValue, 0);
-                        parent::SetValue($mainIdent, $adjustedValue); // Hauptvariable setzen
-                    }
-                } else {
-                    // Setze den Wert für die Preset-Variable (füge '_Presets' an den Ident)
-                    $presetIdent = $Ident . '_Presets';
-                    if ($this->GetIDForIdent($presetIdent)) {
-                        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Setting preset variable value: ', $adjustedValue, 0);
-                        parent::SetValue($presetIdent, $adjustedValue); // Preset-Variable setzen
-                    } else {
-                        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Preset variable does not exist: ', $presetIdent, 0);
-                    }
-                }
-            } else {
-                // Standardverarbeitung für andere Variablentypen
-                switch ($varType) {
-                    case VARIABLETYPE_BOOLEAN:
-                        $adjustedValue = (bool) $Value;
-                        break;
-                    case VARIABLETYPE_INTEGER:
-                        $adjustedValue = (int) $Value;
-                        break;
-                    case VARIABLETYPE_FLOAT:
-                        $adjustedValue = (float) $Value;
-                        break;
-                    case VARIABLETYPE_STRING:
-                        $adjustedValue = (string) $Value;
-                        break;
-                    default:
-                        $adjustedValue = $Value; // Fallback, falls der Typ unbekannt ist
-                        break;
+                    $adjustedValue = (int) $Value; // Fallback auf Integer, falls kein Array übergeben wird
                 }
             }
 
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Adjusted value for ' . $Ident, (is_array($adjustedValue) ? json_encode($adjustedValue) : $adjustedValue), 0);
+            // Überprüfen, ob die Variable ein Profil hat
+            $profileName = IPS_GetVariable($this->GetIDForIdent($Ident))['VariableProfile'];
 
-            // Setze den Wert in die Variable
-            parent::SetValue($Ident, $adjustedValue);
+            if ($profileName) {
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Using profile for ' . $Ident, $profileName, 0);
+
+                // Profilinformationen abrufen und Assoziationen verarbeiten
+                $profileData = IPS_GetVariableProfile($profileName);
+
+                if ($profileData && isset($profileData['Associations'])) {
+                    $associations = $profileData['Associations'];
+
+                    // Wert anhand der Profilassoziationen anpassen
+                    foreach ($associations as $association) {
+                        if ($association['Value'] == $Value) {
+                            $adjustedValue = $association['Value'];
+                            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Adjusted value from profile: ', $adjustedValue, 0);
+                            break;
+                        }
+                    }
+                } else {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: No associations found for profile: ', $profileName, 0);
+                }
+            } else {
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: No profile found for variable: ', $Ident, 0);
+            }
+
+            // Preset-Variable Verarbeitung
+            if (strpos($Ident, '_Presets') !== false) {
+                // Setze den Wert für die Hauptvariable (ohne '_Presets')
+                $mainIdent = str_replace('_Presets', '', $Ident);
+                if (@$this->GetIDForIdent($mainIdent)) {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Setting main variable value: ', $adjustedValue, 0);
+                    parent::SetValue($mainIdent, $adjustedValue); // Hauptvariable setzen
+                }
+            } else {
+                // Setze den Wert für die Preset-Variable (füge '_Presets' an den Ident)
+                $presetIdent = $Ident . '_Presets';
+                if (@$this->GetIDForIdent($presetIdent)) {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Setting preset variable value: ', $adjustedValue, 0);
+                    parent::SetValue($presetIdent, $adjustedValue); // Preset-Variable setzen
+                } else {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Preset variable does not exist: ', $presetIdent, 0);
+                }
+            }
         } else {
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: No variable found for', $Ident, 0);
+            // Typ der vorhandenen Variable abrufen
+            $varType = IPS_GetVariable($this->GetIDForIdent($Ident))['VariableType'];
+            // Standardverarbeitung für andere Variablentypen
+            switch ($varType) {
+                case VARIABLETYPE_BOOLEAN:
+                    $adjustedValue = (bool) $Value;
+                    break;
+                case VARIABLETYPE_INTEGER:
+                    $adjustedValue = (int) $Value;
+                    break;
+                case VARIABLETYPE_FLOAT:
+                    $adjustedValue = (float) $Value;
+                    break;
+                case VARIABLETYPE_STRING:
+                    $adjustedValue = (string) $Value;
+                    break;
+                default:
+                    $adjustedValue = $Value; // Fallback, falls der Typ unbekannt ist
+                    break;
+            }
         }
+
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Adjusted value for ' . $Ident, (is_array($adjustedValue) ? json_encode($adjustedValue) : $adjustedValue), 0);
+
+        // Setze den Wert in die Variable
+        parent::SetValue($Ident, $adjustedValue);
+
     }
 
     /**
@@ -788,72 +783,72 @@ abstract class ModulBase extends \IPSModule
     private function setColor(int $color, string $mode, string $Z2MMode = 'color')
     {
         switch ($mode) {
-        case 'cie':
-            // Nutze die HexToRGB- und RGBToXy-Funktion aus der ColorHelper-Datei
-            $RGB = $this->HexToRGB($color);
-            $cie = $this->RGBToXy($RGB);
+            case 'cie':
+                // Nutze die HexToRGB- und RGBToXy-Funktion aus der ColorHelper-Datei
+                $RGB = $this->HexToRGB($color);
+                $cie = $this->RGBToXy($RGB);
 
-            // Füge die Farbe dem Payload hinzu
-            if ($Z2MMode === 'color') {
-                $Payload['color'] = $cie;
-                $Payload['brightness'] = $cie['bri'];
-            } elseif ($Z2MMode === 'color_rgb') {
-                $Payload['color_rgb'] = $cie;
-            } else {
-                return;
-            }
+                // Füge die Farbe dem Payload hinzu
+                if ($Z2MMode === 'color') {
+                    $Payload['color'] = $cie;
+                    $Payload['brightness'] = $cie['bri'];
+                } elseif ($Z2MMode === 'color_rgb') {
+                    $Payload['color_rgb'] = $cie;
+                } else {
+                    return;
+                }
 
-            $this->SendSetCommand($Payload);
-            break;
+                $this->SendSetCommand($Payload);
+                break;
 
-        case 'hs':
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - Input Color', json_encode($color), 0);
+            case 'hs':
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - Input Color', json_encode($color), 0);
 
-            $RGB = $this->HexToRGB($color);
-            $HSB = $this->RGBToHSB($RGB[0], $RGB[1], $RGB[2]);
+                $RGB = $this->HexToRGB($color);
+                $HSB = $this->RGBToHSB($RGB[0], $RGB[1], $RGB[2]);
 
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - RGB Values for HSB Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - RGB Values for HSB Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
 
-            if ($Z2MMode == 'color') {
-                $Payload = [
-                    'color' => [
-                        'hue'        => $HSB['hue'],
-                        'saturation' => $HSB['saturation'],
-                    ],
-                    'brightness' => $HSB['brightness']
-                ];
-            } else {
-                return;
-            }
+                if ($Z2MMode == 'color') {
+                    $Payload = [
+                        'color' => [
+                            'hue'        => $HSB['hue'],
+                            'saturation' => $HSB['saturation'],
+                        ],
+                        'brightness' => $HSB['brightness']
+                    ];
+                } else {
+                    return;
+                }
 
-            $this->SendSetCommand($Payload);
-            break;
+                $this->SendSetCommand($Payload);
+                break;
 
-        case 'hsl':
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - Input Color', json_encode($color), 0);
+            case 'hsl':
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - Input Color', json_encode($color), 0);
 
-            $RGB = $this->HexToRGB($color);
-            $HSL = $this->RGBToHSL($RGB[0], $RGB[1], $RGB[2]);
+                $RGB = $this->HexToRGB($color);
+                $HSL = $this->RGBToHSL($RGB[0], $RGB[1], $RGB[2]);
 
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - RGB Values for HSL Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - RGB Values for HSL Conversion', 'R: ' . $RGB[0] . ', G: ' . $RGB[1] . ', B: ' . $RGB[2], 0);
 
-            if ($Z2MMode == 'color') {
-                $Payload = [
-                    'color' => [
-                        'hue'        => $HSL['hue'],
-                        'saturation' => $HSL['saturation'],
-                        'lightness'  => $HSL['lightness']
-                    ]
-                ];
-            } else {
-                return;
-            }
+                if ($Z2MMode == 'color') {
+                    $Payload = [
+                        'color' => [
+                            'hue'        => $HSL['hue'],
+                            'saturation' => $HSL['saturation'],
+                            'lightness'  => $HSL['lightness']
+                        ]
+                    ];
+                } else {
+                    return;
+                }
 
-            $this->SendSetCommand($Payload);
-            break;
+                $this->SendSetCommand($Payload);
+                break;
 
-        case 'hsv':
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - Input Color', json_encode($color), 0);
+            case 'hsv':
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColor - Input Color', json_encode($color), 0);
 
                 $RGB = $this->HexToRGB($color);
                 $HSV = $this->RGBToHSV($RGB[0], $RGB[1], $RGB[2]);
@@ -1092,8 +1087,8 @@ abstract class ModulBase extends \IPSModule
 
         // Überprüfen, ob die Variable bereits existiert, bevor sie neu angelegt wird
         $objectID = @$this->GetIDForIdent($ident);
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Object ID: ', $objectID, 0);
-        if ($objectID !== false) {
+        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Object ID: ', (string) $objectID, 0);
+        if ($objectID) {
             return;
         }
 
@@ -1458,7 +1453,7 @@ abstract class ModulBase extends \IPSModule
         // Prüfen, ob die Variable existiert
         $objectID = @$this->GetIDForIdent($ident);
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable: ', $ident, 0);
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Object ID: ', $objectID, 0);
+        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Object ID: ', (string) $objectID, 0);
         if ($objectID !== false) {
             // Aktion für die Variable aktivieren
             $this->EnableAction($ident);

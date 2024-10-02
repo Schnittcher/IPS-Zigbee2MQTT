@@ -6,6 +6,14 @@ namespace Zigbee2MQTT;
 
 trait ColorHelper
 {
+    /**
+     * RGBToHSL
+     *
+     * @param  int $r red
+     * @param  int $g green
+     * @param  int $b blue
+     * @return array index mit keys hue, saturation, lightness
+     */
     protected function RGBToHSL($r, $g, $b)
     {
         $r /= 255;
@@ -45,6 +53,14 @@ trait ColorHelper
         ];
     }
 
+    /**
+     * HSLToRGB
+     *
+     * @param  int $h hue
+     * @param  int $s saturation
+     * @param  int $l lightness
+     * @return array index r für red, index g für green, index b für blue
+     */
     protected function HSLToRGB($h, $s, $l)
     {
         $h /= 360;
@@ -73,6 +89,12 @@ trait ColorHelper
         return $RGB;
     }
 
+    /**
+     * HexToRGB
+     * @Burki24 Funktionsbezeichnung ist irreführend, da $Value int und kein Hex-String ist.
+     * @param  int $value Ist kein Hex (String) sondern ein int,
+     * @return array index 0 int red, index 1 int green, index 2 int blue
+     */
     protected function HexToRGB($value)
     {
         $RGB = [];
@@ -83,6 +105,13 @@ trait ColorHelper
         return $RGB;
     }
 
+    /**
+     * HSToRGB
+     * @Burki24 Warum ist brightness fest auf 1 (100%)? HSVToRGB ist quasi identisch
+     * @param  int $hue
+     * @param  int $saturation
+     * @return string HTML-Farbe (warum nicht wieder ein int oder array?)
+     */
     protected function HSToRGB($hue, $saturation)
     {
         $hue /= 360;
@@ -131,6 +160,14 @@ trait ColorHelper
         return $colorHS;
     }
 
+    /**
+     * HSVToRGB
+     *
+     * @param  int $hue
+     * @param  int $saturation
+     * @param  int $value oder brightness
+     * @return string HTML-Farbe (warum nicht wieder ein int oder array?)
+     */
     protected function HSVToRGB($hue, $saturation, $value)
     {
         $hue /= 360;
@@ -177,16 +214,24 @@ trait ColorHelper
         return $colorRGB;
     }
 
+    /**
+     * RGBToHSV
+     *
+     * @param  mixed $R red
+     * @param  mixed $G green
+     * @param  mixed $B blue
+     * @return array index mit keys hue, saturation, value (brightness)
+     */
     protected function RGBToHSV($R, $G, $B)
     {
-        $R /= 255.0;
-        $G /= 255.0;
-        $B /= 255.0;
-
+        $R /= 255;
+        $G /= 255;
+        $B /= 255;
         $max = max($R, $G, $B);
         $min = min($R, $G, $B);
         $delta = $max - $min;
-
+        $value = $max * 100;
+        $saturation = ($max == 0) ? 0 : ($delta / $max) * 100;
         $hue = 0;
         if ($delta != 0) {
             if ($max == $R) {
@@ -201,21 +246,26 @@ trait ColorHelper
             }
         }
 
-        $saturation = ($max == 0) ? 0 : ($delta / $max) * 100;
-        $value = $max * 100;
-
         return [
-            'hue' => $hue,
+            'hue'        => $hue,
             'saturation' => $saturation,
-            'value' => $value
+            'value'      => $value
         ];
     }
 
+    /**
+     * RGBToHSB
+     *
+     * @param  int $R red
+     * @param  int $G green
+     * @param  int $B blue
+     * @return array index mit keys hue, saturation, brightness
+     */
     protected function RGBToHSB($R, $G, $B)
     {
-        $R /= 255.0;
-        $G /= 255.0;
-        $B /= 255.0;
+        $R /= 255;
+        $G /= 255;
+        $B /= 255;
         $max = max($R, $G, $B);
         $min = min($R, $G, $B);
         $delta = $max - $min;
@@ -238,6 +288,14 @@ trait ColorHelper
         return ['hue' => $hue, 'saturation' => $saturation, 'brightness' => $brightness];
     }
 
+    /**
+     * xyToHEX
+     *
+     * @param  float $x
+     * @param  float $y
+     * @param  int $bri brightness
+     * @return string HTML-Farbe (warum nicht wieder ein int oder array?)
+     */
     protected function xyToHEX($x, $y, $bri)
     {
         // Berechnung der XYZ-Werte
@@ -278,18 +336,19 @@ trait ColorHelper
         return $color;
     }
 
+    /**
+     * RGBToXy
+     *
+     * @param  array $RGB mit index 0 int red, index 1 int green, index 2 int blue
+     * @return array mit index x, y, bri
+     */
     protected function RGBToXy($RGB)
     {
+        $r = $RGB[0] / 255;
+        $g = $RGB[1] / 255;
+        $b = $RGB[2] / 255;
+
         // RGB in Xy-Farbraum konvertieren
-        $RGB = sprintf('#%02x%02x%02x', $RGB[0], $RGB[1], $RGB[2]);
-        $r = hexdec(substr($RGB, 1, 2));
-        $g = hexdec(substr($RGB, 3, 2));
-        $b = hexdec(substr($RGB, 5, 2));
-
-        $r = $r / 255;
-        $g = $g / 255;
-        $b = $b / 255;
-
         $r = ($r > 0.04045 ? pow(($r + 0.055) / 1.055, 2.4) : ($r / 12.92));
         $g = ($g > 0.04045 ? pow(($g + 0.055) / 1.055, 2.4) : ($g / 12.92));
         $b = ($b > 0.04045 ? pow(($b + 0.055) / 1.055, 2.4) : ($b / 12.92));
@@ -318,6 +377,16 @@ trait ColorHelper
         return $cie;
     }
 
+    /**
+     * hueToRGB
+     *
+     * @Schnittcher Hilfe :)
+     * @Burki24  Hilfe :)
+     * @param  mixed $p ???
+     * @param  mixed $q ???
+     * @param  mixed $t ???
+     * @return void ???
+     */
     private function hueToRGB($p, $q, $t)
     {
         if ($t < 0) {
