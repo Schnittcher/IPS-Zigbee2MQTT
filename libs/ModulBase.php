@@ -445,7 +445,7 @@ abstract class ModulBase extends \IPSModule
         // Zeige das modifizierte Payload im Debug
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Modified Payload with Types: ', json_encode($Payload), 0);
 
-     // Gib das modifizierte Payload zurück
+        // Gib das modifizierte Payload zurück
         return $Payload;
     }
 
@@ -753,41 +753,41 @@ abstract class ModulBase extends \IPSModule
         }
     }
 
-/**
- * Setzt die Farbe des Geräts basierend auf dem angegebenen Farbmodus.
- *
- * Diese Methode unterstützt verschiedene Farbmodi und konvertiert die Farbe in das entsprechende Format,
- * bevor sie an das Gerät gesendet wird. Unterstützte Modi sind:
- * - **cie**: Konvertiert RGB in den XY-Farbraum (CIE 1931).
- * - **hs**: Verwendet den Hue-Saturation-Modus (HS), um die Farbe zu setzen.
- * - **hsl**: Nutzt den Farbton, Sättigung und Helligkeit (HSL), um die Farbe zu setzen.
- * - **hsv**: Nutzt den Farbton, Sättigung und den Wert (HSV), um die Farbe zu setzen.
- *
- * @param int $color Der Farbwert in Hexadezimal- oder RGB-Format.
- *                   Die Farbe wird intern in verschiedene Farbmodelle umgerechnet.
- * @param string $mode Der Farbmodus, der verwendet werden soll. Unterstützte Werte:
- *                     - 'cie': Konvertiert die RGB-Werte in den XY-Farbraum.
- *                     - 'hs': Verwendet den Hue-Saturation-Modus.
- *                     - 'hsl': Nutzt den HSL-Modus für die Umrechnung.
- *                     - 'hsv': Nutzt den HSV-Modus für die Umrechnung.
- * @param string $Z2MMode Der Zigbee2MQTT-Modus, standardmäßig 'color'. Kann auch 'color_rgb' sein.
- *                        - 'color': Setzt den Farbwert im XY-Farbraum.
- *                        - 'color_rgb': Setzt den Farbwert im RGB-Modus (nur für 'cie' relevant).
- *
- * @return void
- *
- * @throws InvalidArgumentException Wenn der Modus ungültig ist.
- *
- * @example
- * // Setze eine Farbe im HSL-Modus.
- * $this->setColor(0xFF5733, 'hsl', 'color');
- *
- * // Setze eine Farbe im HSV-Modus.
- * $this->setColor(0x4287f5, 'hsv', 'color');
- */
-private function setColor(int $color, string $mode, string $Z2MMode = 'color')
-{
-    switch ($mode) {
+    /**
+     * Setzt die Farbe des Geräts basierend auf dem angegebenen Farbmodus.
+     *
+     * Diese Methode unterstützt verschiedene Farbmodi und konvertiert die Farbe in das entsprechende Format,
+     * bevor sie an das Gerät gesendet wird. Unterstützte Modi sind:
+     * - **cie**: Konvertiert RGB in den XY-Farbraum (CIE 1931).
+     * - **hs**: Verwendet den Hue-Saturation-Modus (HS), um die Farbe zu setzen.
+     * - **hsl**: Nutzt den Farbton, Sättigung und Helligkeit (HSL), um die Farbe zu setzen.
+     * - **hsv**: Nutzt den Farbton, Sättigung und den Wert (HSV), um die Farbe zu setzen.
+     *
+     * @param int $color Der Farbwert in Hexadezimal- oder RGB-Format.
+     *                   Die Farbe wird intern in verschiedene Farbmodelle umgerechnet.
+     * @param string $mode Der Farbmodus, der verwendet werden soll. Unterstützte Werte:
+     *                     - 'cie': Konvertiert die RGB-Werte in den XY-Farbraum.
+     *                     - 'hs': Verwendet den Hue-Saturation-Modus.
+     *                     - 'hsl': Nutzt den HSL-Modus für die Umrechnung.
+     *                     - 'hsv': Nutzt den HSV-Modus für die Umrechnung.
+     * @param string $Z2MMode Der Zigbee2MQTT-Modus, standardmäßig 'color'. Kann auch 'color_rgb' sein.
+     *                        - 'color': Setzt den Farbwert im XY-Farbraum.
+     *                        - 'color_rgb': Setzt den Farbwert im RGB-Modus (nur für 'cie' relevant).
+     *
+     * @return void
+     *
+     * @throws InvalidArgumentException Wenn der Modus ungültig ist.
+     *
+     * @example
+     * // Setze eine Farbe im HSL-Modus.
+     * $this->setColor(0xFF5733, 'hsl', 'color');
+     *
+     * // Setze eine Farbe im HSV-Modus.
+     * $this->setColor(0x4287f5, 'hsv', 'color');
+     */
+    private function setColor(int $color, string $mode, string $Z2MMode = 'color')
+    {
+        switch ($mode) {
         case 'cie':
             // Nutze die HexToRGB- und RGBToXy-Funktion aus der ColorHelper-Datei
             $RGB = $this->HexToRGB($color);
