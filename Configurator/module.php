@@ -238,12 +238,14 @@ class Zigbee2MQTTConfigurator extends IPSModule
                     unset($IPSGroupById[$instanceID]);
                 }
             }
+            $Location = explode('/', $group['friendly_name']);
+            $Name = array_pop($Location);
             if ($instanceID) {
                 $Value['name'] = IPS_GetName($instanceID);
                 $Value['instanceID'] = $instanceID;
 
             } else {
-                $Value['name'] = $group['friendly_name'];
+                $Value['name'] = $Name;
                 $Value['instanceID'] = 0;
             }
             $Value['ID'] = $group['ID'];
@@ -252,6 +254,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
             $Value['create'] =
                 [
                     'moduleID'      => '{11BF3773-E940-469B-9DD7-FB9ACD7199A2}',
+                    'location'      => $Location,
                     'configuration' => [
                         'MQTTBaseTopic'    => $BaseTopic,
                         'MQTTTopic'        => $group['friendly_name'],
