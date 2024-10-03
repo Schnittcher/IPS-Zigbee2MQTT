@@ -400,7 +400,7 @@ abstract class ModulBase extends \IPSModule
      *
      * @return bool
      */
-    abstract protected function UpdateDeviceInfo();
+    abstract protected function UpdateDeviceInfo(): bool;
 
     /**
      * Fügt den übergebenen Payload-Daten die entsprechenden Variablentypen hinzu.

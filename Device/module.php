@@ -53,7 +53,7 @@ class Zigbee2MQTTDevice extends \Zigbee2MQTT\ModulBase
      *
      * @return bool
      */
-    protected function UpdateDeviceInfo()
+    protected function UpdateDeviceInfo(): bool
     {
         $Result = $this->SendData('/SymconExtension/request/getDeviceInfo/' . $this->ReadPropertyString('MQTTTopic'));
         $this->SendDebug('result', json_encode($Result), 0);

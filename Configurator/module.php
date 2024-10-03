@@ -12,6 +12,11 @@ class Zigbee2MQTTConfigurator extends IPSModule
     use \Zigbee2MQTT\Semaphore;
     use \Zigbee2MQTT\SendData;
 
+    /**
+     * Create
+     *
+     * @return void
+     */
     public function Create()
     {
         //Never delete this line!
@@ -21,6 +26,11 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $this->TransactionData = [];
     }
 
+    /**
+     * ApplyChanges
+     *
+     * @return void
+     */
     public function ApplyChanges()
     {
         //Never delete this line!
@@ -37,6 +47,13 @@ class Zigbee2MQTTConfigurator extends IPSModule
         $this->SetReceiveDataFilter('.*"Topic":"' . $BaseTopic . '/SymconExtension/lists/response.*');
     }
 
+    /**
+     * RequestAction
+     *
+     * @param  string $Ident
+     * @param  mixed $Value
+     * @return void
+     */
     public function RequestAction($Ident, $Value)
     {
         switch ($Ident) {
@@ -46,6 +63,12 @@ class Zigbee2MQTTConfigurator extends IPSModule
         }
     }
 
+    /**
+     * GetConfigurationForm
+     *
+     * @todo versuchen die bridge zu erreichen um zu testen ob das BaseTopic passt
+     * @return string
+     */
     public function GetConfigurationForm()
     {
         if ($this->GetStatus() == IS_CREATING) {
@@ -271,6 +294,12 @@ class Zigbee2MQTTConfigurator extends IPSModule
         return json_encode($Form);
     }
 
+    /**
+     * ReceiveData
+     *
+     * @param  string $JSONString
+     * @return string
+     */
     public function ReceiveData($JSONString)
     {
         $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
@@ -301,6 +330,11 @@ class Zigbee2MQTTConfigurator extends IPSModule
         return '';
     }
 
+    /**
+     * getDevices
+     *
+     * @return array
+     */
     public function getDevices()
     {
         $Result = @$this->SendData('/SymconExtension/lists/request/getDevices');
@@ -310,6 +344,11 @@ class Zigbee2MQTTConfigurator extends IPSModule
         return [];
     }
 
+    /**
+     * getGroups
+     *
+     * @return array
+     */
     public function getGroups()
     {
         $Result = @$this->SendData('/SymconExtension/lists/request/getGroups');
@@ -319,6 +358,11 @@ class Zigbee2MQTTConfigurator extends IPSModule
         return [];
     }
 
+    /**
+     * GetIPSInstancesByIEEE
+     *
+     * @return array
+     */
     private function GetIPSInstancesByIEEE(): array
     {
         $Devices = [];
@@ -329,6 +373,11 @@ class Zigbee2MQTTConfigurator extends IPSModule
         return array_filter($Devices);
     }
 
+    /**
+     * GetIPSInstancesByGroupId
+     *
+     * @return array
+     */
     private function GetIPSInstancesByGroupId(): array
     {
         $Devices = [];
@@ -340,6 +389,13 @@ class Zigbee2MQTTConfigurator extends IPSModule
         return array_filter($Devices);
     }
 
+    /**
+     * GetIPSInstancesByBaseTopic
+     *
+     * @param  string $GUID
+     * @param  string $BaseTopic
+     * @return array
+     */
     private function GetIPSInstancesByBaseTopic(string $GUID, string $BaseTopic): array
     {
         $Devices = [];
@@ -352,7 +408,13 @@ class Zigbee2MQTTConfigurator extends IPSModule
         return $Devices;
     }
 
-    private function FilterInstances(int $InstanceID)
+    /**
+     * FilterInstances
+     *
+     * @param  int $InstanceID
+     * @return bool
+     */
+    private function FilterInstances(int $InstanceID): bool
     {
         return IPS_GetInstance($InstanceID)['ConnectionID'] == IPS_GetInstance($this->InstanceID)['ConnectionID'];
     }

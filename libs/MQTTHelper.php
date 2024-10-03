@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Zigbee2MQTT;
 
 /**
- * @property array $TransactionData
+ * @property array $TransactionData Array welches in einem Instanz-Buffer abgelegt wird und aktuelle Anfragen und Antworten von/zur Z2M Bridge enthält
  */
 trait SendData
 {
+    /** @var mixed $MQTTDataArray
+     *  Vorlage Daten Array zum versenden an einen MQTT-Splitter
+     */
     private static $MQTTDataArray = [
         'DataID'           => '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}',
         'PacketType'       => 3,
@@ -18,14 +21,28 @@ trait SendData
         'Payload'          => ''
     ];
 
+    /**
+     * Command
+     *
+     * @param  string $topic
+     * @param  string $value
+     * @return bool
+     */
     public function Command(string $topic, string $value)
     {
-        $this->SendData('/' . $this->ReadPropertyString('MQTTTopic') . '/' . $topic, json_decode($value, true), 0);
+        return $this->SendData('/' . $this->ReadPropertyString('MQTTTopic') . '/' . $topic, json_decode($value, true), 0);
     }
 
+    /**
+     * CommandExt
+     *
+     * @param  string $topic
+     * @param  string $value
+     * @return bool
+     */
     public function CommandExt(string $topic, string $value) //ohne MQTTTopic
     {
-        $this->SendData('/' . $topic, json_decode($value, true), 0);
+        return $this->SendData('/' . $topic, json_decode($value, true), 0);
     }
 
     /**
