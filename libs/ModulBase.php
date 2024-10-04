@@ -1135,15 +1135,15 @@ abstract class ModulBase extends \IPSModule
             case 'composite':
                 if ($feature['name'] == 'color_xy') {
                     $this->RegisterVariableInteger('Z2M_Color', $this->Translate('Color'), 'HexColor');
-                    $this->enableActionForVariableWithoutAccessFeature('Z2M_Color');
+                    $this->MaintainAction('Z2M_Color', true);
                     $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating composite color_xy', 'Z2M_Color', 0);
                 } elseif ($feature['name'] == 'color_hs') {
                     $this->RegisterVariableInteger('Z2M_ColorHS', $this->Translate('Color HS'), 'HexColor');
-                    $this->enableActionForVariableWithoutAccessFeature('Z2M_ColorHS');
+                    $this->MaintainAction('Z2M_ColorHS', true);
                     $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating composite color_hs', 'Z2M_ColorHS', 0);
                 } elseif ($feature['name'] == 'color_rgb') {
                     $this->RegisterVariableInteger('Z2M_ColorRGB', $this->Translate('Color RGB'), 'HexColor');
-                    $this->enableActionForVariableWithoutAccessFeature('Z2M_ColorRGB');
+                    $this->MaintainAction('Z2M_ColorRGB', true);
                     $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating composite color_rgb', 'Z2M_ColorRGB', 0);
                 } else {
                     $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Unhandled composite type', $feature['name'], 0);
@@ -1155,10 +1155,9 @@ abstract class ModulBase extends \IPSModule
         }
 
         // Prüfen, ob die Variable schaltbar sein soll (access Bit 0b010)
-        if ($feature['access'] & 0b010) {
-            $this->EnableAction($ident);
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: EnableAction set for', $ident, 0);
-        }
+        $isSwitchable = ($feature['access'] & 0b010) != 0;
+        $this->MaintainAction($ident, $isSwitchable);
+        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: MaintainAction set for', $ident, 0);
     }
 
     /**
@@ -1211,18 +1210,25 @@ abstract class ModulBase extends \IPSModule
         $ProfileName = 'Z2M.' . ($expose['property'] ?? $expose['name']);
         $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : '';
 
-        // Debug-Ausgabe
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating profile: ', $ProfileName, 0);
+        // Ident für den StateTypeMapping ermitteln
+        $ident = $this->convertPropertyToIdent($expose['property'] ?? $expose['name']);
 
-        // Erstelle das Profil ohne vorherige Prüfung auf Existenz
-        if ($stateMapping) {
-            $this->RegisterProfileStringEx($ProfileName, '', '', '', [
-                [$stateMapping[0], $this->Translate($stateMapping[0]), '', 0xFF0000],
-                [$stateMapping[1], $this->Translate($stateMapping[1]), '', 0x00FF00]
-            ]);
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: State mapping profile created for: ', $ProfileName . json_encode($stateMapping), 0);
-            return $ProfileName;
+        // Überprüfung auf stateTypeMapping
+        if (isset(self::$stateTypeMapping[$ident])) {
+            $mappedType = self::$stateTypeMapping[$ident]['type'];
+            if (isset(self::$stateMappings[$mappedType])) {
+                // String-Profil mit Mappings erstellen
+                $this->RegisterProfileStringEx($ProfileName, '', '', '', [
+                    [self::$stateMappings[$mappedType][0], $this->Translate(self::$stateMappings[$mappedType][0]), '', 0xFF0000],
+                    [self::$stateMappings[$mappedType][1], $this->Translate(self::$stateMappings[$mappedType][1]), '', 0x00FF00]
+                ]);
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: State mapping profile created for: ', $ProfileName . json_encode(self::$stateMappings[$mappedType]), 0);
+                return $ProfileName;
+            }
         }
+
+        // Debug-Ausgabe für die Profilerstellung
+        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating profile: ', $ProfileName, 0);
 
         // Erstelle das Profil basierend auf dem Expose-Typ
         switch ($expose['type']) {
@@ -1232,6 +1238,7 @@ abstract class ModulBase extends \IPSModule
                     [false, $this->Translate('off'), '', 0xFF0000],
                     [true, $this->Translate('on'), '', 0x00FF00]
                 ]);
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Boolean profile created for: ', $ProfileName, 0);
                 break;
 
             case 'enum':
@@ -1438,28 +1445,5 @@ abstract class ModulBase extends \IPSModule
         $this->RegisterProfileStringEx($profileName, '', '', '', $presetAssociations);
 
         return $profileName;
-    }
-
-    /**
-     * Aktiviert die Aktion für eine Variable ohne Access-Feature.
-     * Diese Funktion wird verwendet, um die Aktion für Variablen zu aktivieren, die kein Access-Feature besitzen.
-     *
-     * @param string $ident Der Identifikator der Variable, für die die Aktion aktiviert werden soll.
-     *
-     * @return void
-     */
-    private function enableActionForVariableWithoutAccessFeature(string $ident)
-    {
-        // Prüfen, ob die Variable existiert
-        $objectID = @$this->GetIDForIdent($ident);
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable: ', $ident, 0);
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Object ID: ', (string) $objectID, 0);
-        if ($objectID !== false) {
-            // Aktion für die Variable aktivieren
-            $this->EnableAction($ident);
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: EnableAction set for variable: ', $ident, 0);
-        } else {
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable not found, unable to enable action for: ', $ident, 0);
-        }
     }
 }
