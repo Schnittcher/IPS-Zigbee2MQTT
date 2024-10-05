@@ -1295,6 +1295,13 @@ abstract class ModulBase extends \IPSModule
         $min = $expose['value_min'] ?? 0;
         $max = $expose['value_max'] ?? 0;
         $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : '';
+       
+        // Prüfen, ob es sich um eine Brightness-Expose handelt
+        // Sonderregel, da expose kein unit sendet
+        if ($expose['name'] === 'brightness') {
+            $unit = ' %';
+        }
+ 
         $fullRangeProfileName = ($min !== 0 || $max !== 0) ? $profileName . '_' . $min . '_' . $max : $profileName;
 
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Main Profile: ', $fullRangeProfileName, 0);
