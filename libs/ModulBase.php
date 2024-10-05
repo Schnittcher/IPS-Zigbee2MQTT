@@ -1135,15 +1135,15 @@ abstract class ModulBase extends \IPSModule
             case 'composite':
                 if ($feature['name'] == 'color_xy') {
                     $this->RegisterVariableInteger('Z2M_Color', $this->Translate('Color'), 'HexColor');
-                    $this->MaintainAction('Z2M_Color', true);
+                    $this->EnableAction('Z2M_Color');
                     $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating composite color_xy', 'Z2M_Color', 0);
                 } elseif ($feature['name'] == 'color_hs') {
                     $this->RegisterVariableInteger('Z2M_ColorHS', $this->Translate('Color HS'), 'HexColor');
-                    $this->MaintainAction('Z2M_ColorHS', true);
+                    $this->EnableAction('Z2M_ColorHS');
                     $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating composite color_hs', 'Z2M_ColorHS', 0);
                 } elseif ($feature['name'] == 'color_rgb') {
                     $this->RegisterVariableInteger('Z2M_ColorRGB', $this->Translate('Color RGB'), 'HexColor');
-                    $this->MaintainAction('Z2M_ColorRGB', true);
+                    $this->EnableAction('Z2M_ColorRGB');
                     $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating composite color_rgb', 'Z2M_ColorRGB', 0);
                 } else {
                     $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Unhandled composite type', $feature['name'], 0);
@@ -1295,13 +1295,13 @@ abstract class ModulBase extends \IPSModule
         $min = $expose['value_min'] ?? 0;
         $max = $expose['value_max'] ?? 0;
         $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : '';
-       
+
         // Prüfen, ob es sich um eine Brightness-Expose handelt
         // Sonderregel, da expose kein unit sendet
         if ($expose['name'] === 'brightness') {
             $unit = ' %';
         }
- 
+
         $fullRangeProfileName = ($min !== 0 || $max !== 0) ? $profileName . '_' . $min . '_' . $max : $profileName;
 
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Main Profile: ', $fullRangeProfileName, 0);

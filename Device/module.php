@@ -39,7 +39,7 @@ class Zigbee2MQTTDevice extends \Zigbee2MQTT\ModulBase
      * GetConfigurationForm
      *
      * @todo Expertenbutton um Schreibschutz vom Feld ieeeAddr aufzuheben.
-     * 
+     *
      * @return string
      */
     public function GetConfigurationForm()
@@ -70,9 +70,9 @@ class Zigbee2MQTTDevice extends \Zigbee2MQTT\ModulBase
                 IPS_ApplyChanges($this->InstanceID);
                 return true;
             }
-            /** 
+            /**
              * @todo Icon sollte auch manuell über die Form neu geladen werden können
-             */  
+             */
             if (array_key_exists('model', $Result)) {
                 $Model = $Result['model'];
                 if ($Model != 'Unknown Model') { // nur wenn Z2M ein Model liefert
