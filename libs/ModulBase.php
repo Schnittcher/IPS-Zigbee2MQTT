@@ -1250,10 +1250,10 @@ abstract class ModulBase extends \IPSModule
 
                     // Erstelle das Profil basierend auf den Enum-Werten
                     $profileValues = [];
-                    foreach ($expose['values'] as $value) {
-                        $readableValue = ucwords(str_replace('_', ' ', $value));
+                    foreach ($expose['values'] as $value) { // $value kann auch ein int sein, cast zu string
+                        $readableValue = ucwords(str_replace('_', ' ', (string) $value));
                         $translatedValue = $this->Translate($readableValue);
-                        $profileValues[] = [$value, $translatedValue, '', 0x00FF00];
+                        $profileValues[] = [(string) $value, $translatedValue, '', 0x00FF00];
                     }
                     $this->RegisterProfileStringEx($ProfileName, 'Menu', '', '', $profileValues);
                     $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Enum profile created for: ' . $ProfileName, json_encode($profileValues), 0);
