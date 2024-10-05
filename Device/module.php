@@ -19,6 +19,7 @@ class Zigbee2MQTTDevice extends \Zigbee2MQTT\ModulBase
         //Never delete this line!
         parent::Create();
         $this->RegisterPropertyString('IEEE', '');
+        $this->RegisterAttributeString('Model', '');
         $this->RegisterAttributeString('Icon', '');
     }
 
@@ -37,6 +38,8 @@ class Zigbee2MQTTDevice extends \Zigbee2MQTT\ModulBase
     /**
      * GetConfigurationForm
      *
+     * @todo Expertenbutton um Schreibschutz vom Feld ieeeAddr aufzuheben.
+     * 
      * @return string
      */
     public function GetConfigurationForm()
@@ -67,16 +70,20 @@ class Zigbee2MQTTDevice extends \Zigbee2MQTT\ModulBase
                 IPS_ApplyChanges($this->InstanceID);
                 return true;
             }
+            /** 
+             * @todo Icon sollte auch manuell über die Form neu geladen werden können
+             */  
             if (array_key_exists('model', $Result)) {
                 $Model = $Result['model'];
                 if ($Model != 'Unknown Model') { // nur wenn Z2M ein Model liefert
-                    if (!$this->ReadAttributeString('Icon')) { // und wir noch kein Bild haben
+                    if ($this->ReadAttributeString('Model') != $Model) { // und das Model sich geändert hat
                         $Url = 'https://raw.githubusercontent.com/Koenkk/zigbee2mqtt.io/master/public/images/devices/' . $Model . '.png';
                         $this->SendDebug('loadImage', $Url, 0);
                         $ImageRaw = @file_get_contents($Url);
                         if ($ImageRaw) {
                             $Icon = 'data:image/png;base64,' . base64_encode($ImageRaw);
                             $this->WriteAttributeString('Icon', $Icon);
+                            $this->WriteAttributeString('Model', $Model);
                         }
                     }
                 }
