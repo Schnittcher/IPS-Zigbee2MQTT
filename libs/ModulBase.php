@@ -1102,6 +1102,12 @@ abstract class ModulBase extends \IPSModule
             } else {
                 $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Unsupported variable type: ' . $variableType, '', 0);
             }
+
+            // Prüfe, ob die Variable schaltbar sein soll (access Bit 0b010) und setze dies nach der Registrierung
+            $isSwitchable = ($feature['access'] & 0b010) != 0;
+            $this->MaintainAction($ident, $isSwitchable);
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: MaintainAction set for', $ident, 0);
+
             return;
         }
 
@@ -1228,8 +1234,7 @@ abstract class ModulBase extends \IPSModule
         $this->MaintainAction($ident, $isSwitchable);
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: MaintainAction set for', $ident, 0);
     }
-
-
+    
     /**
      * Überprüft, ob ein erweitertes Variablenprofil existiert.
      *
