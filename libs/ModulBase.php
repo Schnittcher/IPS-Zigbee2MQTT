@@ -66,6 +66,41 @@ abstract class ModulBase extends \IPSModule
         'mH', 'µH', '%', 'dB', 'dBA', 'dBC'
     ];
 
+    /** @var array<array{type: string, feature: string, profile: string, variableType: string}
+     * Ein Array, das Standardprofile für bestimmte Gerätetypen und Eigenschaften definiert.
+     *
+     * Jedes Element des Arrays enthält folgende Schlüssel:
+     *
+     * - 'type' (string): Der Gerätetyp, z. B. 'cover' oder 'light'. Ein leerer Wert ('') bedeutet, dass der Typ nicht relevant ist.
+     * - 'feature' (string): Die spezifische Eigenschaft oder das Feature des Geräts, z. B. 'position', 'temperature'.
+     * - 'profile' (string): Das Symcon-Profil, das für dieses Feature verwendet wird, z. B. '~Shutter.Reversed' oder '~Battery.100'.
+     * - 'variableType' (string): Der Variablentyp, der für dieses Profil verwendet wird, z. B. 'int' für Integer oder 'float' für Gleitkommazahlen.
+     *
+     * Beispieleintrag:
+     * [
+     *   'type' => 'cover',
+     *   'feature' => 'position',
+     *   'profile' => '~Shutter.Reversed',
+     *   'variableType' => 'int'
+     * ]
+     */
+    protected static $VariableUseStandardProfile = [
+        ['type' => 'cover', 'feature' => 'position', 'profile' => '~Shutter.Reversed', 'variableType' => 'int'],
+        ['type' => '', 'feature' => 'temperature', 'profile' => '~Temperature', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'humidity', 'profile' => '~Humidity.F', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'local_temperature', 'profile' => '~Temperature', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'battery', 'profile' => '~Battery', 'variableType' => 'int'],
+        ['type' => '', 'feature' => 'current', 'profile' => '~Ampere', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'voltage', 'profile' => '~Volt', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'energy', 'profile' => '~Electricity', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'power', 'profile' => '~Watt', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'battery', 'profile' => '~Battery.100', 'variableType' => 'int'],
+        ['type' => '', 'feature' => 'occupancy', 'profile' => '~Presence', 'variableType' => 'bool'],
+        ['type' => '', 'feature' => 'pi_heating_demand', 'profile' => '~Valve', 'variableType' => 'int'],
+        ['type' => '', 'feature' => 'presence', 'profile' => '~Presence', 'variableType' => 'bool'],
+        ['type' => '', 'feature' => 'illuminance_lux', 'profile' => '~Illumination', 'variableType' => 'int']
+    ];
+
     /** @var array $stringVariablesNoResponse
      * Gehört zu RequestAction
      *
@@ -716,7 +751,6 @@ abstract class ModulBase extends \IPSModule
 
         // Setze den Wert in die Variable
         parent::SetValue($Ident, $adjustedValue);
-
     }
 
     /**
@@ -737,16 +771,17 @@ abstract class ModulBase extends \IPSModule
         foreach ($exposes as $expose) {
             // Prüfen, ob das Expose mehrere Features enthält
             if (isset($expose['features'])) {
-                // Jedes Feature einzeln registrieren
+                // Jedes Feature einzeln registrieren und den übergeordneten Expose-Typ mitgeben
                 foreach ($expose['features'] as $feature) {
-                    $this->registerVariable($feature);
+                    $this->registerVariable($feature, $expose['type']); // Expose-Typ mitgeben
                 }
             } else {
                 // Einzelnes Expose registrieren
-                $this->registerVariable($expose);
+                $this->registerVariable($expose, $expose['type']); // Expose-Typ mitgeben
             }
         }
     }
+
 
     /**
      * Setzt die Farbe des Geräts basierend auf dem angegebenen Farbmodus.
@@ -1005,36 +1040,70 @@ abstract class ModulBase extends \IPSModule
     }
 
     /**
-     * Registriert eine Variable basierend auf dem übergebenen Feature.
+     * Registriert eine Variable basierend auf den Eigenschaften des übergebenen Features.
      *
-     * Diese Funktion verarbeitet ein einzelnes Feature und erstellt basierend auf dessen Typ (z.B. binary, numeric, enum, etc.)
-     * eine entsprechende Variable. Falls das Feature einen Zustand (z.B. ON/OFF, LOCK/UNLOCK) oder Presets enthält, wird
-     * ein entsprechendes Profil erstellt. Zusätzlich wird für jede registrierte Variable, einschließlich Preset-Variablen,
-     * die Funktion `EnableAction` aufgerufen, um Aktionen zu ermöglichen.
+     * Diese Funktion verarbeitet ein einzelnes Feature und erstellt eine Variable in Symcon basierend auf dessen Typ.
+     * Es unterstützt die Registrierung von Boolean-, Numeric-, Enum-, String-, und Composite-Variablen.
+     * Zusätzlich werden Standardprofile aus einer vordefinierten Liste angewendet, und es wird überprüft, ob erweiterte
+     * Profile existieren (z. B. `.100`).
      *
      * Unterstützte Typen:
-     * - binary: Boolean-Variable mit optionalem State-Mapping.
-     * - numeric: Ganzzahlige oder Fließkomma-Variable mit optionalen Presets.
-     * - enum: Zeichenkettenvariable mit vordefinierten Werten.
-     * - string/text: Zeichenkettenvariable.
-     * - composite: Spezielle Farbvariablen wie `color_xy`, `color_hs` und `color_rgb`.
+     * - binary: Boolean-Variablen mit einem zugehörigen Profil.
+     * - numeric: Integer- oder Float-Variablen mit optionalen Presets und Min/Max-Werten.
+     * - enum: Zeichenketten-Variablen mit vordefinierten Enum-Werten.
+     * - string/text: Zeichenketten-Variablen.
+     * - composite: Spezielle Farbvariablen wie `color_xy`, `color_hs`, und `color_rgb`.
      *
-     * Wenn das Feature Presets enthält, wird eine zusätzliche Preset-Variable mit einem eigenen Profil erstellt,
-     * und die `EnableAction`-Funktion wird auch für diese Variablen aktiviert.
+     * Falls das Feature Presets enthält, wird eine zusätzliche Preset-Variable mit einem zugehörigen Profil erstellt.
      *
-     * @param array $feature Ein Array, das das Feature beschreibt, welches als Variable registriert werden soll.
-     *                       Enthält Eigenschaften wie 'type', 'property', 'unit', 'access', 'value_min', 'value_max'
-     *                       und mögliche 'presets'.
+     * @param array $feature Das Feature-Array, das Informationen über den Typ, die Einheit, Min/Max-Werte, Presets und andere
+     *                       Eigenschaften enthält, die zur Registrierung der Variable verwendet werden.
      *
      * @return void
      */
-    private function registerVariable($feature)
+    private function registerVariable($feature, $exposeType = null)
     {
+        // Setze den Typ auf den übergebenen Expose-Typ, falls vorhanden
+        if ($exposeType !== null) {
+            $feature['type'] = $exposeType;  // Den Typ direkt in das Feature übernehmen
+        }
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Registering Feature', json_encode($feature), 0);
         $type = $feature['type'];
-        $property = $feature['property'];
+        $property = $feature['property'] ?? '';
         $ident = $this->convertPropertyToIdent($property);
         $label = ucwords(str_replace('_', ' ', $feature['property'] ?? $property));
+        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Using Expose Type: ', $type, 0);
+
+        // Überprüfung auf Standardprofil und zugehörigen Variablentyp
+        $standardProfile = $this->getStandardProfile($type, $property);
+        $variableType = $this->getVariableTypeFromProfile($type, $property);
+
+        // Debug-Ausgabe zur Prüfung, ob Standardprofil und Variablentyp gefunden wurden
+        $this->SendDebug(__FUNCTION__ . ' :: Standard Profile: ', $standardProfile ?? 'none', 0);
+        $this->SendDebug(__FUNCTION__ . ' :: Variable Type: ', $variableType ?? 'none', 0);
+
+        // Wenn ein Standardprofil angegeben ist, prüfe auf Erweiterung
+        if ($standardProfile !== null) {
+            $extendedProfile = $this->checkForExtendedProfile($standardProfile);
+
+            // Wenn ein erweitertes Profil gefunden wurde, nutze es
+            if ($extendedProfile !== null) {
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Using extended profile: ', $extendedProfile, 0);
+                $standardProfile = $extendedProfile;
+            }
+
+            // Registriere die Variable basierend auf dem Typ aus dem Profil
+            if ($variableType === 'int') {
+                $this->RegisterVariableInteger($ident, $this->Translate($label), $standardProfile);
+            } elseif ($variableType === 'float') {
+                $this->RegisterVariableFloat($ident, $this->Translate($label), $standardProfile);
+            } elseif ($variableType === 'bool') {
+                $this->RegisterVariableBoolean($ident, $this->Translate($label), $standardProfile); // Boolean-Profil registrieren
+            } else {
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Unsupported variable type: ' . $variableType, '', 0);
+            }
+            return;
+        }
 
         // Prüfen, ob Presets vorhanden sind
         if (isset($feature['presets']) && is_array($feature['presets'])) {
@@ -1160,6 +1229,74 @@ abstract class ModulBase extends \IPSModule
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: MaintainAction set for', $ident, 0);
     }
 
+
+    /**
+     * Überprüft, ob ein erweitertes Variablenprofil existiert.
+     *
+     * Diese Funktion überprüft, ob das angegebene Basisprofil existiert und ob es eine erweiterte Version
+     * dieses Profils gibt. Ein erweitertes Profil wird durch eine Punktnotation gekennzeichnet (z. B. `.100`).
+     * Falls ein solches erweitertes Profil gefunden wird, gibt die Funktion dieses Profil zurück.
+     *
+     * Beispiele für erweiterte Profile sind Profile wie `~Battery.100`, wobei `.100` eine Erweiterung darstellt.
+     *
+     * @param string $baseProfile Der Name des Basisprofils, das überprüft werden soll.
+     *
+     * @return string|null Gibt das erweiterte Profil zurück, falls eines gefunden wird, oder null, wenn kein passendes Profil existiert.
+     */
+    private function checkForExtendedProfile($baseProfile)
+    {
+        // Prüfen, ob das Basisprofil ohne Erweiterung existiert
+        if (IPS_VariableProfileExists($baseProfile)) {
+            // Prüfen, ob das Profil eine Erweiterung hat (z.B. .100)
+            if (strpos($baseProfile, '.') !== false) {
+                // Prüfen, ob das Profil mit der Erweiterung existiert
+                $this->SendDebug(__FUNCTION__ . ' :: Checking for extended profile: ', $baseProfile, 0);
+
+                // Rückgabe des erweiterten Profils, wenn es existiert
+                return $baseProfile;
+            }
+            // Wenn das Profil keine Erweiterung hat, prüfen, ob ein Profil mit einer Erweiterung existiert
+            else {
+                $extendedProfile = $baseProfile . '.100'; // Beispiel für eine mögliche Erweiterung
+                if (IPS_VariableProfileExists($extendedProfile)) {
+                    $this->SendDebug(__FUNCTION__ . ' :: Extended profile found: ', $extendedProfile, 0);
+                    return $extendedProfile; // Rückgabe des erweiterten Profils
+                }
+            }
+        }
+
+        // Falls kein erweitertes Profil existiert, Debug-Ausgabe
+        $this->SendDebug(__FUNCTION__ . ' :: No extended profile found for: ', $baseProfile, 0);
+        return null;
+    }
+
+    /**
+     * Sucht den Variablentyp für ein Standardprofil basierend auf dem Typ und Feature.
+     *
+     * Diese Funktion durchsucht das Array `VariableUseStandardProfile` und versucht, den zugehörigen
+     * Variablentyp (z. B. int, float, bool) basierend auf dem Typ und dem Feature zu finden.
+     * Wenn der Typ leer ist, wird er ignoriert und nur das Feature wird geprüft.
+     *
+     * @param string $type    Der Typ des Exposes (z. B. 'cover', 'light'). Wenn der Typ leer ist, wird nur das Feature geprüft.
+     * @param string $feature Das spezifische Feature, nach dem gesucht wird (z. B. 'position', 'temperature').
+     *
+     * @return string|null Gibt den Variablentyp zurück (z. B. 'int', 'float', 'bool'), wenn ein passender Eintrag gefunden wird,
+     *                     andernfalls null.
+     */
+    private function getVariableTypeFromProfile(string $type, string $feature): ?string
+    {
+        // Durchlaufe alle Einträge in $VariableUseStandardProfile
+        foreach (self::$VariableUseStandardProfile as $entry) {
+            // Überprüfe, ob der Typ übereinstimmt oder leer ist
+            if (($entry['type'] === $type || $entry['type'] === '') && $entry['feature'] === $feature) {
+                // Rückgabe des zugehörigen Variablentyps
+                return $entry['variableType'];
+            }
+        }
+        // Wenn kein Eintrag gefunden wurde, gib null zurück
+        return null;
+    }
+
     /**
      * Erzeugt den vollständigen Namen eines Variablenprofils basierend auf den Expose-Daten.
      *
@@ -1194,15 +1331,20 @@ abstract class ModulBase extends \IPSModule
     /**
      * Registriert ein Variablenprofil basierend auf dem Expose-Typ oder einem optionalen State-Mapping.
      *
-     * Diese Funktion erstellt und registriert ein Variablenprofil basierend auf dem Typ des Exposes oder
-     * auf einem gegebenen State-Mapping. Sie überprüft, ob das Profil bereits existiert, um doppelte
-     * Profile zu vermeiden. Falls ein Profil mit einem State-Mapping erstellt wird, werden spezifische
-     * Zustände wie LOCK/UNLOCK zugeordnet.
+     * Diese Funktion erstellt und registriert ein Variablenprofil für den angegebenen Expose-Typ (z. B. binary, enum, numeric)
+     * oder ein optionales State-Mapping. Sie überprüft zuerst, ob ein Standardprofil aus den Konfigurationsdaten existiert
+     * oder ob bereits ein vorhandenes Systemprofil verwendet werden kann. Falls nicht, wird ein neues Profil auf Grundlage
+     * der Expose-Daten erstellt.
      *
-     * @param array $expose       Die Expose-Daten, die Informationen über den Typ und mögliche Werte enthalten.
-     * @param array|null $stateMapping  Optionales Mapping für spezifische Zustände (z.B. LOCK/UNLOCK).
+     * - Für binäre Exposes werden Boolean-Profile mit "on"/"off" Werten erstellt.
+     * - Für Enum-Exposes werden String-Profile mit einer Liste möglicher Werte erstellt.
+     * - Für numerische Exposes wird die Funktion `registerNumericProfile` verwendet.
      *
-     * @return string Der Name des erstellten oder vorhandenen Variablenprofils.
+     * @param array $expose       Die Expose-Daten, die Informationen wie Typ, Werte und Einheiten enthalten.
+     * @param array|null $stateMapping  Optionales Mapping für spezifische Zustände (z. B. LOCK/UNLOCK). Kann verwendet werden, um spezielle
+     *                                  Mappings basierend auf dem Gerätetyp anzuwenden.
+     *
+     * @return string Der Name des erstellten oder vorhandenen Variablenprofils. Im Falle eines Systemprofils wird dieses direkt genutzt.
      */
     private function registerVariableProfile($expose, $stateMapping = null)
     {
@@ -1227,8 +1369,20 @@ abstract class ModulBase extends \IPSModule
             }
         }
 
-        // Debug-Ausgabe für die Profilerstellung
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating profile: ', $ProfileName, 0);
+        // Prüfen, ob ein Standardprofil zugewiesen werden soll
+        $standardProfile = $this->getStandardProfile($expose['type'], $expose['property'] ?? $expose['name']);
+        if ($standardProfile !== null) {
+            // Wenn das Profil ein Systemprofil ist, benutze es direkt ohne Registrierung
+            if (strpos($standardProfile, '~') === 0 && IPS_VariableProfileExists($standardProfile)) {
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Using existing system profile: ', $standardProfile, 0);
+                return $standardProfile;
+            }
+
+            // Wenn das Standardprofil existiert, benutze es direkt
+            $variableType = $this->getVariableTypeFromProfile($expose['type'], $expose['property'] ?? $expose['name']);
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Using standard profile: ', $standardProfile . ' with variable type: ' . $variableType, 0);
+            return $standardProfile;
+        }
 
         // Erstelle das Profil basierend auf dem Expose-Typ
         switch ($expose['type']) {
@@ -1276,14 +1430,44 @@ abstract class ModulBase extends \IPSModule
     }
 
     /**
+     * Sucht ein Standardprofil basierend auf dem Typ und dem Feature.
+     *
+     * Diese Funktion durchsucht das Array der vordefinierten Standardprofile (`$VariableUseStandardProfile`)
+     * und versucht, ein passendes Profil basierend auf dem übergebenen Typ und Feature zu finden.
+     * Wenn der Typ im Profil-Eintrag leer ist, wird er ignoriert und nur das Feature geprüft.
+     *
+     * @param string $type    Der Typ des Exposes (z. B. 'cover', 'light'). Wenn der Typ leer ist, wird nur das Feature geprüft.
+     * @param string $feature Das spezifische Feature, nach dem gesucht wird (z. B. 'position', 'temperature').
+     *
+     * @return string|null Gibt den Namen des Standardprofils zurück, wenn eines gefunden wird, oder null, wenn kein passendes Profil existiert.
+     */
+    private function getStandardProfile(string $type, string $feature): ?string
+    {
+        // Überprüfe, ob ein vordefiniertes Standardprofil vorhanden ist
+        foreach (self::$VariableUseStandardProfile as $entry) {
+            // Nur den Typ prüfen, wenn er im Eintrag gesetzt ist
+            if ((!empty($entry['type']) && $entry['type'] === $type) || empty($entry['type'])) {
+                if ($entry['feature'] === $feature) {
+                    return $entry['profile'];  // Rückgabe des Standardprofils
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Registriert ein numerisches Variablenprofil (ganzzahlig oder Gleitkomma) basierend auf den Expose-Daten.
      *
      * Diese Funktion erstellt und registriert ein numerisches Variablenprofil für ganzzahlige oder Gleitkommawerte
-     * auf Grundlage der im Expose definierten Werte. Sie unterstützt optionale Min- und Max-Werte sowie die
-     * Registrierung von Preset-Profilen, falls vorhanden.
+     * auf Grundlage der im Expose definierten Werte. Es unterstützt optionale Min- und Max-Werte sowie Einheiten
+     * (z. B. % bei Helligkeit) und erstellt auch Preset-Profile, falls diese im Expose vorhanden sind.
      *
-     * @param array $expose  Die Expose-Daten, die die Eigenschaften des numerischen Profils enthalten.
-     * @param bool $isFloat  Gibt an, ob das Profil für Fließkommazahlen (true) oder Ganzzahlen (false) erstellt werden soll.
+     * Wenn ein Standardprofil aus den Konfigurationsdaten vorhanden ist, wird dieses verwendet und registriert.
+     * Systemprofile (z. B. ~Battery.100) werden direkt verwendet, ohne neu registriert zu werden.
+     *
+     * @param array $expose  Die Expose-Daten, die die Eigenschaften des numerischen Profils enthalten, wie 'name',
+     *                       'value_min', 'value_max', 'unit' und optional 'presets'.
+     * @param bool  $isFloat Gibt an, ob das Profil für Fließkommazahlen (true) oder Ganzzahlen (false) erstellt werden soll.
      *
      * @return array Ein Array mit zwei Elementen:
      *               - 'mainProfile': Der Name des Hauptprofils.
@@ -1291,13 +1475,29 @@ abstract class ModulBase extends \IPSModule
      */
     private function registerNumericProfile($expose, $isFloat = false)
     {
+        // Überprüfung auf Standardprofil
+        $standardProfile = $this->getStandardProfile($expose['type'], $expose['name']);
+        if ($standardProfile !== null) {
+            $variableType = $this->getVariableTypeFromProfile($expose['type'], $expose['name']);
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Using standard profile: ', $standardProfile . ' with variable type: ' . $variableType, 0);
+
+            // Wenn das Standardprofil ein Systemprofil ist (z.B. ~Battery.100), benutze es direkt ohne Registrierung
+            if (strpos($standardProfile, '~') === 0 && IPS_VariableProfileExists($standardProfile)) {
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Standard system profile exists: ', $standardProfile, 0);
+                return ['mainProfile' => $standardProfile, 'presetProfile' => null];
+            }
+
+            // Rückgabe des Standardprofils, falls es nicht als Systemprofil existiert
+            return ['mainProfile' => $standardProfile, 'presetProfile' => null];
+        }
+
+        // Wenn kein Standardprofil gefunden wird, generiere ein eigenes Profil basierend auf Min/Max Werten
         $profileName = 'Z2M.' . $expose['name'];
         $min = $expose['value_min'] ?? 0;
         $max = $expose['value_max'] ?? 0;
         $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : '';
 
-        // Prüfen, ob es sich um eine Brightness-Expose handelt
-        // Sonderregel, da expose kein unit sendet
+        // Sonderfall für Brightness-Expose (kein Unit gesendet, aber % wird verwendet)
         if ($expose['name'] === 'brightness') {
             $unit = ' %';
         }
@@ -1321,13 +1521,10 @@ abstract class ModulBase extends \IPSModule
 
         // Preset-Profil erstellen, falls Presets vorhanden sind
         if (isset($expose['presets']) && !empty($expose['presets'])) {
-            // Der Name des Preset-Profils basiert auf dem vollständigen Hauptprofilnamen (inkl. Min und Max) mit dem Zusatz '_Presets'
             $presetProfileName = $fullRangeProfileName . '_Presets';
             $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating preset profile: ', $presetProfileName, 0);
 
-            // Prüfen, ob das Preset-Profil existiert, sonst erstellen
             if (!IPS_VariableProfileExists($presetProfileName)) {
-                // Da es sich um ein Preset-Profil handelt, wird es als String-Profil erstellt
                 $this->RegisterProfileStringEx($presetProfileName, '', '', '', []);
 
                 // Presets hinzufügen
