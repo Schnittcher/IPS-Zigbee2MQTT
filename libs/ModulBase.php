@@ -1234,7 +1234,7 @@ protected function mapExposesToVariables(array $exposes)
         }
 
         // Prüfen, ob die Variable schaltbar sein soll (access Bit 0b010)
-        $isSwitchable = ($feature['access'] & 0b010) != 0;
+        $isSwitchable = isset($feature['access']) && ($feature['access'] & 0b010) != 0;
         $this->MaintainAction($ident, $isSwitchable);
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: MaintainAction set for', $ident, 0);
     }
