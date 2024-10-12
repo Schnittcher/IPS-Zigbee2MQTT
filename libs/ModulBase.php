@@ -762,26 +762,30 @@ abstract class ModulBase extends \IPSModule
      *
      * @return void
      */
-    protected function mapExposesToVariables(array $exposes)
-    {
-        // Debug-Ausgabe für die übergebenen Exposes
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: All Exposes', json_encode($exposes), 0);
+protected function mapExposesToVariables(array $exposes)
+{
+    $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: All Exposes', json_encode($exposes), 0);
 
-        // Durchlaufen aller Exposes
-        foreach ($exposes as $expose) {
-            // Prüfen, ob das Expose mehrere Features enthält
-            if (isset($expose['features'])) {
-                // Jedes Feature einzeln registrieren und den übergeordneten Expose-Typ mitgeben
+    // Durchlaufe alle Exposes
+    foreach ($exposes as $expose) {
+        // Prüfen, ob es sich um eine Gruppe handelt
+        if (isset($expose['type']) && in_array($expose['type'], ['light', 'switch', 'lock', 'cover'])) {
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Found group: ', $expose['type'], 0);
+
+            // Features in der Gruppe verarbeiten
+            if (isset($expose['features']) && is_array($expose['features'])) {
                 foreach ($expose['features'] as $feature) {
-                    $this->registerVariable($feature, $expose['type']); // Expose-Typ mitgeben
+                    $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Processing feature in group: ', json_encode($feature), 0);
+                    // Variablen für die einzelnen Features registrieren
+                    $this->registerVariable($feature);
                 }
-            } else {
-                // Einzelnes Expose registrieren
-                $this->registerVariable($expose, $expose['type']); // Expose-Typ mitgeben
             }
+        } else {
+            // Einzelne Exposes (keine Gruppen) normal verarbeiten
+            $this->registerVariable($expose);
         }
     }
-
+}
 
     /**
      * Setzt die Farbe des Geräts basierend auf dem angegebenen Farbmodus.
