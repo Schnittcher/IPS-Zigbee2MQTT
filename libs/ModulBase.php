@@ -98,7 +98,8 @@ abstract class ModulBase extends \IPSModule
         ['type' => '', 'feature' => 'occupancy', 'profile' => '~Presence', 'variableType' => 'bool'],
         ['type' => '', 'feature' => 'pi_heating_demand', 'profile' => '~Valve', 'variableType' => 'int'],
         ['type' => '', 'feature' => 'presence', 'profile' => '~Presence', 'variableType' => 'bool'],
-        ['type' => '', 'feature' => 'illuminance_lux', 'profile' => '~Illumination', 'variableType' => 'int']
+        ['type' => '', 'feature' => 'illuminance_lux', 'profile' => '~Illumination', 'variableType' => 'int'],
+        ['type' => '', 'feature' => 'color_temp', 'profile' => '~TWColor', 'variableType' => 'int']
     ];
 
     /** @var array $stringVariablesNoResponse
@@ -232,6 +233,14 @@ abstract class ModulBase extends \IPSModule
                 $convertedValue = strval(intval(round(1000000 / $value, 0)));
                 $payloadKey = self::convertIdentToPayloadKey($ident);
                 $payload = [$payloadKey => $convertedValue];
+                $this->SendSetCommand($payload);
+                return;
+            case 'Z2M_ColorTemp':
+                // Den Kelvin-Wert zu Mired umrechnen (1000000 / Kelvin)
+                $convertedValue = strval(intval(round(1000000 / $value, 0)));
+                $payloadKey = self::convertIdentToPayloadKey($ident);
+                $payload = [$payloadKey => $convertedValue];
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Converted Kelvin to Mired: ', $convertedValue, 0);
                 $this->SendSetCommand($payload);
                 return;
         }
@@ -520,7 +529,11 @@ abstract class ModulBase extends \IPSModule
             if (strpos($key, '_type') !== false) {
                 continue;
             }
-
+            // Umrechnung von Mired in Kelvin für 'color_temp'
+            if ($key === 'color_temp') {
+                $value = intval(1000000 / $value); // Umrechnung Mired nach Kelvin
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Converted color_temp to Kelvin: ', $value, 0);
+            }
             // Erstelle den Ident-Namen basierend auf dem Property-Namen
             $ident = self::convertPropertyToIdent($key);
             $variableTypeKey = $key . '_type';
@@ -762,30 +775,30 @@ abstract class ModulBase extends \IPSModule
      *
      * @return void
      */
-protected function mapExposesToVariables(array $exposes)
-{
-    $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: All Exposes', json_encode($exposes), 0);
+    protected function mapExposesToVariables(array $exposes)
+    {
+        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: All Exposes', json_encode($exposes), 0);
+        
+        // Durchlaufe alle Exposes
+        foreach ($exposes as $expose) {
+            // Prüfen, ob es sich um eine Gruppe handelt
+            if (isset($expose['type']) && in_array($expose['type'], ['light', 'switch', 'lock', 'cover', 'climate', 'fan'])) {
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Found group: ', $expose['type'], 0);
 
-    // Durchlaufe alle Exposes
-    foreach ($exposes as $expose) {
-        // Prüfen, ob es sich um eine Gruppe handelt
-        if (isset($expose['type']) && in_array($expose['type'], ['light', 'switch', 'lock', 'cover', 'climate', 'fan'])) {
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Found group: ', $expose['type'], 0);
-
-            // Features in der Gruppe verarbeiten
-            if (isset($expose['features']) && is_array($expose['features'])) {
-                foreach ($expose['features'] as $feature) {
-                    $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Processing feature in group: ', json_encode($feature), 0);
-                    // Variablen für die einzelnen Features registrieren
-                    $this->registerVariable($feature);
+                // Features in der Gruppe verarbeiten
+                if (isset($expose['features']) && is_array($expose['features'])) {
+                    foreach ($expose['features'] as $feature) {
+                        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Processing feature in group: ', json_encode($feature), 0);
+                        // Variablen für die einzelnen Features registrieren
+                        $this->registerVariable($feature);
+                    }
                 }
+            } else {
+                // Einzelne Exposes (keine Gruppen) normal verarbeiten
+                $this->registerVariable($expose);
             }
-        } else {
-            // Einzelne Exposes (keine Gruppen) normal verarbeiten
-            $this->registerVariable($expose);
         }
     }
-}
 
     /**
      * Setzt die Farbe des Geräts basierend auf dem angegebenen Farbmodus.
