@@ -769,7 +769,7 @@ protected function mapExposesToVariables(array $exposes)
     // Durchlaufe alle Exposes
     foreach ($exposes as $expose) {
         // Prüfen, ob es sich um eine Gruppe handelt
-        if (isset($expose['type']) && in_array($expose['type'], ['light', 'switch', 'lock', 'cover'])) {
+        if (isset($expose['type']) && in_array($expose['type'], ['light', 'switch', 'lock', 'cover', 'climate', 'fan'])) {
             $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Found group: ', $expose['type'], 0);
 
             // Features in der Gruppe verarbeiten
