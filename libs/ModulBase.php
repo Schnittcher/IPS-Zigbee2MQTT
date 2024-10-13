@@ -236,11 +236,19 @@ abstract class ModulBase extends \IPSModule
                 $this->SendSetCommand($payload);
                 return;
             case 'Z2M_ColorTemp':
-                // Den Kelvin-Wert zu Mired umrechnen (1000000 / Kelvin)
-                $convertedValue = strval(intval(round(1000000 / $value, 0)));
+                // Überprüfen, ob der Wert über 1000 liegt, sonst keine Umrechnung
+                if ($value >= 1000) {
+                    // Den Kelvin-Wert zu Mired umrechnen (1000000 / Kelvin)
+                    $convertedValue = strval(intval(round(1000000 / $value, 0)));
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Converted Kelvin to Mired: ', $convertedValue, 0);
+                } else {
+                    // Wenn der Wert unter 1000 liegt, keine Umrechnung vornehmen
+                    $convertedValue = strval($value);
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Value below 1000, no conversion: ', $convertedValue, 0);
+                }
+
                 $payloadKey = self::convertIdentToPayloadKey($ident);
                 $payload = [$payloadKey => $convertedValue];
-                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Converted Kelvin to Mired: ', $convertedValue, 0);
                 $this->SendSetCommand($payload);
                 return;
         }
