@@ -2,63 +2,61 @@
 
 declare(strict_types=1);
 
-require_once dirname(__DIR__) . '/libs/BufferHelper.php';
-require_once dirname(__DIR__) . '/libs/SemaphoreHelper.php';
+require_once dirname(__DIR__) . '/libs/ModulBase.php';
 
-require_once __DIR__ . '/../libs/VariableProfileHelper.php';
-require_once __DIR__ . '/../libs/ColorHelper.php';
-require_once __DIR__ . '/../libs/MQTTHelper.php';
-require_once __DIR__ . '/../libs/Zigbee2MQTTHelper.php';
-
-class Zigbee2MQTTDevice extends IPSModule
+class Zigbee2MQTTDevice extends \Zigbee2MQTT\ModulBase
 {
-    use \Zigbee2MQTT\BufferHelper;
-    use \Zigbee2MQTT\Semaphore;
-    use \Zigbee2MQTT\ColorHelper;
-    use \Zigbee2MQTT\MQTTHelper;
-    use \Zigbee2MQTT\SendData;
-    use \Zigbee2MQTT\VariableProfileHelper;
-    use \Zigbee2MQTT\Zigbee2MQTTHelper;
+    /** @var mixed $ExtensionTopic Topic für den ReceiveFilter*/
+    protected static $ExtensionTopic = 'getDeviceInfo/';
 
+    /**
+     * Create
+     *
+     * @return void
+     */
     public function Create()
     {
         //Never delete this line!
         parent::Create();
-        $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
-        $this->RegisterPropertyString('MQTTBaseTopic', '');
-        $this->RegisterPropertyString('MQTTTopic', '');
         $this->RegisterPropertyString('IEEE', '');
+        $this->RegisterAttributeString('Model', '');
         $this->RegisterAttributeString('Icon', '');
-        $this->createVariableProfiles();
-        $this->TransactionData = [];
     }
 
+    /**
+     * ApplyChanges
+     *
+     * @return void
+     */
     public function ApplyChanges()
     {
+        $this->SetSummary($this->ReadPropertyString('IEEE'));
         //Never delete this line!
         parent::ApplyChanges();
-        $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
-        $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
-        $MQTTTopic = $this->ReadPropertyString('MQTTTopic');
-        $this->TransactionData = [];
-        if (empty($BaseTopic) || empty($MQTTTopic)) {
-            $this->SetStatus(IS_INACTIVE);
-            $this->SetReceiveDataFilter('NOTHING_TO_RECEIVE'); //block all
-            return;
-        }
-        //Setze Filter für ReceiveData
-        $Filter1 = preg_quote('"Topic":"' . $BaseTopic . '/' . $MQTTTopic . '"');
-        $Filter2 = preg_quote('"Topic":"' . $BaseTopic . '/SymconExtension/response/getDeviceInfo/' . $MQTTTopic);
-        $this->SendDebug('Filter', '.*(' . $Filter1 . '|' . $Filter2 . ').*', 0);
-        $this->SetReceiveDataFilter('.*(' . $Filter1 . '|' . $Filter2 . ').*');
-        $this->SetSummary($this->ReadPropertyString('IEEE'));
-        if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
-            $this->UpdateDeviceInfo();
-        }
-        $this->SetStatus(IS_ACTIVE);
     }
 
-    public function UpdateDeviceInfo()
+    /**
+     * GetConfigurationForm
+     *
+     * @todo Expertenbutton um Schreibschutz vom Feld ieeeAddr aufzuheben.
+     *
+     * @return string
+     */
+    public function GetConfigurationForm()
+    {
+        $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        $Form['elements'][0]['items'][1]['image'] = $this->ReadAttributeString('Icon');
+        return json_encode($Form);
+    }
+
+    /**
+     * UpdateDeviceInfo
+     *
+     * Exposes von der Erweiterung in Z2M anfordern und verarbeiten.
+     *
+     * @return bool
+     */
+    protected function UpdateDeviceInfo(): bool
     {
         $Result = $this->SendData('/SymconExtension/request/getDeviceInfo/' . $this->ReadPropertyString('MQTTTopic'));
         $this->SendDebug('result', json_encode($Result), 0);
@@ -72,16 +70,20 @@ class Zigbee2MQTTDevice extends IPSModule
                 IPS_ApplyChanges($this->InstanceID);
                 return true;
             }
+            /**
+             * @todo Icon sollte auch manuell über die Form neu geladen werden können
+             */
             if (array_key_exists('model', $Result)) {
                 $Model = $Result['model'];
                 if ($Model != 'Unknown Model') { // nur wenn Z2M ein Model liefert
-                    if (!$this->ReadAttributeString('Icon')) { // und wir noch kein Bild haben
+                    if ($this->ReadAttributeString('Model') != $Model) { // und das Model sich geändert hat
                         $Url = 'https://raw.githubusercontent.com/Koenkk/zigbee2mqtt.io/master/public/images/devices/' . $Model . '.png';
                         $this->SendDebug('loadImage', $Url, 0);
                         $ImageRaw = @file_get_contents($Url);
                         if ($ImageRaw) {
                             $Icon = 'data:image/png;base64,' . base64_encode($ImageRaw);
                             $this->WriteAttributeString('Icon', $Icon);
+                            $this->WriteAttributeString('Model', $Model);
                         }
                     }
                 }
@@ -91,12 +93,5 @@ class Zigbee2MQTTDevice extends IPSModule
         }
         trigger_error($this->Translate('Device not found. Check topic'), E_USER_NOTICE);
         return false;
-    }
-
-    public function GetConfigurationForm()
-    {
-        $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        $Form['elements'][0]['items'][1]['image'] = $this->ReadAttributeString('Icon');
-        return json_encode($Form);
     }
 }

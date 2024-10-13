@@ -1,7 +1,8 @@
 [![Version](https://img.shields.io/badge/Symcon-PHPModul-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Version](https://img.shields.io/badge/Symcon%20Version-6.1%20%3E-blue.svg)
-[![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+![Version](https://img.shields.io/badge/Symcon%20Version-7.0%20%3E-blue.svg)
+[![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)  
 [![Check Style](https://github.com/Schnittcher/IPS-Zigbee2MQTT/workflows/Check%20Style/badge.svg)](https://github.com/Schnittcher/IPS-Zigbee2MQTT/actions)
+[![Run Tests](https://github.com/Schnittcher/IPS-Zigbee2MQTT/workflows/Run%20Tests/badge.svg)](https://github.com/Schnittcher/IPS-Zigbee2MQTT/actions)  
 
 # Zigbee2MQTT
    Anbindung von www.zigbee2mqtt.io an IP-Symcon.
@@ -19,7 +20,7 @@
 
 ## 1. Voraussetzungen
 
-* mindestens IPS Version 6.1
+* mindestens IPS Version 7.0
 * MQTT Server (IPS Modul) oder externer MQTT-Broker (z.B. Mosquitto)
 * Installierte Symcon Erweiterung in Zigbee2MQTT [siehe hier](#31-installation-der-ip-symcon-extension-in-zigbee2mqtt)
 

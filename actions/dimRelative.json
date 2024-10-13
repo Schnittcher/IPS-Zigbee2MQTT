@@ -1,0 +1,45 @@
+{
+    "id": "{287802A5-010B-4F03-B474-C1652557481B}",
+    "caption": "Start or stop relative dimming",
+    "form": [
+        {
+            "type": "NumberSpinner",
+            "name": "Steps",
+            "minimum": -100,
+            "maximum": 100,
+            "caption": "Dim steps per second",
+            "suffix": " %"
+        }
+    ],
+    "priority": 1,
+    "action": [
+        "Z2M_SendSetCommand($_IPS['TARGET'], ['brightness_move_onoff' => (int)($_IPS['Steps']*254/100)]);"
+    ],
+    "restrictions": {
+        "objectType": [
+            1
+        ],
+        "moduleID": [
+            "{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}",
+            "{11BF3773-E940-469B-9DD7-FB9ACD7199A2}"
+        ],
+        "includeEnvironments": [
+            "Default",
+            "TestCommands"
+        ],
+        "hasIdent": [
+            "Z2M_Brightness",
+            "Z2M_State"
+        ]
+    },
+    "locale": {
+        "de": {
+            "Start or stop relative dimming": "Relatives Dimmen starten oder anhalten",
+            "Dim steps per second": "Dim Schritte pro Sekunde",
+            "{Steps, select, 0 {Stops} other {Starts}} dimming {TARGET, object} {Steps, select, 0 {} other {with {Steps, number} % steps}}": "{Steps, select, 0 {Stoppe} other {Starte}} dimmen {TARGET, object} {Steps, select, 0 {} other {mit {Steps, number} % Schritten}}",
+            "Start/stop relative dimming. Use positive Values to dim up, negative values to dim down or zero to stop.": "Startet/Stoppe relatives Dimmen. Verwende positive Werte zum Aufdimmen, negative Werte zum Abdimmen oder Null zu stoppen."
+        }
+    },
+    "format": "{Steps, select, 0 {Stops} other {Starts}} dimming {TARGET, object} {Steps, select, 0 {} other {with {Steps, number} % steps}}",
+    "description": "Start/stop relative dimming. Use positive Values to dim up, negative values to dim down or zero to stop."
+}

@@ -1,14 +1,11 @@
 ToDo zur 5.0? (inklusive Darstellungsmanager?)
 oder noch zur 4.5? um beide Änderungen nicht Zeitgleich zu haben?
 
-🟨 Command und CommandExt sind im trait MQTTHelper public und somit für Device, Group und Configurator verfügbar.
+🟨 Command und CommandExt sind public und somit für Device, Group und Configurator verfügbar.
     Doku hierzu ist aber nur in der Readme vom Configurator enthalten und dort noch falsch erklärt (Topics und Signatur)
-🟨 Command und CommandExt sollten auf SendData umgestellt werden, aber ohne Timeout, da keine Transaction verfügbar sind.
-❓ Funktion convertToUnixTimestamp wird gar nicht benutzt?
+🟨 Fehler beim laden des submodul test/stubs
 🟨 CS-Fixer defekt?!
-❓ Z2MSet ist Public? Absicht? Nicht dokumentiert. Z2M_Z2MSet ist irgendwie doppelt gemoppelt 😉 -> Z2M_Set ?
-❓ setColorExt hat color ohne Variablentyp, vermutlich Absicht?!
-    $params kein json, obwohl bei Z2MSet json und kein array
+🟨 setColorExt 
     $Z2MMode optional, was bei public nicht funktioniert.
     Besser wäre das aufteilen auf vier Funktionen?
     SetStringColor & Ex und SetIntegerColor & Ex

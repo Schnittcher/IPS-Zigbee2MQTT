@@ -7,10 +7,10 @@ require_once dirname(__DIR__) . '/libs/VariableProfileHelper.php';
 require_once dirname(__DIR__) . '/libs/MQTTHelper.php';
 
 /**
- * @property string $actualExtensionVersion
- * @property string $ExtensionFilename
- * @property string $ConfigLastSeen
- * @property bool $ConfigPermitJoin
+ * @property string $actualExtensionVersion Enthält die Aktuelle Version der Extension in einem InstanzBuffer
+ * @property string $ExtensionFilename Enthält den Dateinamen der Extension in einem InstanzBuffer
+ * @property string $ConfigLastSeen Enthält die Z2M Konfiguration der LastSeen Option in einem InstanzBuffer
+ * @property bool $ConfigPermitJoin Enthält die Z2M Konfiguration der PermitJoin Option in einem InstanzBuffer
  */
 class Zigbee2MQTTBridge extends IPSModule
 {
@@ -19,6 +19,11 @@ class Zigbee2MQTTBridge extends IPSModule
     use \Zigbee2MQTT\VariableProfileHelper;
     use \Zigbee2MQTT\SendData;
 
+    /**
+     * Create
+     *
+     * @return void
+     */
     public function Create()
     {
         //Never delete this line!
@@ -38,6 +43,11 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->ConfigPermitJoin = false;
     }
 
+    /**
+     * ApplyChanges
+     *
+     * @return void
+     */
     public function ApplyChanges()
     {
         $this->TransactionData = [];
@@ -99,6 +109,12 @@ class Zigbee2MQTTBridge extends IPSModule
 
     }
 
+    /**
+     * ReceiveData
+     *
+     * @param  string $JSONString
+     * @return string
+     */
     public function ReceiveData($JSONString)
     {
         $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
@@ -162,7 +178,7 @@ class Zigbee2MQTTBridge extends IPSModule
                     $this->ConfigPermitJoin = $Payload['config']['permit_join'];
                     $this->UpdateFormField('PermitJoinOption', 'visible', $Payload['config']['permit_join']);
                     if ($Payload['config']['permit_join']) {
-                        $this->LogMessage($this->Translate('Danger! In the Zigbee2MQTT configuration permit_join is activated. This leads to a possible security risk!'), KL_ERROR);
+                        $this->LogMessage($this->Translate("Danger! In the Zigbee2MQTT configuration permit_join is activated.\r\nThis leads to a possible security risk!"), KL_ERROR);
                     }
                 }
                 if (isset($Payload['zigbee_herdsman_converters']['version'])) {
@@ -187,7 +203,11 @@ class Zigbee2MQTTBridge extends IPSModule
                 $foundExtension = false;
                 $Version = 'unknown';
                 foreach ($Payload as $Extension) {
-                    if (strpos($Extension['code'], 'class IPSymconExtension')) {
+                    if (strpos($Extension['code'], 'class IPSymconExtension') !== false) {
+                        if ($foundExtension) {
+                            $this->LogMessage($this->Translate("Danger! Several extensions for Symcon have been found.\r\nPlease delete outdated versions manually to avoid malfunctions."), KL_ERROR);
+                            continue;
+                        }
                         $foundExtension = true;
                         $this->ExtensionName = $Extension['name'];
                         $Lines = explode("\n", $Extension['code']);
@@ -200,7 +220,6 @@ class Zigbee2MQTTBridge extends IPSModule
                         } else {
                             $this->LogMessage($this->Translate('Symcon Extension in Zigbee2MQTT is outdated. Please update the extension.'), KL_ERROR);
                         }
-                        break;
                     }
                 }
                 $this->SetValue('extension_loaded', $foundExtension);
@@ -214,6 +233,13 @@ class Zigbee2MQTTBridge extends IPSModule
         return '';
     }
 
+    /**
+     * RequestAction
+     *
+     * @param  string $Ident
+     * @param  mixed $Value
+     * @return void
+     */
     public function RequestAction($Ident, $Value)
     {
         switch ($Ident) {
@@ -229,6 +255,11 @@ class Zigbee2MQTTBridge extends IPSModule
         }
     }
 
+    /**
+     * GetConfigurationForm
+     *
+     * @return string
+     */
     public function GetConfigurationForm()
     {
         $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
@@ -246,6 +277,12 @@ class Zigbee2MQTTBridge extends IPSModule
         return json_encode($Form);
     }
 
+    /**
+     * InstallSymconExtension
+     *
+     * @todo todo check the Response
+     * @return bool
+     */
     public function InstallSymconExtension()
     {
         if (empty($this->ExtensionName)) {
@@ -260,6 +297,12 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * RequestOptions
+     *
+     * @todo todo check the Response
+     * @return bool
+     */
     public function RequestOptions()
     {
         $Topic = '/bridge/request/options';
@@ -273,6 +316,12 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * SetLastSeen
+     *
+     * @todo todo check the Response
+     * @return bool
+     */
     public function SetLastSeen()
     {
         $Topic = '/bridge/request/options';
@@ -290,6 +339,13 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * SetPermitJoinOption
+     *
+     * @todo todo check the Response
+     * @param  bool $PermitJoin
+     * @return bool
+     */
     public function SetPermitJoinOption(bool $PermitJoin)
     {
         $Topic = '/bridge/request/options';
@@ -301,6 +357,13 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * SetPermitJoin
+     *
+     * @todo todo check the Response
+     * @param  bool $PermitJoin
+     * @return bool
+     */
     public function SetPermitJoin(bool $PermitJoin)
     {
         $Topic = '/bridge/request/permit_join';
@@ -312,6 +375,13 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * SetLogLevel
+     *
+     * @todo todo check the Response
+     * @param  string $LogLevel
+     * @return bool
+     */
     public function SetLogLevel(string $LogLevel)
     {
         $Topic = '/bridge/request/options';
@@ -323,6 +393,12 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * Restart
+     *
+     * @todo todo check the Response
+     * @return bool
+     */
     public function Restart()
     {
         $Topic = '/bridge/request/restart';
@@ -333,6 +409,13 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * CreateGroup
+     *
+     * @todo todo check the Response
+     * @param  string $GroupName
+     * @return bool
+     */
     public function CreateGroup(string $GroupName)
     {
         $Topic = '/bridge/request/group/add';
@@ -344,6 +427,13 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * DeleteGroup
+     *
+     * @todo todo check the Response
+     * @param  string $GroupName
+     * @return bool
+     */
     public function DeleteGroup(string $GroupName)
     {
         $Topic = '/bridge/request/group/remove';
@@ -355,6 +445,14 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * RenameGroup
+     *
+     * @todo todo check the Response
+     * @param  string $OldName
+     * @param  string $NewName
+     * @return bool
+     */
     public function RenameGroup(string $OldName, string $NewName)
     {
         $Topic = '/bridge/request/group/rename';
@@ -366,6 +464,14 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * AddDeviceToGroup
+     *
+     * @todo todo check the Response
+     * @param  string $GroupName
+     * @param  string $DeviceName
+     * @return bool
+     */
     public function AddDeviceToGroup(string $GroupName, string $DeviceName)
     {
         $Topic = '/bridge/request/group/members/add';
@@ -377,6 +483,14 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * RemoveDeviceFromGroup
+     *
+     * @todo todo check the Response
+     * @param  string $GroupName
+     * @param  string $DeviceName
+     * @return bool
+     */
     public function RemoveDeviceFromGroup(string $GroupName, string $DeviceName)
     {
         $Topic = '/bridge/request/group/members/remove';
@@ -388,6 +502,13 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * RemoveAllDevicesFromGroup
+     *
+     * @todo todo check the Response
+     * @param  string $GroupName
+     * @return bool
+     */
     public function RemoveAllDevicesFromGroup(string $GroupName)
     {
         $Topic = '/bridge/request/group/members/remove_all';
@@ -399,6 +520,14 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * Bind
+     *
+     * @todo todo check the Response
+     * @param  string $SourceDevice
+     * @param  string $TargetDevice
+     * @return bool
+     */
     public function Bind(string $SourceDevice, string $TargetDevice)
     {
         $Topic = '/bridge/request/device/bind';
@@ -410,6 +539,14 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * Unbind
+     *
+     * @todo todo check the Response
+     * @param  string $SourceDevice
+     * @param  string $TargetDevice
+     * @return bool
+     */
     public function Unbind(string $SourceDevice, string $TargetDevice)
     {
         $Topic = '/bridge/request/device/unbind';
@@ -421,6 +558,12 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * RequestNetworkmap
+     *
+     * @todo todo check the Response
+     * @return bool
+     */
     public function RequestNetworkmap()
     {
         $Topic = '/bridge/request/networkmap';
@@ -428,6 +571,14 @@ class Zigbee2MQTTBridge extends IPSModule
         return $this->SendData($Topic, $Payload, 0);
     }
 
+    /**
+     * RenameDevice
+     *
+     * @todo todo check the Response
+     * @param  string $OldDeviceName
+     * @param  string $NewDeviceName
+     * @return bool
+     */
     public function RenameDevice(string $OldDeviceName, string $NewDeviceName)
     {
         $Topic = '/bridge/request/device/rename';
@@ -439,6 +590,13 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * RemoveDevice
+     *
+     * @todo todo check the Response
+     * @param  string $DeviceName
+     * @return bool
+     */
     public function RemoveDevice(string $DeviceName)
     {
         $Topic = '/bridge/request/device/remove';
@@ -450,6 +608,13 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * CheckOTAUpdate
+     *
+     * @todo todo check the Response
+     * @param  string $DeviceName
+     * @return bool
+     */
     public function CheckOTAUpdate(string $DeviceName)
     {
         $Topic = '/bridge/request/device/ota_update/check';
@@ -461,6 +626,13 @@ class Zigbee2MQTTBridge extends IPSModule
         return false;
     }
 
+    /**
+     * PerformOTAUpdate
+     *
+     * @todo todo check the Response
+     * @param  string $DeviceName
+     * @return bool
+     */
     public function PerformOTAUpdate(string $DeviceName)
     {
         $Topic = '/bridge/request/device/ota_update/update';
