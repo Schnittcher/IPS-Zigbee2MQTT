@@ -786,7 +786,7 @@ abstract class ModulBase extends \IPSModule
     protected function mapExposesToVariables(array $exposes)
     {
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: All Exposes', json_encode($exposes), 0);
-        
+
         // Durchlaufe alle Exposes
         foreach ($exposes as $expose) {
             // Prüfen, ob es sich um eine Gruppe handelt
@@ -1259,7 +1259,7 @@ abstract class ModulBase extends \IPSModule
         $this->MaintainAction($ident, $isSwitchable);
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: MaintainAction set for', $ident, 0);
     }
-    
+
     /**
      * Überprüft, ob ein erweitertes Variablenprofil existiert.
      *
