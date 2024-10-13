@@ -581,7 +581,7 @@ abstract class ModulBase extends \IPSModule
             if (isset($Payload[$key]['presets'])) {
                 $presetIdent = $ident . '_Presets';
                 if (!@$this->GetIDForIdent($presetIdent)) {
-                    $this->registerPresetProfile($Payload[$key]['presets'], $key);
+                    $this->createPresetProfile($Payload[$key]['presets'], $key);
                 }
             }
 
@@ -1571,63 +1571,6 @@ abstract class ModulBase extends \IPSModule
 
         // Rückgabe des Hauptprofils und des optionalen Preset-Profils
         return ['mainProfile' => $fullRangeProfileName, 'presetProfile' => $presetProfileName];
-    }
-
-    /**
-     * Erstellt ein Preset-Profil für eine Variable, falls es noch nicht existiert, und fügt die Preset-Werte hinzu.
-     *
-     * Diese Methode generiert ein Profil für Preset-Variablen basierend auf dem übergebenen Label und den Preset-Daten.
-     * Der Name des Profils wird dynamisch aus dem Label erzeugt, wobei Leerzeichen durch Unterstriche ersetzt werden und
-     * der Zusatz "_Presets" hinzugefügt wird. Falls das Profil bereits existiert, wird es nicht erneut erstellt. Andernfalls
-     * wird ein neues String-Profil erstellt, und jeder Preset-Wert wird mit seinem entsprechenden Namen als Assoziation hinzugefügt.
-     *
-     * Der Ablauf ist wie folgt:
-     * 1. Es wird überprüft, ob das Profil bereits existiert.
-     * 2. Wenn das Profil nicht existiert, wird es erstellt.
-     * 3. Die Preset-Werte und deren zugehörige Namen werden als Assoziationen dem Profil hinzugefügt.
-     * 4. Der Profilname wird zurückgegeben.
-     *
-     * Beispiel:
-     * Angenommen, das Label ist "Color Temp" und die Presets bestehen aus Werten wie "coolest" (Wert 153),
-     * "warmest" (Wert 500), wird das Profil "Z2M_Color_Temp_Presets" erstellt und die Preset-Werte werden
-     * als Assoziationen in diesem Profil gespeichert.
-     *
-     * @param array $presets Ein Array, das die Preset-Daten enthält. Jeder Eintrag im Array sollte folgendes Format haben:
-     *                       [
-     *                           'name'  => 'coolest',    // Der Name des Presets.
-     *                           'value' => 153           // Der numerische Wert des Presets.
-     *                       ].
-     * @param string $label Das Label, das für den Variablen-Identifikator verwendet wird. Leerzeichen werden durch Unterstriche ersetzt.
-     *
-     * @return string Gibt den Namen des erstellten oder existierenden Profils zurück.
-     *
-     * @throws Exception Falls ein Fehler beim Erstellen des Profils oder Hinzufügen der Assoziationen auftritt.
-     */
-    private function registerPresetProfile(array $presets, string $label)
-    {
-        // Profilname ohne Leerzeichen erstellen
-        $profileName = 'Z2M_' . str_replace(' ', '_', $label) . '_Presets';
-
-        // Überprüfen, ob das Profil bereits existiert
-        if (!IPS_VariableProfileExists($profileName)) {
-            // Neues Profil für Presets erstellen
-            $this->RegisterProfileStringEx($profileName, '', '', '', []);
-
-            // Füge die Presets hinzu
-            foreach ($presets as $preset) {
-                $presetValue = $preset['value'];
-                $presetName = $this->Translate(ucwords(str_replace('_', ' ', $preset['name'])));
-                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Adding preset: ', $presetName . ' with value ' . $presetValue, 0);
-                IPS_SetVariableProfileAssociation($profileName, $presetValue, $presetName, '', 0xFFFFFF);
-            }
-
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Created preset profile: ', $profileName, 0);
-        } else {
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Preset profile already exists: ', $profileName, 0);
-        }
-
-        // Rückgabe des Profilnamens
-        return $profileName;
     }
 
     /**
