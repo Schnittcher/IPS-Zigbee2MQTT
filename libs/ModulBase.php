@@ -257,7 +257,7 @@ abstract class ModulBase extends \IPSModule
         $payloadKey = self::convertIdentToPayloadKey($ident);
 
         // Umwandlung von true/false zu "ON"/"OFF" für state
-        if (strpos($payloadKey. 'state') === 0 && is_bool($value)) {
+        if (strpos($payloadKey . 'state') === 0 && is_bool($value)) {
             $value = $value ? 'ON' : 'OFF';
             $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Converted boolean to state: ', $value, 0);
         }
