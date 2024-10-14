@@ -11,6 +11,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_OperationMode':
+                $payload['operation_mode'] = strval($Value);
+                break;
             case 'Z2M_ChargingProtection':
                 $Payload['charging_protection'] = strval($this->OnOff($Value));
                 break;
@@ -870,6 +873,9 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('operation_mode', $Payload)) {
+                    $this->SetValue('Z2M_OperationMode', $Payload['operation_mode']);
                 }
                 if (array_key_exists('cleaning_reminder', $Payload)) {
                     $this->SetValue('Z2M_CleaningReminder', $Payload['cleaning_reminder']);
@@ -2601,6 +2607,14 @@ trait Zigbee2MQTTHelper
                     $ProfileName .= '.';
                     $ProfileName .= dechex(crc32($tmpProfileName));
                     switch ($ProfileName) {
+                        case 'Z2M.operation_mode.':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['command', $this->Translate('Step'), '', 0x00FF00],
+                                    ['event', $this->Translate('Rotate'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.action_type':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -3547,6 +3561,32 @@ trait Zigbee2MQTTHelper
                                     ['single_both', $this->Translate('Single Both'), '', 0x00FF00],
                                     ['single_left', $this->Translate('Single Left'), '', 0xFF0000],
                                     ['single_right', $this->Translate('Single Right'), '', 0xFF8800]
+                                ]);
+                            }
+                            break;
+                        case 'Z2M.action.f41e3ac5':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['button_1_hold', $this->Translate('Button 1 Hold'), '', 0x00FF00],
+                                    ['button_1_release', $this->Translate('Button 1 Release'), '', 0x00FF00],
+                                    ['button_1_single', $this->Translate('Button 1 Single'), '', 0x00FF00],
+                                    ['button_1_double', $this->Translate('Button 1 Double'), '', 0x00FF00],
+                                    ['button_1_triple', $this->Translate('Button 1 Tripple'), '', 0x00FF00],
+                                    ['button_2_hold', $this->Translate('Button 2 Hold'), '', 0x00FF00],
+                                    ['button_2_release', $this->Translate('Button 2 Release'), '', 0x00FF00],
+                                    ['button_2_single', $this->Translate('Button 2 Single'), '', 0x00FF00],
+                                    ['button_2_double', $this->Translate('Button 2 Double'), '', 0x00FF00],
+                                    ['button_2_triple', $this->Translate('Button 2 Tripple'), '', 0x00FF00],
+                                    ['button_3_hold', $this->Translate('Button 3 Hold'), '', 0x00FF00],
+                                    ['button_3_release', $this->Translate('Button 3 Release'), '', 0x00FF00],
+                                    ['button_3_single', $this->Translate('Button 3 Single'), '', 0x00FF00],
+                                    ['button_3_double', $this->Translate('Button 3 Double'), '', 0x00FF00],
+                                    ['button_3_triple', $this->Translate('Button 3 Tripple'), '', 0x00FF00],
+                                    ['button_4_hold', $this->Translate('Button 4 Hold'), '', 0x00FF00],
+                                    ['button_4_release', $this->Translate('Button 4 Release'), '', 0x00FF00],
+                                    ['button_4_single', $this->Translate('Button 4 Single'), '', 0x00FF00],
+                                    ['button_4_double', $this->Translate('Button 4 Double'), '', 0x00FF00],
+                                    ['button_4_triple', $this->Translate('Button 4 Tripple'), '', 0x00FF00]
                                 ]);
                             }
                             break;
@@ -5760,6 +5800,13 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'operation_mode':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_OperationMode', $this->Translate('Operation Mode'), $ProfileName);
+                                $this->EnableAction('Z2M_OperationMode');
+                            }
+                            break;
                         case 'identify':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
