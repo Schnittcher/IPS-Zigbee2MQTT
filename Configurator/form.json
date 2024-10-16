@@ -19,7 +19,7 @@
                     "delete": true,
                     "rowCount": 5,
                     "sort": {
-                        "column": "name",
+                        "column": "topic",
                         "direction": "ascending"
                     },
                     "columns": [
@@ -31,7 +31,7 @@
                         {
                             "caption": "Topic",
                             "name": "topic",
-                            "width": "200px"
+                            "width": "auto"
                         },
                         {
                             "caption": "Network Address",
@@ -56,7 +56,7 @@
                         {
                             "caption": "Description",
                             "name": "description",
-                            "width": "auto"
+                            "width": "200px"
                         },
                         {
                             "caption": "Type",
@@ -85,7 +85,7 @@
                     "delete": true,
                     "rowCount": 5,
                     "sort": {
-                        "column": "name",
+                        "column": "topic",
                         "direction": "ascending"
                     },
                     "columns": [
@@ -98,7 +98,7 @@
                         {
                             "caption": "Topic",
                             "name": "topic",
-                            "width": "200px"
+                            "width": "auto"
                         },
                         {
                             "caption": "Devices",
@@ -108,7 +108,7 @@
                         {
                             "caption": "Name",
                             "name": "name",
-                            "width": "auto"
+                            "width": "200px"
                         }
                     ],
                     "values": []
