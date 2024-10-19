@@ -1,4 +1,4 @@
-legacy_api <?php
+<?php
 
 declare(strict_types=1);
 
@@ -183,7 +183,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
                 $Value['instanceID'] = 0;
             }
             $Value['parent'] = $this->AddParentElement($ValueId, $ValuesDevices, $Location, self::$DeviceValues);
-            $Value['id'] = ++$ValueId;
+            $Value['id'] = $ValueId++;
             $Value['ieee_address'] = $device['ieeeAddr'];
             $Value['topic'] = $device['friendly_name'];
             $Value['networkAddress'] = $device['networkAddress'];
@@ -214,7 +214,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
             array_pop($Location);
             $ValuesDevices[] = [
                 'name'               => IPS_GetName($instanceID),
-                'id'                 => ++$ValueId,
+                'id'                 => $ValueId++,
                 'parent'             => $this->AddParentElement($ValueId, $ValuesDevices, $Location, self::$DeviceValues),
                 'instanceID'         => $instanceID,
                 'ieee_address'       => $IEEE,
@@ -233,7 +233,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
             array_pop($Location);
             $ValuesDevices[] = [
                 'name'               => IPS_GetName($instanceID),
-                'id'                 => ++$ValueId,
+                'id'                 => $ValueId++,
                 'parent'             => $this->AddParentElement($ValueId, $ValuesDevices, $Location, self::$DeviceValues),
                 'instanceID'         => $instanceID,
                 'ieee_address'       => @IPS_GetProperty($instanceID, 'IEEE'),
@@ -283,7 +283,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
                 $Value['instanceID'] = 0;
             }
             $Value['parent'] = $this->AddParentElement($ValueId, $ValuesGroups, $Location, self::$GroupValues);
-            $Value['id'] = ++$ValueId;
+            $Value['id'] = $ValueId++;
             $Value['ID'] = $group['ID'];
             $Value['topic'] = $group['friendly_name'];
             $Value['DevicesCount'] = (string) count($group['devices']);
@@ -309,7 +309,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
             array_pop($Location);
             $ValuesGroups[] = [
                 'name'                  => IPS_GetName($instanceID),
-                'id'                    => ++$ValueId,
+                'id'                    => $ValueId++,
                 'parent'                => $this->AddParentElement($ValueId, $ValuesDevices, $Location, self::$GroupValues),
                 'instanceID'            => $instanceID,
                 'ID'                    => $ID,
@@ -323,7 +323,7 @@ class Zigbee2MQTTConfigurator extends IPSModule
             array_pop($Location);
             $ValuesGroups[] = [
                 'name'                  => IPS_GetName($instanceID),
-                'id'                    => ++$ValueId,
+                'id'                    => $ValueId++,
                 'parent'                => $this->AddParentElement($ValueId, $ValuesDevices, $Location, self::$DeviceValues),
                 'instanceID'            => $instanceID,
                 'ID'                    => @IPS_GetProperty($instanceID, 'GroupId'),
