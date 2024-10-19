@@ -130,9 +130,9 @@ trait VariableProfileHelper
      * @param string $Icon         Name des Icon.
      * @param string $Prefix       Prefix für die Darstellung.
      * @param string $Suffix       Suffix für die Darstellung.
-     * @param array  $Associations Assoziationen der Werte als Array.
+     * @param int|array  $Associations Assoziationen der Werte als Array.
      */
-    protected function RegisterProfileEx(int $VarTyp, string $Name, string $Icon, string $Prefix, string $Suffix, int|array $Associations, float $MaxValue = -1, float $StepSize = 0, int $Digits = 0): void
+    protected function RegisterProfileEx(int $VarTyp, string $Name, string $Icon, string $Prefix, string $Suffix, mixed $Associations, float $MaxValue = -1, float $StepSize = 0, int $Digits = 0): void
     {
         if (is_int($Associations)) {
             $this->RegisterProfile($VarTyp, $Name, $Icon, $Prefix, $Suffix, $Associations, $MaxValue, $StepSize, $Digits);
