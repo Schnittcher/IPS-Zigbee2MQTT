@@ -154,7 +154,7 @@ abstract class ModulBase extends \IPSModule
             return;
         }
         //Setze Filter für ReceiveData
-        $Filter1 = preg_quote('"Topic":"' . $BaseTopic . '/' . $MQTTTopic . '"');
+        $Filter1 = preg_quote('"Topic":"' . $BaseTopic . '/' . $MQTTTopic);
         $Filter2 = preg_quote('"Topic":"' . $BaseTopic . '/SymconExtension/response/' . static::$ExtensionTopic . $MQTTTopic);
         $this->SendDebug('Filter', '.*(' . $Filter1 . '|' . $Filter2 . ').*', 0);
         $this->SetReceiveDataFilter('.*(' . $Filter1 . '|' . $Filter2 . ').*');
@@ -312,8 +312,8 @@ abstract class ModulBase extends \IPSModule
 
         // Separates Verarbeiten des Verfügbarkeitsstatus (online/offline)
         if (end($Topics) == 'availability') {
-            $this->RegisterVariableBoolean('Z2M_Status', $this->Translate('Status'), 'Z2M.DeviceStatus');
-            $this->SetValue('Z2M_Status', $Buffer['Payload'] == 'online');
+            $this->RegisterVariableBoolean('Z2M_Status', $this->Translate('Availability'), 'Z2M.DeviceStatus');
+            $this->SetValue('Z2M_Status', $Buffer['Payload'] == '{"state":"online"}');
             return '';
         }
 
@@ -540,7 +540,7 @@ abstract class ModulBase extends \IPSModule
             // Umrechnung von Mired in Kelvin für 'color_temp'
             if ($key === 'color_temp') {
                 $value = intval(1000000 / $value); // Umrechnung Mired nach Kelvin
-                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Converted color_temp to Kelvin: ', $value, 0);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Converted color_temp to Kelvin: ', (string) $value, 0);
             }
             // Erstelle den Ident-Namen basierend auf dem Property-Namen
             $ident = self::convertPropertyToIdent($key);
@@ -625,7 +625,7 @@ abstract class ModulBase extends \IPSModule
                 }
             } else {
                 // Fallback: Wert ohne Typinformationen setzen
-                $this->SetValue($ident, $value);
+                $this->SetValue($ident, is_array($value) ? json_encode($value) : $value);
             }
         }
     }
@@ -666,7 +666,7 @@ abstract class ModulBase extends \IPSModule
      */
     protected function SetValue($Ident, $Value)
     {
-        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Incoming value for ' . $Ident, (is_array($Value) ? json_encode($Value) : $Value), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Incoming value for ' . $Ident, $Value, 0);
 
         // Standardwert für adjustedValue setzen
         $adjustedValue = $Value;
@@ -763,7 +763,7 @@ abstract class ModulBase extends \IPSModule
                     $adjustedValue = (string) $Value;
                     break;
                 default:
-                    $adjustedValue = $Value; // Fallback, falls der Typ unbekannt ist
+                    $adjustedValue = (string) $Value; // Fallback, falls der Typ unbekannt ist
                     break;
             }
         }
