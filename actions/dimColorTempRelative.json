@@ -1,0 +1,47 @@
+{
+    "id": "{46860B9A-8479-4312-A301-71BD6F7097FF}",
+    "caption": "Start or stop moving color temp",
+    "form": [
+        {
+            "type": "NumberSpinner",
+            "name": "Steps",
+            "minimum": -100,
+            "maximum": 100,
+            "caption": "Steps per second",
+            "suffix": " %"
+        }
+    ],
+    "priority": 1,
+    "action": [
+        "if ($_IPS['Steps'] == 0){",
+        "   $Value = 'stop';",
+        "} else {",
+        "   $Value = (int)($_IPS['Steps']*254/100);",
+        "}",
+        "Z2M_SendSetCommand($_IPS['TARGET'], ['color_temp_move' => $Value]);"
+    ],
+    "restrictions": {
+        "objectType": [
+            1
+        ],
+        "moduleID": [
+            "{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}",
+            "{11BF3773-E940-469B-9DD7-FB9ACD7199A2}"
+        ],
+        "includeEnvironments": [
+            "Default",
+            "TestCommands"
+        ],
+        "hasIdent": [
+            "Z2M_ColorTemp"
+        ]
+    },
+    "locale": {
+        "de": {
+            "Start or stop moving color temp": "Dimmen von Farbtemperatur starten oder anhalten",
+            "Steps per second": "Schritte pro Sekunde",
+            "Start/stop moving color temp. Use positive Values to warm light, negative values to cool light or zero to stop.": "Startet/Stoppe dimmen der Farbtemperatur. Verwende positive Werte für warmes Licht, negative Werte für kaltes Licht oder Null zum stoppen."
+        }
+    },
+    "description": "Start/stop moving color temp. Use positive Values to warm light, negative values to cool light or zero to stop."
+}

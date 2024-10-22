@@ -117,6 +117,9 @@ class Zigbee2MQTTBridge extends IPSModule
      */
     public function ReceiveData($JSONString)
     {
+        if ($this->GetStatus() == IS_CREATING) {
+            return '';
+        }
         $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
         if (empty($BaseTopic)) {
             return '';

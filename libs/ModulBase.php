@@ -281,6 +281,9 @@ abstract class ModulBase extends \IPSModule
      */
     public function ReceiveData($JSONString)
     {
+        if ($this->GetStatus() == IS_CREATING) {
+            return '';
+        }
         $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: JSONString: ', $JSONString, 0);
 
         // Lese die MQTT-Base- und Topic-Konfiguration aus den Instanzeinstellungen

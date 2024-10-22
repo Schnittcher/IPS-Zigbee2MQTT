@@ -1,6 +1,6 @@
 {
-    "id": "{01561217-6EEA-4E8C-A87A-66FD47190241}",
-    "caption": "Increases or decreases brightness",
+    "id": "{0296A4CC-AC0B-4A9E-9EBF-DE4AA4A43248}",
+    "caption": "Increases or decreases color temp",
     "form": [
         {
             "type": "NumberSpinner",
@@ -13,7 +13,7 @@
     ],
     "priority": 1,
     "action": [
-        "Z2M_SendSetCommand($_IPS['TARGET'], ['brightness_step_onoff' => (int)($_IPS['Step']*254/100)]);"
+        "Z2M_SendSetCommand($_IPS['TARGET'], ['color_temp_step' => (int)($_IPS['Step']*204/100)]);"
     ],
     "restrictions": {
         "objectType": [
@@ -28,16 +28,15 @@
             "TestCommands"
         ],
         "hasIdent": [
-            "Z2M_Brightness",
-            "Z2M_State"
+            "Z2M_ColorTemp"
         ]
     },
     "locale": {
         "de": {
-            "Increases or decreases brightness": "Erhöhe oder verringere Helligkeit",
+            "Increases or decreases color temp": "Erhöhe oder verringere Farbtemperatur",
             "Step": "Schritt",
-            "Single relative dimming step. Use positive Values to dim up or negative values to dim down.": "Einzelner relativer Dimmer Schritt. Verwende positive Werte zum Aufdimmen oder negative Werte zum Abdimmen."
+            "Single relative color temp step. Use positive Values to warm up or negative values to cool down the light.": "Einzelner relativer Dimmer Schritt. Verwende positive Werte für warme oder negative Werte für kaltes Licht."
         }
     },
-    "description": "Single relative dimming step. Use positive Values to dim up or negative values to dim down."
+    "description": "Single relative color temp step. Use positive Values to warm up or negative values to cool down the light."
 }
