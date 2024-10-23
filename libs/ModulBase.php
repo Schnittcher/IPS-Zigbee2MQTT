@@ -161,7 +161,7 @@ abstract class ModulBase extends \IPSModule
         $Filter2 = preg_quote('"Topic":"' . $BaseTopic . '/SymconExtension/response/' . static::$ExtensionTopic . $MQTTTopic);
         $this->SendDebug('Filter', '.*(' . $Filter1 . '|' . $Filter2 . ').*', 0);
         $this->SetReceiveDataFilter('.*(' . $Filter1 . '|' . $Filter2 . ').*');
-        if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
+        if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY) && ($this->GetStatus() != IS_CREATING)) {
             $this->UpdateDeviceInfo();
         }
         $this->SetStatus(IS_ACTIVE);
@@ -607,7 +607,7 @@ abstract class ModulBase extends \IPSModule
             $variableTypeKey = $key . '_type';
             if (isset($Payload[$variableTypeKey])) {
                 $variableType = $Payload[$variableTypeKey];
-                
+
                 // Prüfe, ob ein State-Mapping existiert und wende es an
                 if (array_key_exists($key, self::$stateMappings)) {
                     $mappedValue = self::convertStateBasedOnMapping($key, $value, $variableType);
@@ -758,25 +758,25 @@ abstract class ModulBase extends \IPSModule
                 }
             }
         }
-            // Typ der vorhandenen Variable abrufen
-            $varType = IPS_GetVariable($this->GetIDForIdent($Ident))['VariableType'];
-            // Standardverarbeitung für andere Variablentypen
-            switch ($varType) {
-                case VARIABLETYPE_BOOLEAN:
-                    $adjustedValue = (bool) $Value;
-                    break;
-                case VARIABLETYPE_INTEGER:
-                    $adjustedValue = (int) $Value;
-                    break;
-                case VARIABLETYPE_FLOAT:
-                    $adjustedValue = (float) $Value;
-                    break;
-                case VARIABLETYPE_STRING:
-                    $adjustedValue = (string) $Value;
-                    break;
-                default:
-                    $adjustedValue = (string) $Value; // Fallback, falls der Typ unbekannt ist
-                    break;
+        // Typ der vorhandenen Variable abrufen
+        $varType = IPS_GetVariable($this->GetIDForIdent($Ident))['VariableType'];
+        // Standardverarbeitung für andere Variablentypen
+        switch ($varType) {
+            case VARIABLETYPE_BOOLEAN:
+                $adjustedValue = (bool) $Value;
+                break;
+            case VARIABLETYPE_INTEGER:
+                $adjustedValue = (int) $Value;
+                break;
+            case VARIABLETYPE_FLOAT:
+                $adjustedValue = (float) $Value;
+                break;
+            case VARIABLETYPE_STRING:
+                $adjustedValue = (string) $Value;
+                break;
+            default:
+                $adjustedValue = (string) $Value; // Fallback, falls der Typ unbekannt ist
+                break;
         }
 
         $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Adjusted value for ' . $Ident, (is_array($adjustedValue) ? json_encode($adjustedValue) : $adjustedValue), 0);
@@ -1118,7 +1118,6 @@ abstract class ModulBase extends \IPSModule
         $label = ucwords(str_replace('_', ' ', $feature['property'] ?? $property));
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Using Expose Type: ', $type, 0);
 
-
         // Überprüfen, ob die Variable bereits existiert
         $objectID = @$this->GetIDForIdent($ident);
         if ($objectID) {
@@ -1152,7 +1151,7 @@ abstract class ModulBase extends \IPSModule
         if ($objectID) {
             return;
         }
-        
+
         // Überprüfung auf Standardprofil und zugehörigen Variablentyp
         $standardProfile = $this->getStandardProfile($type, $property);
         $variableType = $this->getVariableTypeFromProfile($type, $property);
