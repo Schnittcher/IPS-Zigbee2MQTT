@@ -9,6 +9,7 @@ require_once __DIR__ . '/SemaphoreHelper.php';
 require_once __DIR__ . '/VariableProfileHelper.php';
 require_once __DIR__ . '/MQTTHelper.php';
 require_once __DIR__ . '/ColorHelper.php';
+require_once __DIR__ . '/AttributeArrayHelper.php';
 
 /**
  * ModulBase
@@ -21,6 +22,7 @@ abstract class ModulBase extends \IPSModule
     use Semaphore;
     use ColorHelper;
     use VariableProfileHelper;
+    use AttributeArrayHelper;
     use SendData;
 
     /** @var string $ExtensionTopic Muss überschrieben werden für den ReceiveFilter */
@@ -132,6 +134,7 @@ abstract class ModulBase extends \IPSModule
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
         $this->RegisterPropertyString('MQTTBaseTopic', '');
         $this->RegisterPropertyString('MQTTTopic', '');
+        $this->RegisterAttributeArray('exposes', []);
         $this->TransactionData = [];
     }
 
@@ -553,38 +556,45 @@ abstract class ModulBase extends \IPSModule
             if (!@$this->GetIDForIdent($ident)) {
                 $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: DecodeData', 'Variable not found, registering: ' . $key, 0);
 
-                // Überprüfen, ob der Payload 'exposes' enthält und Variablen registrieren
-                if (isset($Payload['exposes'])) {
-                    $this->mapExposesToVariables($Payload['exposes']);
-                } else {
-                    // Variable basierend auf dem Wertetyp registrieren
-                    if (is_bool($value)) {
-                        $this->RegisterVariableBoolean($ident, $this->Translate(ucfirst($key)), '~Switch');
-                    } elseif (is_int($value)) {
-                        if ($key === 'last_seen') {
-                            $this->RegisterVariableInteger($ident, $this->Translate('Last Seen'), '~UnixTimestamp');
-                        } else {
-                            $this->RegisterVariableInteger($ident, $this->Translate(ucfirst($key)));
+                // Lese das gespeicherte Expose-Attribut
+                $savedExposes = $this->ReadAttributeArray('exposes');
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: archived exposes: ', json_encode($savedExposes), 0);
+
+                // Prüfen, ob das Feature im Attribut 'exposes' vorhanden ist
+                $foundFeature = null;
+                foreach ($savedExposes as $expose) {
+                    if (isset($expose['features'])) {
+                        foreach ($expose['features'] as $feature) {
+                            if (isset($feature['property']) && $feature['property'] === $key) {
+                                $foundFeature = $feature;
+                                break 2; // Expose gefunden, Schleife abbrechen
+                            }
                         }
-                    } elseif (is_float($value)) {
-                        $this->RegisterVariableFloat($ident, $this->Translate(ucfirst($key)));
-                    } else {
-                        $this->RegisterVariableString($ident, $this->Translate(ucfirst($key)));
+                    } elseif (isset($expose['property']) && $expose['property'] === $key) {
+                        $foundFeature = $expose;
+                        break;
                     }
                 }
 
-                // Überprüfe, ob die Variable erfolgreich registriert wurde
-                if (!@$this->GetIDForIdent($ident)) {
-                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: DecodeData', 'Error: Variable could not be registered: ' . $key, 0);
-                    continue;
-                }
-            }
+                // Wenn das Feature im Attribut gefunden wurde, registriere es
+                if ($foundFeature !== null) {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Feature found in archived exposes, registering: ', $key, 0);
+                    $this->registerVariable($foundFeature);
 
-            // Prüfe, ob Preset-Profile erstellt werden müssen
-            if (isset($Payload[$key]['presets'])) {
-                $presetIdent = $ident . '_Presets';
-                if (!@$this->GetIDForIdent($presetIdent)) {
-                    $this->createPresetProfile($Payload[$key]['presets'], $key);
+                    // Überprüfen, ob die Preset-Variable existiert, falls Presets vorhanden sind
+                    if (isset($foundFeature['presets'])) {
+                        $presetIdent = $ident . '_Presets';
+                        if (!@$this->GetIDForIdent($presetIdent)) {
+                            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Preset variable not found, registering: ', $presetIdent, 0);
+                            $this->registerVariable($foundFeature); // Registriere die Preset-Variable
+                        }
+                    }
+                } elseif ($key === 'last_seen') {
+                    // Ausnahme: 'last_seen' soll immer registriert werden
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Special case for last_seen, registering: ', $key, 0);
+                    $this->registerVariable(['property' => 'last_seen']);
+                } else {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Feature not found in archived exposes: ', $key, 0);
                 }
             }
 
@@ -594,9 +604,10 @@ abstract class ModulBase extends \IPSModule
             }
 
             // Verarbeite den Wert basierend auf dem Typ
+            $variableTypeKey = $key . '_type';
             if (isset($Payload[$variableTypeKey])) {
                 $variableType = $Payload[$variableTypeKey];
-
+                
                 // Prüfe, ob ein State-Mapping existiert und wende es an
                 if (array_key_exists($key, self::$stateMappings)) {
                     $mappedValue = self::convertStateBasedOnMapping($key, $value, $variableType);
@@ -669,8 +680,6 @@ abstract class ModulBase extends \IPSModule
      */
     protected function SetValue($Ident, $Value)
     {
-        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Incoming value for ' . $Ident, $Value, 0);
-
         // Standardwert für adjustedValue setzen
         $adjustedValue = $Value;
 
@@ -748,7 +757,7 @@ abstract class ModulBase extends \IPSModule
                     $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Preset variable does not exist: ', $presetIdent, 0);
                 }
             }
-        } else {
+        }
             // Typ der vorhandenen Variable abrufen
             $varType = IPS_GetVariable($this->GetIDForIdent($Ident))['VariableType'];
             // Standardverarbeitung für andere Variablentypen
@@ -768,7 +777,6 @@ abstract class ModulBase extends \IPSModule
                 default:
                     $adjustedValue = (string) $Value; // Fallback, falls der Typ unbekannt ist
                     break;
-            }
         }
 
         $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Adjusted value for ' . $Ident, (is_array($adjustedValue) ? json_encode($adjustedValue) : $adjustedValue), 0);
@@ -1091,6 +1099,14 @@ abstract class ModulBase extends \IPSModule
      */
     private function registerVariable($feature, $exposeType = null)
     {
+        // Ausnahme für 'last_seen': diese Variable wird immer angelegt
+        if ($feature['property'] === 'last_seen') {
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Registering special case for last_seen', json_encode($feature), 0);
+            $ident = $this->convertPropertyToIdent('last_seen');
+            $this->RegisterVariableInteger($ident, $this->Translate('Last Seen'), '~UnixTimestamp');
+            return;
+        }
+
         // Setze den Typ auf den übergebenen Expose-Typ, falls vorhanden
         if ($exposeType !== null) {
             $feature['type'] = $exposeType;  // Den Typ direkt in das Feature übernehmen
@@ -1102,6 +1118,41 @@ abstract class ModulBase extends \IPSModule
         $label = ucwords(str_replace('_', ' ', $feature['property'] ?? $property));
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Using Expose Type: ', $type, 0);
 
+
+        // Überprüfen, ob die Variable bereits existiert
+        $objectID = @$this->GetIDForIdent($ident);
+        if ($objectID) {
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable already exists, checking presets: ', $ident, 0);
+        }
+
+        // Prüfen, ob Presets vorhanden sind und unabhängig vom Objektzustand registrieren
+        if (isset($feature['presets']) && is_array($feature['presets'])) {
+            $fullRangeProfileName = $this->getFullRangeProfileName($feature);
+            $presetProfileName = $fullRangeProfileName . '_Presets';
+
+            // Debug-Ausgabe des Preset-Profilnamens
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating Preset Profile', $presetProfileName, 0);
+
+            // Preset-Profil direkt erstellen
+            $this->RegisterProfileInteger($presetProfileName, '', '', '', 0, 0, 0);
+            foreach ($feature['presets'] as $preset) {
+                $presetValue = $preset['value'];
+                $presetName = $this->Translate(ucwords(str_replace('_', ' ', $preset['name'])));
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Adding preset: ', $presetName . ' with value ' . $presetValue, 0);
+                IPS_SetVariableProfileAssociation($presetProfileName, $presetValue, $presetName, '', 0xFFFFFF);
+            }
+
+            // Preset-Variable registrieren
+            $this->RegisterVariableInteger($ident . '_Presets', $this->Translate($label . ' Presets'), $presetProfileName);
+            $this->EnableAction($ident . '_Presets');
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Preset profile and variable created for ' . $label, $presetProfileName, 0);
+        }
+
+        // Wenn die Hauptvariable bereits existiert, kehre zurück, da sie nicht neu angelegt werden muss
+        if ($objectID) {
+            return;
+        }
+        
         // Überprüfung auf Standardprofil und zugehörigen Variablentyp
         $standardProfile = $this->getStandardProfile($type, $property);
         $variableType = $this->getVariableTypeFromProfile($type, $property);
@@ -1139,30 +1190,6 @@ abstract class ModulBase extends \IPSModule
             return;
         }
 
-        // Prüfen, ob Presets vorhanden sind
-        if (isset($feature['presets']) && is_array($feature['presets'])) {
-            // Hole den vollständigen Namen des Hauptprofils inklusive Min/Max-Werten
-            $fullRangeProfileName = $this->getFullRangeProfileName($feature);
-            $presetProfileName = $fullRangeProfileName . '_Presets';
-
-            // Debug-Ausgabe des Preset-Profilnamens
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating Preset Profile', $presetProfileName, 0);
-
-            // Preset-Profil direkt erstellen
-            $this->RegisterProfileInteger($presetProfileName, '', '', '', 0, 0, 0);
-            foreach ($feature['presets'] as $preset) {
-                $presetValue = $preset['value'];
-                $presetName = $this->Translate(ucwords(str_replace('_', ' ', $preset['name'])));
-                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Adding preset: ', $presetName . ' with value ' . $presetValue, 0);
-                IPS_SetVariableProfileAssociation($presetProfileName, $presetValue, $presetName, '', 0xFFFFFF);
-            }
-
-            // Preset-Variable registrieren
-            $this->RegisterVariableInteger($ident . '_Presets', $this->Translate($label . ' Presets'), $presetProfileName);
-            $this->EnableAction($ident . '_Presets');
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Preset profile and variable created for ' . $label, $presetProfileName, 0);
-        }
-
         // Überprüfen, ob ein Mapping vorhanden ist und den Datentyp ggf. anpassen
         if (array_key_exists($ident, self::$stateTypeMapping)) {
             $mappedType = self::$stateTypeMapping[$ident]['dataType'];
@@ -1187,15 +1214,6 @@ abstract class ModulBase extends \IPSModule
         }
 
         $isFloat = in_array($feature['unit'] ?? '', self::$floatUnits);
-
-        // Überprüfen, ob die Variable bereits existiert, bevor sie neu angelegt wird
-        $objectID = @$this->GetIDForIdent($ident);
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Object ID: ', (string) $objectID, 0);
-        if ($objectID) {
-            return;
-        }
-
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Registering new variable: ', $ident, 0);
 
         // Registriere die Hauptvariable basierend auf ihrem Typ
         switch ($type) {
