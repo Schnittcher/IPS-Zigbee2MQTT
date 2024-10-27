@@ -113,7 +113,6 @@ class Zigbee2MQTTGroup extends \Zigbee2MQTT\ModulBase
         }
     }
 
-
     /**
      * Destroy
      *
