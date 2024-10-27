@@ -691,7 +691,7 @@ abstract class ModulBase extends \IPSModule
         $vollerPfad = $kernelDir . $verzeichnisName . DIRECTORY_SEPARATOR;
         $dateiPfad = $vollerPfad . $instanceID . '_' . $ieeeAddr . '.json';
 
-        $allowedVariables = [];
+        $knownVariables = [];
 
         if (file_exists($dateiPfad)) {
             $jsonData = file_get_contents($dateiPfad);
