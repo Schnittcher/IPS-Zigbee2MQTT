@@ -21,7 +21,6 @@ abstract class ModulBase extends \IPSModule
     use Semaphore;
     use ColorHelper;
     use VariableProfileHelper;
-    use AttributeArrayHelper;
     use SendData;
 
     /** @var string $ExtensionTopic Muss überschrieben werden für den ReceiveFilter */
