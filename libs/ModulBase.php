@@ -9,7 +9,6 @@ require_once __DIR__ . '/SemaphoreHelper.php';
 require_once __DIR__ . '/VariableProfileHelper.php';
 require_once __DIR__ . '/MQTTHelper.php';
 require_once __DIR__ . '/ColorHelper.php';
-require_once __DIR__ . '/AttributeArrayHelper.php';
 
 /**
  * ModulBase
@@ -134,9 +133,24 @@ abstract class ModulBase extends \IPSModule
         $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
         $this->RegisterPropertyString('MQTTBaseTopic', '');
         $this->RegisterPropertyString('MQTTTopic', '');
-        $this->RegisterAttributeArray('exposes', []);
         $this->TransactionData = [];
-    }
+        
+        // Vollständigen Pfad zum Verzeichnis für die Instanz-Dateien erstellen
+        // rtrim und DIRECTORY_SEPARATOR garantieren BS-Sicherheit (Windows/Linux)
+        $neuesVerzeichnis = rtrim(IPS_GetKernelDir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'Zigbee2MQTTExposes';
+
+        // Prüfen, ob das Verzeichnis bereits existiert
+        if (!is_dir($neuesVerzeichnis)) {
+            // Verzeichnis erstellen mit Berechtigungen 0755
+            if (mkdir($neuesVerzeichnis, 0755, true)) {
+                IPS_LogMessage(__CLASS__, "Verzeichnis '$neuesVerzeichnis' erfolgreich erstellt.");
+            } else {
+                IPS_LogMessage(__CLASS__, "Fehler beim Erstellen des Verzeichnisses '$neuesVerzeichnis'.");
+            }
+        } else {
+            IPS_LogMessage(__CLASS__, "Verzeichnis '$neuesVerzeichnis' existiert bereits.");
+            }
+        }
 
     /**
      * ApplyChanges
@@ -196,7 +210,7 @@ abstract class ModulBase extends \IPSModule
         // Handhabung von Preset-Variablen
         if (strpos($ident, '_Presets') !== false) {
             $mainIdent = str_replace('_Presets', '', $ident);
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, "Preset action detected, redirecting to main ident: $mainIdent", 0);
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, "Aktion über Presets erfolgt, Weiterleitung zur eigentlichen Variable: $mainIdent", 0);
             $this->SetValue($mainIdent, $value);
             $payloadKey = self::convertIdentToPayloadKey($mainIdent);
             $payload = [$payloadKey => $value];
@@ -206,7 +220,7 @@ abstract class ModulBase extends \IPSModule
 
         // Prüfen, ob die Variable in der Liste der String-Variablen ohne Rückmeldung ist
         if (in_array($ident, self::$stringVariablesNoResponse)) {
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Handling string variable without response: ' . $ident, $value, 0);
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Behandlung String ohne Rückmeldung: ' . $ident, $value, 0);
 
             // Sende den Befehl an das Gerät
             $payloadKey = self::convertIdentToPayloadKey($ident);
@@ -243,11 +257,11 @@ abstract class ModulBase extends \IPSModule
                 if ($value >= 1000) {
                     // Den Kelvin-Wert zu Mired umrechnen (1000000 / Kelvin)
                     $convertedValue = strval(intval(round(1000000 / $value, 0)));
-                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Converted Kelvin to Mired: ', $convertedValue, 0);
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Kelvin zu Mired konvertiert: ', $convertedValue, 0);
                 } else {
                     // Wenn der Wert unter 1000 liegt, keine Umrechnung vornehmen
                     $convertedValue = strval($value);
-                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Value below 1000, no conversion: ', $convertedValue, 0);
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Wert unter 1000, Keine Konvertierung: ', $convertedValue, 0);
                 }
 
                 $payloadKey = self::convertIdentToPayloadKey($ident);
@@ -262,12 +276,12 @@ abstract class ModulBase extends \IPSModule
         // Umwandlung von true/false zu "ON"/"OFF" für state
         if (strpos($payloadKey, 'state') === 0 && is_bool($value)) {
             $value = $value ? 'ON' : 'OFF';
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Converted boolean to state: ', $value, 0);
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Boolean zu state konvertiert: ', $value, 0);
         }
 
         $payload = [$payloadKey => $value];
 
-        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Sending payload: ', json_encode($payload), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: sende payload: ', json_encode($payload), 0);
         $this->SendSetCommand($payload);
     }
 
@@ -417,7 +431,7 @@ abstract class ModulBase extends \IPSModule
                 break;
 
             default:
-                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColorExt', 'Invalid mode ' . $mode, 0);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColorExt', 'falscher mode ' . $mode, 0);
                 return;
         }
 
@@ -446,7 +460,7 @@ abstract class ModulBase extends \IPSModule
         $Topic = '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
 
         // Debug-Ausgabe des zu sendenden Payloads
-        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Payload to be sent: ', json_encode($Payload), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: zu sendendes Payload: ', json_encode($Payload), 0);
 
         // Sende die Daten an das Gerät
         $this->SendData($Topic, $Payload, 0);
@@ -476,7 +490,7 @@ abstract class ModulBase extends \IPSModule
     protected function AppendVariableTypes($Payload)
     {
         // Zeige das eingehende Payload im Debug
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Incoming Payload: ', json_encode($Payload), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Eingehendes Payload: ', json_encode($Payload), 0);
 
         foreach ($Payload as $key => $value) {
             // Konvertiere den Key in einen Variablen-Ident
@@ -484,7 +498,7 @@ abstract class ModulBase extends \IPSModule
 
             // Prüfe, ob die Variable existiert
             $objectID = @$this->GetIDForIdent($ident);
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable exists for Ident: ', $ident, 0);
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable existiert für Ident: ', $ident, 0);
             if ($objectID) {
                 // Hole den Typ der existierenden Variablen
                 $variableType = IPS_GetVariable($objectID)['VariableType'];
@@ -495,7 +509,7 @@ abstract class ModulBase extends \IPSModule
         }
 
         // Zeige das modifizierte Payload im Debug
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Modified Payload with Types: ', json_encode($Payload), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: modifizierter Payload mit Typen: ', json_encode($Payload), 0);
 
         // Gib das modifizierte Payload zurück
         return $Payload;
@@ -536,72 +550,91 @@ abstract class ModulBase extends \IPSModule
     {
         // Debug-Ausgabe des eingehenden Payloads
         $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: json incoming: ', json_encode($Payload), 0);
-
+        
+        // Laden der gespeicherten JSON-Datei, um die bekannten Variablen zu erhalten
+        $knownVariables = $this->getKnownVariables();
+        
         // Schleife durch die Payload-Daten
         foreach ($Payload as $key => $value) {
             // Überspringe Typ-Informationen (z.B. '_type')
             if (strpos($key, '_type') !== false) {
                 continue;
             }
-            // Umrechnung von Mired in Kelvin für 'color_temp'
-            if ($key === 'color_temp') {
-                $value = intval(1000000 / $value); // Umrechnung Mired nach Kelvin
-                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Converted color_temp to Kelvin: ', (string) $value, 0);
+          // Sonderbehandlung für 'last_seen'
+            if ($key === 'last_seen') {
+                // Prüfen, ob die Variable existiert, falls nicht, registriere sie
+                if (!@$this->GetIDForIdent($key)) {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Variable nicht gefunden, Registrierung: ' . $key, 0);
+                    // 'last_seen' soll immer registriert werden
+                    $this->registerVariable(['property' => 'last_seen']);
+                }
+
+                // Umrechnung von Millisekunden auf Sekunden
+                $value = intval($value / 1000);
+
+                // Setze den Wert der Variable
+                $ident = self::convertPropertyToIdent($key);
+                $this->SetValue($ident, $value);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'last_seen verarbeitet: ' . $key . ' => ' . $value, 0);
+
+                continue; // Weiter zur nächsten Schleife
             }
+
+            // Sonderbehandlung für 'color_mode'
+            if ($key === 'color_mode') {
+                // Prüfen, ob die Variable existiert, falls nicht, registriere sie
+                if (!@$this->GetIDForIdent($key)) {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Variable nicht gefunden, Registrierung: ' . $key, 0);
+                    // 'color_mode' soll immer registriert werden
+                    $this->registerVariable(['property' => 'color_mode']);
+                }
+
+                // Optional: Spezielle Verarbeitung für 'color_mode' hinzufügen
+                $ident = self::convertPropertyToIdent($key);
+                $processedValue = is_array($value) ? json_encode($value) : $value;
+                $this->SetValue($ident, $processedValue);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'color_mode verarbeitet: ' . $key . ' => ' . $processedValue, 0);
+
+                continue; // Weiter zur nächsten Schleife
+            }
+
+            // Konvertiere den Payload-Schlüssel zu Kleinbuchstaben für den Vergleich
+            $lowerKey = strtolower($key);
+
+            // Prüfen, ob die Variable in der Liste der erlaubten Variablen ist
+            if (!array_key_exists($lowerKey, $knownVariables)) {
+                // Variable ist nicht erlaubt und ist keine Ausnahme, überspringen
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Variable unbekannt, übersprungen: ' . $key, 0);
+                continue;
+            }
+
+            // Erhalte die Eigenschaften der erlaubten Variable
+            $variableProps = $knownVariables[$lowerKey];
+
+            // Umrechnung von Mired in Kelvin für 'color_temp'
+            if ($lowerKey === 'color_temp') {
+                $value = intval(1000000 / $value); // Umrechnung Mired nach Kelvin
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: color_temp zu Kelvin konvertiert: ', (string) $value, 0);
+            }
+
             // Erstelle den Ident-Namen basierend auf dem Property-Namen
             $ident = self::convertPropertyToIdent($key);
-            $variableTypeKey = $key . '_type';
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Verarbeite Ident: ' . $ident, 0);
 
             // Prüfe, ob die Variable existiert, falls nicht, registriere sie
-            if (!@$this->GetIDForIdent($ident)) {
-                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: DecodeData', 'Variable not found, registering: ' . $key, 0);
-
-                // Lese das gespeicherte Expose-Attribut
-                $savedExposes = $this->ReadAttributeArray('exposes');
-                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: archived exposes: ', json_encode($savedExposes), 0);
-
-                // Prüfen, ob das Feature im Attribut 'exposes' vorhanden ist
-                $foundFeature = null;
-                foreach ($savedExposes as $expose) {
-                    if (isset($expose['features'])) {
-                        foreach ($expose['features'] as $feature) {
-                            if (isset($feature['property']) && $feature['property'] === $key) {
-                                $foundFeature = $feature;
-                                break 2; // Expose gefunden, Schleife abbrechen
-                            }
-                        }
-                    } elseif (isset($expose['property']) && $expose['property'] === $key) {
-                        $foundFeature = $expose;
-                        break;
-                    }
-                }
-
-                // Wenn das Feature im Attribut gefunden wurde, registriere es
-                if ($foundFeature !== null) {
-                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Feature found in archived exposes, registering: ', $key, 0);
-                    $this->registerVariable($foundFeature);
-
-                    // Überprüfen, ob die Preset-Variable existiert, falls Presets vorhanden sind
-                    if (isset($foundFeature['presets'])) {
-                        $presetIdent = $ident . '_Presets';
-                        if (!@$this->GetIDForIdent($presetIdent)) {
-                            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Preset variable not found, registering: ', $presetIdent, 0);
-                            $this->registerVariable($foundFeature); // Registriere die Preset-Variable
-                        }
-                    }
-                } elseif ($key === 'last_seen') {
-                    // Ausnahme: 'last_seen' soll immer registriert werden
-                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Special case for last_seen, registering: ', $key, 0);
-                    $this->registerVariable(['property' => 'last_seen']);
-                } else {
-                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Feature not found in archived exposes: ', $key, 0);
+            $variableID = @$this->GetIDForIdent($ident);
+            if (!$variableID) {
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Variable nicht gefunden, Registrierung: ' . $key, 0);
+                $this->registerVariable($variableProps);
+                // Nach der Registrierung die Variable erneut abrufen
+                $variableID = @$this->GetIDForIdent($ident);
+                if (!$variableID) {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Fehler beim Registrieren der Variable: ' . $ident, 0);
+                    continue;
                 }
             }
 
-            // Spezieller Fall: last_seen muss von Millisekunden auf Sekunden umgerechnet werden
-            if ($key === 'last_seen') {
-                $value = intval($value / 1000);
-            }
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Hole ID für Ident: ' . $ident . ': ' . $variableID, 0);
 
             // Verarbeite den Wert basierend auf dem Typ
             $variableTypeKey = $key . '_type';
@@ -640,10 +673,64 @@ abstract class ModulBase extends \IPSModule
             } else {
                 // Fallback: Wert ohne Typinformationen setzen
                 $this->SetValue($ident, is_array($value) ? json_encode($value) : $value);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Fallback processed: ' . $key, 0);
             }
         }
     }
 
+    /**
+     * Lädt die gespeicherte JSON-Datei und gibt die Liste der bekannten Variablen zurück
+     *
+     * @return array Liste der bekannten Variablen
+     */
+    private function getKnownVariables(): array
+    {
+        $instanceID = $this->InstanceID;
+        $ieeeAddr = $this->ReadPropertyString('IEEE');
+        $kernelDir = IPS_GetKernelDir();
+        $verzeichnisName = 'Zigbee2MQTTExposes';
+        $vollerPfad = $kernelDir . $verzeichnisName . DIRECTORY_SEPARATOR;
+        $dateiPfad = $vollerPfad . $instanceID . '_' . $ieeeAddr . '.json';
+
+        $allowedVariables = [];
+
+        if (file_exists($dateiPfad)) {
+            $jsonData = file_get_contents($dateiPfad);
+            $data = json_decode($jsonData, true);
+            if (json_last_error() === JSON_ERROR_NONE && isset($data['exposes'])) {
+                foreach ($data['exposes'] as $expose) {
+                    // Prüfen, ob 'features' existieren
+                    if (isset($expose['features']) && is_array($expose['features'])) {
+                        foreach ($expose['features'] as $feature) {
+                            if (isset($feature['property'])) { // Änderung hier
+                                $variableName = trim(strtolower($feature['property']));
+                                $allowedVariables[$variableName] = $feature;
+                            }
+                        }
+                    } else {
+                        // Falls 'features' nicht vorhanden sind, überprüfen, ob 'property' direkt unter 'expose' liegt
+                        if (isset($expose['property'])) { // Änderung hier
+                            $variableName = trim(strtolower($expose['property']));
+                            $allowedVariables[$variableName] = $expose;
+                        }
+                    }
+                }
+                // Loggen der erlaubten Variablen mit genauen Zeichenfolgen
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Known Variables Array:', 0);
+                foreach ($allowedVariables as $varName => $varProps) {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, "'" . $varName . "'", 0);
+                }
+                return $knownVariables;
+            } else {
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, "Fehler beim Dekodieren der JSON-Datei oder fehlende 'exposes': " . json_last_error_msg(), 0);
+            }
+        } else {
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, "JSON-Datei nicht gefunden: " . $dateiPfad, 0);
+        }
+
+        return $knownVariables;
+    }
+    
     /**
      * Setzt den Wert einer existierenden Variable, passt den Wert entsprechend dem Variablentyp an.
      *
@@ -1106,7 +1193,15 @@ abstract class ModulBase extends \IPSModule
             $this->RegisterVariableInteger($ident, $this->Translate('Last Seen'), '~UnixTimestamp');
             return;
         }
-
+        
+        // Ausnahme für 'color_mode': diese Variable wird immer angelegt
+        if ($feature['property'] === 'color_mode') {
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Registering special case for color_mode', json_encode($feature), 0);
+            $ident = $this->convertPropertyToIdent('color_mode');
+            $this->RegisterVariableString($ident, $this->Translate('Color Mode'), '');
+            return;
+        }
+        
         // Setze den Typ auf den übergebenen Expose-Typ, falls vorhanden
         if ($exposeType !== null) {
             $feature['type'] = $exposeType;  // Den Typ direkt in das Feature übernehmen
