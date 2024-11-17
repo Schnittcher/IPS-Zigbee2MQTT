@@ -143,6 +143,9 @@ trait Zigbee2MQTTHelper
             case 'Z2M_CycleIrrigationInterval':
                 $Payload['cycle_irrigation_interval'] = $Value;
                 break;
+            case 'Z2M_Countdown':
+                $Payload['countdown'] = $Value;  
+                break;              
             case 'Z2M_CountdownL1':
                 $Payload['countdown_l1'] = $Value;
                 break;
@@ -1184,6 +1187,9 @@ trait Zigbee2MQTTHelper
                 }
                 if (array_key_exists('cycle_irrigation_interval', $Payload)) {
                     $this->SetValue('Z2M_CycleIrrigationInterval', $Payload['cycle_irrigation_interval']);
+                }
+                if (array_key_exists('countdown', $Payload)) {
+                    $this->SetValue('Z2M_Countdown', $Payload['countdown']);
                 }
                 if (array_key_exists('countdown_l1', $Payload)) {
                     $this->SetValue('Z2M_CountdownL1', $Payload['countdown_l1']);
@@ -4529,6 +4535,7 @@ trait Zigbee2MQTTHelper
                             $this->RegisterProfileInteger($ProfileName, 'Graph', '', ' ' . $expose['unit'], $expose['value_min'], $expose['value_max'], 1);
                         }
                         break;
+                    case 'countdown':
                     case 'countdown_l2':
                     case 'countdown_l1':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
@@ -6724,6 +6731,13 @@ trait Zigbee2MQTTHelper
                                 $this->EnableAction('Z2M_CycleIrrigationInterval');
                             }
                             break;
+                        case 'countdown':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableInteger('Z2M_Countdown', $this->Translate('Countdown'), $ProfileName);
+                                $this->EnableAction('Z2M_Countdown');
+                            }
+                            break;                            
                         case 'countdown_l1':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
