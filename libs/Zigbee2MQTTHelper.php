@@ -11,6 +11,12 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_OccupiedCoolingMode':
+                $Payload['occupied_cooling_mode'] = $Value;
+                break;
+            case 'Z2M_OperatingMode':
+                $payload['operating_mode'] = strval($Value);
+                break;
             case 'Z2M_OperationMode':
                 $payload['operation_mode'] = strval($Value);
                 break;
@@ -873,6 +879,12 @@ trait Zigbee2MQTTHelper
                     //Last Seen ist nicht in den Exposes enthalten, deswegen hier.
                     $this->RegisterVariableInteger('Z2M_LastSeen', $this->Translate('Last Seen'), '~UnixTimestamp');
                     $this->SetValue('Z2M_LastSeen', ($Payload['last_seen'] / 1000));
+                }
+                if (array_key_exists('occupied_cooling_setpoint', $Payload)) {
+                    $this->SetValue('Z2M_OccupiedCoolingSetpoint', $Payload['occupied_cooling_setpoint']);
+                }
+                if (array_key_exists('operating_mode', $Payload)) {
+                    $this->SetValue('Z2M_OperatingMode', $Payload['operating_mode']);
                 }
                 if (array_key_exists('operation_mode', $Payload)) {
                     $this->SetValue('Z2M_OperationMode', $Payload['operation_mode']);
@@ -3747,6 +3759,15 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.system_mode.f25194a5':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
+                                    ['heat', $this->Translate('Heat'), '', 0x00FF00],
+                                    ['cool', $this->Translate('Cool'), '', 0x00FF00],
+                                    ['off', $this->Translate('Off'), '', 0x00FF00],
+                                ]);
+                            }
+                            break;
                         case 'Z2M.system_mode.ba44e6f8':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Information', '', '', [
@@ -4789,6 +4810,7 @@ trait Zigbee2MQTTHelper
                     case 'remote_temperature':
                     case 'current_heating_setpoint_auto':
                     case 'current_heating_setpoint':
+                    case 'occupied_cooling_setpoint':
                     case 'occupied_heating_setpoint':
                     case 'occupied_heating_setpoint_scheduled':
                         $ProfileName .= $expose['value_min'] . '_' . $expose['value_max'];
@@ -5305,6 +5327,13 @@ trait Zigbee2MQTTHelper
                                     break; //Climate binaray break;
                                 case 'numeric':
                                     switch ($feature['property']) {
+                                        case 'occupied_cooling_setpoint':
+                                            $ProfileName = $this->registerVariableProfile($feature);
+                                            if ($ProfileName != false) {
+                                                $this->RegisterVariableFloat('Z2M_OccupiedCoolingSetpoint', $this->Translate('Occupied Cooling Setpoint'), $ProfileName);
+                                                $this->EnableAction('Z2M_OccupiedCoolingSetpoint');
+                                            }
+                                            break;
                                         case 'current_heating_setpoint':
                                             $ProfileName = $this->registerVariableProfile($feature);
                                             if ($ProfileName != false) {
@@ -5800,6 +5829,13 @@ trait Zigbee2MQTTHelper
                     break; //binary break
                 case 'enum':
                     switch ($expose['property']) {
+                        case 'operating_mode':
+                            $ProfileName = $this->registerVariableProfile($expose);
+                            if ($ProfileName != false) {
+                                $this->RegisterVariableString('Z2M_OperatingMode', $this->Translate('Operating Mode'), $ProfileName);
+                                $this->EnableAction('Z2M_OperatingMode');
+                            }
+                            break;
                         case 'operation_mode':
                             $ProfileName = $this->registerVariableProfile($expose);
                             if ($ProfileName != false) {
