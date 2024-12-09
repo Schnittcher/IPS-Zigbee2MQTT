@@ -1,0 +1,45 @@
+{
+    "id": "{60B28A30-AF85-4F80-8B90-6BC894D241DA}",
+    "caption": "On with timed off",
+    "form": [
+        {
+            "type": "NumberSpinner",
+            "name": "ONTIME",
+            "minimum": 1,
+            "maximum": 2147483647,
+            "caption": "On Time",
+            "suffix": "seconds"
+        }
+    ],
+    "priority": 1,
+    "action": [
+        "Z2M_SendSetCommand($_IPS['TARGET'], ['state' => 'ON', 'countdown' => $_IPS['ONTIME']]);"
+    ],
+    "restrictions": {
+        "objectType": [
+            1
+        ],
+        "moduleID": [
+            "{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}",
+            "{11BF3773-E940-469B-9DD7-FB9ACD7199A2}"
+        ],
+        "includeEnvironments": [
+            "Default",
+            "TestCommands"
+        ],
+        "hasIdent": [
+            "Z2M_Countdown",
+            "Z2M_State"
+        ]
+    },
+    "locale": {
+        "de": {
+            "On with timed off": "Ein mit Zeitabschaltung",
+            "Switch on and switch off after a defined time.": "Einschalten und nach definierter Zeit ausschalten.",
+            "seconds": "Sekunden",
+            "Switch on and after {ONTIME} seconds switch off": "Einschalten und nach {ONTIME} Sekunden wieder ausschalten"
+        }
+    },
+    "description": "Switch on and switch off after a defined time.",
+    "format": "Switch on and after {ONTIME} seconds switch off"
+}

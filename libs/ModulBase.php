@@ -66,6 +66,42 @@ abstract class ModulBase extends \IPSModule
         'mH', 'µH', '%', 'dB', 'dBA', 'dBC'
     ];
 
+    /** @var array<array{type: string, feature: string, profile: string, variableType: string}
+     * Ein Array, das Standardprofile für bestimmte Gerätetypen und Eigenschaften definiert.
+     *
+     * Jedes Element des Arrays enthält folgende Schlüssel:
+     *
+     * - 'type' (string): Der Gerätetyp, z. B. 'cover' oder 'light'. Ein leerer Wert ('') bedeutet, dass der Typ nicht relevant ist.
+     * - 'feature' (string): Die spezifische Eigenschaft oder das Feature des Geräts, z. B. 'position', 'temperature'.
+     * - 'profile' (string): Das Symcon-Profil, das für dieses Feature verwendet wird, z. B. '~Shutter.Reversed' oder '~Battery.100'.
+     * - 'variableType' (string): Der Variablentyp, der für dieses Profil verwendet wird, z. B. 'int' für Integer oder 'float' für Gleitkommazahlen.
+     *
+     * Beispieleintrag:
+     * [
+     *   'type' => 'cover',
+     *   'feature' => 'position',
+     *   'profile' => '~Shutter.Reversed',
+     *   'variableType' => 'int'
+     * ]
+     */
+    protected static $VariableUseStandardProfile = [
+        ['type' => 'cover', 'feature' => 'position', 'profile' => '~Shutter.Reversed', 'variableType' => 'int'],
+        ['type' => '', 'feature' => 'temperature', 'profile' => '~Temperature', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'humidity', 'profile' => '~Humidity.F', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'local_temperature', 'profile' => '~Temperature', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'battery', 'profile' => '~Battery', 'variableType' => 'int'],
+        ['type' => '', 'feature' => 'current', 'profile' => '~Ampere', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'voltage', 'profile' => '~Volt', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'energy', 'profile' => '~Electricity', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'power', 'profile' => '~Watt', 'variableType' => 'float'],
+        ['type' => '', 'feature' => 'battery', 'profile' => '~Battery.100', 'variableType' => 'int'],
+        ['type' => '', 'feature' => 'occupancy', 'profile' => '~Presence', 'variableType' => 'bool'],
+        ['type' => '', 'feature' => 'pi_heating_demand', 'profile' => '~Valve', 'variableType' => 'int'],
+        ['type' => '', 'feature' => 'presence', 'profile' => '~Presence', 'variableType' => 'bool'],
+        ['type' => '', 'feature' => 'illuminance_lux', 'profile' => '~Illumination', 'variableType' => 'int'],
+        ['type' => '', 'feature' => 'color_temp', 'profile' => '~TWColor', 'variableType' => 'int']
+    ];
+
     /** @var array $stringVariablesNoResponse
      * Gehört zu RequestAction
      *
@@ -97,7 +133,23 @@ abstract class ModulBase extends \IPSModule
         $this->RegisterPropertyString('MQTTBaseTopic', '');
         $this->RegisterPropertyString('MQTTTopic', '');
         $this->TransactionData = [];
-    }
+        
+        // Vollständigen Pfad zum Verzeichnis für die Instanz-Dateien erstellen
+        // rtrim und DIRECTORY_SEPARATOR garantieren BS-Sicherheit (Windows/Linux)
+        $neuesVerzeichnis = rtrim(IPS_GetKernelDir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'Zigbee2MQTTExposes';
+
+        // Prüfen, ob das Verzeichnis bereits existiert
+        if (!is_dir($neuesVerzeichnis)) {
+            // Verzeichnis erstellen mit Berechtigungen 0755
+            if (mkdir($neuesVerzeichnis, 0755, true)) {
+                IPS_LogMessage(__CLASS__, "Verzeichnis '$neuesVerzeichnis' erfolgreich erstellt.");
+            } else {
+                IPS_LogMessage(__CLASS__, "Fehler beim Erstellen des Verzeichnisses '$neuesVerzeichnis'.");
+            }
+        } else {
+            IPS_LogMessage(__CLASS__, "Verzeichnis '$neuesVerzeichnis' existiert bereits.");
+            }
+        }
 
     /**
      * ApplyChanges
@@ -118,11 +170,11 @@ abstract class ModulBase extends \IPSModule
             return;
         }
         //Setze Filter für ReceiveData
-        $Filter1 = preg_quote('"Topic":"' . $BaseTopic . '/' . $MQTTTopic . '"');
+        $Filter1 = preg_quote('"Topic":"' . $BaseTopic . '/' . $MQTTTopic);
         $Filter2 = preg_quote('"Topic":"' . $BaseTopic . '/SymconExtension/response/' . static::$ExtensionTopic . $MQTTTopic);
         $this->SendDebug('Filter', '.*(' . $Filter1 . '|' . $Filter2 . ').*', 0);
         $this->SetReceiveDataFilter('.*(' . $Filter1 . '|' . $Filter2 . ').*');
-        if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
+        if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY) && ($this->GetStatus() != IS_CREATING)) {
             $this->UpdateDeviceInfo();
         }
         $this->SetStatus(IS_ACTIVE);
@@ -157,7 +209,7 @@ abstract class ModulBase extends \IPSModule
         // Handhabung von Preset-Variablen
         if (strpos($ident, '_Presets') !== false) {
             $mainIdent = str_replace('_Presets', '', $ident);
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, "Preset action detected, redirecting to main ident: $mainIdent", 0);
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, "Aktion über Presets erfolgt, Weiterleitung zur eigentlichen Variable: $mainIdent", 0);
             $this->SetValue($mainIdent, $value);
             $payloadKey = self::convertIdentToPayloadKey($mainIdent);
             $payload = [$payloadKey => $value];
@@ -167,7 +219,7 @@ abstract class ModulBase extends \IPSModule
 
         // Prüfen, ob die Variable in der Liste der String-Variablen ohne Rückmeldung ist
         if (in_array($ident, self::$stringVariablesNoResponse)) {
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Handling string variable without response: ' . $ident, $value, 0);
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Behandlung String ohne Rückmeldung: ' . $ident, $value, 0);
 
             // Sende den Befehl an das Gerät
             $payloadKey = self::convertIdentToPayloadKey($ident);
@@ -199,20 +251,36 @@ abstract class ModulBase extends \IPSModule
                 $payload = [$payloadKey => $convertedValue];
                 $this->SendSetCommand($payload);
                 return;
+            case 'Z2M_ColorTemp':
+                // Überprüfen, ob der Wert über 1000 liegt, sonst keine Umrechnung
+                if ($value >= 1000) {
+                    // Den Kelvin-Wert zu Mired umrechnen (1000000 / Kelvin)
+                    $convertedValue = strval(intval(round(1000000 / $value, 0)));
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Kelvin zu Mired konvertiert: ', $convertedValue, 0);
+                } else {
+                    // Wenn der Wert unter 1000 liegt, keine Umrechnung vornehmen
+                    $convertedValue = strval($value);
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Wert unter 1000, Keine Konvertierung: ', $convertedValue, 0);
+                }
+
+                $payloadKey = self::convertIdentToPayloadKey($ident);
+                $payload = [$payloadKey => $convertedValue];
+                $this->SendSetCommand($payload);
+                return;
         }
 
         // Wandelt den $Ident zum passenden Expose um
         $payloadKey = self::convertIdentToPayloadKey($ident);
 
         // Umwandlung von true/false zu "ON"/"OFF" für state
-        if ($payloadKey === 'state' && is_bool($value)) {
+        if (strpos($payloadKey, 'state') === 0 && is_bool($value)) {
             $value = $value ? 'ON' : 'OFF';
-            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Converted boolean to state: ', $value, 0);
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Boolean zu state konvertiert: ', $value, 0);
         }
 
         $payload = [$payloadKey => $value];
 
-        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Sending payload: ', json_encode($payload), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: sende payload: ', json_encode($payload), 0);
         $this->SendSetCommand($payload);
     }
 
@@ -229,6 +297,9 @@ abstract class ModulBase extends \IPSModule
      */
     public function ReceiveData($JSONString)
     {
+        if ($this->GetStatus() == IS_CREATING) {
+            return '';
+        }
         $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: JSONString: ', $JSONString, 0);
 
         // Lese die MQTT-Base- und Topic-Konfiguration aus den Instanzeinstellungen
@@ -260,8 +331,8 @@ abstract class ModulBase extends \IPSModule
 
         // Separates Verarbeiten des Verfügbarkeitsstatus (online/offline)
         if (end($Topics) == 'availability') {
-            $this->RegisterVariableBoolean('Z2M_Status', $this->Translate('Status'), 'Z2M.DeviceStatus');
-            $this->SetValue('Z2M_Status', $Buffer['Payload'] == 'online');
+            $this->RegisterVariableBoolean('Z2M_Status', $this->Translate('Availability'), 'Z2M.DeviceStatus');
+            $this->SetValue('Z2M_Status', $Buffer['Payload'] == '{"state":"online"}');
             return '';
         }
 
@@ -359,7 +430,7 @@ abstract class ModulBase extends \IPSModule
                 break;
 
             default:
-                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColorExt', 'Invalid mode ' . $mode, 0);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: setColorExt', 'falscher mode ' . $mode, 0);
                 return;
         }
 
@@ -388,7 +459,7 @@ abstract class ModulBase extends \IPSModule
         $Topic = '/' . $this->ReadPropertyString('MQTTTopic') . '/set';
 
         // Debug-Ausgabe des zu sendenden Payloads
-        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Payload to be sent: ', json_encode($Payload), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: zu sendendes Payload: ', json_encode($Payload), 0);
 
         // Sende die Daten an das Gerät
         $this->SendData($Topic, $Payload, 0);
@@ -418,7 +489,7 @@ abstract class ModulBase extends \IPSModule
     protected function AppendVariableTypes($Payload)
     {
         // Zeige das eingehende Payload im Debug
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Incoming Payload: ', json_encode($Payload), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Eingehendes Payload: ', json_encode($Payload), 0);
 
         foreach ($Payload as $key => $value) {
             // Konvertiere den Key in einen Variablen-Ident
@@ -426,7 +497,7 @@ abstract class ModulBase extends \IPSModule
 
             // Prüfe, ob die Variable existiert
             $objectID = @$this->GetIDForIdent($ident);
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable exists for Ident: ', $ident, 0);
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable existiert für Ident: ', $ident, 0);
             if ($objectID) {
                 // Hole den Typ der existierenden Variablen
                 $variableType = IPS_GetVariable($objectID)['VariableType'];
@@ -437,7 +508,7 @@ abstract class ModulBase extends \IPSModule
         }
 
         // Zeige das modifizierte Payload im Debug
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Modified Payload with Types: ', json_encode($Payload), 0);
+        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: modifizierter Payload mit Typen: ', json_encode($Payload), 0);
 
         // Gib das modifizierte Payload zurück
         return $Payload;
@@ -478,63 +549,94 @@ abstract class ModulBase extends \IPSModule
     {
         // Debug-Ausgabe des eingehenden Payloads
         $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: json incoming: ', json_encode($Payload), 0);
-
+        
+        // Laden der gespeicherten JSON-Datei, um die bekannten Variablen zu erhalten
+        $knownVariables = $this->getKnownVariables();
+        
         // Schleife durch die Payload-Daten
         foreach ($Payload as $key => $value) {
             // Überspringe Typ-Informationen (z.B. '_type')
             if (strpos($key, '_type') !== false) {
                 continue;
             }
+          // Sonderbehandlung für 'last_seen'
+            if ($key === 'last_seen') {
+                // Prüfen, ob die Variable existiert, falls nicht, registriere sie
+                if (!@$this->GetIDForIdent($key)) {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Variable nicht gefunden, Registrierung: ' . $key, 0);
+                    // 'last_seen' soll immer registriert werden
+                    $this->registerVariable(['property' => 'last_seen']);
+                }
+
+                // Umrechnung von Millisekunden auf Sekunden
+                $value = intval($value / 1000);
+
+                // Setze den Wert der Variable
+                $ident = self::convertPropertyToIdent($key);
+                $this->SetValue($ident, $value);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'last_seen verarbeitet: ' . $key . ' => ' . $value, 0);
+
+                continue; // Weiter zur nächsten Schleife
+            }
+
+            // Sonderbehandlung für 'color_mode'
+            if ($key === 'color_mode') {
+                // Prüfen, ob die Variable existiert, falls nicht, registriere sie
+                if (!@$this->GetIDForIdent($key)) {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Variable nicht gefunden, Registrierung: ' . $key, 0);
+                    // 'color_mode' soll immer registriert werden
+                    $this->registerVariable(['property' => 'color_mode']);
+                }
+
+                // Optional: Spezielle Verarbeitung für 'color_mode' hinzufügen
+                $ident = self::convertPropertyToIdent($key);
+                $processedValue = is_array($value) ? json_encode($value) : $value;
+                $this->SetValue($ident, $processedValue);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'color_mode verarbeitet: ' . $key . ' => ' . $processedValue, 0);
+
+                continue; // Weiter zur nächsten Schleife
+            }
+
+            // Konvertiere den Payload-Schlüssel zu Kleinbuchstaben für den Vergleich
+            $lowerKey = strtolower($key);
+
+            // Prüfen, ob die Variable in der Liste der erlaubten Variablen ist
+            if (!array_key_exists($lowerKey, $knownVariables)) {
+                // Variable ist nicht erlaubt und ist keine Ausnahme, überspringen
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Variable unbekannt, übersprungen: ' . $key, 0);
+                continue;
+            }
+
+            // Erhalte die Eigenschaften der erlaubten Variable
+            $variableProps = $knownVariables[$lowerKey];
+
+            // Umrechnung von Mired in Kelvin für 'color_temp'
+            if ($lowerKey === 'color_temp') {
+                $value = intval(1000000 / $value); // Umrechnung Mired nach Kelvin
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: color_temp zu Kelvin konvertiert: ', (string) $value, 0);
+            }
 
             // Erstelle den Ident-Namen basierend auf dem Property-Namen
             $ident = self::convertPropertyToIdent($key);
-            $variableTypeKey = $key . '_type';
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Verarbeite Ident: ' . $ident, 0);
 
             // Prüfe, ob die Variable existiert, falls nicht, registriere sie
-            if (!@$this->GetIDForIdent($ident)) {
-                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: DecodeData', 'Variable not found, registering: ' . $key, 0);
-
-                // Überprüfen, ob der Payload 'exposes' enthält und Variablen registrieren
-                if (isset($Payload['exposes'])) {
-                    $this->mapExposesToVariables($Payload['exposes']);
-                } else {
-                    // Variable basierend auf dem Wertetyp registrieren
-                    if (is_bool($value)) {
-                        $this->RegisterVariableBoolean($ident, $this->Translate(ucfirst($key)), '~Switch');
-                    } elseif (is_int($value)) {
-                        if ($key === 'last_seen') {
-                            $this->RegisterVariableInteger($ident, $this->Translate('Last Seen'), '~UnixTimestamp');
-                        } else {
-                            $this->RegisterVariableInteger($ident, $this->Translate(ucfirst($key)));
-                        }
-                    } elseif (is_float($value)) {
-                        $this->RegisterVariableFloat($ident, $this->Translate(ucfirst($key)));
-                    } else {
-                        $this->RegisterVariableString($ident, $this->Translate(ucfirst($key)));
-                    }
-                }
-
-                // Überprüfe, ob die Variable erfolgreich registriert wurde
-                if (!@$this->GetIDForIdent($ident)) {
-                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: DecodeData', 'Error: Variable could not be registered: ' . $key, 0);
+            $variableID = @$this->GetIDForIdent($ident);
+            if (!$variableID) {
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Variable nicht gefunden, Registrierung: ' . $key, 0);
+                $this->registerVariable($variableProps);
+                // Nach der Registrierung die Variable erneut abrufen
+                $variableID = @$this->GetIDForIdent($ident);
+                if (!$variableID) {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Fehler beim Registrieren der Variable: ' . $ident, 0);
                     continue;
                 }
             }
 
-            // Prüfe, ob Preset-Profile erstellt werden müssen
-            if (isset($Payload[$key]['presets'])) {
-                $presetIdent = $ident . '_Presets';
-                if (!@$this->GetIDForIdent($presetIdent)) {
-                    $this->registerPresetProfile($Payload[$key]['presets'], $key);
-                }
-            }
-
-            // Spezieller Fall: last_seen muss von Millisekunden auf Sekunden umgerechnet werden
-            if ($key === 'last_seen') {
-                $value = intval($value / 1000);
-            }
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Hole ID für Ident: ' . $ident . ': ' . $variableID, 0);
 
             // Verarbeite den Wert basierend auf dem Typ
+            $variableTypeKey = $key . '_type';
             if (isset($Payload[$variableTypeKey])) {
                 $variableType = $Payload[$variableTypeKey];
 
@@ -569,11 +671,78 @@ abstract class ModulBase extends \IPSModule
                 }
             } else {
                 // Fallback: Wert ohne Typinformationen setzen
-                $this->SetValue($ident, $value);
+                $this->SetValue($ident, is_array($value) ? json_encode($value) : $value);
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Fallback processed: ' . $key, 0);
             }
         }
     }
 
+    /**
+     * Lädt die gespeicherte JSON-Datei und gibt die Liste der bekannten Variablen zurück
+     *
+     * @return array Liste der bekannten Variablen
+     */
+    private function getKnownVariables(): array
+    {
+        $instanceID = $this->InstanceID;
+
+        // Pfad zur JSON-Datei basierend auf InstanceID_*.json
+        $kernelDir = rtrim(string: IPS_GetKernelDir(), characters: DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $verzeichnisName = 'Zigbee2MQTTExposes';
+        $vollerPfad = $kernelDir . $verzeichnisName . DIRECTORY_SEPARATOR;
+        $dateiPfadPattern = $vollerPfad . $instanceID . '_*.json';
+
+        $knownVariables = [];
+
+        // Suche nach Dateien, die dem Muster entsprechen
+        $files = glob(pattern: $dateiPfadPattern);
+
+        if (!empty($files)) {
+            foreach ($files as $dateiPfad) {
+                if (file_exists(filename: $dateiPfad)) {
+                    $jsonData = file_get_contents(filename: $dateiPfad);
+                    $data = json_decode(json: $jsonData, associative: true);
+
+                    if (json_last_error() === JSON_ERROR_NONE && isset($data['exposes'])) {
+                        foreach ($data['exposes'] as $expose) {
+                            // Prüfen, ob 'features' existieren
+                            if (isset($expose['features']) && is_array(value: $expose['features'])) {
+                                foreach ($expose['features'] as $feature) {
+                                    if (isset($feature['property'])) {
+                                        $variableName = trim(string: strtolower(string: $feature['property']));
+                                        $knownVariables[$variableName] = $feature;
+                                    }
+                                }
+                            } else {
+                                // Falls 'features' nicht vorhanden sind, prüfen, ob 'property' direkt unter 'expose' liegt
+                                if (isset($expose['property'])) {
+                                    $variableName = trim(string: strtolower(string: $expose['property']));
+                                    $knownVariables[$variableName] = $expose;
+                                }
+                            }
+                        }
+                    } else {
+                        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, "Fehler beim Dekodieren der JSON-Datei oder fehlende 'exposes' in Datei: $dateiPfad. Fehler: " . json_last_error_msg(), 0);
+                    }
+                } else {
+                    $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, "JSON-Datei nicht gefunden: " . $dateiPfad, 0);
+                }
+            }
+
+            // Loggen der bekannten Variablen mit genauen Zeichenfolgen
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, 'Known Variables Array:', 0);
+            foreach ($knownVariables as $varName => $varProps) {
+                $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, "'" . $varName . "'", 0);
+            }
+
+            return $knownVariables;
+        } else {
+            $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__, "Keine JSON-Dateien gefunden, die dem Muster entsprechen: " . $dateiPfadPattern, 0);
+        }
+
+        return $knownVariables;
+    }
+    
     /**
      * Setzt den Wert einer existierenden Variable, passt den Wert entsprechend dem Variablentyp an.
      *
@@ -610,8 +779,6 @@ abstract class ModulBase extends \IPSModule
      */
     protected function SetValue($Ident, $Value)
     {
-        $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Incoming value for ' . $Ident, (is_array($Value) ? json_encode($Value) : $Value), 0);
-
         // Standardwert für adjustedValue setzen
         $adjustedValue = $Value;
 
@@ -689,34 +856,32 @@ abstract class ModulBase extends \IPSModule
                     $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Preset variable does not exist: ', $presetIdent, 0);
                 }
             }
-        } else {
-            // Typ der vorhandenen Variable abrufen
-            $varType = IPS_GetVariable($this->GetIDForIdent($Ident))['VariableType'];
-            // Standardverarbeitung für andere Variablentypen
-            switch ($varType) {
-                case VARIABLETYPE_BOOLEAN:
-                    $adjustedValue = (bool) $Value;
-                    break;
-                case VARIABLETYPE_INTEGER:
-                    $adjustedValue = (int) $Value;
-                    break;
-                case VARIABLETYPE_FLOAT:
-                    $adjustedValue = (float) $Value;
-                    break;
-                case VARIABLETYPE_STRING:
-                    $adjustedValue = (string) $Value;
-                    break;
-                default:
-                    $adjustedValue = $Value; // Fallback, falls der Typ unbekannt ist
-                    break;
-            }
+        }
+        // Typ der vorhandenen Variable abrufen
+        $varType = IPS_GetVariable($this->GetIDForIdent($Ident))['VariableType'];
+        // Standardverarbeitung für andere Variablentypen
+        switch ($varType) {
+            case VARIABLETYPE_BOOLEAN:
+                $adjustedValue = (bool) $Value;
+                break;
+            case VARIABLETYPE_INTEGER:
+                $adjustedValue = (int) $Value;
+                break;
+            case VARIABLETYPE_FLOAT:
+                $adjustedValue = (float) $Value;
+                break;
+            case VARIABLETYPE_STRING:
+                $adjustedValue = (string) $Value;
+                break;
+            default:
+                $adjustedValue = (string) $Value; // Fallback, falls der Typ unbekannt ist
+                break;
         }
 
         $this->SendDebug(__FUNCTION__ . ' :: ' . __LINE__ . ' :: Adjusted value for ' . $Ident, (is_array($adjustedValue) ? json_encode($adjustedValue) : $adjustedValue), 0);
 
         // Setze den Wert in die Variable
         parent::SetValue($Ident, $adjustedValue);
-
     }
 
     /**
@@ -730,19 +895,24 @@ abstract class ModulBase extends \IPSModule
      */
     protected function mapExposesToVariables(array $exposes)
     {
-        // Debug-Ausgabe für die übergebenen Exposes
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: All Exposes', json_encode($exposes), 0);
 
-        // Durchlaufen aller Exposes
+        // Durchlaufe alle Exposes
         foreach ($exposes as $expose) {
-            // Prüfen, ob das Expose mehrere Features enthält
-            if (isset($expose['features'])) {
-                // Jedes Feature einzeln registrieren
-                foreach ($expose['features'] as $feature) {
-                    $this->registerVariable($feature);
+            // Prüfen, ob es sich um eine Gruppe handelt
+            if (isset($expose['type']) && in_array($expose['type'], ['light', 'switch', 'lock', 'cover', 'climate', 'fan'])) {
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Found group: ', $expose['type'], 0);
+
+                // Features in der Gruppe verarbeiten
+                if (isset($expose['features']) && is_array($expose['features'])) {
+                    foreach ($expose['features'] as $feature) {
+                        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Processing feature in group: ', json_encode($feature), 0);
+                        // Variablen für die einzelnen Features registrieren
+                        $this->registerVariable($feature);
+                    }
                 }
             } else {
-                // Einzelnes Expose registrieren
+                // Einzelne Exposes (keine Gruppen) normal verarbeiten
                 $this->registerVariable($expose);
             }
         }
@@ -1005,40 +1175,64 @@ abstract class ModulBase extends \IPSModule
     }
 
     /**
-     * Registriert eine Variable basierend auf dem übergebenen Feature.
+     * Registriert eine Variable basierend auf den Eigenschaften des übergebenen Features.
      *
-     * Diese Funktion verarbeitet ein einzelnes Feature und erstellt basierend auf dessen Typ (z.B. binary, numeric, enum, etc.)
-     * eine entsprechende Variable. Falls das Feature einen Zustand (z.B. ON/OFF, LOCK/UNLOCK) oder Presets enthält, wird
-     * ein entsprechendes Profil erstellt. Zusätzlich wird für jede registrierte Variable, einschließlich Preset-Variablen,
-     * die Funktion `EnableAction` aufgerufen, um Aktionen zu ermöglichen.
+     * Diese Funktion verarbeitet ein einzelnes Feature und erstellt eine Variable in Symcon basierend auf dessen Typ.
+     * Es unterstützt die Registrierung von Boolean-, Numeric-, Enum-, String-, und Composite-Variablen.
+     * Zusätzlich werden Standardprofile aus einer vordefinierten Liste angewendet, und es wird überprüft, ob erweiterte
+     * Profile existieren (z. B. `.100`).
      *
      * Unterstützte Typen:
-     * - binary: Boolean-Variable mit optionalem State-Mapping.
-     * - numeric: Ganzzahlige oder Fließkomma-Variable mit optionalen Presets.
-     * - enum: Zeichenkettenvariable mit vordefinierten Werten.
-     * - string/text: Zeichenkettenvariable.
-     * - composite: Spezielle Farbvariablen wie `color_xy`, `color_hs` und `color_rgb`.
+     * - binary: Boolean-Variablen mit einem zugehörigen Profil.
+     * - numeric: Integer- oder Float-Variablen mit optionalen Presets und Min/Max-Werten.
+     * - enum: Zeichenketten-Variablen mit vordefinierten Enum-Werten.
+     * - string/text: Zeichenketten-Variablen.
+     * - composite: Spezielle Farbvariablen wie `color_xy`, `color_hs`, und `color_rgb`.
      *
-     * Wenn das Feature Presets enthält, wird eine zusätzliche Preset-Variable mit einem eigenen Profil erstellt,
-     * und die `EnableAction`-Funktion wird auch für diese Variablen aktiviert.
+     * Falls das Feature Presets enthält, wird eine zusätzliche Preset-Variable mit einem zugehörigen Profil erstellt.
      *
-     * @param array $feature Ein Array, das das Feature beschreibt, welches als Variable registriert werden soll.
-     *                       Enthält Eigenschaften wie 'type', 'property', 'unit', 'access', 'value_min', 'value_max'
-     *                       und mögliche 'presets'.
+     * @param array $feature Das Feature-Array, das Informationen über den Typ, die Einheit, Min/Max-Werte, Presets und andere
+     *                       Eigenschaften enthält, die zur Registrierung der Variable verwendet werden.
      *
      * @return void
      */
-    private function registerVariable($feature)
+    private function registerVariable($feature, $exposeType = null)
     {
+        // Ausnahme für 'last_seen': diese Variable wird immer angelegt
+        if ($feature['property'] === 'last_seen') {
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Registering special case for last_seen', json_encode($feature), 0);
+            $ident = $this->convertPropertyToIdent('last_seen');
+            $this->RegisterVariableInteger($ident, $this->Translate('Last Seen'), '~UnixTimestamp');
+            return;
+        }
+        
+        // Ausnahme für 'color_mode': diese Variable wird immer angelegt
+        if ($feature['property'] === 'color_mode') {
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Registering special case for color_mode', json_encode($feature), 0);
+            $ident = $this->convertPropertyToIdent('color_mode');
+            $this->RegisterVariableString($ident, $this->Translate('Color Mode'), '');
+            return;
+        }
+        
+        // Setze den Typ auf den übergebenen Expose-Typ, falls vorhanden
+        if ($exposeType !== null) {
+            $feature['type'] = $exposeType;  // Den Typ direkt in das Feature übernehmen
+        }
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Registering Feature', json_encode($feature), 0);
         $type = $feature['type'];
-        $property = $feature['property'];
+        $property = $feature['property'] ?? '';
         $ident = $this->convertPropertyToIdent($property);
         $label = ucwords(str_replace('_', ' ', $feature['property'] ?? $property));
+        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Using Expose Type: ', $type, 0);
 
-        // Prüfen, ob Presets vorhanden sind
+        // Überprüfen, ob die Variable bereits existiert
+        $objectID = @$this->GetIDForIdent($ident);
+        if ($objectID) {
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Variable already exists, checking presets: ', $ident, 0);
+        }
+
+        // Prüfen, ob Presets vorhanden sind und unabhängig vom Objektzustand registrieren
         if (isset($feature['presets']) && is_array($feature['presets'])) {
-            // Hole den vollständigen Namen des Hauptprofils inklusive Min/Max-Werten
             $fullRangeProfileName = $this->getFullRangeProfileName($feature);
             $presetProfileName = $fullRangeProfileName . '_Presets';
 
@@ -1058,6 +1252,48 @@ abstract class ModulBase extends \IPSModule
             $this->RegisterVariableInteger($ident . '_Presets', $this->Translate($label . ' Presets'), $presetProfileName);
             $this->EnableAction($ident . '_Presets');
             $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Preset profile and variable created for ' . $label, $presetProfileName, 0);
+        }
+
+        // Wenn die Hauptvariable bereits existiert, kehre zurück, da sie nicht neu angelegt werden muss
+        if ($objectID) {
+            return;
+        }
+
+        // Überprüfung auf Standardprofil und zugehörigen Variablentyp
+        $standardProfile = $this->getStandardProfile($type, $property);
+        $variableType = $this->getVariableTypeFromProfile($type, $property);
+
+        // Debug-Ausgabe zur Prüfung, ob Standardprofil und Variablentyp gefunden wurden
+        $this->SendDebug(__FUNCTION__ . ' :: Standard Profile: ', $standardProfile ?? 'none', 0);
+        $this->SendDebug(__FUNCTION__ . ' :: Variable Type: ', $variableType ?? 'none', 0);
+
+        // Wenn ein Standardprofil angegeben ist, prüfe auf Erweiterung
+        if ($standardProfile !== null) {
+            $extendedProfile = $this->checkForExtendedProfile($standardProfile);
+
+            // Wenn ein erweitertes Profil gefunden wurde, nutze es
+            if ($extendedProfile !== null) {
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Using extended profile: ', $extendedProfile, 0);
+                $standardProfile = $extendedProfile;
+            }
+
+            // Registriere die Variable basierend auf dem Typ aus dem Profil
+            if ($variableType === 'int') {
+                $this->RegisterVariableInteger($ident, $this->Translate($label), $standardProfile);
+            } elseif ($variableType === 'float') {
+                $this->RegisterVariableFloat($ident, $this->Translate($label), $standardProfile);
+            } elseif ($variableType === 'bool') {
+                $this->RegisterVariableBoolean($ident, $this->Translate($label), $standardProfile); // Boolean-Profil registrieren
+            } else {
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Unsupported variable type: ' . $variableType, '', 0);
+            }
+
+            // Prüfe, ob die Variable schaltbar sein soll (access Bit 0b010) und setze dies nach der Registrierung
+            $isSwitchable = ($feature['access'] & 0b010) != 0;
+            $this->MaintainAction($ident, $isSwitchable);
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: MaintainAction set for', $ident, 0);
+
+            return;
         }
 
         // Überprüfen, ob ein Mapping vorhanden ist und den Datentyp ggf. anpassen
@@ -1084,15 +1320,6 @@ abstract class ModulBase extends \IPSModule
         }
 
         $isFloat = in_array($feature['unit'] ?? '', self::$floatUnits);
-
-        // Überprüfen, ob die Variable bereits existiert, bevor sie neu angelegt wird
-        $objectID = @$this->GetIDForIdent($ident);
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Object ID: ', (string) $objectID, 0);
-        if ($objectID) {
-            return;
-        }
-
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Registering new variable: ', $ident, 0);
 
         // Registriere die Hauptvariable basierend auf ihrem Typ
         switch ($type) {
@@ -1155,9 +1382,76 @@ abstract class ModulBase extends \IPSModule
         }
 
         // Prüfen, ob die Variable schaltbar sein soll (access Bit 0b010)
-        $isSwitchable = ($feature['access'] & 0b010) != 0;
+        $isSwitchable = isset($feature['access']) && ($feature['access'] & 0b010) != 0;
         $this->MaintainAction($ident, $isSwitchable);
         $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: MaintainAction set for', $ident, 0);
+    }
+
+    /**
+     * Überprüft, ob ein erweitertes Variablenprofil existiert.
+     *
+     * Diese Funktion überprüft, ob das angegebene Basisprofil existiert und ob es eine erweiterte Version
+     * dieses Profils gibt. Ein erweitertes Profil wird durch eine Punktnotation gekennzeichnet (z. B. `.100`).
+     * Falls ein solches erweitertes Profil gefunden wird, gibt die Funktion dieses Profil zurück.
+     *
+     * Beispiele für erweiterte Profile sind Profile wie `~Battery.100`, wobei `.100` eine Erweiterung darstellt.
+     *
+     * @param string $baseProfile Der Name des Basisprofils, das überprüft werden soll.
+     *
+     * @return string|null Gibt das erweiterte Profil zurück, falls eines gefunden wird, oder null, wenn kein passendes Profil existiert.
+     */
+    private function checkForExtendedProfile($baseProfile)
+    {
+        // Prüfen, ob das Basisprofil ohne Erweiterung existiert
+        if (IPS_VariableProfileExists($baseProfile)) {
+            // Prüfen, ob das Profil eine Erweiterung hat (z.B. .100)
+            if (strpos($baseProfile, '.') !== false) {
+                // Prüfen, ob das Profil mit der Erweiterung existiert
+                $this->SendDebug(__FUNCTION__ . ' :: Checking for extended profile: ', $baseProfile, 0);
+
+                // Rückgabe des erweiterten Profils, wenn es existiert
+                return $baseProfile;
+            }
+            // Wenn das Profil keine Erweiterung hat, prüfen, ob ein Profil mit einer Erweiterung existiert
+            else {
+                $extendedProfile = $baseProfile . '.100'; // Beispiel für eine mögliche Erweiterung
+                if (IPS_VariableProfileExists($extendedProfile)) {
+                    $this->SendDebug(__FUNCTION__ . ' :: Extended profile found: ', $extendedProfile, 0);
+                    return $extendedProfile; // Rückgabe des erweiterten Profils
+                }
+            }
+        }
+
+        // Falls kein erweitertes Profil existiert, Debug-Ausgabe
+        $this->SendDebug(__FUNCTION__ . ' :: No extended profile found for: ', $baseProfile, 0);
+        return null;
+    }
+
+    /**
+     * Sucht den Variablentyp für ein Standardprofil basierend auf dem Typ und Feature.
+     *
+     * Diese Funktion durchsucht das Array `VariableUseStandardProfile` und versucht, den zugehörigen
+     * Variablentyp (z. B. int, float, bool) basierend auf dem Typ und dem Feature zu finden.
+     * Wenn der Typ leer ist, wird er ignoriert und nur das Feature wird geprüft.
+     *
+     * @param string $type    Der Typ des Exposes (z. B. 'cover', 'light'). Wenn der Typ leer ist, wird nur das Feature geprüft.
+     * @param string $feature Das spezifische Feature, nach dem gesucht wird (z. B. 'position', 'temperature').
+     *
+     * @return string|null Gibt den Variablentyp zurück (z. B. 'int', 'float', 'bool'), wenn ein passender Eintrag gefunden wird,
+     *                     andernfalls null.
+     */
+    private function getVariableTypeFromProfile(string $type, string $feature): ?string
+    {
+        // Durchlaufe alle Einträge in $VariableUseStandardProfile
+        foreach (self::$VariableUseStandardProfile as $entry) {
+            // Überprüfe, ob der Typ übereinstimmt oder leer ist
+            if (($entry['type'] === $type || $entry['type'] === '') && $entry['feature'] === $feature) {
+                // Rückgabe des zugehörigen Variablentyps
+                return $entry['variableType'];
+            }
+        }
+        // Wenn kein Eintrag gefunden wurde, gib null zurück
+        return null;
     }
 
     /**
@@ -1194,15 +1488,20 @@ abstract class ModulBase extends \IPSModule
     /**
      * Registriert ein Variablenprofil basierend auf dem Expose-Typ oder einem optionalen State-Mapping.
      *
-     * Diese Funktion erstellt und registriert ein Variablenprofil basierend auf dem Typ des Exposes oder
-     * auf einem gegebenen State-Mapping. Sie überprüft, ob das Profil bereits existiert, um doppelte
-     * Profile zu vermeiden. Falls ein Profil mit einem State-Mapping erstellt wird, werden spezifische
-     * Zustände wie LOCK/UNLOCK zugeordnet.
+     * Diese Funktion erstellt und registriert ein Variablenprofil für den angegebenen Expose-Typ (z. B. binary, enum, numeric)
+     * oder ein optionales State-Mapping. Sie überprüft zuerst, ob ein Standardprofil aus den Konfigurationsdaten existiert
+     * oder ob bereits ein vorhandenes Systemprofil verwendet werden kann. Falls nicht, wird ein neues Profil auf Grundlage
+     * der Expose-Daten erstellt.
      *
-     * @param array $expose       Die Expose-Daten, die Informationen über den Typ und mögliche Werte enthalten.
-     * @param array|null $stateMapping  Optionales Mapping für spezifische Zustände (z.B. LOCK/UNLOCK).
+     * - Für binäre Exposes werden Boolean-Profile mit "on"/"off" Werten erstellt.
+     * - Für Enum-Exposes werden String-Profile mit einer Liste möglicher Werte erstellt.
+     * - Für numerische Exposes wird die Funktion `registerNumericProfile` verwendet.
      *
-     * @return string Der Name des erstellten oder vorhandenen Variablenprofils.
+     * @param array $expose       Die Expose-Daten, die Informationen wie Typ, Werte und Einheiten enthalten.
+     * @param array|null $stateMapping  Optionales Mapping für spezifische Zustände (z. B. LOCK/UNLOCK). Kann verwendet werden, um spezielle
+     *                                  Mappings basierend auf dem Gerätetyp anzuwenden.
+     *
+     * @return string Der Name des erstellten oder vorhandenen Variablenprofils. Im Falle eines Systemprofils wird dieses direkt genutzt.
      */
     private function registerVariableProfile($expose, $stateMapping = null)
     {
@@ -1227,8 +1526,20 @@ abstract class ModulBase extends \IPSModule
             }
         }
 
-        // Debug-Ausgabe für die Profilerstellung
-        $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating profile: ', $ProfileName, 0);
+        // Prüfen, ob ein Standardprofil zugewiesen werden soll
+        $standardProfile = $this->getStandardProfile($expose['type'], $expose['property'] ?? $expose['name']);
+        if ($standardProfile !== null) {
+            // Wenn das Profil ein Systemprofil ist, benutze es direkt ohne Registrierung
+            if (strpos($standardProfile, '~') === 0 && IPS_VariableProfileExists($standardProfile)) {
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Using existing system profile: ', $standardProfile, 0);
+                return $standardProfile;
+            }
+
+            // Wenn das Standardprofil existiert, benutze es direkt
+            $variableType = $this->getVariableTypeFromProfile($expose['type'], $expose['property'] ?? $expose['name']);
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Using standard profile: ', $standardProfile . ' with variable type: ' . $variableType, 0);
+            return $standardProfile;
+        }
 
         // Erstelle das Profil basierend auf dem Expose-Typ
         switch ($expose['type']) {
@@ -1276,14 +1587,44 @@ abstract class ModulBase extends \IPSModule
     }
 
     /**
+     * Sucht ein Standardprofil basierend auf dem Typ und dem Feature.
+     *
+     * Diese Funktion durchsucht das Array der vordefinierten Standardprofile (`$VariableUseStandardProfile`)
+     * und versucht, ein passendes Profil basierend auf dem übergebenen Typ und Feature zu finden.
+     * Wenn der Typ im Profil-Eintrag leer ist, wird er ignoriert und nur das Feature geprüft.
+     *
+     * @param string $type    Der Typ des Exposes (z. B. 'cover', 'light'). Wenn der Typ leer ist, wird nur das Feature geprüft.
+     * @param string $feature Das spezifische Feature, nach dem gesucht wird (z. B. 'position', 'temperature').
+     *
+     * @return string|null Gibt den Namen des Standardprofils zurück, wenn eines gefunden wird, oder null, wenn kein passendes Profil existiert.
+     */
+    private function getStandardProfile(string $type, string $feature): ?string
+    {
+        // Überprüfe, ob ein vordefiniertes Standardprofil vorhanden ist
+        foreach (self::$VariableUseStandardProfile as $entry) {
+            // Nur den Typ prüfen, wenn er im Eintrag gesetzt ist
+            if ((!empty($entry['type']) && $entry['type'] === $type) || empty($entry['type'])) {
+                if ($entry['feature'] === $feature) {
+                    return $entry['profile'];  // Rückgabe des Standardprofils
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Registriert ein numerisches Variablenprofil (ganzzahlig oder Gleitkomma) basierend auf den Expose-Daten.
      *
      * Diese Funktion erstellt und registriert ein numerisches Variablenprofil für ganzzahlige oder Gleitkommawerte
-     * auf Grundlage der im Expose definierten Werte. Sie unterstützt optionale Min- und Max-Werte sowie die
-     * Registrierung von Preset-Profilen, falls vorhanden.
+     * auf Grundlage der im Expose definierten Werte. Es unterstützt optionale Min- und Max-Werte sowie Einheiten
+     * (z. B. % bei Helligkeit) und erstellt auch Preset-Profile, falls diese im Expose vorhanden sind.
      *
-     * @param array $expose  Die Expose-Daten, die die Eigenschaften des numerischen Profils enthalten.
-     * @param bool $isFloat  Gibt an, ob das Profil für Fließkommazahlen (true) oder Ganzzahlen (false) erstellt werden soll.
+     * Wenn ein Standardprofil aus den Konfigurationsdaten vorhanden ist, wird dieses verwendet und registriert.
+     * Systemprofile (z. B. ~Battery.100) werden direkt verwendet, ohne neu registriert zu werden.
+     *
+     * @param array $expose  Die Expose-Daten, die die Eigenschaften des numerischen Profils enthalten, wie 'name',
+     *                       'value_min', 'value_max', 'unit' und optional 'presets'.
+     * @param bool  $isFloat Gibt an, ob das Profil für Fließkommazahlen (true) oder Ganzzahlen (false) erstellt werden soll.
      *
      * @return array Ein Array mit zwei Elementen:
      *               - 'mainProfile': Der Name des Hauptprofils.
@@ -1291,13 +1632,29 @@ abstract class ModulBase extends \IPSModule
      */
     private function registerNumericProfile($expose, $isFloat = false)
     {
+        // Überprüfung auf Standardprofil
+        $standardProfile = $this->getStandardProfile($expose['type'], $expose['name']);
+        if ($standardProfile !== null) {
+            $variableType = $this->getVariableTypeFromProfile($expose['type'], $expose['name']);
+            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Using standard profile: ', $standardProfile . ' with variable type: ' . $variableType, 0);
+
+            // Wenn das Standardprofil ein Systemprofil ist (z.B. ~Battery.100), benutze es direkt ohne Registrierung
+            if (strpos($standardProfile, '~') === 0 && IPS_VariableProfileExists($standardProfile)) {
+                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Standard system profile exists: ', $standardProfile, 0);
+                return ['mainProfile' => $standardProfile, 'presetProfile' => null];
+            }
+
+            // Rückgabe des Standardprofils, falls es nicht als Systemprofil existiert
+            return ['mainProfile' => $standardProfile, 'presetProfile' => null];
+        }
+
+        // Wenn kein Standardprofil gefunden wird, generiere ein eigenes Profil basierend auf Min/Max Werten
         $profileName = 'Z2M.' . $expose['name'];
         $min = $expose['value_min'] ?? 0;
         $max = $expose['value_max'] ?? 0;
         $unit = isset($expose['unit']) ? ' ' . $expose['unit'] : '';
 
-        // Prüfen, ob es sich um eine Brightness-Expose handelt
-        // Sonderregel, da expose kein unit sendet
+        // Sonderfall für Brightness-Expose (kein Unit gesendet, aber % wird verwendet)
         if ($expose['name'] === 'brightness') {
             $unit = ' %';
         }
@@ -1321,13 +1678,10 @@ abstract class ModulBase extends \IPSModule
 
         // Preset-Profil erstellen, falls Presets vorhanden sind
         if (isset($expose['presets']) && !empty($expose['presets'])) {
-            // Der Name des Preset-Profils basiert auf dem vollständigen Hauptprofilnamen (inkl. Min und Max) mit dem Zusatz '_Presets'
             $presetProfileName = $fullRangeProfileName . '_Presets';
             $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Creating preset profile: ', $presetProfileName, 0);
 
-            // Prüfen, ob das Preset-Profil existiert, sonst erstellen
             if (!IPS_VariableProfileExists($presetProfileName)) {
-                // Da es sich um ein Preset-Profil handelt, wird es als String-Profil erstellt
                 $this->RegisterProfileStringEx($presetProfileName, '', '', '', []);
 
                 // Presets hinzufügen
@@ -1344,63 +1698,6 @@ abstract class ModulBase extends \IPSModule
 
         // Rückgabe des Hauptprofils und des optionalen Preset-Profils
         return ['mainProfile' => $fullRangeProfileName, 'presetProfile' => $presetProfileName];
-    }
-
-    /**
-     * Erstellt ein Preset-Profil für eine Variable, falls es noch nicht existiert, und fügt die Preset-Werte hinzu.
-     *
-     * Diese Methode generiert ein Profil für Preset-Variablen basierend auf dem übergebenen Label und den Preset-Daten.
-     * Der Name des Profils wird dynamisch aus dem Label erzeugt, wobei Leerzeichen durch Unterstriche ersetzt werden und
-     * der Zusatz "_Presets" hinzugefügt wird. Falls das Profil bereits existiert, wird es nicht erneut erstellt. Andernfalls
-     * wird ein neues String-Profil erstellt, und jeder Preset-Wert wird mit seinem entsprechenden Namen als Assoziation hinzugefügt.
-     *
-     * Der Ablauf ist wie folgt:
-     * 1. Es wird überprüft, ob das Profil bereits existiert.
-     * 2. Wenn das Profil nicht existiert, wird es erstellt.
-     * 3. Die Preset-Werte und deren zugehörige Namen werden als Assoziationen dem Profil hinzugefügt.
-     * 4. Der Profilname wird zurückgegeben.
-     *
-     * Beispiel:
-     * Angenommen, das Label ist "Color Temp" und die Presets bestehen aus Werten wie "coolest" (Wert 153),
-     * "warmest" (Wert 500), wird das Profil "Z2M_Color_Temp_Presets" erstellt und die Preset-Werte werden
-     * als Assoziationen in diesem Profil gespeichert.
-     *
-     * @param array $presets Ein Array, das die Preset-Daten enthält. Jeder Eintrag im Array sollte folgendes Format haben:
-     *                       [
-     *                           'name'  => 'coolest',    // Der Name des Presets.
-     *                           'value' => 153           // Der numerische Wert des Presets.
-     *                       ].
-     * @param string $label Das Label, das für den Variablen-Identifikator verwendet wird. Leerzeichen werden durch Unterstriche ersetzt.
-     *
-     * @return string Gibt den Namen des erstellten oder existierenden Profils zurück.
-     *
-     * @throws Exception Falls ein Fehler beim Erstellen des Profils oder Hinzufügen der Assoziationen auftritt.
-     */
-    private function registerPresetProfile(array $presets, string $label)
-    {
-        // Profilname ohne Leerzeichen erstellen
-        $profileName = 'Z2M_' . str_replace(' ', '_', $label) . '_Presets';
-
-        // Überprüfen, ob das Profil bereits existiert
-        if (!IPS_VariableProfileExists($profileName)) {
-            // Neues Profil für Presets erstellen
-            $this->RegisterProfileStringEx($profileName, '', '', '', []);
-
-            // Füge die Presets hinzu
-            foreach ($presets as $preset) {
-                $presetValue = $preset['value'];
-                $presetName = $this->Translate(ucwords(str_replace('_', ' ', $preset['name'])));
-                $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Adding preset: ', $presetName . ' with value ' . $presetValue, 0);
-                IPS_SetVariableProfileAssociation($profileName, $presetValue, $presetName, '', 0xFFFFFF);
-            }
-
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Created preset profile: ', $profileName, 0);
-        } else {
-            $this->SendDebug(__FUNCTION__ . ' :: Line ' . __LINE__ . ' :: Preset profile already exists: ', $profileName, 0);
-        }
-
-        // Rückgabe des Profilnamens
-        return $profileName;
     }
 
     /**
