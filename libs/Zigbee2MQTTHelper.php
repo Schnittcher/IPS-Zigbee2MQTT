@@ -880,6 +880,9 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('cleaning_reminder', $Payload)) {
                     $this->SetValue('Z2M_CleaningReminder', $Payload['cleaning_reminder']);
                 }
+                if (array_key_exists('rain', $Payload)) {
+                    $this->SetValue('Z2M_Rain', $Payload['rain']);
+                }
                 if (array_key_exists('rain_intensity', $Payload)) {
                     $this->SetValue('Z2M_RainIntensity', $Payload['rain_intensity']);
                 }
@@ -4979,6 +4982,9 @@ trait Zigbee2MQTTHelper
                             switch ($feature['type']) {
                                 case 'binary':
                                     switch ($feature['property']) {
+                                        case 'rain':
+                                            $this->RegisterVariableBoolean('Z2M_Rain', $this->Translate('Rain'), '~Switch');
+                                            break;
                                         case 'learn_ir_code':
                                             $this->RegisterVariableBoolean('Z2M_LearnIRCode', $this->Translate('Learn IR Code'), '~Switch');
                                             $this->EnableAction('Z2M_LearnIRCode');
