@@ -895,6 +895,9 @@ trait Zigbee2MQTTHelper
                 if (array_key_exists('cleaning_reminder', $Payload)) {
                     $this->SetValue('Z2M_CleaningReminder', $Payload['cleaning_reminder']);
                 }
+                if (array_key_exists('rain', $Payload)) {
+                    $this->SetValue('Z2M_Rain', $Payload['rain']);
+                }
                 if (array_key_exists('rain_intensity', $Payload)) {
                     $this->SetValue('Z2M_RainIntensity', $Payload['rain_intensity']);
                 }
@@ -4374,8 +4377,10 @@ trait Zigbee2MQTTHelper
             case 'numeric':
                 switch ($expose['property']) {
                     case 'rain_intensity':
+                        // Setze 'unit' auf einen leeren String, falls es nicht gesetzt ist
+                        $unit = isset($expose['unit']) ? $expose['unit'] : '';
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ', 0, 0, 1, 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' .  $unit, 0, 0, 1, 0);
                         }
                         break;
                     case 'illuminance_maximum_today':
@@ -5016,6 +5021,9 @@ trait Zigbee2MQTTHelper
                             switch ($feature['type']) {
                                 case 'binary':
                                     switch ($feature['property']) {
+                                        case 'rain':
+                                            $this->RegisterVariableBoolean('Z2M_Rain', $this->Translate('Rain'), '~Switch');
+                                            break;
                                         case 'learn_ir_code':
                                             $this->RegisterVariableBoolean('Z2M_LearnIRCode', $this->Translate('Learn IR Code'), '~Switch');
                                             $this->EnableAction('Z2M_LearnIRCode');
