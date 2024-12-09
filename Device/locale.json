@@ -533,6 +533,7 @@
             "Occupancy Timeout": "Bewegung Timeout",
             "Occupancy": "Bewegung",
             "Occupancy Sensitivity": "Bewegungserkennungsempfindlichkeit",
+            "Occupied Cooling Setpoint": "Besetzter Kühlsollwert",
             "Occupied Heating Setpoint Scheduled": "Geplanter Heizsollwert für Belegt",
             "Occupied Heating Setpoint": "Besetzter Heizungssollwert",
             "Ocean Dawn": "Ozean-Dämmerung",
