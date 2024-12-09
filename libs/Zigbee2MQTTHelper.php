@@ -4342,8 +4342,10 @@ trait Zigbee2MQTTHelper
             case 'numeric':
                 switch ($expose['property']) {
                     case 'rain_intensity':
+                        // Setze 'unit' auf einen leeren String, falls es nicht gesetzt ist
+                        $unit = isset($expose['unit']) ? $expose['unit'] : '';
                         if (!IPS_VariableProfileExists($ProfileName)) {
-                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ', 0, 0, 1, 0);
+                            $this->RegisterProfileInteger($ProfileName, 'Information', '', ' ' .  $unit, 0, 0, 1, 0);
                         }
                         break;
                     case 'illuminance_maximum_today':
