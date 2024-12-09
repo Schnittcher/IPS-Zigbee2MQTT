@@ -4173,6 +4173,14 @@ trait Zigbee2MQTTHelper
                                 ]);
                             }
                             break;
+                        case 'Z2M.mode.cc8717a5':
+                            if (!IPS_VariableProfileExists($ProfileName)) {
+                                $this->RegisterProfileStringEx($ProfileName, 'Mode', '', '', [
+                                    ['manual', $this->Translate('Manual'), '', 0x00FF00],
+                                    ['schedule', $this->Translate('Schedule'), '', 0xFF8800]
+                                ]);
+                            }
+                            break;                        
                         case 'Z2M.mode.a774535':
                             if (!IPS_VariableProfileExists($ProfileName)) {
                                 $this->RegisterProfileStringEx($ProfileName, 'Mode', '', '', [
