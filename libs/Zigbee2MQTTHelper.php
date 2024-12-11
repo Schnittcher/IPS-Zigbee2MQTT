@@ -11,6 +11,9 @@ trait Zigbee2MQTTHelper
         $variableID = $this->GetIDForIdent($Ident);
         $variableType = IPS_GetVariable($variableID)['VariableType'];
         switch ($Ident) {
+            case 'Z2M_OccupiedCoolingSetpoint':
+                $Payload['occupied_cooling_setpoint'] = $Value;
+                break;
             case 'Z2M_OccupiedCoolingMode':
                 $Payload['occupied_cooling_mode'] = $Value;
                 break;
