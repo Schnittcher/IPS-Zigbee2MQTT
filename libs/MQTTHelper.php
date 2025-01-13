@@ -49,7 +49,7 @@ trait MQTTHelper
         $Data['PacketType'] = 3;
         $Data['QualityOfService'] = 0;
         $Data['Retain'] = false;
-//        $Data['Topic'] = 'symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/' . $topic;
+        //        $Data['Topic'] = 'symcon/' . $this->ReadPropertyString('MQTTBaseTopic') . '/' . $topic;
         $Data['Topic'] = $this->ReadPropertyString('MQTTBaseTopic') . '/bridge/symcon/' . $topic;
         $Data['Payload'] = utf8_encode($value);
         $DataJSON = json_encode($Data, JSON_UNESCAPED_SLASHES);

@@ -9,11 +9,13 @@
     "actions": [
         {
             "type": "Button",
+            "name": "InstallExtension",
             "label": "Install or upgrade Symcon-Extension",
             "onClick": "Z2M_InstallSymconExtension($id);"
         },
         {
             "type": "Button",
+            "name": "SetLastSeen",
             "label": "Set last_seen setting to epoch",
             "onClick": "Z2M_SetLastSeen($id);"
         },

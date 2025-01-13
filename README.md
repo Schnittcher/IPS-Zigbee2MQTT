@@ -7,12 +7,15 @@
    Anbindung von www.zigbee2mqtt.io an IP-Symcon.
 
    ## Inhaltverzeichnis
-   1. [Voraussetzungen](#1-voraussetzungen)
-   2. [Enthaltene Module](#2-enthaltene-module)
-   3. [Installation](#3-installation)
-   4. [Konfiguration in IP-Symcon](#4-konfiguration-in-ip-symcon)
-   5. [Spenden](#5-spenden)
-   6. [Lizenz](#6-lizenz)
+- [Zigbee2MQTT](#zigbee2mqtt)
+  - [Inhaltverzeichnis](#inhaltverzeichnis)
+  - [1. Voraussetzungen](#1-voraussetzungen)
+  - [2. Enthaltene Module](#2-enthaltene-module)
+  - [3. Installation](#3-installation)
+    - [3.1 Installation der IP-Symcon Extension in Zigbee2MQTT](#31-installation-der-ip-symcon-extension-in-zigbee2mqtt)
+  - [4. Konfiguration in IP-Symcon](#4-konfiguration-in-ip-symcon)
+- [5. Spenden](#5-spenden)
+  - [6. Lizenz](#6-lizenz)
 
 ## 1. Voraussetzungen
 
@@ -60,10 +63,13 @@ Z2M_BoostTime | Integer | - | variabel | Integer
 ### 3.1 Installation der IP-Symcon Extension in Zigbee2MQTT
 
 Um Devices im Konfigurator anzeigen zu können und diese anzulegen und Eigenschaften abholen zu können, benötigt das Modul eine Extension in Z2M.
-Dazu die Datei [IPSymconExtension.js](libs/IPSymconExtension.js) in das Verzeichnis **"/opt/zigbee2mqtt/data/extension"** auf dem Rechner, wo Z2M installiert ist ablegen.<br>
 
-Alternativ kann über das Frontend die Datei angelegt werden und der Inhalt eingefügt werden.
-
+Folgende Varianten für die Einrichtung sind möglich:
+ 1) Bridge-Instanz (Empfohlen): Über die [Bridge-Instanz](Bridge/README.md) kann die Erweiterung in Z2M eingerichtet werden und wird automatisch aktuell gehalten.
+ 2) Frontend: Über das Frontend den Inhalt der Datei [IPSymconExtension.js](libs/IPSymconExtension.js) anlegen.
+ 3) Dateizugriff: Die Datei [IPSymconExtension.js](libs/IPSymconExtension.js) in das Verzeichnis **"/opt/zigbee2mqtt/data/extension"** auf dem Rechner, wo Z2M installiert ist ablegen und Z2M neu starten.
+--- 
+zu 2)  
 Dazu geht Ihr auf den Punkt "Erweiterungen": <br> ![Erweiterungen](/docs/pictures/Erweiterung_Z2M.jpg)<br> Legt eine neue Extension über den Plus-Button an:  ![Erweiterungen](/docs/pictures/Erweiterung_erstellen_1.jpg)<br> Dann gebt Ihr der Erweiterung den Namen: symcon.js:<br> ![Erweiterung erstellen](/docs/pictures/Erweiterung_erstellen.jpg)<br> Danach öffnet sich ein Fenster für die Code-Eingabe:<br> ![Code Eingabe](/docs/pictures/Erweiterung_code.jpg). <br>Den dort bereits enthaltenen Code bitte komplett löschen. Danach wird der Code aus [IPSymconExtension.js](libs/IPSymconExtension.js) herein kopiert und gespeichert.<br> Danach Z2M bitte neu starten: <br>![Code Eingabe](/docs/pictures/Erweiterung_neustart.jpg)<br>
 
 

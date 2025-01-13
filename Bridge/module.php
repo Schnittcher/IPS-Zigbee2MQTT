@@ -18,6 +18,12 @@ class Zigbee2MQTTBridge extends IPSModule
     use \Zigbee2MQTT\Semaphore;
     use \Zigbee2MQTT\VariableProfileHelper;
 
+    /** @var array ZH Version zu Erweiterung  */
+    private const EXTENSION_ZH_VERSION = [
+        2 => 'IPSymconExtension.js',
+        //3 => 'IPSymconExtension2.js'
+    ];
+
     private static $MQTTDataArray = [
         'DataID'           => '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}',
         'PacketType'       => 3,
@@ -27,19 +33,26 @@ class Zigbee2MQTTBridge extends IPSModule
         'Payload'          => ''
     ];
 
+    /**
+     * Create
+     *
+     * @return void
+     */
     public function Create()
     {
         //Never delete this line!
         parent::Create();
-        $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
         $this->RegisterPropertyString('MQTTBaseTopic', 'zigbee2mqtt');
+        /*
         $Version = 'unknown';
         $File = file(dirname(__DIR__) . '/libs/IPSymconExtension.js');
         $Start = strpos($File[2], 'Version: ');
         if ($Start) {
             $Version = trim(substr($File[2], $Start + strlen('Version: ')));
         }
-        $this->actualExtensionVersion = $Version;
+         */
+        $this->actualExtensionVersion = 0;
+        $this->installedZhVersion = 0;
         $this->ExtensionFilename = '';
         $this->ConfigLastSeen = 'epoch';
         $this->TransactionData = [];
@@ -51,7 +64,6 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->TransactionData = [];
         //Never delete this line!
         parent::ApplyChanges();
-        $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
         $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
         if (empty($BaseTopic)) {
             $this->SetStatus(IS_INACTIVE);
@@ -87,10 +99,35 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->RegisterVariableString('zigbee_herdsman_converters', $this->Translate('Zigbee Herdsman Converters Version'));
         $this->RegisterVariableString('zigbee_herdsman', $this->Translate('Zigbee Herdsman Version'));
         $this->RegisterVariableInteger('network_channel', $this->Translate('Network Channel'));
+
+        $online = false;
+        if (!empty($BaseTopic)) {
+            if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
+                $online = @$this->RequestOptions();
+            }
+        }
+        $this->SendDebug('Online', $online ? 'true' : 'false', 0);
+        $installedExtVersion = (float) $this->GetValue('extension_version');
+        $this->SetValue('extension_is_current', $this->actualExtensionVersion <= $installedExtVersion);
+        if ($this->actualExtensionVersion <= $installedExtVersion) {
+            $this->UpdateFormField('InstallExtension', 'label', $this->Translate('Symcon-Extension is up-to-date'));
+            $this->UpdateFormField('InstallExtension', 'enabled', false);
+        } else {
+            $this->UpdateFormField('InstallExtension', 'label', $this->Translate('Install or upgrade Symcon-Extension'));
+            $this->UpdateFormField('InstallExtension', 'enabled', true);
+            if (!empty($BaseTopic)) {
+                if ($online) {
+                    @$this->InstallSymconExtension();
+                }
+            }
+        }
     }
 
     public function ReceiveData($JSONString)
     {
+        if ($this->GetStatus() == IS_CREATING) {
+            return '';
+        }
         $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
         if (empty($BaseTopic)) {
             return '';
@@ -107,8 +144,8 @@ class Zigbee2MQTTBridge extends IPSModule
         $Topics = explode('/', $Topic);
         $Topic = array_shift($Topics);
         $this->SendDebug('MQTT Topic', $Topic, 0);
-        $this->SendDebug('MQTT Payload', $Buffer['Payload'], 0);
-        $Payload = json_decode($Buffer['Payload'], true);
+        $this->SendDebug('MQTT Payload', utf8_decode($Buffer['Payload']), 0);
+        $Payload = json_decode(utf8_decode($Buffer['Payload']), true);
         switch ($Topic) {
             case 'request': //nothing todo
                 break;
@@ -152,18 +189,33 @@ class Zigbee2MQTTBridge extends IPSModule
                     $this->ConfigPermitJoin = $Payload['config']['permit_join'];
                     $this->UpdateFormField('PermitJoinOption', 'visible', $Payload['config']['permit_join']);
                     if ($Payload['config']['permit_join']) {
-                        $this->LogMessage($this->Translate('Danger! In the Zigbee2MQTT configuration permit_join is activated. This leads to a possible security risk!'), KL_ERROR);
+                        $this->LogMessage($this->Translate("Danger! In the Zigbee2MQTT configuration permit_join is activated.\r\nThis leads to a possible security risk!"), KL_ERROR);
                     }
                 }
                 if (isset($Payload['zigbee_herdsman_converters']['version'])) {
                     $this->SetValue('zigbee_herdsman_converters', $Payload['zigbee_herdsman_converters']['version']);
                 }
                 if (isset($Payload['zigbee_herdsman']['version'])) {
+                    $this->installedZhVersion = $Payload['zigbee_herdsman']['version'];
+                    if (isset(self::EXTENSION_ZH_VERSION[(int) $this->installedZhVersion])) {
+                        $Extension = file_get_contents(dirname(__DIR__) . '/libs/' . self::EXTENSION_ZH_VERSION[(int) $this->installedZhVersion]);
+                        preg_match('/Version: (.*)/', $Extension, $matches);
+                        if (isset($matches[1])) {
+                            $this->actualExtensionVersion = (float) $matches[1];
+                        }
+                    } else {
+                        $this->actualExtensionVersion = 0;
+                    }
                     $this->SetValue('zigbee_herdsman', $Payload['zigbee_herdsman']['version']);
                 }
                 if (isset($Payload['config']['advanced']['last_seen'])) {
                     $this->ConfigLastSeen = $Payload['config']['advanced']['last_seen'];
-                    if ($Payload['config']['advanced']['last_seen'] != 'epoch') {
+                    if ($Payload['config']['advanced']['last_seen'] == 'epoch') {
+                        $this->UpdateFormField('SetLastSeen', 'label', $this->Translate('last_seen setting is correct'));
+                        $this->UpdateFormField('SetLastSeen', 'enabled', false);
+                    } else {
+                        $this->UpdateFormField('SetLastSeen', 'label', $this->Translate('Set last_seen setting to epoch'));
+                        $this->UpdateFormField('SetLastSeen', 'enabled', true);
                         $this->LogMessage($this->Translate('Wrong last_seen setting in Zigbee2MQTT. Please set last_seen to epoch.'), KL_ERROR);
                     }
                 }
@@ -173,25 +225,33 @@ class Zigbee2MQTTBridge extends IPSModule
                 break;
             case 'extensions':
                 $foundExtension = false;
+                $Version = 'unknown';
                 foreach ($Payload as $Extension) {
-                    if (strpos($Extension['code'], 'class IPSymconExtension')) {
+                    if (strpos($Extension['code'], 'class IPSymconExtension') !== false) {
+                        if ($foundExtension) {
+                            $this->LogMessage($this->Translate("Danger! Several extensions for Symcon have been found.\r\nPlease delete outdated versions manually to avoid malfunctions."), KL_ERROR);
+                            continue;
+                        }
                         $foundExtension = true;
                         $this->ExtensionName = $Extension['name'];
-                        $Version = 'unknown';
-                        $Lines = explode("\n", $Extension['code']);
-                        $Start = strpos($Lines[2], 'Version: ');
-                        if ($Start) {
-                            $Version = trim(substr($Lines[2], $Start + strlen('Version: ')));
+                        $this->SendDebug('Found Extension', $this->ExtensionName, 0);
+                        preg_match('/Version: (.*)/', $Extension['code'], $matches);
+                        if (isset($matches[1])) {
+                            $Version = $matches[1];
                         }
-                        $this->SetValue('extension_version', $Version);
-                        $this->SetValue('extension_is_current', $this->actualExtensionVersion == $Version);
-                        if ($this->actualExtensionVersion != $Version) {
+                        if ($this->actualExtensionVersion <= (float) $Version) {
+                            $this->UpdateFormField('InstallExtension', 'label', $this->Translate('Symcon-Extension is up-to-date'));
+                            $this->UpdateFormField('InstallExtension', 'enabled', false);
+                        } else {
+                            $this->UpdateFormField('InstallExtension', 'label', $this->Translate('Install or upgrade Symcon-Extension'));
+                            $this->UpdateFormField('InstallExtension', 'enabled', true);
                             $this->LogMessage($this->Translate('Symcon Extension in Zigbee2MQTT is outdated. Please update the extension.'), KL_ERROR);
                         }
-                        break;
                     }
                 }
                 $this->SetValue('extension_loaded', $foundExtension);
+                $this->SetValue('extension_version', $Version);
+                $this->SetValue('extension_is_current', $this->actualExtensionVersion == (float) $Version);
                 if (!$foundExtension) {
                     $this->LogMessage($this->Translate('No Symcon Extension in Zigbee2MQTT installed. Please install the extension.'), KL_ERROR);
                 }
@@ -209,7 +269,7 @@ class Zigbee2MQTTBridge extends IPSModule
             case 'log_level':
                 $this->SetLogLevel((string) $Value);
                 break;
-            case'restart_request':
+            case 'restart_request':
                 $this->Restart();
                 break;
         }
@@ -234,14 +294,44 @@ class Zigbee2MQTTBridge extends IPSModule
 
     public function InstallSymconExtension()
     {
-        if (empty($this->ExtensionName)) {
-            $ExtensionName = 'IPSymconExtension.js';
+        if ($this->installedZhVersion == 0) {
+            $this->LogMessage($this->Translate('Cannot determine ZH Version. No Extension installed.'), KL_WARNING);
+            return;
         }
+        if (!isset(self::EXTENSION_ZH_VERSION[(int) $this->installedZhVersion])) {
+            return;
+
+        }
+        $ExtensionName = $this->ExtensionName == '' ? 'IPSymconExtension.js' : $this->ExtensionName;
         $Topic = '/bridge/request/extension/save';
-        $Payload = ['name'=>$ExtensionName, 'code'=>file_get_contents(dirname(__DIR__) . '/libs/IPSymconExtension.js')];
+        $Payload = ['name'=>$ExtensionName, 'code'=>file_get_contents(dirname(__DIR__) . '/libs/' . self::EXTENSION_ZH_VERSION[(int) $this->installedZhVersion])];
         $Result = $this->SendData($Topic, $Payload);
-        if ($Result) { //todo check the Response
-            return true;
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
+        }
+        if (isset($Result['status'])) {
+            return $Result['status'] == 'ok';
+        }
+        return false;
+    }
+
+    /**
+     * RequestOptions
+     *
+     * @return bool
+     */
+    public function RequestOptions()
+    {
+        $Topic = '/bridge/request/options';
+        $Payload = [
+            'options'=> []
+        ];
+        $Result = $this->SendData($Topic, $Payload);
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
+        }
+        if (isset($Result['status'])) {
+            return $Result['status'] == 'ok';
         }
         return false;
     }
