@@ -180,6 +180,7 @@ class DevicesTest extends DumpInclude
         $this->assertSame(self::count_recursive($Debug['LastPayload']) + $OffestLastPayload, count(IPS_GetChildrenIDs($iid)) + $OffsetChildrenIDs, 'Anzahl LastPayload (' . self::count_recursive($Debug['LastPayload']) + $OffestLastPayload . ') und Erzeugte Variablen (' . count(IPS_GetChildrenIDs($iid)) + $OffsetChildrenIDs . ') unterscheiden sich');
         $this->assertCount(0, self::getExportDebugData($iid)['missingTranslations'], 'Fehlende übersetzungen gefunden:' . var_export(self::getExportDebugData($iid)['missingTranslations'], true));
     }
+
     public function testSenoroWinv2()
     {
         [$iid,$Debug] = $this->createTestInstance('Senoro.Win_v2.json');
@@ -224,4 +225,89 @@ class DevicesTest extends DumpInclude
         $this->assertCount(0, self::getExportDebugData($iid)['missingTranslations'], 'Fehlende übersetzungen gefunden:' . var_export(self::getExportDebugData($iid)['missingTranslations'], true));
     }
 
+    public function testDWZTCGQ11LM()
+    {
+        [$iid,$Debug] = $this->createTestInstance('DWZTCGQ11LM.json');
+        $OffestLastPayload = 0;
+        // device_status bei den IPS_GetChildrenIDs abziehen
+        $OffsetChildrenIDs = -1;
+        $OffsetDebugChild = 0;
+        $this->assertSame(count($Debug['Childs']) + $OffsetDebugChild, count(IPS_GetChildrenIDs($iid)), 'Anzahl Variablen aus dem Debug (' . count($Debug['Childs']) . ') und Erzeugte Variablen (' . count(IPS_GetChildrenIDs($iid)) . ') vom Test unterscheiden sich');
+        //$Debug['LastPayload'] ist leider leer. Neues Z2M_Debug benötigt
+        //$this->assertSame(self::count_recursive($Debug['LastPayload']) + $OffestLastPayload, count(IPS_GetChildrenIDs($iid)) + $OffsetChildrenIDs, 'Anzahl LastPayload (' . self::count_recursive($Debug['LastPayload']) + $OffestLastPayload . ') und Erzeugte Variablen (' . count(IPS_GetChildrenIDs($iid)) + $OffsetChildrenIDs . ') unterscheiden sich');
+        $this->assertCount(0, self::getExportDebugData($iid)['missingTranslations'], 'Fehlende übersetzungen gefunden:' . var_export(self::getExportDebugData($iid)['missingTranslations'], true));
+    }
+
+    public function testWT_A03E_2()
+    {
+        [$iid,$Debug] = $this->createTestInstance('WT-A03E_2.json');
+        /* Fehlen in LastPayload
+        away_preset_temperature
+        window_open
+        device_status
+        system_mode
+        preset
+        sensor
+        external_temperature_input
+        calibrate
+        temperature_control_abnormal_notification
+        anti_freeze_temperature
+        5 x PRESET_
+            preset_home_temperature
+            preset_away_temperature
+            preset_sleep_temperature
+            preset_vacation_temperature
+            preset_wind_down_temperature
+        schedule_upload_status
+        save_schedule
+        clear_schedule
+        identify
+        last_seen
+         */
+        $OffestLastPayload = +20;
+        // fehlen im Expose und somit keine Variablen im test
+        // min_heat_setpoint_limit
+        // max_heat_setpoint_limit
+        // temperature_setpoint_hold
+        // helper
+        // away_preset_temperature
+        // valve_detection
+        // state
+
+        $OffestLastPayload -= 7;
+
+        // device_status bei den IPS_GetChildrenIDs abziehen
+        $OffsetChildrenIDs = -1;
+        $OffsetDebugChild = -7;
+        /*foreach (IPS_GetChildrenIDs($iid) as $id) {
+            echo IPS_GetObject($id)['ObjectIdent'] . PHP_EOL;
+        }*/
+        $this->assertSame(count($Debug['Childs']) + $OffsetDebugChild, count(IPS_GetChildrenIDs($iid)), 'Anzahl Variablen aus dem Debug (' . count($Debug['Childs']) . ') und Erzeugte Variablen (' . count(IPS_GetChildrenIDs($iid)) . ') vom Test unterscheiden sich');
+        //$this->assertSame(self::count_recursive($Debug['LastPayload']) + $OffestLastPayload, count(IPS_GetChildrenIDs($iid)) + $OffsetChildrenIDs, 'Anzahl LastPayload (' . self::count_recursive($Debug['LastPayload']) + $OffestLastPayload . ') und Erzeugte Variablen (' . count(IPS_GetChildrenIDs($iid)) + $OffsetChildrenIDs . ') unterscheiden sich');
+        $this->assertCount(0, self::getExportDebugData($iid)['missingTranslations'], 'Fehlende übersetzungen gefunden:' . var_export(self::getExportDebugData($iid)['missingTranslations'], true));
+    }
+
+    public function testSNZB_01M()
+    {
+        [$iid,$Debug] = $this->createTestInstance('SNZB-01M.json');
+        // release_notes ist im Payload null, also abziehen.
+        $OffestLastPayload = -1;
+        // device_status bei den IPS_GetChildrenIDs abziehen
+        $OffsetChildrenIDs = -1;
+        $OffsetDebugChild = 0;
+        $this->assertSame(count($Debug['Childs']) + $OffsetDebugChild, count(IPS_GetChildrenIDs($iid)), 'Anzahl Variablen aus dem Debug (' . count($Debug['Childs']) . ') und Erzeugte Variablen (' . count(IPS_GetChildrenIDs($iid)) . ') vom Test unterscheiden sich');
+        $this->assertSame(self::count_recursive($Debug['LastPayload']) + $OffestLastPayload, count(IPS_GetChildrenIDs($iid)) + $OffsetChildrenIDs, 'Anzahl LastPayload (' . self::count_recursive($Debug['LastPayload']) + $OffestLastPayload . ') und Erzeugte Variablen (' . count(IPS_GetChildrenIDs($iid)) + $OffsetChildrenIDs . ') unterscheiden sich');
+        $this->assertCount(0, self::getExportDebugData($iid)['missingTranslations'], 'Fehlende übersetzungen gefunden:' . var_export(self::getExportDebugData($iid)['missingTranslations'], true));
+    }
+    public function testD4Z()
+    {
+        [$iid,$Debug] = $this->createTestInstance('D4Z.json');
+        $OffestLastPayload = 0;
+        // device_status bei den IPS_GetChildrenIDs abziehen
+        $OffsetChildrenIDs = -1;
+        $OffsetDebugChild = 0;
+        //$this->assertSame(count($Debug['Childs']) + $OffsetDebugChild, count(IPS_GetChildrenIDs($iid)), 'Anzahl Variablen aus dem Debug (' . count($Debug['Childs']) . ') und Erzeugte Variablen (' . count(IPS_GetChildrenIDs($iid)) . ') vom Test unterscheiden sich');
+        //$this->assertSame(self::count_recursive($Debug['LastPayload']) + $OffestLastPayload, count(IPS_GetChildrenIDs($iid)) + $OffsetChildrenIDs, 'Anzahl LastPayload (' . self::count_recursive($Debug['LastPayload']) + $OffestLastPayload . ') und Erzeugte Variablen (' . count(IPS_GetChildrenIDs($iid)) + $OffsetChildrenIDs . ') unterscheiden sich');
+        //$this->assertCount(0, self::getExportDebugData($iid)['missingTranslations'], 'Fehlende übersetzungen gefunden:' . var_export(self::getExportDebugData($iid)['missingTranslations'], true));
+    }
 }

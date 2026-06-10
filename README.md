@@ -200,6 +200,11 @@ Bitte den einzelnen Modulen entnehmen:
 
 ## 5. Changelog  
 
+**Version 5.43:**  
+
+- Fehlende Übersetzungen von den Geräten DWZTCGQ11LM, SNZB-01M und WT-A03E ergänzt.  
+- Hotfix für Z2M Payloads welche als Schlüssel einen `numeric string` enthalten.
+
 **Version 5.42:**  
 
 - Bridge Instanz konnte den Namen der bereits installierten Erweiterung nicht korrekt erkennen und übernehmen.  

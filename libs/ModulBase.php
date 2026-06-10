@@ -1741,6 +1741,7 @@ abstract class ModulBase extends \IPSModule
 
         // Payload-Daten verarbeiten
         foreach ($flattenedPayload as $key => $value) {
+            $key = (string) $key;
             if ($value === null) {
                 $this->SendDebug(__FUNCTION__, \sprintf('Skip empty value for key=%s', $key), 0);
                 continue;

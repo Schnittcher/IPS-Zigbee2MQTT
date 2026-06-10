@@ -1,0 +1,588 @@
+{
+    "Instance": {
+        "ParentID": 40967,
+        "ObjectID": 37787,
+        "ObjectType": 1,
+        "ObjectIdent": "",
+        "ObjectName": "Aussenbereich_Garten_PTZKamera_Steuerung",
+        "ObjectInfo": "",
+        "ObjectIcon": "",
+        "ObjectSummary": "0xa4c138104928ffff",
+        "ObjectPosition": 0,
+        "ObjectIsReadOnly": false,
+        "ObjectIsHidden": false,
+        "ObjectIsDisabled": false,
+        "ObjectIsLocked": false,
+        "HasChildren": true,
+        "ChildrenIDs": [
+            27577,
+            55246,
+            48772,
+            11414,
+            13122,
+            35577,
+            46753,
+            25208,
+            58352
+        ],
+        "InstanceID": 37787,
+        "ConnectionID": 50177,
+        "InstanceStatus": 102,
+        "InstanceSupportsSearching": false,
+        "InstanceIsSearching": false,
+        "InstanceVisualizationType": 0,
+        "InstanceChanged": 1777907664,
+        "ModuleInfo": {
+            "ModuleID": "{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}",
+            "ModuleName": "Zigbee2MQTT Device",
+            "ModuleType": 3
+        }
+    },
+    "Model": "SNZB-01M",
+    "ModelUrl": "https://www.zigbee2mqtt.io/devices/SNZB-01M.html",
+    "Config": {
+        "IEEE": "0xa4c138104928ffff",
+        "MQTTBaseTopic": "zigbee2mqtt",
+        "MQTTTopic": "Aussenbereich_Garten_PTZKamera_Steuerung"
+    },
+    "Exposes": [
+        {
+            "name": "battery",
+            "label": "Battery",
+            "access": 5,
+            "type": "numeric",
+            "property": "battery",
+            "description": "Remaining battery in %",
+            "category": "diagnostic",
+            "unit": "%",
+            "value_max": 100,
+            "value_min": 0
+        },
+        {
+            "name": "action",
+            "label": "Action",
+            "access": 1,
+            "type": "enum",
+            "property": "action",
+            "description": "Triggered action (e.g. a button click)",
+            "category": "diagnostic",
+            "values": [
+                "single_button_1",
+                "double_button_1",
+                "long_button_1",
+                "triple_button_1",
+                "single_button_2",
+                "double_button_2",
+                "long_button_2",
+                "triple_button_2",
+                "single_button_3",
+                "double_button_3",
+                "long_button_3",
+                "triple_button_3",
+                "single_button_4",
+                "double_button_4",
+                "long_button_4",
+                "triple_button_4"
+            ]
+        },
+        {
+            "name": "linkquality",
+            "label": "Linkquality",
+            "access": 1,
+            "type": "numeric",
+            "property": "linkquality",
+            "description": "Link quality (signal strength)",
+            "category": "diagnostic",
+            "unit": "lqi",
+            "value_max": 255,
+            "value_min": 0
+        }
+    ],
+    "LastPayload": {
+        "action": "single_button_1",
+        "battery": 100,
+        "last_seen": 1777907717730,
+        "linkquality": 188,
+        "update": {
+            "installed_version": 4101,
+            "latest_release_notes": null,
+            "latest_source": "https://raw.githubusercontent.com/Koenkk/zigbee-OTA/master/images/Sonoff/snzb-01m_v1.1.0.ota",
+            "latest_version": 4352,
+            "state": "available"
+        }
+    },
+    "Childs": {
+        "58352": {
+            "ParentID": 39313,
+            "ObjectID": 58352,
+            "ObjectType": 2,
+            "ObjectIdent": "device_status",
+            "ObjectName": "Verfügbarkeit",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 58352,
+            "VariableProfile": "Z2M.DeviceStatus",
+            "VariableAction": 0,
+            "VariableCustomProfile": "Window_2",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1762613857,
+            "VariableChanged": 1762613857,
+            "VariableType": 0,
+            "VariableValue": false,
+            "VariableIsLocked": false
+        },
+        "27577": {
+            "ParentID": 37787,
+            "ObjectID": 27577,
+            "ObjectType": 2,
+            "ObjectIdent": "battery",
+            "ObjectName": "Batterie",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 27577,
+            "VariableProfile": "~Battery.100",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1777910639,
+            "VariableChanged": 1777907717,
+            "VariablePresentation": {
+                "PROFILE": "~Battery.100",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 100,
+            "VariableIsLocked": false
+        },
+        "55246": {
+            "ParentID": 37787,
+            "ObjectID": 55246,
+            "ObjectType": 2,
+            "ObjectIdent": "action",
+            "ObjectName": "Aktion",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 55246,
+            "VariableProfile": "Z2M.action.6ccaf82c",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1777910639,
+            "VariableChanged": 1777910639,
+            "VariablePresentation": {
+                "PROFILE": "Z2M.action.6ccaf82c",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 3,
+            "VariableValue": "single_button_2",
+            "VariableIsLocked": false
+        },
+        "48772": {
+            "ParentID": 37787,
+            "ObjectID": 48772,
+            "ObjectType": 2,
+            "ObjectIdent": "linkquality",
+            "ObjectName": "Verbindungsqualität",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 48772,
+            "VariableProfile": "Z2M.linkquality_0_255",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1777910639,
+            "VariableChanged": 1777910639,
+            "VariablePresentation": {
+                "PROFILE": "Z2M.linkquality_0_255",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 100,
+            "VariableIsLocked": false
+        },
+        "11414": {
+            "ParentID": 37787,
+            "ObjectID": 11414,
+            "ObjectType": 2,
+            "ObjectIdent": "last_seen",
+            "ObjectName": "Zuletzt gesehen",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 11414,
+            "VariableProfile": "~UnixTimestamp",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1777910639,
+            "VariableChanged": 1777910639,
+            "VariablePresentation": {
+                "PROFILE": "~UnixTimestamp",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 1777910639,
+            "VariableIsLocked": false
+        },
+        "13122": {
+            "ParentID": 37787,
+            "ObjectID": 13122,
+            "ObjectType": 2,
+            "ObjectIdent": "update__installed_version",
+            "ObjectName": "Update: Installierte Version",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 13122,
+            "VariableProfile": "",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1777910639,
+            "VariableChanged": 1777907717,
+            "VariablePresentation": [],
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 4101,
+            "VariableIsLocked": false
+        },
+        "35577": {
+            "ParentID": 37787,
+            "ObjectID": 35577,
+            "ObjectType": 2,
+            "ObjectIdent": "update__latest_source",
+            "ObjectName": "Update: Neueste Quelle",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 35577,
+            "VariableProfile": "",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1777910639,
+            "VariableChanged": 1777907717,
+            "VariablePresentation": [],
+            "VariableCustomPresentation": [],
+            "VariableType": 3,
+            "VariableValue": "https://raw.githubusercontent.com/Koenkk/zigbee-OTA/master/images/Sonoff/snzb-01m_v1.1.0.ota",
+            "VariableIsLocked": false
+        },
+        "46753": {
+            "ParentID": 37787,
+            "ObjectID": 46753,
+            "ObjectType": 2,
+            "ObjectIdent": "update__latest_version",
+            "ObjectName": "Update: Neueste Version",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 46753,
+            "VariableProfile": "",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1777910639,
+            "VariableChanged": 1777907717,
+            "VariablePresentation": [],
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 4352,
+            "VariableIsLocked": false
+        },
+        "25208": {
+            "ParentID": 37787,
+            "ObjectID": 25208,
+            "ObjectType": 2,
+            "ObjectIdent": "update__state",
+            "ObjectName": "Update: Status",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 25208,
+            "VariableProfile": "",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1777910639,
+            "VariableChanged": 1777907717,
+            "VariablePresentation": [],
+            "VariableCustomPresentation": [],
+            "VariableType": 3,
+            "VariableValue": "available",
+            "VariableIsLocked": false
+        }
+    },
+    "Profile": {
+        "~Battery.100": {
+            "ProfileName": "~Battery.100",
+            "ProfileType": 1,
+            "Icon": "Battery",
+            "Prefix": "",
+            "Suffix": " %",
+            "MinValue": 0,
+            "MaxValue": 100,
+            "StepSize": 10,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": true
+        },
+        "Z2M.action.6ccaf82c": {
+            "ProfileName": "Z2M.action.6ccaf82c",
+            "ProfileType": 3,
+            "Icon": "Menu",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": "double_button_1",
+                    "Name": "Double Button 1",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "double_button_2",
+                    "Name": "Double Button 2",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "double_button_3",
+                    "Name": "Double Button 3",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "double_button_4",
+                    "Name": "Double Button 4",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "long_button_1",
+                    "Name": "Long Button 1",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "long_button_2",
+                    "Name": "Long Button 2",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "long_button_3",
+                    "Name": "Long Button 3",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "long_button_4",
+                    "Name": "Long Button 4",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "single_button_1",
+                    "Name": "Single Button 1",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "single_button_2",
+                    "Name": "Single Button 2",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "single_button_3",
+                    "Name": "Single Button 3",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "single_button_4",
+                    "Name": "Single Button 4",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "triple_button_1",
+                    "Name": "Triple Button 1",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "triple_button_2",
+                    "Name": "Triple Button 2",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "triple_button_3",
+                    "Name": "Triple Button 3",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "triple_button_4",
+                    "Name": "Triple Button 4",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        },
+        "Z2M.linkquality_0_255": {
+            "ProfileName": "Z2M.linkquality_0_255",
+            "ProfileType": 1,
+            "Icon": "",
+            "Prefix": "",
+            "Suffix": " lqi",
+            "MinValue": 0,
+            "MaxValue": 255,
+            "StepSize": 1,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": false
+        },
+        "~UnixTimestamp": {
+            "ProfileName": "~UnixTimestamp",
+            "ProfileType": 1,
+            "Icon": "Clock",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": true
+        }
+    },
+    "missingTranslations": [
+        {
+            "value": "Double Button 1"
+        },
+        {
+            "value": "Double Button 2"
+        },
+        {
+            "value": "Double Button 3"
+        },
+        {
+            "value": "Double Button 4"
+        },
+        {
+            "value": "Long Button 1"
+        },
+        {
+            "value": "Long Button 2"
+        },
+        {
+            "value": "Long Button 3"
+        },
+        {
+            "value": "Long Button 4"
+        },
+        {
+            "value": "Single Button 1"
+        },
+        {
+            "value": "Single Button 2"
+        },
+        {
+            "value": "Single Button 3"
+        },
+        {
+            "value": "Single Button 4"
+        },
+        {
+            "value": "Triple Button 1"
+        },
+        {
+            "value": "Triple Button 2"
+        },
+        {
+            "value": "Triple Button 3"
+        },
+        {
+            "value": "Triple Button 4"
+        }
+    ]
+}
