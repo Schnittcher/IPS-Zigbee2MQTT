@@ -1,15 +1,10 @@
 {
     "translations": {
         "de": {
-            "Settings": "Einstellungen",
-            "Paring Mode:": "Paring Modus:",
-            "Activate Pairing Mode": "Aktiviere Paring Modus",
-            "Deactivate Pairing Mode": "Deaktiviere Paring Modus",
+            "Instance has no active parent.": "Instanz hat keinen aktiven Parent.",
+            "Zigbee2MQTT Configurator": "Zigbee2MQTT Konfigurator",
             "Unknown": "Unbekannt",
-            "Paring active": "Paring aktiv",
-            "Paring inactive": "Paring inaktiv",
             "Devices": "Geräte",
-            "Groups": "Gruppen",
             "IEEE Address": "IEEE Adresse",
             "Network Address": "Netzweradresse",
             "Type": "Typ",
@@ -17,17 +12,22 @@
             "Model": "Model",
             "Description": "Beschreibung",
             "Power Source": "Energiequelle",
-            "Supported": "Unterstützt",
+            "Groups": "Gruppen",
             "Battery": "Batterie",
             "Mains (single phase)": "Netz (einphasig)",
-            "Please use this function with attention!": "Bitte benutzen Sie diese Funktion mit Aufmerksamkeit!",
-            "Read Variables": "Rufe Variablen ab",
-            "Zigbee2MQTT did not response.": "Zigbee2MQTT hat nicht geantwortet.",
+            "Donations": "Spenden / Schenkung",
+            "This module is free for non-commercial use,\r\nDonations in support of the author are accepted here:": "Dieses Modul ist für die nicht kommerzielle Nutzung kostenlos, Schenkungen als Unterstützung für den Autor werden hier akzeptiert:",
             "Close": "Schließen",
             "No devices found!": "Keine Geräte gefunden!",
             "The Symcon extension in Zigbee2MQTT is not installed or not up to date.\r\nPlease install or update the extension within the Bridge instance configuration.": "Die Symcon-Erweiterung in Zigbee2MQTT ist nicht installiert oder nicht auf dem neuesten Stand.\r\nBitte installieren oder aktualisieren Sie die Erweiterung innerhalb der Bridge-Instanzkonfiguration.",
             "Open bridge instance": "Bridge-Instanz öffnen",
-            "Create bridge instance": "Bridge-Instanz erstellen"
+            "Create bridge instance": "Bridge-Instanz erstellen",
+            "Zigbee2MQTT did not response!": "Zigbee2MQTT antwortet nicht!",
+            "Zigbee2MQTT did not response on Topic %s": "Zigbee2MQTT antwortet nicht auf Topic %s",
+            "Transaction Data is locked": "Transaktionen Daten sind gesperrt",
+            "Devices that the configurator has found but are connected to the wrong MQTT splitter in Symcon.": "Geräte welche der Konfigurator gefunden hat, aber in Symcon mit einem falschen MQTT-Splitter verbunden sind.",
+            "InstanceId": "InstanzID",
+            "Fix it!": "Repariere es!"
         }
     }
 }

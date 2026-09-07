@@ -1,0 +1,12 @@
+{
+    "id": "{7D2AD94C-6CD2-4B32-8B23-3F21EFC30DAC}",
+    "name": "Zigbee2MQTT Discovery",
+    "type": 5,
+    "vendor": "Zigbee2MQTT",
+    "aliases": [],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "Z2M",
+    "url": "https://github.com/Nall-chan/Zigbee2MQTT/blob/main/Discovery/README.md"
+}

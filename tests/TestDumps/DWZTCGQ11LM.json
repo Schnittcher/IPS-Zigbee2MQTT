@@ -1,0 +1,1144 @@
+{
+    "Instance": {
+        "ParentID": 20339,
+        "ObjectID": 40295,
+        "ObjectType": 1,
+        "ObjectIdent": "",
+        "ObjectName": "Multi Sensor P100",
+        "ObjectInfo": "",
+        "ObjectIcon": "",
+        "ObjectSummary": "0x54ef4410015e4d82",
+        "ObjectPosition": 0,
+        "ObjectIsReadOnly": false,
+        "ObjectIsHidden": false,
+        "ObjectIsDisabled": false,
+        "ObjectIsLocked": false,
+        "HasChildren": true,
+        "ChildrenIDs": [
+            10688,
+            17150,
+            58756,
+            18133,
+            44893,
+            26346,
+            15925,
+            23921,
+            20457,
+            25132,
+            49998,
+            57998,
+            54056,
+            31525,
+            17711,
+            19528,
+            58352
+        ],
+        "InstanceID": 40295,
+        "ConnectionID": 46497,
+        "InstanceStatus": 102,
+        "InstanceSupportsSearching": false,
+        "InstanceIsSearching": false,
+        "InstanceVisualizationType": 0,
+        "InstanceChanged": 1777725829,
+        "ModuleInfo": {
+            "ModuleID": "{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}",
+            "ModuleName": "Zigbee2MQTT Device",
+            "ModuleType": 3
+        }
+    },
+    "Model": "DWZTCGQ11LM",
+    "ModelUrl": "https://www.zigbee2mqtt.io/devices/DWZTCGQ11LM.html",
+    "Config": {
+        "IEEE": "0x54ef4410015e4d82",
+        "MQTTBaseTopic": "zigbee2mqtt",
+        "MQTTTopic": "Multi Sensor P100"
+    },
+    "Exposes": [
+        {
+            "name": "battery",
+            "label": "Battery",
+            "access": 1,
+            "type": "numeric",
+            "property": "battery",
+            "description": "Remaining battery in %, can take up to 24 hours before reported",
+            "category": "diagnostic",
+            "unit": "%",
+            "value_max": 100,
+            "value_min": 0
+        },
+        {
+            "name": "voltage",
+            "label": "Voltage",
+            "access": 1,
+            "type": "numeric",
+            "property": "voltage",
+            "description": "Voltage of the battery in millivolts",
+            "category": "diagnostic",
+            "unit": "mV"
+        },
+        {
+            "name": "device_mode",
+            "label": "Device mode",
+            "access": 3,
+            "type": "enum",
+            "property": "device_mode",
+            "description": "Device operating mode",
+            "category": "config",
+            "values": [
+                "door_window",
+                "object"
+            ]
+        },
+        {
+            "name": "door_window_type",
+            "label": "Door window type",
+            "access": 3,
+            "type": "enum",
+            "property": "door_window_type",
+            "description": "Door/window type (applies when device_mode = door window)",
+            "category": "config",
+            "values": [
+                "casement_window",
+                "hopper_window",
+                "composite_window",
+                "hinged_door"
+            ]
+        },
+        {
+            "name": "sensitivity",
+            "label": "Sensitivity",
+            "access": 3,
+            "type": "numeric",
+            "property": "sensitivity",
+            "description": "Detection sensitivity (1 = low, 10 = high)",
+            "category": "config",
+            "value_max": 10,
+            "value_min": 1
+        },
+        {
+            "name": "report_interval",
+            "label": "Report interval",
+            "access": 3,
+            "type": "numeric",
+            "property": "report_interval",
+            "description": "Reporting interval in seconds",
+            "category": "config",
+            "unit": "s",
+            "value_max": 300,
+            "value_min": 5
+        },
+        {
+            "name": "orientation_detection",
+            "label": "Orientation detection",
+            "access": 3,
+            "type": "binary",
+            "property": "orientation_detection",
+            "description": "Enable orientation event detection",
+            "value_on": "ON",
+            "value_off": "OFF"
+        },
+        {
+            "name": "movement_detection",
+            "label": "Movement detection",
+            "access": 3,
+            "type": "binary",
+            "property": "movement_detection",
+            "description": "Enable movement event detection",
+            "value_on": "ON",
+            "value_off": "OFF"
+        },
+        {
+            "name": "fall_detection",
+            "label": "Fall detection",
+            "access": 3,
+            "type": "binary",
+            "property": "fall_detection",
+            "description": "Enable fall event detection",
+            "value_on": "ON",
+            "value_off": "OFF"
+        },
+        {
+            "name": "vibration_detection",
+            "label": "Vibration detection",
+            "access": 3,
+            "type": "binary",
+            "property": "vibration_detection",
+            "description": "Enable vibration event detection",
+            "value_on": "ON",
+            "value_off": "OFF"
+        },
+        {
+            "name": "triple_tap_detection",
+            "label": "Triple tap detection",
+            "access": 3,
+            "type": "binary",
+            "property": "triple_tap_detection",
+            "description": "Enable triple-tap event detection",
+            "value_on": "ON",
+            "value_off": "OFF"
+        },
+        {
+            "name": "orientation",
+            "label": "Orientation",
+            "access": 1,
+            "type": "enum",
+            "property": "orientation",
+            "description": "Last reported orientation (relevant when action = orientation)",
+            "values": [
+                "face_up",
+                "face_down",
+                "vertical",
+                "tilt"
+            ]
+        },
+        {
+            "name": "contact",
+            "label": "Contact",
+            "access": 1,
+            "type": "binary",
+            "property": "contact",
+            "description": "Door/window state (door/window mode only)",
+            "value_on": false,
+            "value_off": true
+        },
+        {
+            "name": "device_posture",
+            "label": "Device posture",
+            "access": 1,
+            "type": "enum",
+            "property": "device_posture",
+            "description": "Mounting orientation check — 'abnormal' when the sensor is incorrectly installed or needs calibration",
+            "category": "diagnostic",
+            "values": [
+                "normal",
+                "abnormal"
+            ]
+        },
+        {
+            "name": "action",
+            "label": "Action",
+            "access": 1,
+            "type": "enum",
+            "property": "action",
+            "description": "Triggered action (e.g. a button click)",
+            "category": "diagnostic",
+            "values": [
+                "triple_tap",
+                "movement",
+                "vibration",
+                "orientation",
+                "fall"
+            ]
+        },
+        {
+            "name": "linkquality",
+            "label": "Linkquality",
+            "access": 1,
+            "type": "numeric",
+            "property": "linkquality",
+            "description": "Link quality (signal strength)",
+            "category": "diagnostic",
+            "unit": "lqi",
+            "value_max": 255,
+            "value_min": 0
+        }
+    ],
+    "LastPayload": [],
+    "Childs": {
+        "58352": {
+            "ParentID": 39313,
+            "ObjectID": 58352,
+            "ObjectType": 2,
+            "ObjectIdent": "device_status",
+            "ObjectName": "Verfügbarkeit",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 58352,
+            "VariableProfile": "Z2M.DeviceStatus",
+            "VariableAction": 0,
+            "VariableCustomProfile": "Window_2",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1762613857,
+            "VariableChanged": 1762613857,
+            "VariableType": 0,
+            "VariableValue": false,
+            "VariableIsLocked": false
+        },
+        "10688": {
+            "ParentID": 40295,
+            "ObjectID": 10688,
+            "ObjectType": 2,
+            "ObjectIdent": "battery",
+            "ObjectName": "Batterie",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 10688,
+            "VariableProfile": "~Battery.100",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "~Battery.100",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 0,
+            "VariableIsLocked": false
+        },
+        "17150": {
+            "ParentID": 40295,
+            "ObjectID": 17150,
+            "ObjectType": 2,
+            "ObjectIdent": "voltage",
+            "ObjectName": "Spannung",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 17150,
+            "VariableProfile": "~Volt",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "~Volt",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 2,
+            "VariableValue": 0,
+            "VariableIsLocked": false
+        },
+        "58756": {
+            "ParentID": 40295,
+            "ObjectID": 58756,
+            "ObjectType": 2,
+            "ObjectIdent": "device_mode",
+            "ObjectName": "Gerätemodus",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 58756,
+            "VariableProfile": "Z2M.device_mode.c1650a43",
+            "VariableAction": 40295,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "Z2M.device_mode.c1650a43",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 3,
+            "VariableValue": "",
+            "VariableIsLocked": false
+        },
+        "18133": {
+            "ParentID": 40295,
+            "ObjectID": 18133,
+            "ObjectType": 2,
+            "ObjectIdent": "door_window_type",
+            "ObjectName": "Door Window Type",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 18133,
+            "VariableProfile": "Z2M.door_window_type.292348f9",
+            "VariableAction": 40295,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "Z2M.door_window_type.292348f9",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 3,
+            "VariableValue": "",
+            "VariableIsLocked": false
+        },
+        "44893": {
+            "ParentID": 40295,
+            "ObjectID": 44893,
+            "ObjectType": 2,
+            "ObjectIdent": "sensitivity",
+            "ObjectName": "Empfindlichkeit",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 44893,
+            "VariableProfile": "Z2M.sensitivity_1_10",
+            "VariableAction": 40295,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "Z2M.sensitivity_1_10",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 0,
+            "VariableIsLocked": false
+        },
+        "26346": {
+            "ParentID": 40295,
+            "ObjectID": 26346,
+            "ObjectType": 2,
+            "ObjectIdent": "report_interval",
+            "ObjectName": "Report Interval",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 26346,
+            "VariableProfile": "Z2M.report_interval_5_300",
+            "VariableAction": 40295,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "Z2M.report_interval_5_300",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 2,
+            "VariableValue": 0,
+            "VariableIsLocked": false
+        },
+        "15925": {
+            "ParentID": 40295,
+            "ObjectID": 15925,
+            "ObjectType": 2,
+            "ObjectIdent": "orientation_detection",
+            "ObjectName": "Orientation Detection",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 15925,
+            "VariableProfile": "~Switch",
+            "VariableAction": 40295,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "~Switch",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 0,
+            "VariableValue": false,
+            "VariableIsLocked": false
+        },
+        "23921": {
+            "ParentID": 40295,
+            "ObjectID": 23921,
+            "ObjectType": 2,
+            "ObjectIdent": "movement_detection",
+            "ObjectName": "Movement Detection",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 23921,
+            "VariableProfile": "~Switch",
+            "VariableAction": 40295,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "~Switch",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 0,
+            "VariableValue": false,
+            "VariableIsLocked": false
+        },
+        "20457": {
+            "ParentID": 40295,
+            "ObjectID": 20457,
+            "ObjectType": 2,
+            "ObjectIdent": "fall_detection",
+            "ObjectName": "Fall Detection",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 20457,
+            "VariableProfile": "~Switch",
+            "VariableAction": 40295,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "~Switch",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 0,
+            "VariableValue": false,
+            "VariableIsLocked": false
+        },
+        "25132": {
+            "ParentID": 40295,
+            "ObjectID": 25132,
+            "ObjectType": 2,
+            "ObjectIdent": "vibration_detection",
+            "ObjectName": "Vibration Detection",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 25132,
+            "VariableProfile": "~Switch",
+            "VariableAction": 40295,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "~Switch",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 0,
+            "VariableValue": false,
+            "VariableIsLocked": false
+        },
+        "49998": {
+            "ParentID": 40295,
+            "ObjectID": 49998,
+            "ObjectType": 2,
+            "ObjectIdent": "triple_tap_detection",
+            "ObjectName": "Triple Tap Detection",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 49998,
+            "VariableProfile": "~Switch",
+            "VariableAction": 40295,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "~Switch",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 0,
+            "VariableValue": false,
+            "VariableIsLocked": false
+        },
+        "57998": {
+            "ParentID": 40295,
+            "ObjectID": 57998,
+            "ObjectType": 2,
+            "ObjectIdent": "orientation",
+            "ObjectName": "Orientation",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 57998,
+            "VariableProfile": "Z2M.orientation.227960b8",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "Z2M.orientation.227960b8",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 3,
+            "VariableValue": "",
+            "VariableIsLocked": false
+        },
+        "54056": {
+            "ParentID": 40295,
+            "ObjectID": 54056,
+            "ObjectType": 2,
+            "ObjectIdent": "contact",
+            "ObjectName": "Kontakt",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 54056,
+            "VariableProfile": "~Window.Reversed",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "~Window.Reversed",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 0,
+            "VariableValue": false,
+            "VariableIsLocked": false
+        },
+        "31525": {
+            "ParentID": 40295,
+            "ObjectID": 31525,
+            "ObjectType": 2,
+            "ObjectIdent": "device_posture",
+            "ObjectName": "Device Posture",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 31525,
+            "VariableProfile": "Z2M.device_posture.3309d9c0",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "Z2M.device_posture.3309d9c0",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 3,
+            "VariableValue": "",
+            "VariableIsLocked": false
+        },
+        "17711": {
+            "ParentID": 40295,
+            "ObjectID": 17711,
+            "ObjectType": 2,
+            "ObjectIdent": "action",
+            "ObjectName": "Aktion",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 17711,
+            "VariableProfile": "Z2M.action.35d35c80",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "Z2M.action.35d35c80",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 3,
+            "VariableValue": "",
+            "VariableIsLocked": false
+        },
+        "19528": {
+            "ParentID": 40295,
+            "ObjectID": 19528,
+            "ObjectType": 2,
+            "ObjectIdent": "linkquality",
+            "ObjectName": "Verbindungsqualität",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 19528,
+            "VariableProfile": "Z2M.linkquality_0_255",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 0,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PROFILE": "Z2M.linkquality_0_255",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 0,
+            "VariableIsLocked": false
+        }
+    },
+    "Profile": {
+        "~Battery.100": {
+            "ProfileName": "~Battery.100",
+            "ProfileType": 1,
+            "Icon": "Battery",
+            "Prefix": "",
+            "Suffix": " %",
+            "MinValue": 0,
+            "MaxValue": 100,
+            "StepSize": 10,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": true
+        },
+        "~Volt": {
+            "ProfileName": "~Volt",
+            "ProfileType": 2,
+            "Icon": "Electricity",
+            "Prefix": "",
+            "Suffix": " V",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 1,
+            "Associations": [],
+            "IsReadOnly": true
+        },
+        "Z2M.device_mode.c1650a43": {
+            "ProfileName": "Z2M.device_mode.c1650a43",
+            "ProfileType": 3,
+            "Icon": "Menu",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": "door_window",
+                    "Name": "Door Window",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "object",
+                    "Name": "Object",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        },
+        "Z2M.door_window_type.292348f9": {
+            "ProfileName": "Z2M.door_window_type.292348f9",
+            "ProfileType": 3,
+            "Icon": "Menu",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": "casement_window",
+                    "Name": "Casement Window",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "composite_window",
+                    "Name": "Composite Window",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "hinged_door",
+                    "Name": "Hinged Door",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "hopper_window",
+                    "Name": "Hopper Window",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        },
+        "Z2M.sensitivity_1_10": {
+            "ProfileName": "Z2M.sensitivity_1_10",
+            "ProfileType": 1,
+            "Icon": "",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 1,
+            "MaxValue": 10,
+            "StepSize": 1,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": false
+        },
+        "Z2M.report_interval_5_300": {
+            "ProfileName": "Z2M.report_interval_5_300",
+            "ProfileType": 2,
+            "Icon": "",
+            "Prefix": "",
+            "Suffix": " s",
+            "MinValue": 5,
+            "MaxValue": 300,
+            "StepSize": 1,
+            "Digits": 2,
+            "Associations": [],
+            "IsReadOnly": false
+        },
+        "~Switch": {
+            "ProfileName": "~Switch",
+            "ProfileType": 0,
+            "Icon": "Power",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 1,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": false,
+                    "Name": "Aus",
+                    "Icon": "",
+                    "Color": -1
+                },
+                {
+                    "Value": true,
+                    "Name": "An",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": true
+        },
+        "Z2M.orientation.227960b8": {
+            "ProfileName": "Z2M.orientation.227960b8",
+            "ProfileType": 3,
+            "Icon": "Menu",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": "face_down",
+                    "Name": "Face Down",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "face_up",
+                    "Name": "Face Up",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "tilt",
+                    "Name": "Neigung",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "vertical",
+                    "Name": "Vertical",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        },
+        "~Window.Reversed": {
+            "ProfileName": "~Window.Reversed",
+            "ProfileType": 0,
+            "Icon": "Window",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 1,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": false,
+                    "Name": "Geöffnet",
+                    "Icon": "",
+                    "Color": 255
+                },
+                {
+                    "Value": true,
+                    "Name": "Geschlossen",
+                    "Icon": "",
+                    "Color": -1
+                }
+            ],
+            "IsReadOnly": true
+        },
+        "Z2M.device_posture.3309d9c0": {
+            "ProfileName": "Z2M.device_posture.3309d9c0",
+            "ProfileType": 3,
+            "Icon": "Menu",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": "abnormal",
+                    "Name": "Abnormal",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "normal",
+                    "Name": "Normal",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        },
+        "Z2M.action.35d35c80": {
+            "ProfileName": "Z2M.action.35d35c80",
+            "ProfileType": 3,
+            "Icon": "Menu",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": "fall",
+                    "Name": "Fallen",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "movement",
+                    "Name": "Bewegung",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "orientation",
+                    "Name": "Orientation",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "triple_tap",
+                    "Name": "Triple Tap",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "vibration",
+                    "Name": "Vibration",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        },
+        "Z2M.linkquality_0_255": {
+            "ProfileName": "Z2M.linkquality_0_255",
+            "ProfileType": 1,
+            "Icon": "",
+            "Prefix": "",
+            "Suffix": " lqi",
+            "MinValue": 0,
+            "MaxValue": 255,
+            "StepSize": 1,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": false
+        }
+    },
+    "missingTranslations": [
+        {
+            "value": "Door Window"
+        },
+        {
+            "value": "Object"
+        },
+        {
+            "value": "Casement Window"
+        },
+        {
+            "value": "Composite Window"
+        },
+        {
+            "value": "Hinged Door"
+        },
+        {
+            "value": "Hopper Window"
+        },
+        {
+            "lable": "Door Window Type"
+        },
+        {
+            "lable": "Report Interval"
+        },
+        {
+            "lable": "Orientation Detection"
+        },
+        {
+            "lable": "Movement Detection"
+        },
+        {
+            "lable": "Fall Detection"
+        },
+        {
+            "lable": "Vibration Detection"
+        },
+        {
+            "lable": "Triple Tap Detection"
+        },
+        {
+            "value": "Face Down"
+        },
+        {
+            "value": "Face Up"
+        },
+        {
+            "value": "Vertical"
+        },
+        {
+            "lable": "Orientation"
+        },
+        {
+            "value": "Abnormal"
+        },
+        {
+            "lable": "Device Posture"
+        },
+        {
+            "value": "Orientation"
+        },
+        {
+            "value": "Triple Tap"
+        }
+    ]
+}

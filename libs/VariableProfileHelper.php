@@ -99,7 +99,7 @@ trait VariableProfileHelper
      * @param string $Suffix   Suffix für die Darstellung.
      * @param int    $MinValue Minimaler Wert.
      * @param int    $MaxValue Maximaler wert.
-     * @param int    $StepSize Schrittweite
+     * @param float  $StepSize Schrittweite
      */
     protected function RegisterProfileInteger(string $Name, string $Icon, string $Prefix, string $Suffix, int $MinValue, int $MaxValue, float $StepSize): void
     {
@@ -185,7 +185,9 @@ trait VariableProfileHelper
         } else {
             $profile = IPS_GetVariableProfile($Name);
             if ($profile['ProfileType'] != $VarTyp) {
-                throw new \Exception('Variable profile type does not match for profile ' . $Name, E_USER_WARNING);
+                IPS_DeleteVariableProfile($Name);
+                $this->LogMessage('Variable profile type does not match for profile ' . $Name, KL_WARNING);
+                //throw new \Exception('Variable profile type does not match for profile ' . $Name, E_USER_WARNING);
             }
         }
 

@@ -1,0 +1,21 @@
+{
+    "translations": {
+        "de": {
+            "Configuration for external broker": "Konfiguration für externen Broker",
+            "Zigbee2MQTT Installations": "Zigbee2MQTT Installationen",
+            "Close": "Schließen",
+            "Add external broker": "Externen Broker hinzufügen",
+            "Edit configuration": "Konfiguration ändern",
+            "No MQTT Server or Client in Symcon found!": "Kein MQTT Server oder Client in Symcon gefunden!",
+            "If an external MQTT broker is used, it can be specified here for verification:": "Wenn ein externer MQTT Broker genutzt wird,\r\nso kann dieser hier zur Überprüfung angegeben werden:",
+            "Url (mqtt:// or mqtts://)": "Url (mqtt:// oder mqtts://)",
+            "Username": "Benutzername",
+            "Password": "Passwort",
+            "Save": "Speichern",
+            "Please wait": "Bitte warte",
+            "Configurator": "Konfigurator",
+            "Could not connect to broker!": "Verbindung zum Broker konnte\r\nnicht hergestellt werden!",
+            "Transaction Data is locked": "Transaktionen Daten sind gesperrt"
+        }
+    }
+}

@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Zigbee2MQTT;
 
+require_once __DIR__ . '/ModuleConstants.php';
+
 /**
  * @property array $TransactionData Array welches in einem Instanz-Buffer abgelegt wird und aktuelle Anfragen und Antworten von/zur Z2M Bridge enthält
  */
 trait SendData
 {
+    use Constants;
+
     /** @var mixed $MQTTDataArray
      *  Vorlage Daten Array zum versenden an einen MQTT-Splitter
      */
     private static $MQTTDataArray = [
-        'DataID'           => '{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}',
+        'DataID'           => self::GUID_MQTT_SEND,
         'PacketType'       => 3,
         'QualityOfService' => 0,
         'Retain'           => false,
@@ -30,7 +34,7 @@ trait SendData
      */
     public function Command(string $topic, string $value)
     {
-        return $this->SendData('/' . $this->ReadPropertyString('MQTTTopic') . '/' . $topic, json_decode($value, true), 0);
+        return $this->SendData('/' . $this->ReadPropertyString(self::MQTT_TOPIC) . '/' . $topic, json_decode($value, true), 0);
     }
 
     /**
@@ -63,14 +67,17 @@ trait SendData
         if ($Timeout) {
             $TransactionId = $this->AddTransaction($Payload);
         }
+
         $this->SendDebug(__FUNCTION__ . ':Topic', $Topic, 0);
         $this->SendDebug(__FUNCTION__ . ':Payload', json_encode($Payload), 0);
-        $DataJSON = self::BuildRequest($this->ReadPropertyString('MQTTBaseTopic') . $Topic, $Payload);
+        $DataJSON = self::BuildRequest($this->ReadPropertyString(self::MQTT_BASE_TOPIC) . $Topic, $Payload);
         $this->SendDataToParent($DataJSON);
+
         if ($Timeout) {
             $Result = $this->WaitForTransactionEnd($TransactionId, $Timeout);
+            $this->SendDebug(__FUNCTION__ . ' :Result', json_encode($Result), 0);
             if ($Result === false) {
-                trigger_error($this->Translate('Zigbee2MQTT did not response.'), E_USER_NOTICE);
+                trigger_error(\sprintf($this->Translate('Zigbee2MQTT did not response on Topic %s'), $Topic), E_USER_NOTICE);
                 return false;
             }
             return $Result;
@@ -92,10 +99,10 @@ trait SendData
         $Sleep = intdiv($Timeout, 1000);
         for ($i = 0; $i < 1000; $i++) {
             $Buffer = $this->TransactionData;
-            if (!array_key_exists($TransactionId, $Buffer)) {
+            if (!isset($Buffer[$TransactionId])) {
                 return false;
             }
-            if (count($Buffer[$TransactionId])) {
+            if (\count($Buffer[$TransactionId])) {
                 $this->RemoveTransaction($TransactionId);
                 unset($Buffer[$TransactionId]['transaction']);
                 return $Buffer[$TransactionId];
@@ -105,7 +112,6 @@ trait SendData
         $this->RemoveTransaction($TransactionId);
         return false;
     }
-    //################# SENDQUEUE
 
     /**
      * AddTransaction
@@ -118,7 +124,7 @@ trait SendData
     private function AddTransaction(array &$Payload)
     {
         if (!$this->lock('TransactionData')) {
-            throw new \Exception($this->Translate('TransactionData is locked'), E_USER_NOTICE);
+            throw new \Exception($this->Translate('Transaction Data is locked'), E_USER_NOTICE);
         }
         $TransactionId = mt_rand(1, 10000);
         $Payload['transaction'] = $TransactionId;
@@ -140,10 +146,10 @@ trait SendData
     private function UpdateTransaction(array $Data)
     {
         if (!$this->lock('TransactionData')) {
-            throw new \Exception($this->Translate('TransactionData is locked'), E_USER_NOTICE);
+            throw new \Exception($this->Translate('Transaction Data is locked'), E_USER_NOTICE);
         }
         $TransactionData = $this->TransactionData;
-        if (array_key_exists($Data['transaction'], $TransactionData)) {
+        if (isset($TransactionData[$Data['transaction']])) {
             $TransactionData[$Data['transaction']] = $Data;
             $this->TransactionData = $TransactionData;
             $this->unlock('TransactionData');
@@ -163,7 +169,7 @@ trait SendData
     private function RemoveTransaction(int $TransactionId)
     {
         if (!$this->lock('TransactionData')) {
-            throw new \Exception($this->Translate('TransactionData is locked'), E_USER_NOTICE);
+            throw new \Exception($this->Translate('Transaction Data is locked'), E_USER_NOTICE);
         }
         $TransactionData = $this->TransactionData;
         unset($TransactionData[$TransactionId]);

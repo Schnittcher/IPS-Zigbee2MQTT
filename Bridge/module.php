@@ -7,7 +7,10 @@ require_once dirname(__DIR__) . '/libs/VariableProfileHelper.php';
 require_once dirname(__DIR__) . '/libs/MQTTHelper.php';
 
 /**
- * @property string $actualExtensionVersion Enthält die Aktuelle Version der Extension in einem InstanzBuffer
+ * Zigbee2MQTTBridge
+ *
+ * @property float $actualExtensionVersion Enthält die benötigte Version der Extension passend zu Z2M in einem InstanzBuffer
+ * @property float $installedZhVersion Enthält die installierte Version des zigbee-herdsman Moduls
  * @property string $ExtensionFilename Enthält den Dateinamen der Extension in einem InstanzBuffer
  * @property string $ConfigLastSeen Enthält die Z2M Konfiguration der LastSeen Option in einem InstanzBuffer
  * @property bool $ConfigPermitJoin Enthält die Z2M Konfiguration der PermitJoin Option in einem InstanzBuffer
@@ -19,8 +22,31 @@ class Zigbee2MQTTBridge extends IPSModule
     use \Zigbee2MQTT\VariableProfileHelper;
     use \Zigbee2MQTT\SendData;
 
+    /** @var array ZH Version zu Erweiterung  */
+    private const EXTENSION_ZH_VERSION = [
+        2  => 'IPSymconExtension.js',
+        3  => 'IPSymconExtension2.js',
+        4  => 'IPSymconExtension2.js',
+        5  => 'IPSymconExtension2.js',
+        6  => 'IPSymconExtension2.js',
+        7  => 'IPSymconExtension2.js',
+        8  => 'IPSymconExtension2.js',
+        9  => 'IPSymconExtension2.js',
+        10 => 'IPSymconExtension2.js',
+        11 => 'IPSymconExtension2.js',
+        12 => 'IPSymconExtension2.js',
+        13 => 'IPSymconExtension2.js',
+        14 => 'IPSymconExtension2.js',
+        15 => 'IPSymconExtension2.js',
+        16 => 'IPSymconExtension2.js',
+        17 => 'IPSymconExtension2.js',
+        18 => 'IPSymconExtension2.js'
+    ];
     /**
      * Create
+     *
+     * @uses IPSModule::Create()
+     * @uses IPSModule::RegisterPropertyString()
      *
      * @return void
      */
@@ -28,15 +54,11 @@ class Zigbee2MQTTBridge extends IPSModule
     {
         //Never delete this line!
         parent::Create();
-        $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
-        $this->RegisterPropertyString('MQTTBaseTopic', '');
-        $Version = 'unknown';
-        $File = file(dirname(__DIR__) . '/libs/IPSymconExtension.js');
-        $Start = strpos($File[2], 'Version: ');
-        if ($Start) {
-            $Version = trim(substr($File[2], $Start + strlen('Version: ')));
-        }
-        $this->actualExtensionVersion = $Version;
+        $this->RegisterPropertyString(self::MQTT_BASE_TOPIC, '');
+
+        // Init Buffers
+        $this->actualExtensionVersion = 0;
+        $this->installedZhVersion = 0;
         $this->ExtensionFilename = '';
         $this->ConfigLastSeen = 'epoch';
         $this->TransactionData = [];
@@ -47,14 +69,37 @@ class Zigbee2MQTTBridge extends IPSModule
      * ApplyChanges
      *
      * @return void
+     *
+     * @uses IPSModule::ApplyChanges()
+     * @uses IPSModule::ReadPropertyString()
+     * @uses IPSModule::SetStatus()
+     * @uses IPSModule::SetReceiveDataFilter()
+     * @uses IPSModule::SetSummary()
+     * @uses IPSModule::UnregisterVariable()
+     * @uses IPSModule::RegisterVariableBoolean()
+     * @uses IPSModule::RegisterVariableString()
+     * @uses IPSModule::RegisterVariableInteger()
+     * @uses IPSModule::EnableAction()
+     * @uses IPSModule::HasActiveParent()
+     * @uses IPSModule::UpdateFormField()
+     * @uses IPSModule::GetValue()
+     * @uses IPSModule::SetValue()
+     * @uses IPSModule::Translate()
+     * @uses Zigbee2MQTTBridge::RegisterProfileIntegerEx()
+     * @uses Zigbee2MQTTBridge::RegisterProfileStringEx()
+     * @uses Zigbee2MQTTBridge::RequestOptions()
+     * @uses Zigbee2MQTTBridge::InstallSymconExtension()
+     * @uses IPS_GetKernelRunlevel()
      */
     public function ApplyChanges()
     {
+        // Empty TransactionQueue
         $this->TransactionData = [];
+
         //Never delete this line!
         parent::ApplyChanges();
-        $this->ConnectParent('{C6D2AEB3-6E1F-4B2E-8E69-3A1A00246850}');
-        $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
+
+        $BaseTopic = $this->ReadPropertyString(self::MQTT_BASE_TOPIC);
         if (empty($BaseTopic)) {
             $this->SetStatus(IS_INACTIVE);
             $this->SetReceiveDataFilter('NOTHING_TO_RECEIVE'); //block all
@@ -63,6 +108,9 @@ class Zigbee2MQTTBridge extends IPSModule
             //Setze Filter für ReceiveData
             $this->SetReceiveDataFilter('.*"Topic":"' . $BaseTopic . '/bridge/.*');
         }
+
+        $this->SetSummary($BaseTopic);
+
         $this->RegisterProfileIntegerEx('Z2M.bridge.restart', '', '', '', [
             [0, $this->Translate('Restart'), '', 0xFF0000],
         ]);
@@ -72,8 +120,7 @@ class Zigbee2MQTTBridge extends IPSModule
             ['info', $this->Translate('Information'), '', 0x00FF00],
             ['debug', $this->Translate('Debug'), '', 0x00FF00],
         ]);
-        $this->RegisterProfileInteger('Z2M.seconds', '', '', ' s', 0, 0, 1, 0);
-        $this->RegisterVariableBoolean('state', $this->Translate('State'));
+        $this->RegisterVariableBoolean('state', $this->Translate('State'), '~Alert.Reversed');
         $this->RegisterVariableBoolean('extension_loaded', $this->Translate('Extension Loaded'));
         $this->RegisterVariableString('extension_version', $this->Translate('Extension Version'));
         $this->RegisterVariableBoolean('extension_is_current', $this->Translate('Extension is up to date'));
@@ -81,7 +128,6 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->EnableAction('log_level');
         $this->RegisterVariableBoolean('permit_join', $this->Translate('Allow joining the network'), '~Switch');
         $this->EnableAction('permit_join');
-        $this->RegisterVariableInteger('permit_join_timeout', $this->Translate('Permit Join Timeout'), 'Z2M.seconds');
         $this->RegisterVariableBoolean('restart_required', $this->Translate('Restart Required'));
         $this->RegisterVariableInteger('restart_request', $this->Translate('Perform a restart'), 'Z2M.bridge.restart');
         $this->EnableAction('restart_request');
@@ -90,42 +136,68 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->RegisterVariableString('zigbee_herdsman', $this->Translate('Zigbee Herdsman Version'));
         $this->RegisterVariableInteger('network_channel', $this->Translate('Network Channel'));
 
+        $this->UnregisterVariable('permit_join_timeout');
+
+        $online = false;
         if (!empty($BaseTopic)) {
             if (($this->HasActiveParent()) && (IPS_GetKernelRunlevel() == KR_READY)) {
-                @$this->RequestOptions();
+                $online = @$this->RequestOptions();
             }
         }
-
-        $ExtVersion = $this->GetValue('extension_version');
-        if (!empty($ExtVersion) && ($ExtVersion != 'unknown')) {
-            $this->SetValue('extension_is_current', $this->actualExtensionVersion == $ExtVersion);
-            if ($this->actualExtensionVersion == $ExtVersion) {
-                $this->UpdateFormField('InstallExtension', 'enabled', false);
-            } else {
-                //$this->LogMessage($this->Translate('Symcon Extension in Zigbee2MQTT is outdated. Please update the extension.'), KL_ERROR);
-                @$this->InstallSymconExtension();
+        $this->SendDebug('Online', $online ? 'true' : 'false', 0);
+        $installedExtVersion = (empty($this->GetValue('extension_version')) ? -1 : (float) $this->GetValue('extension_version'));
+        $this->SetValue('extension_is_current', $this->actualExtensionVersion <= $installedExtVersion);
+        if ($this->actualExtensionVersion <= $installedExtVersion) {
+            $this->UpdateFormField('InstallExtension', 'caption', $this->Translate('Symcon-Extension is up-to-date'));
+            $this->UpdateFormField('InstallExtension', 'enabled', false);
+        } else {
+            $this->UpdateFormField('InstallExtension', 'caption', $this->Translate('Install or upgrade Symcon-Extension'));
+            $this->UpdateFormField('InstallExtension', 'enabled', true);
+            if (!empty($BaseTopic)) {
+                if ($online) {
+                    @$this->InstallSymconExtension();
+                }
             }
         }
-
     }
 
     /**
      * ReceiveData
      *
      * @param  string $JSONString
+     *
      * @return string
+     *
+     * @uses IPSModule::GetStatus()
+     * @uses IPSModule::ReadPropertyString()
+     * @uses IPSModule::RegisterVariableString()
+     * @uses IPSModule::SendDebug()
+     * @uses IPSModule::SetValue()
+     * @uses IPSModule::Translate()
+     * @uses IPSModule::UpdateFormField()
+     * @uses IPSModule::LogMessage()
+     * @uses Zigbee2MQTTBridge::UpdateTransaction()
+     * @uses json_decode()
+     * @uses strpos()
+     * @uses substr()
+     * @uses strlen()
+     * @uses explode()
+     * @uses array_shift()
+     * @uses utf8_decode()
+     * @uses file_get_contents()
+     * @uses preg_match()
+     * @uses isset()
      */
     public function ReceiveData($JSONString)
     {
         if ($this->GetStatus() == IS_CREATING) {
             return '';
         }
-        $BaseTopic = $this->ReadPropertyString('MQTTBaseTopic');
+        $BaseTopic = $this->ReadPropertyString(self::MQTT_BASE_TOPIC);
         if (empty($BaseTopic)) {
             return '';
         }
         $this->SendDebug('ReceiveData', $JSONString, 0);
-
         $Buffer = json_decode($JSONString, true);
         if (!isset($Buffer['Topic'])) {
             return '';
@@ -139,14 +211,14 @@ class Zigbee2MQTTBridge extends IPSModule
         $this->SendDebug('MQTT Payload', utf8_decode($Buffer['Payload']), 0);
         $Payload = json_decode(utf8_decode($Buffer['Payload']), true);
         switch ($Topic) {
-            case 'request': //nothing todo
+            case 'request': //nothing
                 break;
             case 'response': //response from request
                 if (isset($Payload['transaction'])) {
                     $this->UpdateTransaction($Payload);
                     break;
                 }
-                if (count($Topics)) {
+                if (is_array($Topics)) {
                     if ($Topics[0] == 'networkmap') {
                         if ($Payload['status'] == 'ok') {
                             $this->RegisterVariableString($Payload['data']['type'], $this->Translate('Network Map'));
@@ -164,12 +236,6 @@ class Zigbee2MQTTBridge extends IPSModule
                 }
                 if (isset($Payload['permit_join'])) {
                     $this->SetValue('permit_join', $Payload['permit_join']);
-                    if ($Payload['permit_join'] === false) {
-                        $this->SetValue('permit_join_timeout', 0);
-                    }
-                }
-                if (isset($Payload['permit_join_timeout'])) {
-                    $this->SetValue('permit_join_timeout', $Payload['permit_join_timeout']);
                 }
                 if (isset($Payload['restart_required'])) {
                     $this->SetValue('restart_required', $Payload['restart_required']);
@@ -188,13 +254,26 @@ class Zigbee2MQTTBridge extends IPSModule
                     $this->SetValue('zigbee_herdsman_converters', $Payload['zigbee_herdsman_converters']['version']);
                 }
                 if (isset($Payload['zigbee_herdsman']['version'])) {
+                    $this->installedZhVersion = $Payload['zigbee_herdsman']['version'];
+                    if (isset(self::EXTENSION_ZH_VERSION[(int) $this->installedZhVersion])) {
+                        $Extension = file_get_contents(dirname(__DIR__) . '/libs/' . self::EXTENSION_ZH_VERSION[(int) $this->installedZhVersion]);
+                        preg_match('/Version: (.*)/', $Extension, $matches);
+                        if (isset($matches[1])) {
+                            $this->actualExtensionVersion = (float) $matches[1];
+                        }
+                    } else {
+                        $this->actualExtensionVersion = 0;
+                    }
                     $this->SetValue('zigbee_herdsman', $Payload['zigbee_herdsman']['version']);
                 }
                 if (isset($Payload['config']['advanced']['last_seen'])) {
                     $this->ConfigLastSeen = $Payload['config']['advanced']['last_seen'];
                     if ($Payload['config']['advanced']['last_seen'] == 'epoch') {
+                        $this->UpdateFormField('SetLastSeen', 'caption', $this->Translate('last_seen setting is correct'));
                         $this->UpdateFormField('SetLastSeen', 'enabled', false);
                     } else {
+                        $this->UpdateFormField('SetLastSeen', 'caption', $this->Translate('Set last_seen setting to epoch'));
+                        $this->UpdateFormField('SetLastSeen', 'enabled', true);
                         $this->LogMessage($this->Translate('Wrong last_seen setting in Zigbee2MQTT. Please set last_seen to epoch.'), KL_ERROR);
                     }
                 }
@@ -203,6 +282,9 @@ class Zigbee2MQTTBridge extends IPSModule
                 }
                 break;
             case 'extensions':
+                if (!is_array($Payload)) {
+                    break;
+                }
                 $foundExtension = false;
                 $Version = 'unknown';
                 foreach ($Payload as $Extension) {
@@ -212,22 +294,25 @@ class Zigbee2MQTTBridge extends IPSModule
                             continue;
                         }
                         $foundExtension = true;
-                        $this->ExtensionName = $Extension['name'];
-                        $Lines = explode("\n", $Extension['code']);
-                        $Start = strpos($Lines[2], 'Version: ');
-                        if ($Start) {
-                            $Version = trim(substr($Lines[2], $Start + strlen('Version: ')));
+                        $this->ExtensionFilename = $Extension['name'];
+                        $this->SendDebug('Found Extension', $this->ExtensionFilename, 0);
+                        preg_match('/Version: (.*)/', $Extension['code'], $matches);
+                        if (isset($matches[1])) {
+                            $Version = $matches[1];
                         }
-                        if ($this->actualExtensionVersion == $Version) {
+                        if ($this->actualExtensionVersion <= (float) $Version) {
+                            $this->UpdateFormField('InstallExtension', 'caption', $this->Translate('Symcon-Extension is up-to-date'));
                             $this->UpdateFormField('InstallExtension', 'enabled', false);
                         } else {
+                            $this->UpdateFormField('InstallExtension', 'caption', $this->Translate('Install or upgrade Symcon-Extension'));
+                            $this->UpdateFormField('InstallExtension', 'enabled', true);
                             $this->LogMessage($this->Translate('Symcon Extension in Zigbee2MQTT is outdated. Please update the extension.'), KL_ERROR);
                         }
                     }
                 }
                 $this->SetValue('extension_loaded', $foundExtension);
                 $this->SetValue('extension_version', $Version);
-                $this->SetValue('extension_is_current', $this->actualExtensionVersion == $Version);
+                $this->SetValue('extension_is_current', $this->actualExtensionVersion == (float) $Version);
                 if (!$foundExtension) {
                     $this->LogMessage($this->Translate('No Symcon Extension in Zigbee2MQTT installed. Please install the extension.'), KL_ERROR);
                 }
@@ -239,18 +324,22 @@ class Zigbee2MQTTBridge extends IPSModule
     /**
      * RequestAction
      *
-     * @param  string $Ident
-     * @param  mixed $Value
+     * @param  string $ident
+     * @param  mixed $value
      * @return void
+     *
+     * @uses Zigbee2MQTTBridge::SetPermitJoin()
+     * @uses Zigbee2MQTTBridge::SetLogLevel()
+     * @uses Zigbee2MQTTBridge::Restart()
      */
-    public function RequestAction($Ident, $Value)
+    public function RequestAction($ident, $value)
     {
-        switch ($Ident) {
+        switch ($ident) {
             case 'permit_join':
-                $this->SetPermitJoin((bool) $Value);
+                $this->SetPermitJoin((bool) $value);
                 break;
             case 'log_level':
-                $this->SetLogLevel((string) $Value);
+                $this->SetLogLevel((string) $value);
                 break;
             case 'restart_request':
                 $this->Restart();
@@ -262,17 +351,23 @@ class Zigbee2MQTTBridge extends IPSModule
      * GetConfigurationForm
      *
      * @return string
+     *
+     * @uses IPSModule::GetValue()
+     * @uses IPSModule::Translate()
+     * @uses json_decode()
+     * @uses json_encode()
+     * @uses file_get_contents()
      */
     public function GetConfigurationForm()
     {
         $Form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         if ($this->GetValue('extension_loaded') && $this->GetValue('extension_is_current')) {
             $Form['actions'][0]['enabled'] = false;
-            $Form['actions'][0]['label'] = $this->Translate('Symcon-Extension is up-to-date');
+            $Form['actions'][0]['caption'] = $this->Translate('Symcon-Extension is up-to-date');
         }
         if ($this->ConfigLastSeen == 'epoch') {
             $Form['actions'][1]['enabled'] = false;
-            $Form['actions'][1]['label'] = $this->Translate('last_seen setting is correct');
+            $Form['actions'][1]['caption'] = $this->Translate('last_seen setting is correct');
         }
         if ($this->ConfigPermitJoin) {
             $Form['actions'][2]['visible'] = true;
@@ -283,19 +378,35 @@ class Zigbee2MQTTBridge extends IPSModule
     /**
      * InstallSymconExtension
      *
-     * @todo todo check the Response
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
+     * @uses IPSModule::LogMessage()
+     * @uses IPSModule::Translate()
+     * @uses file_get_contents()
+     * @uses dirname()
+     * @uses trigger_error()
+     * @uses isset()
      */
     public function InstallSymconExtension()
     {
-        if (empty($this->ExtensionName)) {
-            $ExtensionName = 'IPSymconExtension.js';
+        if ($this->installedZhVersion == 0) {
+            $this->LogMessage($this->Translate('Cannot determine ZH Version. No Extension installed.'), KL_WARNING);
+            return false;
         }
+        if (!isset(self::EXTENSION_ZH_VERSION[(int) $this->installedZhVersion])) {
+            return false;
+
+        }
+        $ExtensionFilename = $this->ExtensionFilename == '' ? 'IPSymconExtension.js' : $this->ExtensionFilename;
         $Topic = '/bridge/request/extension/save';
-        $Payload = ['name'=>$ExtensionName, 'code'=>file_get_contents(dirname(__DIR__) . '/libs/IPSymconExtension.js')];
+        $Payload = ['name'=>$ExtensionFilename, 'code'=>file_get_contents(dirname(__DIR__) . '/libs/' . self::EXTENSION_ZH_VERSION[(int) $this->installedZhVersion])];
         $Result = $this->SendData($Topic, $Payload);
-        if ($Result) { //todo check the Response
-            return true;
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
+        }
+        if (isset($Result['status'])) {
+            return $Result['status'] == 'ok';
         }
         return false;
     }
@@ -303,8 +414,11 @@ class Zigbee2MQTTBridge extends IPSModule
     /**
      * RequestOptions
      *
-     * @todo todo check the Response
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
+     * @uses trigger_error()
+     * @uses isset()
      */
     public function RequestOptions()
     {
@@ -313,8 +427,11 @@ class Zigbee2MQTTBridge extends IPSModule
             'options'=> []
         ];
         $Result = $this->SendData($Topic, $Payload);
-        if ($Result) { //todo check the Response
-            return true;
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
+        }
+        if (isset($Result['status'])) {
+            return $Result['status'] == 'ok';
         }
         return false;
     }
@@ -322,8 +439,11 @@ class Zigbee2MQTTBridge extends IPSModule
     /**
      * SetLastSeen
      *
-     * @todo todo check the Response
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
+     * @uses trigger_error()
+     * @uses isset()
      */
     public function SetLastSeen()
     {
@@ -336,8 +456,11 @@ class Zigbee2MQTTBridge extends IPSModule
             ]
         ];
         $Result = $this->SendData($Topic, $Payload);
-        if ($Result) { //todo check the Response
-            return true;
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
+        }
+        if (isset($Result['status'])) {
+            return $Result['status'] == 'ok';
         }
         return false;
     }
@@ -345,17 +468,24 @@ class Zigbee2MQTTBridge extends IPSModule
     /**
      * SetPermitJoinOption
      *
-     * @todo todo check the Response
      * @param  bool $PermitJoin
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
+     * @uses trigger_error()
+     * @uses isset()
      */
     public function SetPermitJoinOption(bool $PermitJoin)
     {
         $Topic = '/bridge/request/options';
         $Payload = ['options'=> ['permit_join' => $PermitJoin]];
         $Result = $this->SendData($Topic, $Payload);
-        if ($Result) { //todo check the Response
-            return true;
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
+        }
+        if (isset($Result['status'])) {
+            return $Result['status'] == 'ok';
         }
         return false;
     }
@@ -363,17 +493,24 @@ class Zigbee2MQTTBridge extends IPSModule
     /**
      * SetPermitJoin
      *
-     * @todo todo check the Response
      * @param  bool $PermitJoin
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
+     * @uses trigger_error()
+     * @uses isset()
      */
     public function SetPermitJoin(bool $PermitJoin)
     {
         $Topic = '/bridge/request/permit_join';
-        $Payload = ['value'=>$PermitJoin, 'time'=> 254];
+        $Payload = ['time'=> ($PermitJoin ? 254 : 0)];
         $Result = $this->SendData($Topic, $Payload);
-        if ($Result) { //todo check the Response
-            return true;
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
+        }
+        if (isset($Result['status'])) {
+            return $Result['status'] == 'ok';
         }
         return false;
     }
@@ -381,33 +518,47 @@ class Zigbee2MQTTBridge extends IPSModule
     /**
      * SetLogLevel
      *
-     * @todo todo check the Response
      * @param  string $LogLevel
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
+     * @uses trigger_error()
+     * @uses isset()
      */
     public function SetLogLevel(string $LogLevel)
     {
         $Topic = '/bridge/request/options';
         $Payload = ['options' =>['advanced' => ['log_level'=> $LogLevel]]];
         $Result = $this->SendData($Topic, $Payload);
-        if ($Result) { //todo check the Response
-            return true;
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
         }
+        if (isset($Result['status'])) {
+            return $Result['status'] == 'ok';
+        }
+
         return false;
     }
 
     /**
      * Restart
      *
-     * @todo todo check the Response
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
+     * @uses trigger_error()
+     * @uses isset()
      */
     public function Restart()
     {
         $Topic = '/bridge/request/restart';
         $Result = $this->SendData($Topic);
-        if ($Result) { //todo check the Response
-            return true;
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
+        }
+        if (isset($Result['status'])) {
+            return $Result['status'] == 'ok';
         }
         return false;
     }
@@ -417,7 +568,10 @@ class Zigbee2MQTTBridge extends IPSModule
      *
      * @todo todo check the Response
      * @param  string $GroupName
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
      */
     public function CreateGroup(string $GroupName)
     {
@@ -435,7 +589,10 @@ class Zigbee2MQTTBridge extends IPSModule
      *
      * @todo todo check the Response
      * @param  string $GroupName
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
      */
     public function DeleteGroup(string $GroupName)
     {
@@ -454,7 +611,10 @@ class Zigbee2MQTTBridge extends IPSModule
      * @todo todo check the Response
      * @param  string $OldName
      * @param  string $NewName
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
      */
     public function RenameGroup(string $OldName, string $NewName)
     {
@@ -473,7 +633,10 @@ class Zigbee2MQTTBridge extends IPSModule
      * @todo todo check the Response
      * @param  string $GroupName
      * @param  string $DeviceName
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
      */
     public function AddDeviceToGroup(string $GroupName, string $DeviceName)
     {
@@ -492,7 +655,10 @@ class Zigbee2MQTTBridge extends IPSModule
      * @todo todo check the Response
      * @param  string $GroupName
      * @param  string $DeviceName
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
      */
     public function RemoveDeviceFromGroup(string $GroupName, string $DeviceName)
     {
@@ -510,7 +676,10 @@ class Zigbee2MQTTBridge extends IPSModule
      *
      * @todo todo check the Response
      * @param  string $GroupName
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
      */
     public function RemoveAllDevicesFromGroup(string $GroupName)
     {
@@ -529,7 +698,10 @@ class Zigbee2MQTTBridge extends IPSModule
      * @todo todo check the Response
      * @param  string $SourceDevice
      * @param  string $TargetDevice
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
      */
     public function Bind(string $SourceDevice, string $TargetDevice)
     {
@@ -548,7 +720,10 @@ class Zigbee2MQTTBridge extends IPSModule
      * @todo todo check the Response
      * @param  string $SourceDevice
      * @param  string $TargetDevice
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
      */
     public function Unbind(string $SourceDevice, string $TargetDevice)
     {
@@ -566,6 +741,8 @@ class Zigbee2MQTTBridge extends IPSModule
      *
      * @todo todo check the Response
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
      */
     public function RequestNetworkmap()
     {
@@ -577,18 +754,25 @@ class Zigbee2MQTTBridge extends IPSModule
     /**
      * RenameDevice
      *
-     * @todo todo check the Response
      * @param  string $OldDeviceName
      * @param  string $NewDeviceName
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
+     * @uses trigger_error()
+     * @uses isset()
      */
     public function RenameDevice(string $OldDeviceName, string $NewDeviceName)
     {
         $Topic = '/bridge/request/device/rename';
         $Payload = ['from' => $OldDeviceName, 'to' => $NewDeviceName];
         $Result = $this->SendData($Topic, $Payload);
-        if ($Result) { //todo check the Response
-            return true;
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
+        }
+        if (isset($Result['status'])) {
+            return $Result['status'] == 'ok';
         }
         return false;
     }
@@ -596,17 +780,24 @@ class Zigbee2MQTTBridge extends IPSModule
     /**
      * RemoveDevice
      *
-     * @todo todo check the Response
      * @param  string $DeviceName
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
+     * @uses trigger_error()
+     * @uses isset()
      */
     public function RemoveDevice(string $DeviceName)
     {
         $Topic = '/bridge/request/device/remove';
         $Payload = ['id'=>$DeviceName];
-        $Result = $this->SendData($Topic, $Payload);
-        if ($Result) { //todo check the Response
-            return true;
+        $Result = $this->SendData($Topic, $Payload, 11000);
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
+        }
+        if (isset($Result['status'])) {
+            return $Result['status'] == 'ok';
         }
         return false;
     }
@@ -614,19 +805,28 @@ class Zigbee2MQTTBridge extends IPSModule
     /**
      * CheckOTAUpdate
      *
-     * @todo todo check the Response
      * @param  string $DeviceName
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
+     * @uses trigger_error()
+     * @uses isset()
      */
     public function CheckOTAUpdate(string $DeviceName)
     {
         $Topic = '/bridge/request/device/ota_update/check';
         $Payload = ['id'=>$DeviceName];
-        $Result = $this->SendData($Topic, $Payload);
-        if ($Result) { //todo check the Response
-            return true;
+        $Result = $this->SendData($Topic, $Payload, 10000);
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
+            return false;
         }
-        return false;
+        if (!isset($Result['status']) && ($Result['status'] != 'ok')) {
+            trigger_error('unknown error', E_USER_NOTICE);
+            return false;
+        }
+        return $Result['data']['updateAvailable'];
     }
 
     /**
@@ -634,15 +834,23 @@ class Zigbee2MQTTBridge extends IPSModule
      *
      * @todo todo check the Response
      * @param  string $DeviceName
+     *
      * @return bool
+     *
+     * @uses Zigbee2MQTTBridge::SendData()
+     * @uses trigger_error()
+     * @uses isset()
      */
     public function PerformOTAUpdate(string $DeviceName)
     {
         $Topic = '/bridge/request/device/ota_update/update';
         $Payload = ['id'=>$DeviceName];
         $Result = $this->SendData($Topic, $Payload);
-        if ($Result) { //todo check the Response
-            return true;
+        if (isset($Result['error'])) {
+            trigger_error($Result['error'], E_USER_NOTICE);
+        }
+        if (isset($Result['status'])) {
+            return $Result['status'] == 'ok';
         }
         return false;
     }

@@ -28,8 +28,8 @@
             "TestCommands"
         ],
         "hasIdent": [
-            "Z2M_Brightness",
-            "Z2M_State"
+            "brightness",
+            "state"
         ]
     },
     "locale": {

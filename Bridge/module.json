@@ -1,11 +1,9 @@
 {
     "id": "{00160D82-9E2F-D1BD-6D0B-952F945332C5}",
-    "name": "Zigbee2MQTTBridge",
+    "name": "Zigbee2MQTT Bridge",
     "type": 3,
-    "vendor": "",
-    "aliases": [
-        "Zigbee2MQTT Bridge"
-    ],
+    "vendor": "Zigbee2MQTT",
+    "aliases": [],
     "parentRequirements": [
         "{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}"
     ],
@@ -14,5 +12,5 @@
         "{7F7632D9-FA40-4F38-8DEA-C83CD4325A32}"
     ],
     "prefix": "Z2M",
-    "url": "https://github.com/Schnittcher/IPS-Zigbee2MQTT/blob/main/Bridge/README.md"
+    "url": "https://github.com/Nall-chan/Zigbee2MQTT/blob/main/Bridge/README.md"
 }

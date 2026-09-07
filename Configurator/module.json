@@ -1,11 +1,9 @@
 {
     "id": "{D30BADA8-F261-4D9F-89A9-2E9961AF021F}",
-    "name": "Zigbee2MQTTConfigurator",
+    "name": "Zigbee2MQTT Configurator",
     "type": 4,
-    "vendor": "",
-    "aliases": [
-        "Zigbee2MQTT Configurator"
-    ],
+    "vendor": "Zigbee2MQTT",
+    "aliases": [],
     "parentRequirements": [
         "{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}"
     ],
@@ -14,5 +12,5 @@
         "{7F7632D9-FA40-4F38-8DEA-C83CD4325A32}"
     ],
     "prefix": "Z2M",
-    "url": "https://github.com/Schnittcher/IPS-Zigbee2MQTT/blob/main/Configurator/README.md"
+    "url": "https://github.com/Nall-chan/Zigbee2MQTT/blob/main/Configurator/README.md"
 }

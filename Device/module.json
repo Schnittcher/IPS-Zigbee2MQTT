@@ -1,11 +1,9 @@
 {
     "id": "{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}",
-    "name": "Zigbee2MQTTDevice",
+    "name": "Zigbee2MQTT Device",
     "type": 3,
-    "vendor": "",
-    "aliases": [
-        "Zigbee2MQTT Device"
-    ],
+    "vendor": "Zigbee2MQTT",
+    "aliases": [],
     "parentRequirements": [
         "{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}"
     ],
@@ -14,5 +12,5 @@
         "{7F7632D9-FA40-4F38-8DEA-C83CD4325A32}"
     ],
     "prefix": "Z2M",
-    "url": "https://github.com/Schnittcher/IPS-Zigbee2MQTT/blob/main/Device/README.md"
+    "url": "https://github.com/Nall-chan/Zigbee2MQTT/blob/main/Device/README.md"
 }

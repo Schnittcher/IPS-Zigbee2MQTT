@@ -1,0 +1,34 @@
+{
+    "translations": {
+        "de": {
+            "Device not found. Check topic": "Gerät nicht gefunden. Topic prüfen.",
+            "Change IEEE Address": "IEEE Adresse ändern",
+            "Warning!": "Warnung!",
+            "I understand": "Habe ich verstanden",
+            "Please use this function carefully!\r\nAn incorrect IEEE address can lead to malfunctions.": "Bitte benutzen Sie diese Funktion mit Aufmerksamkeit!\r\nEine falsche IEEE Adresse kann zu Fehlfunktionen führen.",
+            "Get Device Infos": "Geräteinformationen abrufen",
+            "Change Group Id": "Gruppen-ID ändern",
+            "Please use this function carefully!\r\nAn incorrect GroupId can lead to malfunctions.": "Bitte benutzen Sie diese Funktion mit Aufmerksamkeit!\r\nEine falsche Gruppen-ID kann zu Fehlfunktionen führen.",
+            "Link to device information: ": "Link zur Geräteinformation: ",
+            "Get Group Infos": "Gruppeninformationen abrufen",
+            "Group not found. Check topic.": "Gruppe nicht gefunden. Topic prüfen.",
+            "Group Id": "Gruppen ID",
+            "Donations": "Spenden / Schenkung",
+            "This module is free for non-commercial use,\r\nDonations in support of the author are accepted here:": "Dieses Modul ist für die nicht kommerzielle Nutzung kostenlos, Schenkungen als Unterstützung für den Autor werden hier akzeptiert:",
+            "Zigbee2MQTT did not response on Topic %s": "Zigbee2MQTT antwortet nicht auf Topic %s",
+            "Error on create folder: ": "Fehler beim Erstellen von dem Ordner: ",
+            "MQTTTopic not configured.": "MTTTopic nicht konfiguriert",
+            "Device not found. Check topic.": "Gerät nicht gefunden. Topic prüfen.",
+            "IEEE-Address missing.": "Keine IEEE-Adresse gefunden.",
+            "No IEEE address configured": "Keine IEEE-Adresse konfiguriert",
+            "No group ID configured": "Keine Gruppen ID konfiguriert",
+            "Error downloading icon from URL: ": "Fehler beim Herunterladen des Icons von URL: ",
+            "File successfully deleted: ": "Datei erfolgreich gelöscht: ",
+            "Error on delete file: ": "Fehler beim löschen der Datei: ",
+            "JSON encoding error: ": "Fehler beim JSON-Encoding: ",
+            "Error writing JSON file.": "Fehler beim Schreiben der JSON-Datei.",
+            "Error on create Expose Directory": "Fehler beim Erstellen des Expose-Verzeichnisses",
+            "Transaction Data is locked": "Transaktionen Daten sind gesperrt"
+        }
+    }
+}

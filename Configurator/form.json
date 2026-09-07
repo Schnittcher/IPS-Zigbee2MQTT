@@ -49,7 +49,7 @@
                             "width": "100px"
                         },
                         {
-                            "caption": "Model ID",
+                            "caption": "Model",
                             "name": "modelID",
                             "width": "200px"
                         },
@@ -126,6 +126,7 @@
                         "name": "ErrorTitle",
                         "type": "Label",
                         "bold": true,
+                        "color": 16711680,
                         "caption": "No devices found!"
                     },
                     {
@@ -149,12 +150,70 @@
             }
         },
         {
-            "type": "Label",
-            "caption": "Spenden / Schenkung"
+            "type": "PopupAlert",
+            "name": "WrongConnectedInstancesPopup",
+            "visible": false,
+            "popup": {
+                "closeCaption": "Close",
+                "buttons": [
+                    {
+                        "caption": "Fix it!",
+                        "onClick": [
+                            "$SplitterId = IPS_GetInstance($id)['ConnectionID'];",
+                            "foreach ($WrongConnectedInstances as $Instance){",
+                            "   @IPS_DisconnectInstance($Instance['instanceId']);",
+                            "   @IPS_ConnectInstance($Instance['instanceId'], $SplitterId);",
+                            "}",
+                            "IPS_RequestAction($id, 'ReloadForm', true);"
+                        ]
+                    }
+                ],
+                "items": [
+                    {
+                        "name": "ErrorTitle",
+                        "type": "Label",
+                        "bold": true,
+                        "color": 16711680,
+                        "caption": "Devices that the configurator has found but are connected to the wrong MQTT splitter in Symcon."
+                    },
+                    {
+                        "type": "List",
+                        "name": "WrongConnectedInstances",
+                        "add": false,
+                        "delete": false,
+                        "rowCount": 0,
+                        "sort": {
+                            "column": "name",
+                            "direction": "ascending"
+                        },
+                        "columns": [
+                            {
+                                "caption": "Topic",
+                                "name": "topic",
+                                "width": "300px"
+                            },
+                            {
+                                "caption": "Name",
+                                "name": "name",
+                                "width": "auto"
+                            },
+                            {
+                                "caption": "InstanceId",
+                                "name": "instanceIdStr",
+                                "width": "75px"
+                            }
+                        ]
+                    }
+                ]
+            }
         },
         {
             "type": "Label",
-            "caption": "Dieses Modul ist für die nicht kommerzielle Nutzung kostenlos, Schenkungen als Unterstützung für den Autor werden hier akzeptiert:    "
+            "caption": "Donations"
+        },
+        {
+            "type": "Label",
+            "caption": "This module is free for non-commercial use,\r\nDonations in support of the author are accepted here:"
         },
         {
             "type": "RowLayout",

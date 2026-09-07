@@ -10,32 +10,37 @@
         {
             "type": "Button",
             "name": "InstallExtension",
-            "label": "Install or upgrade Symcon-Extension",
-            "onClick": "Z2M_InstallSymconExtension($id);"
+            "caption": "Install or upgrade Symcon-Extension",
+            "onClick": [
+                "if (!Z2M_InstallSymconExtension($id)){",
+                "   echo 'ERROR';",
+                "}"
+            ]
         },
         {
             "type": "Button",
             "name": "SetLastSeen",
-            "label": "Set last_seen setting to epoch",
+            "caption": "Set last_seen setting to epoch",
             "onClick": "Z2M_SetLastSeen($id);"
         },
         {
             "type": "Button",
             "name": "PermitJoinOption",
-            "label": "Disable permit_join option in Z2M configuration.yaml",
+            "caption": "Disable permit_join option in Z2M configuration.yaml",
             "onClick": "Z2M_SetPermitJoinOption($id, false);",
             "visible": false
         },
         {
+            "caption": "Testcenter",
             "type": "TestCenter"
         },
         {
             "type": "Label",
-            "caption": "Spenden / Schenkung"
+            "caption": "Donations"
         },
         {
             "type": "Label",
-            "caption": "Dieses Modul ist für die nicht kommerzielle Nutzung kostenlos, Schenkungen als Unterstützung für den Autor werden hier akzeptiert:    "
+            "caption": "This module is free for non-commercial use,\r\nDonations in support of the author are accepted here:"
         },
         {
             "type": "RowLayout",

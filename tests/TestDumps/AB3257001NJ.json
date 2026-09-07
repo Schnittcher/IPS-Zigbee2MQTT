@@ -1,0 +1,295 @@
+{
+    "Instance": {
+        "ParentID": 29316,
+        "ObjectID": 44740,
+        "ObjectType": 1,
+        "ObjectIdent": "",
+        "ObjectName": "AP-Z02",
+        "ObjectInfo": "",
+        "ObjectIcon": "",
+        "ObjectSummary": "0x7cb03eaa00afc40c",
+        "ObjectPosition": 0,
+        "ObjectIsReadOnly": false,
+        "ObjectIsHidden": false,
+        "ObjectIsDisabled": false,
+        "ObjectIsLocked": false,
+        "HasChildren": true,
+        "ChildrenIDs": [
+            23695,
+            17886,
+            20351,
+            58352
+        ],
+        "InstanceID": 44740,
+        "ConnectionID": 23222,
+        "InstanceStatus": 102,
+        "InstanceSupportsSearching": false,
+        "InstanceIsSearching": false,
+        "InstanceVisualizationType": 0,
+        "InstanceChanged": 1763200922,
+        "ModuleInfo": {
+            "ModuleID": "{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}",
+            "ModuleName": "Zigbee2MQTT Device",
+            "ModuleType": 3
+        }
+    },
+    "Model": "AB3257001NJ",
+    "ModelUrl": "https://www.zigbee2mqtt.io/devices/AB3257001NJ.html",
+    "Config": {
+        "IEEE": "0x7cb03eaa00afc40c",
+        "MQTTBaseTopic": "zigbee2mqtt",
+        "MQTTTopic": "AP-Z02"
+    },
+    "Exposes": [
+        {
+            "type": "switch",
+            "features": [
+                {
+                    "name": "state",
+                    "label": "State",
+                    "access": 7,
+                    "type": "binary",
+                    "property": "state",
+                    "description": "On/off state of the switch",
+                    "value_on": "ON",
+                    "value_off": "OFF",
+                    "value_toggle": "TOGGLE"
+                }
+            ]
+        },
+        {
+            "name": "linkquality",
+            "label": "Linkquality",
+            "access": 1,
+            "type": "numeric",
+            "property": "linkquality",
+            "description": "Link quality (signal strength)",
+            "category": "diagnostic",
+            "unit": "lqi",
+            "value_max": 255,
+            "value_min": 0
+        }
+    ],
+    "LastPayload": {
+        "last_seen": 0,
+        "state": "ON",
+        "linkquality": 208
+    },
+    "Childs": {
+        "23695": {
+            "ParentID": 44740,
+            "ObjectID": 23695,
+            "ObjectType": 2,
+            "ObjectIdent": "linkquality",
+            "ObjectName": "Verbindungsqualität",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 23695,
+            "VariableProfile": "Z2M.linkquality_0_255",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1763200800,
+            "VariableChanged": 1763200800,
+            "VariableType": 1,
+            "VariableValue": 61,
+            "VariableIsLocked": false
+        },
+        "17886": {
+            "ParentID": 44740,
+            "ObjectID": 17886,
+            "ObjectType": 2,
+            "ObjectIdent": "state",
+            "ObjectName": "Status",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 17886,
+            "VariableProfile": "~Switch",
+            "VariableAction": 44740,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1763200800,
+            "VariableChanged": 1763200389,
+            "VariableType": 0,
+            "VariableValue": true,
+            "VariableIsLocked": false
+        },
+        "20351": {
+            "ParentID": 44740,
+            "ObjectID": 20351,
+            "ObjectType": 2,
+            "ObjectIdent": "last_seen",
+            "ObjectName": "Zuletzt gesehen",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 20351,
+            "VariableProfile": "~UnixTimestamp",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1763200800,
+            "VariableChanged": 1763200800,
+            "VariableType": 1,
+            "VariableValue": 1763200800,
+            "VariableIsLocked": false
+        },
+        "58352": {
+            "ParentID": 44740,
+            "ObjectID": 58352,
+            "ObjectType": 2,
+            "ObjectIdent": "device_status",
+            "ObjectName": "Verfügbarkeit",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 58352,
+            "VariableProfile": "Z2M.DeviceStatus",
+            "VariableAction": 0,
+            "VariableCustomProfile": "Window_2",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1762613857,
+            "VariableChanged": 1762613857,
+            "VariableType": 0,
+            "VariableValue": false,
+            "VariableIsLocked": false
+        }
+    },
+    "Profile": {
+        "Z2M.linkquality_0_255": {
+            "ProfileName": "Z2M.linkquality_0_255",
+            "ProfileType": 1,
+            "Icon": "",
+            "Prefix": "",
+            "Suffix": " lqi",
+            "MinValue": 0,
+            "MaxValue": 255,
+            "StepSize": 1,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": false
+        },
+        "~Switch": {
+            "ProfileName": "~Switch",
+            "ProfileType": 0,
+            "Icon": "Power",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 1,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": false,
+                    "Name": "Aus",
+                    "Icon": "",
+                    "Color": -1
+                },
+                {
+                    "Value": true,
+                    "Name": "An",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": true
+        },
+        "~UnixTimestamp": {
+            "ProfileName": "~UnixTimestamp",
+            "ProfileType": 1,
+            "Icon": "Clock",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": true
+        },
+        "Window_2": {
+            "ProfileName": "Window_2",
+            "ProfileType": 0,
+            "Icon": "Ok",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": false,
+                    "Name": "Nicht erreichbar",
+                    "Icon": "Close",
+                    "Color": 16711680
+                },
+                {
+                    "Value": true,
+                    "Name": "iO",
+                    "Icon": "Ok",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        },
+        "Z2M.DeviceStatus": {
+            "ProfileName": "Z2M.DeviceStatus",
+            "ProfileType": 0,
+            "Icon": "Network",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": false,
+                    "Name": "Offline",
+                    "Icon": "",
+                    "Color": 16711680
+                },
+                {
+                    "Value": true,
+                    "Name": "Online",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        }
+    },
+    "missingTranslations": []
+}

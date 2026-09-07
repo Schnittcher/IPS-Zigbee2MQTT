@@ -28,7 +28,7 @@
             "TestCommands"
         ],
         "hasIdent": [
-            "Z2M_ColorTemp"
+            "color_temp"
         ]
     },
     "locale": {

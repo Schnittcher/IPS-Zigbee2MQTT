@@ -30,24 +30,126 @@
                     "width": "200px"
                 }
             ]
+        },
+        {
+            "type": "Label",
+            "caption": ""
+        },
+        {
+            "type": "Button",
+            "visible": false,
+            "caption": "Show missing translations",
+            "onClick": "IPS_RequestAction($id, 'ShowMissingTranslations', true);"
         }
     ],
     "actions": [
         {
-            "type": "Button",
-            "label": "Get Device Infos",
-            "onClick": "IPS_RequestAction($id, 'UpdateInfo', true);"
+            "name": "IeeeWarning",
+            "type": "PopupAlert",
+            "visible": false,
+            "popup": {
+                "closeCaption": "Close",
+                "buttons": [
+                    {
+                        "caption": "I understand",
+                        "onClick": "IPS_RequestAction($id, 'EnableIeeeEdit', true);"
+                    }
+                ],
+                "items": [
+                    {
+                        "name": "ErrorTitle",
+                        "type": "Label",
+                        "bold": true,
+                        "caption": "Warning!"
+                    },
+                    {
+                        "name": "ErrorText",
+                        "type": "Label",
+                        "caption": "Please use this function carefully!\r\nAn incorrect IEEE address can lead to malfunctions."
+                    }
+                ]
+            }
         },
         {
+            "type": "ExpansionPanel",
+            "caption": "Expert Settings",
+            "expanded": false,
+            "width": "800px",
+            "items": [
+                {
+                    "type": "RowLayout",
+                    "items": [
+                        {
+                            "type": "Button",
+                            "caption": "Get Device Infos",
+                            "onClick": "IPS_RequestAction($id, 'UpdateInfo', true);"
+                        },
+                        {
+                            "type": "Button",
+                            "caption": "Download Debug Data",
+                            "download": "Z2M_Debug.json",
+                            "onClick": [
+                                "echo Z2M_UIExportDebugData($id);"
+                            ]
+                        },
+                        {
+                            "type": "Button",
+                            "caption": "Change IEEE Address",
+                            "onClick": "IPS_RequestAction($id, 'ShowIeeeEditWarning', true);"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ShowMissingTranslations",
+            "type": "PopupAlert",
+            "visible": false,
+            "popup": {
+                "closeCaption": "Close",
+                "items": [
+                    {
+                        "type": "Label",
+                        "bold": true,
+                        "caption": "List of missing translations"
+                    },
+                    {
+                        "name": "MissingTranslationsList",
+                        "type": "List",
+                        "delete": false,
+                        "add": false,
+                        "rowCount": 8,
+                        "sort": {
+                            "column": "value",
+                            "direction": "ascending"
+                        },
+                        "columns": [
+                            {
+                                "caption": "Type",
+                                "name": "type",
+                                "width": "150px"
+                            },
+                            {
+                                "caption": "Value",
+                                "name": "value",
+                                "width": "300px"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "caption": "Testcenter",
             "type": "TestCenter"
         },
         {
             "type": "Label",
-            "caption": "Spenden / Schenkung"
+            "caption": "Donations"
         },
         {
             "type": "Label",
-            "caption": "Dieses Modul ist für die nicht kommerzielle Nutzung kostenlos, Schenkungen als Unterstützung für den Autor werden hier akzeptiert:    "
+            "caption": "This module is free for non-commercial use,\r\nDonations in support of the author are accepted here:"
         },
         {
             "type": "RowLayout",

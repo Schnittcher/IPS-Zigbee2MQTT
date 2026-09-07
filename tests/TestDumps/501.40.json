@@ -1,0 +1,521 @@
+{
+    "Instance": {
+        "ParentID": 14682,
+        "ObjectID": 39313,
+        "ObjectType": 1,
+        "ObjectIdent": "",
+        "ObjectName": "Fernbedienung Gent 2",
+        "ObjectInfo": "",
+        "ObjectIcon": "",
+        "ObjectSummary": "0x385b44fffe30318a",
+        "ObjectPosition": 0,
+        "ObjectIsReadOnly": false,
+        "ObjectIsHidden": false,
+        "ObjectIsDisabled": false,
+        "ObjectIsLocked": false,
+        "HasChildren": true,
+        "ChildrenIDs": [
+            58352,
+            42366,
+            37389,
+            35322,
+            39992
+        ],
+        "InstanceID": 39313,
+        "ConnectionID": 46497,
+        "InstanceStatus": 102,
+        "InstanceSupportsSearching": false,
+        "InstanceIsSearching": false,
+        "InstanceVisualizationType": 0,
+        "InstanceChanged": 1771052403,
+        "ModuleInfo": {
+            "ModuleID": "{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}",
+            "ModuleName": "Zigbee2MQTT Device",
+            "ModuleType": 3
+        }
+    },
+    "Model": "501.40",
+    "ModelUrl": "https://www.zigbee2mqtt.io/devices/501.40.html",
+    "Config": {
+        "IEEE": "0x385b44fffe30318a",
+        "MQTTBaseTopic": "zigbee2mqtt",
+        "MQTTTopic": "Fernbedienung Gent 2"
+    },
+    "Exposes": [
+        {
+            "name": "battery",
+            "label": "Battery",
+            "access": 5,
+            "type": "numeric",
+            "property": "battery",
+            "description": "Remaining battery in %",
+            "category": "diagnostic",
+            "unit": "%",
+            "value_max": 100,
+            "value_min": 0
+        },
+        {
+            "name": "action",
+            "label": "Action",
+            "access": 1,
+            "type": "enum",
+            "property": "action",
+            "description": "Triggered action (e.g. a button click)",
+            "category": "diagnostic",
+            "values": [
+                "on",
+                "off",
+                "toggle",
+                "brightness_move_to_level",
+                "brightness_move_up",
+                "brightness_move_down",
+                "brightness_step_up",
+                "brightness_step_down",
+                "brightness_stop",
+                "color_temperature_move_stop",
+                "color_temperature_move_up",
+                "color_temperature_move_down",
+                "color_temperature_step_up",
+                "color_temperature_step_down",
+                "enhanced_move_to_hue_and_saturation",
+                "move_to_hue_and_saturation",
+                "color_hue_step_up",
+                "color_hue_step_down",
+                "color_saturation_step_up",
+                "color_saturation_step_down",
+                "color_loop_set",
+                "color_temperature_move",
+                "color_move",
+                "hue_move",
+                "hue_stop",
+                "move_to_saturation",
+                "move_to_hue",
+                "recall",
+                "store",
+                "add",
+                "remove",
+                "remove_all"
+            ]
+        },
+        {
+            "name": "linkquality",
+            "label": "Linkquality",
+            "access": 1,
+            "type": "numeric",
+            "property": "linkquality",
+            "description": "Link quality (signal strength)",
+            "category": "diagnostic",
+            "unit": "lqi",
+            "value_max": 255,
+            "value_min": 0
+        }
+    ],
+    "LastPayload": {
+        "last_seen": 1771054578212
+    },
+    "Childs": {
+        "58352": {
+            "ParentID": 39313,
+            "ObjectID": 58352,
+            "ObjectType": 2,
+            "ObjectIdent": "device_status",
+            "ObjectName": "Verfügbarkeit",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 58352,
+            "VariableProfile": "Z2M.DeviceStatus",
+            "VariableAction": 0,
+            "VariableCustomProfile": "Window_2",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1762613857,
+            "VariableChanged": 1762613857,
+            "VariableType": 0,
+            "VariableValue": false,
+            "VariableIsLocked": false
+        },
+        "42366": {
+            "ParentID": 39313,
+            "ObjectID": 42366,
+            "ObjectType": 2,
+            "ObjectIdent": "last_seen",
+            "ObjectName": "Zuletzt gesehen",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 42366,
+            "VariableProfile": "~UnixTimestamp",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1770835016,
+            "VariableChanged": 1770819611,
+            "VariablePresentation": {
+                "PROFILE": "~UnixTimestamp",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 1770819611,
+            "VariableIsLocked": false
+        },
+        "37389": {
+            "ParentID": 39313,
+            "ObjectID": 37389,
+            "ObjectType": 2,
+            "ObjectIdent": "battery",
+            "ObjectName": "Batterie",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 37389,
+            "VariableProfile": "~Battery.100",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1770835016,
+            "VariableChanged": 1741513830,
+            "VariablePresentation": {
+                "PROFILE": "~Battery.100",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 100,
+            "VariableIsLocked": false
+        },
+        "35322": {
+            "ParentID": 39313,
+            "ObjectID": 35322,
+            "ObjectType": 2,
+            "ObjectIdent": "action",
+            "ObjectName": "Aktion",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 35322,
+            "VariableProfile": "Z2M.action.fab75df6",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1767693137,
+            "VariableChanged": 1767373596,
+            "VariablePresentation": {
+                "PROFILE": "Z2M.action.fab75df6",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 3,
+            "VariableValue": "move_to_hue_and_saturation_4",
+            "VariableIsLocked": false
+        },
+        "39992": {
+            "ParentID": 39313,
+            "ObjectID": 39992,
+            "ObjectType": 2,
+            "ObjectIdent": "linkquality",
+            "ObjectName": "Verbindungsqualität",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 39992,
+            "VariableProfile": "Z2M.linkquality_0_255",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1770835016,
+            "VariableChanged": 1770769013,
+            "VariablePresentation": {
+                "PROFILE": "Z2M.linkquality_0_255",
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 130,
+            "VariableIsLocked": false
+        }
+    },
+    "Profile": {
+        "~UnixTimestamp": {
+            "ProfileName": "~UnixTimestamp",
+            "ProfileType": 1,
+            "Icon": "Clock",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": true
+        },
+        "~Battery.100": {
+            "ProfileName": "~Battery.100",
+            "ProfileType": 1,
+            "Icon": "Battery",
+            "Prefix": "",
+            "Suffix": " %",
+            "MinValue": 0,
+            "MaxValue": 100,
+            "StepSize": 10,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": true
+        },
+        "Z2M.action.fab75df6": {
+            "ProfileName": "Z2M.action.fab75df6",
+            "ProfileType": 3,
+            "Icon": "Menu",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": "add",
+                    "Name": "Zufügen",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "brightness_move_down",
+                    "Name": "Helligkeit senken",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "brightness_move_to_level",
+                    "Name": "Helligkeit auf Wert setzen",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "brightness_move_up",
+                    "Name": "Helligkeit erhöhen",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "brightness_step_down",
+                    "Name": "Helligkeit Schrittweise senken",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "brightness_step_up",
+                    "Name": "Hellgikeit Schrittweise erhöhen",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "brightness_stop",
+                    "Name": "Helligkeit Stopp",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "color_hue_step_down",
+                    "Name": "Farbton absenken",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "color_hue_step_up",
+                    "Name": "Farbton erhöhen",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "color_loop_set",
+                    "Name": "Farbschleifensatz",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "color_move",
+                    "Name": "Farbverschiebung",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "color_saturation_step_down",
+                    "Name": "Farbsättigung verringern",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "color_saturation_step_up",
+                    "Name": "Farbsättigung erhöhen",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "color_temperature_move",
+                    "Name": "Farbtemperatur Ändern",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "color_temperature_move_down",
+                    "Name": "Farbtemperatur senken",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "color_temperature_move_stop",
+                    "Name": "Color Temperature Move Stop",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "color_temperature_move_up",
+                    "Name": "Farbtemperatur erhöhen",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "color_temperature_step_down",
+                    "Name": "Farbtemperatur Schritt senken",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "color_temperature_step_up",
+                    "Name": "Farbtemperatur Schritt erhöhen",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "enhanced_move_to_hue_and_saturation",
+                    "Name": "Erweiterte Anpassung von Farbton und Sättigung",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "hue_move",
+                    "Name": "Hue Ändern",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "hue_stop",
+                    "Name": "Hue Stopp",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "move_to_hue",
+                    "Name": "Move To Hue",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "move_to_hue_and_saturation",
+                    "Name": "Move To Hue And Saturation",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "move_to_saturation",
+                    "Name": "Sättigung ändern",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "off",
+                    "Name": "Aus",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "on",
+                    "Name": "An",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "recall",
+                    "Name": "Erneut abrufen",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "remove",
+                    "Name": "Entfernen",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "remove_all",
+                    "Name": "Alle entfernen",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "store",
+                    "Name": "Speichern",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "toggle",
+                    "Name": "Wechsel",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        },
+        "Z2M.linkquality_0_255": {
+            "ProfileName": "Z2M.linkquality_0_255",
+            "ProfileType": 1,
+            "Icon": "",
+            "Prefix": "",
+            "Suffix": " lqi",
+            "MinValue": 0,
+            "MaxValue": 255,
+            "StepSize": 1,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": false
+        }
+    },
+    "missingTranslations": []
+}

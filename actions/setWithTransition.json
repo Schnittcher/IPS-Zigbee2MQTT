@@ -2,7 +2,7 @@
     "id": "{8F75ACEC-3265-4D9D-BF2E-997539B36B37}",
     "caption": "Brightness with Transition",
     "form": [
-        "$id = IPS_GetObjectIDByIdent('Z2M_Brightness', $_IPS['TARGET']);",
+        "$id = IPS_GetObjectIDByIdent('brightness', $_IPS['TARGET']);",
         "return [",
         "   [",
         "       'type' => 'SelectValue',",
@@ -20,7 +20,7 @@
     ],
     "priority": 1,
     "action": [
-        "Z2M_SendSetCommand($_IPS['TARGET'], ['brightness' => $_IPS['Brightness'], 'transition' => $_IPS['TransitionTime']]);"
+        "Z2M_SendSetCommand($_IPS['TARGET'], ['brightness' => (int)($_IPS['Brightness']*254/100), 'transition' => $_IPS['TransitionTime']]);"
     ],
     "restrictions": {
         "objectType": [
@@ -31,7 +31,7 @@
             "TestCommands"
         ],
         "hasIdent": [
-            "Z2M_Brightness"
+            "brightness"
         ]
     },
     "locale": {

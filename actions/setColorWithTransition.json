@@ -16,7 +16,7 @@
     ],
     "priority": 1,
     "action": [
-        "Z2M_setColorExt($_IPS['TARGET'], $_IPS['Color'], 'cie', ['transition' => $_IPS['TransitionTime'], 'state' => 'ON'], 'color');"
+        "Z2M_SetColorExt($_IPS['TARGET'], $_IPS['Color'], $_IPS['TransitionTime']);"
     ],
     "restrictions": {
         "objectType": [
@@ -27,7 +27,7 @@
             "TestCommands"
         ],
         "hasIdent": [
-            "Z2M_Color"
+            "color"
         ]
     },
     "locale": {

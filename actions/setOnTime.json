@@ -28,8 +28,8 @@
             "TestCommands"
         ],
         "hasIdent": [
-            "Z2M_Countdown",
-            "Z2M_State"
+            "countdown",
+            "state"
         ]
     },
     "locale": {

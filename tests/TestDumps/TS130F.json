@@ -1,0 +1,729 @@
+{
+    "Instance": {
+        "ParentID": 18706,
+        "ObjectID": 35615,
+        "ObjectType": 1,
+        "ObjectIdent": "",
+        "ObjectName": "Jalousie",
+        "ObjectInfo": "",
+        "ObjectIcon": "",
+        "ObjectSummary": "0xa4c1389611a28ebf",
+        "ObjectPosition": 0,
+        "ObjectIsReadOnly": false,
+        "ObjectIsHidden": false,
+        "ObjectIsDisabled": false,
+        "ObjectIsLocked": false,
+        "HasChildren": true,
+        "ChildrenIDs": [
+            50798,
+            54506,
+            23260,
+            52145,
+            35616,
+            39090,
+            46204,
+            26624,
+            53041,
+            56887,
+            33382
+        ],
+        "InstanceID": 35615,
+        "ConnectionID": 57366,
+        "InstanceStatus": 102,
+        "InstanceSupportsSearching": false,
+        "InstanceIsSearching": false,
+        "InstanceVisualizationType": 0,
+        "InstanceChanged": 1736800292,
+        "ModuleInfo": {
+            "ModuleID": "{E5BB36C6-A70B-EB23-3716-9151A09AC8A2}",
+            "ModuleName": "Zigbee2MQTT Device",
+            "ModuleType": 3
+        }
+    },
+    "Model": "TS130F",
+    "ModelUrl": "https://www.zigbee2mqtt.io/devices/TS130F.html",
+    "Config": {
+        "IEEE": "0xa4c1389611a28ebf",
+        "MQTTBaseTopic": "zigbee2mqtt",
+        "MQTTTopic": "Obergeschoss/Tim/Jalousie"
+    },
+    "Exposes": [
+        {
+            "type": "cover",
+            "features": [
+                {
+                    "name": "state",
+                    "label": "State",
+                    "access": 3,
+                    "type": "enum",
+                    "property": "state",
+                    "values": [
+                        "OPEN",
+                        "CLOSE",
+                        "STOP"
+                    ]
+                },
+                {
+                    "name": "position",
+                    "label": "Position",
+                    "access": 7,
+                    "type": "numeric",
+                    "property": "position",
+                    "description": "Position of this cover",
+                    "unit": "%",
+                    "value_max": 100,
+                    "value_min": 0
+                }
+            ]
+        },
+        {
+            "name": "moving",
+            "label": "Moving",
+            "access": 1,
+            "type": "enum",
+            "property": "moving",
+            "values": [
+                "UP",
+                "STOP",
+                "DOWN"
+            ]
+        },
+        {
+            "name": "motor_reversal",
+            "label": "Motor reversal",
+            "access": 7,
+            "type": "binary",
+            "property": "motor_reversal",
+            "value_on": "ON",
+            "value_off": "OFF"
+        },
+        {
+            "name": "calibration",
+            "label": "Calibration",
+            "access": 7,
+            "type": "binary",
+            "property": "calibration",
+            "value_on": "ON",
+            "value_off": "OFF"
+        },
+        {
+            "name": "calibration_time",
+            "label": "Calibration time",
+            "access": 1,
+            "type": "numeric",
+            "property": "calibration_time",
+            "description": "Calibration time",
+            "unit": "s"
+        },
+        {
+            "name": "indicator_mode",
+            "label": "Indicator mode",
+            "access": 7,
+            "type": "enum",
+            "property": "indicator_mode",
+            "description": "LED indicator mode",
+            "values": [
+                "off",
+                "off/on",
+                "on/off",
+                "on"
+            ]
+        },
+        {
+            "name": "backlight_mode",
+            "label": "Backlight mode",
+            "access": 7,
+            "type": "binary",
+            "property": "backlight_mode",
+            "description": "Mode of the backlight",
+            "value_on": "ON",
+            "value_off": "OFF"
+        },
+        {
+            "name": "linkquality",
+            "label": "Linkquality",
+            "access": 1,
+            "type": "numeric",
+            "property": "linkquality",
+            "description": "Link quality (signal strength)",
+            "category": "diagnostic",
+            "unit": "lqi",
+            "value_max": 255,
+            "value_min": 0
+        }
+    ],
+    "LastPayload": {
+        "backlight_mode": "OFF",
+        "calibration": "OFF",
+        "calibration_time": 18.8,
+        "indicator_mode": "off",
+        "last_seen": 1737302212244,
+        "linkquality": 61,
+        "motor_reversal": "ON",
+        "moving": "STOP",
+        "position": 100,
+        "state": "OPEN"
+    },
+    "Childs": {
+        "50798": {
+            "ParentID": 35615,
+            "ObjectID": 50798,
+            "ObjectType": 2,
+            "ObjectIdent": "position",
+            "ObjectName": "Position",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 50798,
+            "VariableProfile": "~Shutter.Reversed",
+            "VariableAction": 35615,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1737314593,
+            "VariableChanged": 1736832655,
+            "VariablePresentation": {
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}",
+                "PROFILE": "~Shutter.Reversed"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 100,
+            "VariableIsLocked": false
+        },
+        "54506": {
+            "ParentID": 35615,
+            "ObjectID": 54506,
+            "ObjectType": 2,
+            "ObjectIdent": "moving",
+            "ObjectName": "Bewegung",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 54506,
+            "VariableProfile": "Z2M.moving.7ac27aed",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1737314593,
+            "VariableChanged": 1736832655,
+            "VariablePresentation": {
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}",
+                "PROFILE": "Z2M.moving.7ac27aed"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 3,
+            "VariableValue": "STOP",
+            "VariableIsLocked": false
+        },
+        "23260": {
+            "ParentID": 35615,
+            "ObjectID": 23260,
+            "ObjectType": 2,
+            "ObjectIdent": "motor_reversal",
+            "ObjectName": "Motorumkehr",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 23260,
+            "VariableProfile": "~Switch",
+            "VariableAction": 35615,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1737314593,
+            "VariableChanged": 1736832655,
+            "VariablePresentation": {
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}",
+                "PROFILE": "~Switch"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 0,
+            "VariableValue": true,
+            "VariableIsLocked": false
+        },
+        "52145": {
+            "ParentID": 35615,
+            "ObjectID": 52145,
+            "ObjectType": 2,
+            "ObjectIdent": "calibration",
+            "ObjectName": "Kalibrierung",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 52145,
+            "VariableProfile": "~Switch",
+            "VariableAction": 35615,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1737314593,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}",
+                "PROFILE": "~Switch"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 0,
+            "VariableValue": false,
+            "VariableIsLocked": false
+        },
+        "35616": {
+            "ParentID": 35615,
+            "ObjectID": 35616,
+            "ObjectType": 2,
+            "ObjectIdent": "calibration_time",
+            "ObjectName": "Kalibrierzeit",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 35616,
+            "VariableProfile": "Z2M.calibration_time",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1737314593,
+            "VariableChanged": 1736832655,
+            "VariablePresentation": {
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}",
+                "PROFILE": "Z2M.calibration_time"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 2,
+            "VariableValue": 18.8,
+            "VariableIsLocked": false
+        },
+        "39090": {
+            "ParentID": 35615,
+            "ObjectID": 39090,
+            "ObjectType": 2,
+            "ObjectIdent": "indicator_mode",
+            "ObjectName": "Anzeigemodus",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 39090,
+            "VariableProfile": "Z2M.indicator_mode.45cba34f",
+            "VariableAction": 35615,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1737314593,
+            "VariableChanged": 1736832655,
+            "VariablePresentation": {
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}",
+                "PROFILE": "Z2M.indicator_mode.45cba34f"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 3,
+            "VariableValue": "off",
+            "VariableIsLocked": false
+        },
+        "46204": {
+            "ParentID": 35615,
+            "ObjectID": 46204,
+            "ObjectType": 2,
+            "ObjectIdent": "backlight_mode",
+            "ObjectName": "Hintergrundbeleuchtung",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 46204,
+            "VariableProfile": "~Switch",
+            "VariableAction": 35615,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1737314593,
+            "VariableChanged": 0,
+            "VariablePresentation": {
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}",
+                "PROFILE": "~Switch"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 0,
+            "VariableValue": false,
+            "VariableIsLocked": false
+        },
+        "26624": {
+            "ParentID": 35615,
+            "ObjectID": 26624,
+            "ObjectType": 2,
+            "ObjectIdent": "linkquality",
+            "ObjectName": "Verbindungsqualität",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 26624,
+            "VariableProfile": "Z2M.linkquality_0_255",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1737314593,
+            "VariableChanged": 1737314593,
+            "VariablePresentation": {
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}",
+                "PROFILE": "Z2M.linkquality_0_255"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 65,
+            "VariableIsLocked": false
+        },
+        "53041": {
+            "ParentID": 35615,
+            "ObjectID": 53041,
+            "ObjectType": 2,
+            "ObjectIdent": "device_status",
+            "ObjectName": "Verfügbarkeit",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 53041,
+            "VariableProfile": "Z2M.DeviceStatus",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1737313180,
+            "VariableChanged": 1736832396,
+            "VariablePresentation": {
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}",
+                "PROFILE": "Z2M.DeviceStatus"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 0,
+            "VariableValue": true,
+            "VariableIsLocked": false
+        },
+        "56887": {
+            "ParentID": 35615,
+            "ObjectID": 56887,
+            "ObjectType": 2,
+            "ObjectIdent": "last_seen",
+            "ObjectName": "Zuletzt gesehen",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 56887,
+            "VariableProfile": "~UnixTimestamp",
+            "VariableAction": 0,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1737314593,
+            "VariableChanged": 1737314593,
+            "VariablePresentation": {
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}",
+                "PROFILE": "~UnixTimestamp"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 1,
+            "VariableValue": 1737314593,
+            "VariableIsLocked": false
+        },
+        "33382": {
+            "ParentID": 35615,
+            "ObjectID": 33382,
+            "ObjectType": 2,
+            "ObjectIdent": "state",
+            "ObjectName": "Status",
+            "ObjectInfo": "",
+            "ObjectIcon": "",
+            "ObjectSummary": "",
+            "ObjectPosition": 0,
+            "ObjectIsReadOnly": false,
+            "ObjectIsHidden": false,
+            "ObjectIsDisabled": false,
+            "ObjectIsLocked": false,
+            "HasChildren": false,
+            "ChildrenIDs": [],
+            "VariableID": 33382,
+            "VariableProfile": "Z2M.state.7c75b7a3",
+            "VariableAction": 35615,
+            "VariableCustomProfile": "",
+            "VariableCustomAction": 0,
+            "VariableUpdated": 1737314593,
+            "VariableChanged": 1737278558,
+            "VariablePresentation": {
+                "PRESENTATION": "{4153A8D4-5C33-C65F-C1F3-7B61AAF99B1C}",
+                "PROFILE": "Z2M.state.7c75b7a3"
+            },
+            "VariableCustomPresentation": [],
+            "VariableType": 3,
+            "VariableValue": "OPEN",
+            "VariableIsLocked": false
+        }
+    },
+    "Profile": {
+        "~Shutter.Reversed": {
+            "ProfileName": "~Shutter.Reversed",
+            "ProfileType": 1,
+            "Icon": "Shutter",
+            "Prefix": "",
+            "Suffix": " %",
+            "MinValue": 0,
+            "MaxValue": 100,
+            "StepSize": 1,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": true
+        },
+        "Z2M.moving.7ac27aed": {
+            "ProfileName": "Z2M.moving.7ac27aed",
+            "ProfileType": 3,
+            "Icon": "Menu",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": "DOWN",
+                    "Name": "Runter",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "STOP",
+                    "Name": "Stop",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "UP",
+                    "Name": "Aufwärts",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        },
+        "~Switch": {
+            "ProfileName": "~Switch",
+            "ProfileType": 0,
+            "Icon": "Power",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 1,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": false,
+                    "Name": "Aus",
+                    "Icon": "",
+                    "Color": -1
+                },
+                {
+                    "Value": true,
+                    "Name": "An",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": true
+        },
+        "Z2M.calibration_time": {
+            "ProfileName": "Z2M.calibration_time",
+            "ProfileType": 2,
+            "Icon": "",
+            "Prefix": "",
+            "Suffix": " s",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 1,
+            "Digits": 2,
+            "Associations": [],
+            "IsReadOnly": false
+        },
+        "Z2M.indicator_mode.45cba34f": {
+            "ProfileName": "Z2M.indicator_mode.45cba34f",
+            "ProfileType": 3,
+            "Icon": "Menu",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": "on",
+                    "Name": "An",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "off",
+                    "Name": "Aus",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "off/on",
+                    "Name": "Aus/An",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "on/off",
+                    "Name": "An/Aus",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        },
+        "Z2M.linkquality_0_255": {
+            "ProfileName": "Z2M.linkquality_0_255",
+            "ProfileType": 1,
+            "Icon": "",
+            "Prefix": "",
+            "Suffix": " lqi",
+            "MinValue": 0,
+            "MaxValue": 255,
+            "StepSize": 1,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": false
+        },
+        "Z2M.DeviceStatus": {
+            "ProfileName": "Z2M.DeviceStatus",
+            "ProfileType": 0,
+            "Icon": "Network",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": false,
+                    "Name": "Offline",
+                    "Icon": "",
+                    "Color": 16711680
+                },
+                {
+                    "Value": true,
+                    "Name": "Online",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        },
+        "~UnixTimestamp": {
+            "ProfileName": "~UnixTimestamp",
+            "ProfileType": 1,
+            "Icon": "Clock",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [],
+            "IsReadOnly": true
+        },
+        "Z2M.state.7c75b7a3": {
+            "ProfileName": "Z2M.state.7c75b7a3",
+            "ProfileType": 3,
+            "Icon": "Menu",
+            "Prefix": "",
+            "Suffix": "",
+            "MinValue": 0,
+            "MaxValue": 0,
+            "StepSize": 0,
+            "Digits": 0,
+            "Associations": [
+                {
+                    "Value": "CLOSE",
+                    "Name": "CLOSE",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "OPEN",
+                    "Name": "OPEN",
+                    "Icon": "",
+                    "Color": 65280
+                },
+                {
+                    "Value": "STOP",
+                    "Name": "Stop",
+                    "Icon": "",
+                    "Color": 65280
+                }
+            ],
+            "IsReadOnly": false
+        }
+    }
+}
